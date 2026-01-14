@@ -1,8 +1,8 @@
 # Guildford Community Digital Platform
 ## Complete Platform Specification Document
 
-**Document Version:** 1.0  
-**Date:** January 2026  
+**Document Version:** 1.1
+**Date:** January 2026
 **Purpose:** Comprehensive specification for platform development planning
 
 ---
@@ -25,6 +25,10 @@
 14. [Analytics & Reporting](#14-analytics--reporting)
 15. [Integration Requirements](#15-integration-requirements)
 16. [Design Specifications](#16-design-specifications)
+17. [Messaging & Communication System](#17-messaging--communication-system)
+18. [Deals & Promotions Hub](#18-deals--promotions-hub)
+19. [Business-to-Business Networking](#19-business-to-business-networking)
+20. [Emergency & Crisis Communication](#20-emergency--crisis-communication)
 
 ---
 
@@ -1656,6 +1660,520 @@ See Section 5.4 for business-specific analytics.
 
 ---
 
+## 17. Messaging & Communication System
+
+### 17.1 Overview
+
+The messaging system enables direct communication between community members and businesses, facilitating enquiries, customer service, and community connection while maintaining privacy and safety.
+
+### 17.2 Message Types
+
+| Type | Participants | Use Case |
+|------|--------------|----------|
+| Business Enquiry | Community Member → Business | Pre-visit questions, service enquiries |
+| Business Response | Business → Community Member | Replies to enquiries |
+| Event Enquiry | Community Member → Event Organiser | Event-specific questions |
+| Admin Broadcast | Admin → Users/Businesses | Platform announcements |
+
+### 17.3 Business Enquiry System
+
+#### Enquiry Form Fields
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| Subject | Select | Yes | Predefined categories: General Enquiry, Product/Service Question, Booking Request, Feedback, Other |
+| Message | Text | Yes | Max 1000 characters |
+| Preferred Contact | Select | No | Reply via platform, Email, Phone |
+| Phone Number | Text | Conditional | Required if phone contact preferred |
+
+#### Business Inbox Features
+
+| Feature | Description |
+|---------|-------------|
+| Unified Inbox | All enquiries in one place |
+| Unread Count | Badge showing unread messages |
+| Quick Reply | Template responses for common questions |
+| Mark as Read/Unread | Message status management |
+| Archive | Move resolved conversations out of inbox |
+| Search | Search messages by keyword, sender, date |
+| Filter | Filter by status, subject category, date range |
+
+#### Response Management
+
+| Setting | Options |
+|---------|---------|
+| Auto-Response | Optional message sent immediately upon receiving enquiry |
+| Response Time Goal | Business sets target (e.g., "Usually responds within 2 hours") |
+| Response Rate | Displayed on profile (e.g., "Responds to 95% of messages") |
+| Average Response Time | Calculated and displayed on profile |
+
+### 17.4 Conversation Threading
+
+| Feature | Description |
+|---------|-------------|
+| Thread View | All messages in conversation grouped together |
+| Reply Chain | Clear parent-child message relationship |
+| Timestamp | Date and time for each message |
+| Read Receipt | Indicator when message has been read |
+| Attachments | Support for images (max 3, 5MB each) |
+
+### 17.5 Notification Settings
+
+| Notification | Default | Options |
+|--------------|---------|---------|
+| New Message | On | Push, Email, Both, Off |
+| Message Reminder | On | 24-hour reminder for unanswered messages |
+| Daily Digest | Off | Summary of all messages |
+
+### 17.6 Privacy & Safety
+
+| Feature | Description |
+|---------|-------------|
+| No Direct Contact | Personal email/phone hidden until user chooses to share |
+| Block User | Prevent further messages from specific user |
+| Report Message | Flag inappropriate content for moderation |
+| Spam Detection | Automated filtering of spam messages |
+| Rate Limiting | Max 10 new conversations per user per day |
+
+### 17.7 Business Messaging Analytics
+
+| Metric | Description |
+|--------|-------------|
+| Total Enquiries | Messages received in period |
+| Response Rate | Percentage of messages responded to |
+| Average Response Time | Time to first response |
+| Enquiry Categories | Breakdown by subject type |
+| Peak Times | When most enquiries are received |
+
+---
+
+## 18. Deals & Promotions Hub
+
+### 18.1 Overview
+
+A centralised deals discovery system that aggregates promotions from all participating businesses, making it easy for community members to find and take advantage of local offers.
+
+### 18.2 Deals Hub Features
+
+#### Main Deals Page
+
+| Section | Description |
+|---------|-------------|
+| Today's Deals | Active promotions valid today |
+| Ending Soon | Deals expiring within 48 hours |
+| New This Week | Recently added promotions |
+| Most Popular | Deals with highest saves/views |
+| Near You | Location-based deal recommendations |
+
+#### Deal Card Display
+
+| Element | Description |
+|---------|-------------|
+| Business Logo | Visual identifier |
+| Business Name | Linked to profile |
+| Deal Title | Headline of the offer |
+| Discount Badge | e.g., "20% OFF", "BOGO", "FREE" |
+| Valid Period | Start and end dates |
+| Distance | From user's location |
+| Save Button | Add to saved deals |
+| Share Button | Share deal with others |
+
+### 18.3 Deal Categories
+
+| Category | Examples |
+|----------|----------|
+| Food & Drink | Restaurant specials, cafe discounts, meal deals |
+| Retail | Store sales, product discounts |
+| Services | Service discounts, package deals |
+| Health & Beauty | Spa offers, salon discounts |
+| Entertainment | Activity discounts, event specials |
+| Family | Kid-friendly deals, family packages |
+
+### 18.4 Flash Deals
+
+#### Flash Deal Features
+
+| Feature | Description |
+|---------|-------------|
+| Limited Time | Deals lasting 2-24 hours |
+| Countdown Timer | Visual countdown on deal card |
+| Quantity Limit | Optional limit on redemptions |
+| Remaining Count | Show "X remaining" if limited |
+| Push Notification | Alert followers of flash deals |
+
+#### Flash Deal Rules
+
+- Business can run max 2 flash deals per week
+- Minimum 2-hour duration
+- Must be approved within 1 hour (expedited moderation)
+- Cannot overlap with another flash deal from same business
+
+### 18.5 Deal Redemption
+
+#### Redemption Methods
+
+| Method | Description |
+|--------|-------------|
+| Show Screen | Display deal on phone at business |
+| Unique Code | One-time use code generated per user |
+| QR Code | Scannable code for business to verify |
+| No Verification | Trust-based redemption |
+
+#### Redemption Tracking
+
+| Field | Description |
+|-------|-------------|
+| Views | Number of times deal was viewed |
+| Saves | Number of users who saved deal |
+| Redemptions | Verified redemption count (if tracked) |
+| Conversion Rate | Redemptions / Views |
+
+### 18.6 Personalised Deal Recommendations
+
+| Signal | Usage |
+|--------|-------|
+| Saved Businesses | Prioritise deals from favourites |
+| Category Interests | Show relevant deal categories |
+| Past Redemptions | Recommend similar deals |
+| Location | Emphasise nearby offers |
+| Browsing History | Learn preferences over time |
+
+### 18.7 Deal Alerts
+
+#### User Alert Settings
+
+| Setting | Description |
+|---------|-------------|
+| Flash Deal Alerts | Notify for all flash deals |
+| Category Alerts | Notify for specific deal categories |
+| Business Alerts | Notify for deals from followed businesses |
+| Price Threshold | Notify for deals above X% discount |
+| Proximity Alerts | Notify for deals within X distance |
+
+#### Alert Delivery
+
+| Channel | Options |
+|---------|---------|
+| Push Notification | Instant alert (if PWA installed) |
+| Email | Instant, Daily Digest, Weekly Digest |
+| In-App | Notification centre |
+
+### 18.8 Business Deal Management
+
+#### Deal Creation (Enhanced)
+
+| Field | Type | Description |
+|-------|------|-------------|
+| Deal Type | Select | Standard, Flash Deal, Recurring |
+| Feature on Hub | Checkbox | Request featuring on main deals page |
+| Target Audience | Multi-select | All, Followers only, New customers |
+| Redemption Method | Select | Show screen, Code, QR, None |
+| Redemption Limit | Number | Optional cap on redemptions |
+
+#### Deal Analytics
+
+| Metric | Description |
+|--------|-------------|
+| Impressions | Times shown in deals hub |
+| Click-through Rate | Views / Impressions |
+| Save Rate | Saves / Views |
+| Redemption Rate | Redemptions / Views |
+| Revenue Impact | Estimated revenue from deal (optional input) |
+
+---
+
+## 19. Business-to-Business Networking
+
+### 19.1 Overview
+
+A dedicated networking space for local business owners to connect, collaborate, and support each other, strengthening the local business ecosystem.
+
+### 19.2 Business Network Profile
+
+#### Additional Business Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| Open to Networking | Toggle | Show in B2B directory |
+| Looking For | Multi-select | Partnerships, Suppliers, Cross-promotion, Referrals, Mentorship |
+| Can Offer | Multi-select | Same options as Looking For |
+| Business Size | Select | Solo, 2-5 employees, 6-20, 20+ |
+| Years in Guildford | Number | Time operating in precinct |
+| Industry Connections | Multi-select | Industries interested in connecting with |
+
+### 19.3 Business Directory (B2B View)
+
+#### Directory Features
+
+| Feature | Description |
+|---------|-------------|
+| B2B Search | Search businesses by networking criteria |
+| Filter by Needs | Find businesses looking for what you offer |
+| Filter by Offers | Find businesses offering what you need |
+| Category Filter | Filter by business type |
+| Connection Status | Show existing connections |
+
+#### Directory Card (B2B)
+
+| Element | Description |
+|---------|-------------|
+| Business Name | Linked to profile |
+| Category | Primary business type |
+| Looking For | Icons showing needs |
+| Can Offer | Icons showing offerings |
+| Mutual Connections | Shared business connections |
+| Connect Button | Initiate connection request |
+
+### 19.4 Business Connections
+
+#### Connection Flow
+
+1. Business A sends connection request with optional message
+2. Business B receives notification
+3. Business B accepts or declines
+4. If accepted, both can now message directly
+5. Connection visible on both profiles
+
+#### Connection Management
+
+| Action | Description |
+|--------|-------------|
+| View Connections | List of all connected businesses |
+| Pending Requests | Incoming and outgoing requests |
+| Remove Connection | Disconnect from business |
+| Block Business | Prevent future requests |
+| Export Contacts | Download connection list (CSV) |
+
+### 19.5 Business Messaging (B2B)
+
+#### B2B Inbox
+
+| Feature | Description |
+|---------|-------------|
+| Separate from Customer Messages | Dedicated B2B inbox tab |
+| Connection Required | Must be connected to message |
+| Rich Messages | Support for attachments, links |
+| Meeting Scheduler | Propose meeting times |
+| File Sharing | Share documents (PDF, max 10MB) |
+
+### 19.6 Collaboration Features
+
+#### Joint Promotions
+
+| Feature | Description |
+|---------|-------------|
+| Co-branded Deals | Create promotions with partner business |
+| Split Visibility | Deal appears on both business profiles |
+| Shared Analytics | Both businesses see performance data |
+| Approval Workflow | Both parties must approve before publishing |
+
+#### Referral Tracking
+
+| Feature | Description |
+|---------|-------------|
+| Referral Links | Generate trackable referral links |
+| Referral Dashboard | See referrals sent and received |
+| Thank You Notes | Send appreciation for referrals |
+| Referral Leaderboard | Optional visibility of top referrers |
+
+### 19.7 Business Community Features
+
+#### Discussion Forum (B2B)
+
+| Feature | Description |
+|---------|-------------|
+| Topic Categories | General, Suppliers, Marketing, Operations, Local Issues |
+| Post Types | Question, Discussion, Recommendation, Announcement |
+| Replies & Comments | Threaded discussions |
+| Upvoting | Surface helpful content |
+| Moderator Oversight | Chamber/Council staff can moderate |
+
+#### Resource Sharing
+
+| Resource Type | Description |
+|---------------|-------------|
+| Recommended Suppliers | Share supplier contacts |
+| Local Service Providers | Recommend accountants, designers, etc. |
+| Templates & Documents | Share useful business templates |
+| Bulk Buy Opportunities | Coordinate group purchasing |
+
+### 19.8 Business Events
+
+#### B2B Event Types
+
+| Type | Description |
+|------|-------------|
+| Networking Events | Chamber-organised meetups |
+| Workshop/Training | Skill-building sessions |
+| Business Breakfasts | Morning networking |
+| Industry Meetups | Category-specific gatherings |
+
+#### B2B Event Features
+
+| Feature | Description |
+|---------|-------------|
+| Business RSVP | RSVP as business (not personal) |
+| Attendee List | See which businesses are attending |
+| Post-Event Connections | Suggest connections with attendees |
+| Event Discussion | Pre/post event discussion thread |
+
+### 19.9 Chamber Integration
+
+| Feature | Description |
+|---------|-------------|
+| Chamber Announcements | Official communications to businesses |
+| Member Benefits | Display Chamber member status |
+| Chamber Events | Highlighted in B2B calendar |
+| Resources | Chamber resources and documents |
+| Contact Chamber | Direct line to Chamber staff |
+
+---
+
+## 20. Emergency & Crisis Communication
+
+### 20.1 Overview
+
+A critical communication system for urgent alerts affecting the Guildford community, ensuring residents and businesses receive timely notifications during emergencies.
+
+### 20.2 Alert Types
+
+| Alert Level | Description | Visual | Use Case |
+|-------------|-------------|--------|----------|
+| **Critical** | Immediate danger to life/safety | Red banner, persistent | Natural disaster, major emergency |
+| **Warning** | Significant disruption or risk | Orange banner | Severe weather, major road closure |
+| **Advisory** | Important information | Yellow banner | Planned disruption, minor incident |
+| **Information** | General updates | Blue banner | Recovery updates, situation resolved |
+
+### 20.3 Alert Sources
+
+| Source | Alert Types | Approval Required |
+|--------|-------------|-------------------|
+| Platform Admin | All levels | No |
+| Cumberland Council | All levels | No (trusted source) |
+| NSW Government | Critical, Warning | No (integrated feed) |
+| Chamber of Commerce | Advisory, Information | Admin approval |
+| Business Owners | Information (own business only) | No |
+
+### 20.4 Alert Content
+
+#### Alert Fields
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| Alert Level | Select | Yes | Critical, Warning, Advisory, Information |
+| Title | Text | Yes | Max 100 characters, clear and concise |
+| Summary | Text | Yes | Max 280 characters (SMS-friendly) |
+| Full Details | Rich Text | Yes | Complete information, max 2000 chars |
+| Affected Area | Multi-select | Yes | Specific suburbs/streets or "All Guildford" |
+| Start Time | DateTime | Yes | When alert becomes active |
+| Expected End | DateTime | No | Estimated resolution time |
+| Source | Text | Yes | Organisation issuing alert |
+| External Links | URLs | No | Links to official sources |
+| Map Area | Polygon | No | Visual representation of affected area |
+
+#### Alert Updates
+
+| Feature | Description |
+|---------|-------------|
+| Update Thread | All updates linked to original alert |
+| Update Notification | Users notified of significant updates |
+| Status Changes | Clear indication when situation changes |
+| Resolution Notice | Final update when incident resolved |
+
+### 20.5 Alert Distribution
+
+#### Display Locations
+
+| Location | Behaviour |
+|----------|-----------|
+| Homepage Banner | Persistent banner for active Critical/Warning alerts |
+| App Header | Alert icon with count, colour indicates severity |
+| Alert Centre | Dedicated page for all active and recent alerts |
+| Business Profiles | Relevant alerts shown on affected business pages |
+| Map View | Visual overlay of affected areas |
+
+#### Notification Channels
+
+| Channel | Critical | Warning | Advisory | Information |
+|---------|----------|---------|----------|-------------|
+| Push Notification | Forced | Default On | Default Off | Off |
+| SMS (opt-in) | Yes | Yes | No | No |
+| Email | Immediate | Immediate | Digest | Digest |
+| In-App | Prominent | Prominent | Standard | Standard |
+
+### 20.6 User Alert Preferences
+
+| Setting | Description |
+|---------|-------------|
+| SMS Alerts | Opt-in for SMS (Critical/Warning only) |
+| Phone Number | Required for SMS alerts |
+| Location-Based | Only receive alerts for specified area |
+| Alert Categories | Choose alert types to receive |
+| Quiet Hours | No non-critical alerts during specified hours |
+
+### 20.7 Business Emergency Features
+
+#### Business Status Updates
+
+| Status | Description | Display |
+|--------|-------------|---------|
+| Operating Normally | Default status | None |
+| Modified Hours | Temporary hour changes | Yellow badge |
+| Limited Services | Some services unavailable | Orange badge |
+| Temporarily Closed | Closed due to emergency | Red badge |
+| Closed Until Further Notice | Extended closure | Red badge + date unknown |
+
+#### Quick Update Feature
+
+| Feature | Description |
+|---------|-------------|
+| One-Tap Status | Quick status change buttons |
+| Auto-Notification | Followers notified of status change |
+| Expected Reopening | Optional reopening date/time |
+| Update Message | Brief explanation (max 280 chars) |
+| Social Sync | Option to post update to social media |
+
+### 20.8 Community Safety Features
+
+#### Check-In System (Major Emergencies)
+
+| Feature | Description |
+|---------|-------------|
+| "I'm Safe" Button | Users can mark themselves safe |
+| Business Check-In | Businesses confirm status |
+| Community View | See check-in status (privacy-controlled) |
+| Family/Friends | Share status with specified contacts |
+
+#### Resource Information
+
+| Resource | Description |
+|----------|-------------|
+| Emergency Contacts | Police, Fire, Ambulance, SES |
+| Evacuation Routes | Links to official evacuation info |
+| Relief Centres | Location of emergency shelters |
+| Council Contacts | Direct council emergency line |
+
+### 20.9 Alert Analytics (Admin)
+
+| Metric | Description |
+|--------|-------------|
+| Alert Reach | Users who viewed alert |
+| Notification Delivery | Success rate by channel |
+| Engagement | Clicks on alert for details |
+| Response Time | Time from incident to alert publication |
+| Resolution Time | Duration of incident |
+
+### 20.10 Integration with External Systems
+
+| System | Integration |
+|--------|-------------|
+| NSW Alerts | Feed integration for relevant alerts |
+| Bureau of Meteorology | Severe weather warnings |
+| Transport NSW | Major transport disruptions |
+| Council Systems | Direct integration for council alerts |
+
+---
+
 ## Appendix A: Data Models
 
 ### Business
@@ -1737,6 +2255,142 @@ Event {
 }
 ```
 
+### Message
+
+```
+Message {
+  id: UUID
+  conversation_id: UUID
+  sender_type: Enum (user, business)
+  sender_id: UUID
+  recipient_type: Enum (user, business)
+  recipient_id: UUID
+  subject_category: Enum (general, product_question, booking, feedback, other)
+  content: Text
+  attachments: [Image]
+  read_at: DateTime
+  created_at: DateTime
+}
+```
+
+### Conversation
+
+```
+Conversation {
+  id: UUID
+  business_id: Reference (Business)
+  user_id: Reference (User)
+  subject: String
+  status: Enum (active, archived, blocked)
+  last_message_at: DateTime
+  unread_count_business: Integer
+  unread_count_user: Integer
+  created_at: DateTime
+}
+```
+
+### Deal
+
+```
+Deal {
+  id: UUID
+  business_id: Reference (Business)
+  title: String
+  description: Text (multilingual)
+  deal_type: Enum (standard, flash, recurring)
+  discount_type: Enum (percentage, fixed, bogo, free_item)
+  discount_value: Number
+  category: Reference (DealCategory)
+  valid_from: DateTime
+  valid_until: DateTime
+  redemption_method: Enum (show_screen, unique_code, qr_code, none)
+  redemption_limit: Integer
+  redemption_count: Integer
+  target_audience: Enum (all, followers, new_customers)
+  terms_conditions: Text
+  image: Image
+  featured: Boolean
+  status: Enum (active, pending, expired, cancelled)
+  views: Integer
+  saves: Integer
+  created_at: DateTime
+  updated_at: DateTime
+}
+```
+
+### BusinessConnection
+
+```
+BusinessConnection {
+  id: UUID
+  requester_business_id: Reference (Business)
+  recipient_business_id: Reference (Business)
+  status: Enum (pending, accepted, declined, blocked)
+  message: Text
+  connected_at: DateTime
+  created_at: DateTime
+}
+```
+
+### BusinessNetworkProfile
+
+```
+BusinessNetworkProfile {
+  id: UUID
+  business_id: Reference (Business)
+  open_to_networking: Boolean
+  looking_for: [Enum] (partnerships, suppliers, cross_promotion, referrals, mentorship)
+  can_offer: [Enum] (partnerships, suppliers, cross_promotion, referrals, mentorship)
+  business_size: Enum (solo, small_2_5, medium_6_20, large_20_plus)
+  years_in_guildford: Integer
+  industry_connections: [String]
+  created_at: DateTime
+  updated_at: DateTime
+}
+```
+
+### Alert
+
+```
+Alert {
+  id: UUID
+  level: Enum (critical, warning, advisory, information)
+  title: String
+  summary: String (max 280 chars)
+  full_details: Text
+  affected_areas: [String]
+  start_time: DateTime
+  expected_end: DateTime
+  source: String
+  source_type: Enum (admin, council, government, chamber, business)
+  external_links: [URL]
+  map_polygon: GeoJSON
+  status: Enum (active, resolved, cancelled)
+  parent_alert_id: UUID (for updates)
+  views: Integer
+  created_by: Reference (User)
+  created_at: DateTime
+  updated_at: DateTime
+  resolved_at: DateTime
+}
+```
+
+### BusinessEmergencyStatus
+
+```
+BusinessEmergencyStatus {
+  id: UUID
+  business_id: Reference (Business)
+  status: Enum (normal, modified_hours, limited_services, temporarily_closed, closed_indefinitely)
+  message: String (max 280 chars)
+  modified_hours: OperatingHours
+  expected_reopening: DateTime
+  related_alert_id: Reference (Alert)
+  created_at: DateTime
+  updated_at: DateTime
+}
+```
+
 ---
 
 ## Appendix B: API Endpoints
@@ -1794,6 +2448,75 @@ Event {
 | GET | /search/events | Search events |
 | GET | /search/suggestions | Get autocomplete suggestions |
 
+### Messages
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | /conversations | List user's conversations |
+| GET | /conversations/:id | Get conversation with messages |
+| POST | /conversations | Start new conversation |
+| POST | /conversations/:id/messages | Send message in conversation |
+| PUT | /conversations/:id/read | Mark conversation as read |
+| PUT | /conversations/:id/archive | Archive conversation |
+| POST | /conversations/:id/block | Block user from conversation |
+| GET | /businesses/:id/inbox | Get business inbox (owner only) |
+| GET | /businesses/:id/inbox/analytics | Get messaging analytics |
+
+### Deals
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | /deals | List all active deals |
+| GET | /deals/featured | Get featured/today's deals |
+| GET | /deals/flash | Get active flash deals |
+| GET | /deals/:id | Get deal details |
+| POST | /deals | Create deal (business owner) |
+| PUT | /deals/:id | Update deal |
+| DELETE | /deals/:id | Cancel deal |
+| POST | /deals/:id/save | Save deal to user's list |
+| DELETE | /deals/:id/save | Remove deal from saved |
+| POST | /deals/:id/redeem | Record deal redemption |
+| GET | /deals/:id/analytics | Get deal performance analytics |
+| GET | /businesses/:id/deals | Get deals for specific business |
+| GET | /users/:id/saved-deals | Get user's saved deals |
+
+### Business Networking (B2B)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | /b2b/directory | List businesses open to networking |
+| GET | /b2b/profile/:businessId | Get B2B network profile |
+| PUT | /b2b/profile/:businessId | Update B2B network profile |
+| GET | /b2b/connections | List business connections |
+| POST | /b2b/connections | Send connection request |
+| PUT | /b2b/connections/:id | Accept/decline connection |
+| DELETE | /b2b/connections/:id | Remove connection |
+| GET | /b2b/messages | Get B2B inbox |
+| POST | /b2b/messages | Send B2B message |
+| GET | /b2b/forum | List forum topics |
+| GET | /b2b/forum/:topicId | Get forum topic with replies |
+| POST | /b2b/forum | Create forum topic |
+| POST | /b2b/forum/:topicId/replies | Reply to forum topic |
+| GET | /b2b/events | List B2B events |
+| POST | /b2b/referrals | Create referral tracking link |
+| GET | /b2b/referrals | Get referral statistics |
+
+### Alerts
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | /alerts | List active alerts |
+| GET | /alerts/active | Get currently active alerts by severity |
+| GET | /alerts/:id | Get alert details |
+| POST | /alerts | Create alert (admin/council) |
+| PUT | /alerts/:id | Update alert |
+| POST | /alerts/:id/resolve | Mark alert as resolved |
+| GET | /alerts/history | Get past alerts |
+| PUT | /users/:id/alert-preferences | Update alert notification preferences |
+| POST | /alerts/:id/check-in | User safety check-in |
+| GET | /businesses/:id/emergency-status | Get business emergency status |
+| PUT | /businesses/:id/emergency-status | Update business emergency status |
+
 ---
 
 ## Appendix C: Glossary
@@ -1816,6 +2539,7 @@ Event {
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0 | January 2026 | Andrew | Initial comprehensive specification |
+| 1.1 | January 2026 | Andrew | Added Messaging System, Deals Hub, B2B Networking, Emergency Communications |
 
 ---
 
