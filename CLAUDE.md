@@ -4,13 +4,67 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is the **Guildford Community Digital Platform** - a Digital Community Improvement Hub (DCIH) for local business discovery and community engagement in the Guildford South precinct (Sydney, Australia). The platform connects residents with local businesses that face competition from large shopping centres.
+This is **Community Hub** - a location-agnostic Digital Community Improvement Hub (DCIH) platform for local business discovery and community engagement. The platform connects residents with local businesses that face competition from large shopping centres.
+
+**First Deployment:** Guildford South precinct (Sydney, Australia)
+
+**Future Deployments:** The platform is designed to be deployed to multiple suburbs with configuration-only changes (no code modifications required).
 
 **Current Status:** Specification phase - the detailed specification is complete but source code has not yet been written.
 
-**Primary Reference:** `Docs/Guildford_Platform_Specification.md` (2500+ lines) - this is the authoritative source for all functional requirements, data models, API endpoints, and design specifications.
+**Primary Reference:** `Docs/Community_Hub_Platform_Specification.md` (~3000 lines) - this is the authoritative source for all functional requirements, data models, API endpoints, and design specifications.
 
-**Specification Version:** 1.1 (January 2026)
+**Specification Version:** 1.3 (January 2026)
+
+## Location-Agnostic Architecture
+
+**CRITICAL:** No location-specific data should be hardcoded. The platform uses a three-tier configuration system (see Section 2 of the specification):
+
+1. **`.env`** - Sensitive credentials, API keys, environment-specific settings
+2. **`config/platform.json`** - Location, branding, feature flags (edit this for new suburb deployments)
+3. **Database** - Runtime-editable settings (categories, templates, system settings)
+
+When implementing features, always reference configuration values rather than hardcoding suburb names, coordinates, or other location-specific data.
+
+## Specification Document Structure
+
+The specification is organised for development workflow:
+
+### Foundation & Architecture (Sections 1-6)
+- **Section 1:** Project Overview
+- **Section 2:** Platform Configuration Architecture (location-agnostic config)
+- **Section 3:** Technical Requirements (stack, performance, scalability)
+- **Section 4:** Security & Privacy
+- **Section 5:** Design Specifications (colours, typography, components)
+- **Section 6:** Multilingual Support (10 languages, RTL)
+
+### Users & Core Entities (Sections 7-10)
+- **Section 7:** User Types & Roles
+- **Section 8:** Business Profile Features
+- **Section 9:** Community User Features
+- **Section 10:** Business Owner Features
+
+### Core Functionality (Sections 11-14)
+- **Section 11:** Search & Discovery
+- **Section 12:** Events & Calendar System
+- **Section 13:** Messaging & Communication System
+- **Section 14:** Deals & Promotions Hub
+
+### Community & Social Features (Sections 15-18)
+- **Section 15:** Community Features (noticeboard, groups, history)
+- **Section 16:** Social Media Integration
+- **Section 17:** Business-to-Business Networking
+- **Section 18:** Emergency & Crisis Communication
+
+### Administration & Operations (Sections 19-21)
+- **Section 19:** Administration & Moderation
+- **Section 20:** Analytics & Reporting
+- **Section 21:** Integration Requirements
+
+### Appendices
+- **Appendix A:** Data Models
+- **Appendix B:** API Endpoints
+- **Appendix C:** Glossary
 
 ## Key Technical Decisions (from Specification)
 
@@ -26,50 +80,12 @@ This is the **Guildford Community Digital Platform** - a Digital Community Impro
 - **WCAG 2.1 AA Accessibility:** All components must meet accessibility standards
 - **Mobile-First:** Primary breakpoint < 768px, 44px minimum touch targets
 - **PWA:** Installable, offline-capable with service worker
+- **Location-Agnostic:** All location data from configuration, never hardcoded
 
 ### Performance Targets
 - Page load < 3 seconds on 3G
 - API response < 200ms (95th percentile)
 - Lighthouse performance score > 80
-
-## Core Platform Features
-
-### Business Discovery (Sections 3, 5, 10)
-- Business profiles with hours, media, promotions, certifications
-- Search with filters (category, distance, languages, accessibility)
-- Google Business Profile sync
-
-### Community Engagement (Sections 4, 6, 8)
-- User accounts with saved businesses and follows
-- Events calendar with RSVPs and recurring events
-- Community noticeboard, groups hub, local history archive
-
-### Messaging System (Section 17)
-- Business enquiry forms with subject categories
-- Business inbox with quick replies and templates
-- Response rate tracking displayed on profiles
-- Privacy controls (blocking, spam detection)
-
-### Deals & Promotions Hub (Section 18)
-- Centralised deals discovery ("Today's Deals", "Ending Soon", "Near You")
-- Flash deals with countdown timers and quantity limits
-- Multiple redemption methods (QR codes, unique codes)
-- Personalised deal recommendations and alerts
-
-### Business-to-Business Networking (Section 19)
-- B2B network profiles (partnerships, suppliers, cross-promotion)
-- Business connection system with messaging
-- Discussion forum for local business topics
-- Joint promotions and referral tracking
-- Chamber of Commerce integration
-
-### Emergency & Crisis Communication (Section 20)
-- Four-tier alert system (Critical, Warning, Advisory, Information)
-- Multiple sources (Admin, Council, NSW Government, Chamber)
-- SMS opt-in for critical alerts
-- Business emergency status updates
-- Community safety check-in system
-- Integration with NSW Alerts, BOM, Transport NSW
 
 ## Data Models
 
@@ -99,7 +115,7 @@ RESTful endpoints defined in Appendix B:
 
 ## Design System
 
-- **Colors:** Teal (#2C5F7C), Orange (#E67E22), Gold (#F39C12)
+- **Colors:** Teal (#2C5F7C), Orange (#E67E22), Gold (#F39C12) - configurable per deployment
 - **Typography:** Montserrat (headings), Open Sans (body)
 - **Responsive breakpoints:** Mobile (< 768px), Tablet (768-1199px), Desktop (≥ 1200px)
 - **Alert Colors:** Red (Critical), Orange (Warning), Yellow (Advisory), Blue (Information)
@@ -112,6 +128,7 @@ RESTful endpoints defined in Appendix B:
 - Security headers: CSP, X-Frame-Options, HSTS
 - Rate limiting, input validation on all endpoints
 - Message spam detection and rate limiting (max 10 new conversations/day)
+- API keys and secrets in `.env` only, never in platform.json or code
 
 ## Integration Points
 
@@ -121,4 +138,15 @@ RESTful endpoints defined in Appendix B:
 - Maps API (Google Maps or OpenStreetMap)
 - SendGrid/Mailgun (email notifications)
 - Twilio or similar (SMS for emergency alerts)
-- NSW Alerts / Bureau of Meteorology / Transport NSW (emergency feeds)
+- State emergency alerts / Bureau of Meteorology / Transport authority (emergency feeds)
+
+## Configuration Files
+
+When the codebase is implemented, the following configuration files will be present:
+
+| File | Purpose |
+|------|---------|
+| `.env.example` | Template for environment variables |
+| `config/platform.json` | Location and branding configuration |
+| `config/platform.development.json` | Development overrides |
+| `config/platform.staging.json` | Staging overrides |
