@@ -549,8 +549,8 @@ Phase 1 (Foundation)
 | Document | Location | Version |
 |----------|----------|---------|
 | Full Specification | `Docs/Community_Hub_Specification_v2.md` | 2.0 |
-| Original Specification | `Docs/Community_Hub_Platform_Specification.md` | 1.3 (superseded) |
-| Specification Supplement | `Docs/Community_Hub_Specification_Supplement.md` | 1.0 (superseded) |
+| Original Specification | `Docs/Archive/Community_Hub_Platform_Specification.md` | 1.3 (archived) |
+| Specification Supplement | `Docs/Archive/Community_Hub_Specification_Supplement.md` | 1.0 (archived) |
 | Development TODO | `TODO.md` | Current |
 | Progress Tracker | `PROGRESS.md` | Current |
 | Project Instructions | `CLAUDE.md` | Current |
