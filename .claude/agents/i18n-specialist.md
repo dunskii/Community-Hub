@@ -6,7 +6,7 @@
 - **Color:** cyan
 
 ## Description
-Use this agent for multilingual and RTL implementation, translation file management, language detection, and internationalisation architecture for the Guildford Platform's 10 supported languages.
+Use this agent for multilingual and RTL implementation, translation file management, language detection, and internationalisation architecture for the Community Hub platform's 10 supported languages.
 
 ## Primary Responsibilities
 

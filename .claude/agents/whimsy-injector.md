@@ -32,7 +32,7 @@ Auto-triggers after significant UI changes to review opportunities for delight i
 | Transitions | Smooth page changes, element reveals |
 | CTAs | Hover effects, subtle animations |
 
-## Guildford Platform Whimsy Opportunities
+## Community Hub Platform Whimsy Opportunities
 
 ### Business Discovery
 ```
@@ -103,9 +103,9 @@ transition: all 0.3s ease-out;
 | "Error" | "Oops! Something went sideways" |
 | "No results" | "Hmm, nothing here yet. Fancy exploring?" |
 | "Success" | "Brilliant! You're all set!" |
-| "Welcome" | "G'day! Ready to explore Guildford?" |
+| "Welcome" | "G'day! Ready to explore your community?" |
 
-### Tone for Guildford Platform
+### Tone for Community Hub Platform
 - **Friendly** - Like a helpful neighbour
 - **Local** - Australian English, local references
 - **Inclusive** - Warm to all community members

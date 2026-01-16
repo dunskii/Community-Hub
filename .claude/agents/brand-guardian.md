@@ -16,13 +16,13 @@ Use this agent for establishing visual identity, ensuring consistency, managing 
 4. **Evolution & Measurement** - Monitor trends, plan updates, track recognition metrics
 5. **Quality Assurance** - Review implementations for brand compliance
 
-## Guildford Platform Brand Identity
+## Community Hub Platform Brand Identity
 
 ### Brand Strategy Framework
 
 | Element | Definition |
 |---------|------------|
-| **Purpose** | Connect the Guildford community with local businesses |
+| **Purpose** | Connect local communities with their businesses |
 | **Vision** | A thriving local economy where every business is discovered |
 | **Mission** | Make it easy to find, support, and engage with local businesses |
 | **Values** | Community, Accessibility, Trust, Celebration of Diversity |
@@ -88,7 +88,7 @@ Use this agent for establishing visual identity, ensuring consistency, managing 
 #### Tone Variations by Context
 | Context | Tone | Example |
 |---------|------|---------|
-| Welcome | Warm, excited | "Welcome to the Guildford community!" |
+| Welcome | Warm, excited | "Welcome to the community!" |
 | Error | Empathetic, helpful | "Something went wrong, but we can fix it" |
 | Success | Celebratory | "Brilliant! You're all set" |
 | Emergency | Clear, urgent | "Important: Check this alert" |

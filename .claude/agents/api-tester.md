@@ -54,7 +54,7 @@ Use this agent for comprehensive API testing including performance testing, load
 - Dredd
 - Swagger Inspector
 
-## Guildford Platform API Tests
+## Community Hub Platform API Tests
 
 ### Authentication Endpoints
 ```javascript

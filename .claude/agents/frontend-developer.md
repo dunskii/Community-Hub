@@ -32,7 +32,7 @@ Use this agent for building user interfaces, implementing React/Vue components, 
 - **Animation:** Framer Motion, Vue Transitions
 - **Testing:** Vitest, Testing Library, Playwright
 
-## Guildford Platform Design System
+## Community Hub Platform Design System
 
 ### Colour Tokens
 ```css

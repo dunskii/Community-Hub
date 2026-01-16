@@ -18,17 +18,17 @@ Use this agent for cross-platform content generation, from long-form blog posts 
 
 ## Platform Requirements
 
-**MANDATORY:** All generated content must be saved to files using markdown format with proper metadata headers and descriptive kebab-case naming (e.g., `blog-post-hidden-gems-guildford.md`).
+**MANDATORY:** All generated content must be saved to files using markdown format with proper metadata headers and descriptive kebab-case naming (e.g., `blog-post-hidden-gems-local.md`).
 
-## Content Pillars for Guildford Platform
+## Content Pillars for Community Hub Platform
 
 | Pillar | Purpose | Examples |
 |--------|---------|----------|
-| **Discovery** | Help users find businesses | "5 Best Coffee Shops in Guildford" |
+| **Discovery** | Help users find businesses | "5 Best Coffee Shops in Your Area" |
 | **Community** | Build connection | "Meet the Owner" profiles |
 | **Events** | Drive engagement | Event previews and recaps |
 | **Local Stories** | Create emotional connection | Business origin stories |
-| **Tips & Guides** | Provide value | "Complete Guide to Dining in Guildford" |
+| **Tips & Guides** | Provide value | "Complete Guide to Local Dining" |
 
 ## Content Multiplication Model
 
@@ -53,7 +53,7 @@ Use this agent for cross-platform content generation, from long-form blog posts 
 title: [Primary Keyword] - [Secondary Keyword]
 description: [155 chars max with keywords]
 keywords: [keyword1, keyword2, keyword3]
-author: Guildford Community
+author: Community Hub
 date: YYYY-MM-DD
 category: [Discovery|Community|Events|Guides]
 ---
@@ -80,7 +80,7 @@ category: [Discovery|Community|Events|Guides]
 
 ---
 
-*Discover more local businesses on [Guildford Community](link)*
+*Discover more local businesses on [Community Hub](link)*
 ```
 
 ## Social Media Content
@@ -109,7 +109,7 @@ category: [Discovery|Community|Events|Guides]
 
 [Hashtags - 20-30 relevant tags]
 
-#Guildford #GuildfordNSW #WesternSydney #SydneyLocal
+#YourSuburb #WesternSydney #SydneyLocal
 #ShopLocal #SupportLocal #LocalBusiness #Sydney
 [+ category-specific tags]
 ```
@@ -124,14 +124,14 @@ category: [Discovery|Community|Events|Guides]
 
 🔗 [Link to platform or blog]
 
-#Guildford #LocalBusiness #Community
+#YourSuburb #LocalBusiness #Community
 ```
 
 ## Email Newsletter Structure
 
 ### Weekly Digest Template
 ```
-Subject: This Week in Guildford 🏪
+Subject: This Week in Your Community 🏪
 
 Preview: [New businesses, upcoming events, and local deals]
 
@@ -160,7 +160,7 @@ COMMUNITY NEWS
 ```
 HOOK (0:00-0:10)
 "What if I told you the best [category] in Sydney
-is right here in Guildford?"
+is right here in your community?"
 
 INTRO (0:10-0:30)
 Introduce business and owner
@@ -177,7 +177,7 @@ What to try first
 
 CTA (2:00-2:30)
 How to find them
-Link to Guildford Community platform
+Link to Community Hub platform
 "Follow for more local discoveries"
 ```
 

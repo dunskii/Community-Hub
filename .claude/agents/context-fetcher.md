@@ -42,7 +42,7 @@ Use this agent for efficiently retrieving specific documentation and context inf
 
 | Category | Location |
 |----------|----------|
-| Specification | `Docs/Guildford_Platform_Specification.md` |
+| Specification | `Docs/Community_Hub_Specification_v2.md` |
 | Roadmap | `Docs/Development_Roadmap.md` |
 | API Endpoints | Specification Appendix B |
 | Data Models | Specification Appendix A |
@@ -80,7 +80,7 @@ Use this agent for efficiently retrieving specific documentation and context inf
 - Include irrelevant surrounding context
 - Repeat the same search multiple times
 
-## Common Queries for Guildford Platform
+## Common Queries for Community Hub Platform
 
 | Query | Source | Section |
 |-------|--------|---------|

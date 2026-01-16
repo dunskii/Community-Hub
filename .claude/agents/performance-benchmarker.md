@@ -26,7 +26,7 @@ Use this agent for comprehensive performance testing, profiling, and optimisatio
 | CLS (Cumulative Layout Shift) | < 0.1 | 0.1-0.25 | > 0.25 |
 | INP (Interaction to Next Paint) | < 200ms | 200-500ms | > 500ms |
 
-## Guildford Platform Performance Targets
+## Community Hub Platform Performance Targets
 
 ### Frontend
 | Metric | Target |
@@ -168,7 +168,7 @@ WHERE relname = 'businesses';
 
 ### Index Recommendations
 ```sql
--- Common indexes for Guildford Platform
+-- Common indexes for Community Hub Platform
 CREATE INDEX idx_businesses_category ON businesses(category_id);
 CREATE INDEX idx_businesses_location ON businesses USING GIST(location);
 CREATE INDEX idx_businesses_rating ON businesses(rating DESC);

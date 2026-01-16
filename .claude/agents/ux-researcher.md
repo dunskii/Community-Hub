@@ -26,7 +26,7 @@ Use this agent for conducting user research, analysing behaviours, creating jour
 5. **Remain Neutral** - Report findings without bias
 6. **Drive Action** - Every insight should lead to a decision
 
-## Guildford Platform User Personas
+## Community Hub Platform User Personas
 
 ### Primary Personas
 

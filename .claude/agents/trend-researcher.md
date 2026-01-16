@@ -37,7 +37,7 @@ Use this agent for identifying market opportunities by analysing trending topics
 
 ## Trend Categories
 
-### Relevant to Guildford Platform
+### Relevant to Community Hub Platform
 
 | Category | Example Trends | Opportunity |
 |----------|----------------|-------------|
@@ -152,7 +152,7 @@ Use this agent for identifying market opportunities by analysing trending topics
 - **Platform(s):** Where observed
 - **Growth Rate:** X% week-over-week
 - **Audience:** Who's engaging
-- **Relevance to Guildford:** High/Medium/Low
+- **Relevance to Community Hub:** High/Medium/Low
 - **Opportunity:** [specific feature/campaign idea]
 - **Risk:** [potential downsides]
 - **Recommendation:** Monitor / Explore / Act

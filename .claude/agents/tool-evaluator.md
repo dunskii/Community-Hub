@@ -18,7 +18,7 @@ Use this agent for rapid assessment of development tools, frameworks, and servic
 
 ## Evaluation Framework
 
-### Weighting (Guildford Platform)
+### Weighting (Community Hub Platform)
 | Factor | Weight | Rationale |
 |--------|--------|-----------|
 | Speed to Market | 40% | Need to launch quickly |
@@ -117,7 +117,7 @@ Use this agent for rapid assessment of development tools, frameworks, and servic
 - Major vendor lock-in
 - No clear pricing model
 
-## Tool Categories for Guildford Platform
+## Tool Categories for Community Hub Platform
 
 ### Frontend Frameworks
 | Tool | Status | Notes |

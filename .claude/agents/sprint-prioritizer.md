@@ -55,7 +55,7 @@ RICE Score = (Reach × Impact × Confidence) / Effort
 | **Could** | Nice to have |
 | **Won't** | Not this release |
 
-## Guildford Platform Phase Priorities
+## Community Hub Platform Phase Priorities
 
 ### Phase 1: Foundation (Must Have)
 - [ ] Project setup and infrastructure

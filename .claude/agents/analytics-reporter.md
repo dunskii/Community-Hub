@@ -16,7 +16,7 @@ Use this agent for data analysis, creating reports, building dashboards, and tra
 4. **Reporting** - Regular and ad-hoc reports for stakeholders
 5. **Insights** - Translate data into actionable recommendations
 
-## Key Metrics for Guildford Platform
+## Key Metrics for Community Hub Platform
 
 ### User Metrics
 | Metric | Description | Target |

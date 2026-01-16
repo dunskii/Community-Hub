@@ -36,7 +36,7 @@ Auto-triggers when experiments are running to monitor progress and flag issues.
 
 ## Experiment Types
 
-### For Guildford Platform
+### For Community Hub Platform
 | Type | Example | Goal |
 |------|---------|------|
 | Feature Test | New filter options | Adoption rate |

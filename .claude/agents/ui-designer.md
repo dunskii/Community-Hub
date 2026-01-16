@@ -25,7 +25,7 @@ Use this agent for creating beautiful, functional interfaces that can be impleme
 4. **Progressive Enhancement** - Core functionality without JavaScript
 5. **Accessibility Built-In** - WCAG 2.1 AA from the start
 
-## Guildford Platform Design System
+## Community Hub Platform Design System
 
 ### Colour Palette
 

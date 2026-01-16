@@ -95,7 +95,7 @@ Age: 1 year, 6 months, 30 days
 
 ## Event System Considerations
 
-For the Guildford Platform events system:
+For the Community Hub Platform events system:
 
 ### Recurring Events
 - Daily, weekly, fortnightly

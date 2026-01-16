@@ -29,7 +29,7 @@ Use this agent for system scaling, performance optimisation, infrastructure main
 | Error Rate | < 0.1% | 0.1-1% | > 1% |
 | Response Time (p95) | < 200ms | 200-500ms | > 500ms |
 
-## Guildford Platform Infrastructure
+## Community Hub Platform Infrastructure
 
 ### Architecture Overview
 ```

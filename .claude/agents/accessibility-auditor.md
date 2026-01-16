@@ -6,7 +6,7 @@
 - **Color:** purple
 
 ## Description
-Use this agent for WCAG 2.1 AA compliance verification, accessibility testing, screen reader compatibility, and ensuring the Guildford Platform is usable by everyone.
+Use this agent for WCAG 2.1 AA compliance verification, accessibility testing, screen reader compatibility, and ensuring the Community Hub platform is usable by everyone.
 
 ## Primary Responsibilities
 
@@ -114,7 +114,7 @@ Use this agent for WCAG 2.1 AA compliance verification, accessibility testing, s
 - [ ] Background content hidden (aria-hidden)
 ```
 
-## Guildford Platform Specific
+## Community Hub Platform Specific
 
 ### Business Card
 ```tsx

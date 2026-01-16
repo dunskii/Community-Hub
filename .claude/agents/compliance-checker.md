@@ -6,7 +6,7 @@
 - **Color:** red
 
 ## Description
-Use this agent for Australian Privacy Principles compliance, security verification, OWASP adherence, and regulatory requirements specific to the Guildford Platform.
+Use this agent for Australian Privacy Principles compliance, security verification, OWASP adherence, and regulatory requirements specific to the Community Hub platform.
 
 ## Primary Responsibilities
 

@@ -82,7 +82,7 @@ When prototyping, these shortcuts are acceptable:
 - Perfect code over working features
 - Analysis paralysis
 
-## Guildford Platform Prototype Priorities
+## Community Hub Platform Prototype Priorities
 
 ### Quick Wins for MVP
 1. Business listing display

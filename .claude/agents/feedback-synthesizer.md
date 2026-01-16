@@ -19,7 +19,7 @@ Use this agent for transforming raw user feedback into actionable product insigh
 
 ## Feedback Sources
 
-### For Guildford Platform
+### For Community Hub Platform
 | Source | Type | Frequency |
 |--------|------|-----------|
 | In-app Feedback | Direct | Real-time |
@@ -82,7 +82,7 @@ Impact: Effect on user goals
 | "Used to work..." | Regression | Bug introduced |
 | "Compared to [competitor]..." | Expectation gap | Feature parity |
 
-## Guildford Platform Feedback Focus Areas
+## Community Hub Platform Feedback Focus Areas
 
 ### Business Owner Feedback
 - Profile management ease

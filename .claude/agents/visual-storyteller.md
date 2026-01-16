@@ -57,7 +57,7 @@ Use this agent for transforming complex ideas into compelling visual narratives 
 | Geographic | Map, choropleth |
 | Hierarchy | Treemap, sunburst |
 
-### Guildford Platform Visualisations
+### Community Hub Platform Visualisations
 
 #### Business Analytics Dashboard
 ```

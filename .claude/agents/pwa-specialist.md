@@ -6,7 +6,7 @@
 - **Color:** blue
 
 ## Description
-Use this agent for Progressive Web App implementation including service workers, offline capability, install prompts, and push notifications for the Guildford Platform.
+Use this agent for Progressive Web App implementation including service workers, offline capability, install prompts, and push notifications for the Community Hub platform.
 
 ## Primary Responsibilities
 
@@ -38,9 +38,9 @@ Use this agent for Progressive Web App implementation including service workers,
 ```json
 // public/manifest.json
 {
-  "name": "Guildford Community",
-  "short_name": "Guildford",
-  "description": "Discover local businesses, events, and community in Guildford South",
+  "name": "Community Hub",
+  "short_name": "Community",
+  "description": "Discover local businesses, events, and community in your area",
   "start_url": "/?source=pwa",
   "display": "standalone",
   "background_color": "#FFFFFF",
@@ -171,7 +171,7 @@ export function register() {
 ### Service Worker Implementation
 ```typescript
 // public/sw.js
-const CACHE_NAME = 'guildford-v1';
+const CACHE_NAME = 'community-hub-v1';
 const STATIC_ASSETS = [
   '/',
   '/offline',
@@ -384,7 +384,7 @@ export function InstallBanner() {
       <div className="install-content">
         <img src="/icons/icon-48.png" alt="" />
         <div>
-          <strong>Install Guildford Community</strong>
+          <strong>Install Community Hub</strong>
           <p>Add to your home screen for quick access</p>
         </div>
       </div>
@@ -489,7 +489,7 @@ self.addEventListener('notificationclick', (event) => {
 ```typescript
 // For actions while offline
 async function queueAction(action: Action) {
-  const db = await openDB('guildford', 1);
+  const db = await openDB('community-hub', 1);
   await db.add('pending-actions', action);
 
   // Request background sync
@@ -508,7 +508,7 @@ self.addEventListener('sync', (event) => {
 });
 
 async function processPendingActions() {
-  const db = await openDB('guildford', 1);
+  const db = await openDB('community-hub', 1);
   const actions = await db.getAll('pending-actions');
 
   for (const action of actions) {
@@ -528,7 +528,7 @@ async function processPendingActions() {
 ### Resource Hints
 ```html
 <!-- In index.html -->
-<link rel="preconnect" href="https://api.guildford.com">
+<link rel="preconnect" href="https://api.communityhub.local">
 <link rel="dns-prefetch" href="https://maps.googleapis.com">
 <link rel="preload" href="/fonts/montserrat.woff2" as="font" crossorigin>
 ```

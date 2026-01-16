@@ -22,7 +22,7 @@ Use this agent for legal review, compliance verification, privacy policy assessm
 ### Overview
 The Privacy Act 1988 applies to organisations with annual turnover > $3M or handling health information. Best practice to comply regardless.
 
-### Key Principles for Guildford Platform
+### Key Principles for Community Hub Platform
 
 | Principle | Requirement | Implementation |
 |-----------|-------------|----------------|
@@ -52,7 +52,7 @@ The Privacy Act 1988 applies to organisations with annual turnover > $3M or hand
 10. Cookies and tracking disclosure
 ```
 
-### Guildford Platform Data Collection
+### Community Hub Platform Data Collection
 
 | Data Type | Purpose | Retention |
 |-----------|---------|-----------|

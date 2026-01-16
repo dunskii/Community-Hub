@@ -278,7 +278,7 @@ If we [change], then [metric] will improve by [amount]
 [After experiment]
 ```
 
-## Guildford Platform Workflow Recommendations
+## Community Hub Platform Workflow Recommendations
 
 ### Development Workflow
 1. **Spec Review** - AI agent summarises requirements

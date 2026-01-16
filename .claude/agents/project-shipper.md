@@ -268,7 +268,7 @@ const featureConfig = {
 - [ ] [Action for next launch]
 ```
 
-## Guildford Platform Launch Phases
+## Community Hub Platform Launch Phases
 
 ### Phase 1 Launch (Foundation)
 - Soft launch to limited users

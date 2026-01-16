@@ -45,7 +45,7 @@ Use this agent for writing comprehensive tests, maintaining test suites, and fix
 - Visual regression testing
 - Performance testing
 
-## Guildford Platform Testing Strategy
+## Community Hub Platform Testing Strategy
 
 ### Test Pyramid
 ```

@@ -6,7 +6,7 @@
 - **Color:** red
 
 ## Description
-Use this agent for designing and implementing the emergency and crisis communication system for the Guildford Platform, including alerts, business status updates, and community safety features.
+Use this agent for designing and implementing the emergency and crisis communication system for the Community Hub platform, including alerts, business status updates, and community safety features.
 
 ## Primary Responsibilities
 
@@ -205,9 +205,9 @@ async function fetchNSWAlerts(): Promise<ExternalAlert[]> {
 
   const alerts = await response.json();
 
-  // Filter for Guildford area
+  // Filter for configured area
   return alerts.filter(alert =>
-    isWithinGuildfordArea(alert.geometry)
+    isWithinConfiguredArea(alert.geometry)
   );
 }
 
@@ -229,7 +229,7 @@ async function fetchWeatherWarnings(): Promise<WeatherWarning[]> {
   const warnings = await response.json();
 
   return warnings
-    .filter(w => isRelevantToGuildford(w))
+    .filter(w => isRelevantToConfiguredArea(w))
     .map(w => transformToAlert(w));
 }
 ```

@@ -35,7 +35,7 @@ Use this agent for CI/CD pipelines, cloud infrastructure, monitoring, and deploy
 - AWS ECS/Fargate
 
 ### Cloud Providers
-- AWS (primary for Guildford)
+- AWS (primary for Community Hub)
 - Google Cloud Platform
 - Azure
 
@@ -45,7 +45,7 @@ Use this agent for CI/CD pipelines, cloud infrastructure, monitoring, and deploy
 - AWS CloudWatch
 - Sentry (errors)
 
-## Guildford Platform Infrastructure
+## Community Hub Platform Infrastructure
 
 ### Environment Strategy
 ```

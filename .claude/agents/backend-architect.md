@@ -25,7 +25,7 @@ Use this agent for designing APIs, building server-side logic, implementing data
 - Go, Java, Rust
 
 ### Databases
-- **Relational:** PostgreSQL (primary for Guildford)
+- **Relational:** PostgreSQL (primary for Community Hub)
 - **Search:** Elasticsearch
 - **Cache:** Redis
 - **Document:** MongoDB
@@ -77,7 +77,7 @@ DELETE /businesses/:id      Delete business
 }
 ```
 
-## Guildford Platform Backend Architecture
+## Community Hub Platform Backend Architecture
 
 ### Core Services
 ```
