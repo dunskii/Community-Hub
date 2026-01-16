@@ -1,15 +1,15 @@
-# Guildford Community Digital Platform
+# Community Hub Platform
 ## Development Roadmap
 
-**Document Version:** 1.0
+**Document Version:** 1.1
 **Date:** January 2026
-**Reference:** Guildford_Platform_Specification.md v1.1
+**Reference:** Community_Hub_Specification_v2.md
 
 ---
 
 ## Overview
 
-This roadmap outlines the development phases for the Guildford Community Digital Platform. The platform will be built incrementally, delivering value at each phase while building towards the complete feature set defined in the specification.
+This roadmap outlines the development phases for the Community Hub Platform. The platform will be built incrementally, delivering value at each phase while building towards the complete feature set defined in the specification.
 
 ### Development Principles
 

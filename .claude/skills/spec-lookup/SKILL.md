@@ -16,55 +16,55 @@ Docs/Community_Hub_Specification_v2.md
 
 ## Specification Structure (v2.0)
 
-The specification is organised into 7 parts with 31 sections plus appendices:
+The specification is organised into 8 parts with 31 sections plus appendices:
 
-### Part I: Foundation (Sections 1-5)
-- **Section 1:** Introduction
+### Part 1: Foundation & Architecture (Sections 1-5)
+- **Section 1:** Project Overview
 - **Section 2:** Platform Configuration Architecture (3-tier config system)
-- **Section 3:** Technical Architecture (stack, performance, scalability, accessibility)
+- **Section 3:** Technical Requirements (stack, performance, scalability)
 - **Section 4:** Security & Privacy (auth, encryption, APP compliance)
 - **Section 5:** Legal & Compliance
 
-### Part II: User Experience (Sections 6-9)
-- **Section 6:** User Roles & Permissions (6 roles, permissions matrix)
-- **Section 7:** UI Components & Design System (colours, typography, components)
+### Part 2: Design & User Experience (Sections 6-9)
+- **Section 6:** Design Specifications (colours, typography, components)
+- **Section 7:** UI States & Components
 - **Section 8:** Multilingual Support (10 languages, RTL)
-- **Section 9:** Onboarding Flows
+- **Section 9:** Onboarding & User Journeys
 
-### Part III: Business Features (Sections 10-14)
-- **Section 10:** Business Owner Features
+### Part 3: Users & Core Entities (Sections 10-13)
+- **Section 10:** User Types & Roles (6 roles, permissions matrix)
 - **Section 11:** Business Profile Features
-- **Section 12:** Reviews & Ratings
-- **Section 13:** Deals & Promotions Hub
-- **Section 14:** B2B Networking
+- **Section 12:** Community User Features
+- **Section 13:** Business Owner Features
 
-### Part IV: Community Features (Sections 15-19)
-- **Section 15:** Community User Features
-- **Section 16:** Events System
-- **Section 17:** Community Noticeboard
-- **Section 18:** Local History
-- **Section 19:** Groups & Forums
+### Part 4: Core Functionality (Sections 14-18)
+- **Section 14:** Search & Discovery
+- **Section 15:** Events & Calendar System
+- **Section 16:** Messaging & Communication System
+- **Section 17:** Deals & Promotions Hub
+- **Section 18:** Reviews & Ratings
 
-### Part V: Communication (Sections 20-22)
-- **Section 20:** Messaging System
-- **Section 21:** Notifications
-- **Section 22:** Social Media Integration
+### Part 5: Community & Social Features (Sections 19-22)
+- **Section 19:** Community Features (noticeboard, groups, history)
+- **Section 20:** Social Media Integration
+- **Section 21:** Business-to-Business Networking
+- **Section 22:** Emergency & Crisis Communication
 
-### Part VI: Safety & Emergency (Sections 23-25)
-- **Section 23:** Emergency System
-- **Section 24:** Content Moderation
-- **Section 25:** Reporting & Safety
+### Part 6: Administration & Operations (Sections 23-26)
+- **Section 23:** Administration & Moderation
+- **Section 24:** Content Policies
+- **Section 25:** Analytics & Reporting
+- **Section 26:** Integration Requirements
 
-### Part VII: Administration (Sections 26-31)
-- **Section 26:** Admin Dashboard
-- **Section 27:** Analytics & Reporting
-- **Section 28:** Search & Discovery
-- **Section 29:** Integration Requirements
-- **Section 30:** Testing Strategy
-- **Section 31:** Deployment & DevOps
+### Part 7: Technical Operations (Sections 27-31)
+- **Section 27:** Error Handling
+- **Section 28:** Data Management
+- **Section 29:** Technical Operations
+- **Section 30:** Testing & Quality Requirements
+- **Section 31:** Operational Procedures
 
-### Appendices
-- **Appendix A:** Data Models (22 entity definitions with fields)
+### Part 8: Appendices
+- **Appendix A:** Data Models (all entity definitions with fields)
 - **Appendix B:** API Endpoints (all REST endpoints with methods)
 - **Appendix C:** Glossary
 
@@ -88,11 +88,11 @@ When asked about the specification:
 - "How do I implement the deals API?" → Read Appendix B, search for `/deals/`
 
 ### Feature Requirements
-- "How should the review system work?" → Read Section 12
-- "What are the flash deal rules?" → Read Section 13.2
+- "How should the review system work?" → Read Section 18
+- "What are the flash deal rules?" → Read Section 17.2
 
 ### Design Specifications
-- "What colours should I use?" → Read Section 7.1
+- "What colours should I use?" → Read Section 6.1
 - "What are the accessibility requirements?" → Read Section 3.6
 
 ### Configuration
