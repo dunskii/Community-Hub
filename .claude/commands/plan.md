@@ -11,7 +11,7 @@ Generate a comprehensive implementation plan for "$1".
 **Use the Plan agent** to create a detailed plan by:
 
 1. **Analyze Task Requirements:**
-   - Review `Docs/Community_Hub_Platform_Specification.md` for requirements
+   - Review `Docs/Community_Hub_Specification_v2.md` for requirements
    - Identify the relevant specification section(s)
    - Review CLAUDE.md guidelines and configuration requirements
    - Identify dependencies and prerequisites

@@ -67,7 +67,7 @@ enum BusinessStatus {
 }
 ```
 
-### User Model (from Spec §7, Appendix A)
+### User Model (from Spec §6, Appendix A)
 
 ```prisma
 model User {
@@ -128,7 +128,7 @@ enum UserStatus {
 }
 ```
 
-### Review Model (from Spec §9.3, Appendix A)
+### Review Model (from Spec §12, Appendix A)
 
 ```prisma
 model Review {
@@ -173,7 +173,7 @@ enum ReviewStatus {
 }
 ```
 
-### Event Model (from Spec §12, Appendix A)
+### Event Model (from Spec §16, Appendix A)
 
 ```prisma
 model Event {
@@ -244,7 +244,7 @@ enum EventStatus {
 }
 ```
 
-### Deal Model (from Spec §14, Appendix A)
+### Deal Model (from Spec §13, Appendix A)
 
 ```prisma
 model Deal {

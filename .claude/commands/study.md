@@ -11,7 +11,7 @@ I need to thoroughly understand "$1" in the Community Hub platform before starti
 **Use the Explore agent with "very thorough" setting** to comprehensively research "$1" by searching:
 
 1. **Primary Specification:**
-   - `Docs/Community_Hub_Platform_Specification.md` - the authoritative source (~3000 lines)
+   - `Docs/Community_Hub_Specification_v2.md` - the authoritative source (~4000 lines)
    - Search for the relevant section(s) covering "$1"
    - Note the section number(s) for future reference
 

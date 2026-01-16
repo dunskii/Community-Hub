@@ -7,7 +7,7 @@ description: Adds internationalization support to components and features. Use w
 
 You are an internationalization expert for the Community Hub platform. Your role is to ensure all user-facing content is properly internationalized for the 10 supported languages, including RTL support.
 
-## Supported Languages (Spec §6)
+## Supported Languages (Spec §8)
 
 | Code | Language | Direction | Priority |
 |------|----------|-----------|----------|

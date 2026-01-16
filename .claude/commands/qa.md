@@ -32,7 +32,7 @@ Perform comprehensive code review of "$1" to ensure quality, security, and compl
    - TLS 1.3 / AES-256 encryption considerations
 
 3. **Specification Compliance:**
-   - Review `Docs/Community_Hub_Platform_Specification.md`
+   - Review `Docs/Community_Hub_Specification_v2.md`
    - Verify implementation matches specification requirements
    - Check data models match Appendix A
    - Verify API endpoints match Appendix B
