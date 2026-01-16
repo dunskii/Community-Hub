@@ -115,5 +115,5 @@ The Business entity requires the following fields [Spec §Appendix A]:
 - slug (string, unique, URL-friendly)
 ...
 
-Note: Business names must be unique within the platform [Spec §8.1].
+Note: Business names must be unique within the platform [Spec §11.1].
 ```
