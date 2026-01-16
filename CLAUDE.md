@@ -12,9 +12,9 @@ This is **Community Hub** - a location-agnostic Digital Community Improvement Hu
 
 **Current Status:** Specification phase - the detailed specification is complete but source code has not yet been written.
 
-**Primary Reference:** `Docs/Community_Hub_Platform_Specification.md` (~3000 lines) - this is the authoritative source for all functional requirements, data models, API endpoints, and design specifications.
+**Primary Reference:** `Docs/Community_Hub_Specification_v2.md` - this is the authoritative source for all functional requirements, data models, API endpoints, and design specifications.
 
-**Specification Version:** 1.3 (January 2026)
+**Specification Version:** 2.0 (January 2026)
 
 ## Location-Agnostic Architecture
 
@@ -26,44 +26,58 @@ This is **Community Hub** - a location-agnostic Digital Community Improvement Hu
 
 When implementing features, always reference configuration values rather than hardcoding suburb names, coordinates, or other location-specific data.
 
-## Specification Document Structure
+## Specification Document Structure (v2.0)
 
-The specification is organised for development workflow:
+The specification is organised into 7 parts plus appendices:
 
-### Foundation & Architecture (Sections 1-6)
+### Part 1: Foundation & Architecture (Sections 1-5)
 - **Section 1:** Project Overview
 - **Section 2:** Platform Configuration Architecture (location-agnostic config)
-- **Section 3:** Technical Requirements (stack, performance, scalability)
+- **Section 3:** Technical Requirements (stack, performance, scalability, accessibility)
 - **Section 4:** Security & Privacy
-- **Section 5:** Design Specifications (colours, typography, components)
-- **Section 6:** Multilingual Support (10 languages, RTL)
+- **Section 5:** Legal & Compliance (Terms, Privacy Policy, Cookie Consent)
 
-### Users & Core Entities (Sections 7-10)
-- **Section 7:** User Types & Roles
-- **Section 8:** Business Profile Features
-- **Section 9:** Community User Features
-- **Section 10:** Business Owner Features
+### Part 2: Design & User Experience (Sections 6-9)
+- **Section 6:** Design Specifications (colours, typography, components)
+- **Section 7:** UI States & Components (loading, empty, error states)
+- **Section 8:** Multilingual Support (10 languages, RTL)
+- **Section 9:** Onboarding & User Journeys
 
-### Core Functionality (Sections 11-14)
-- **Section 11:** Search & Discovery
-- **Section 12:** Events & Calendar System
-- **Section 13:** Messaging & Communication System
-- **Section 14:** Deals & Promotions Hub
+### Part 3: Users & Core Entities (Sections 10-13)
+- **Section 10:** User Types & Roles
+- **Section 11:** Business Profile Features
+- **Section 12:** Community User Features
+- **Section 13:** Business Owner Features
 
-### Community & Social Features (Sections 15-18)
-- **Section 15:** Community Features (noticeboard, groups, history)
-- **Section 16:** Social Media Integration
-- **Section 17:** Business-to-Business Networking
-- **Section 18:** Emergency & Crisis Communication
+### Part 4: Core Functionality (Sections 14-18)
+- **Section 14:** Search & Discovery
+- **Section 15:** Events & Calendar System
+- **Section 16:** Messaging & Communication System
+- **Section 17:** Deals & Promotions Hub
+- **Section 18:** Reviews & Ratings
 
-### Administration & Operations (Sections 19-21)
-- **Section 19:** Administration & Moderation
-- **Section 20:** Analytics & Reporting
-- **Section 21:** Integration Requirements
+### Part 5: Community & Social Features (Sections 19-22)
+- **Section 19:** Community Features (noticeboard, groups, history)
+- **Section 20:** Social Media Integration
+- **Section 21:** Business-to-Business Networking
+- **Section 22:** Emergency & Crisis Communication
+
+### Part 6: Administration & Operations (Sections 23-26)
+- **Section 23:** Administration & Moderation
+- **Section 24:** Content Policies
+- **Section 25:** Analytics & Reporting
+- **Section 26:** Integration Requirements
+
+### Part 7: Technical Operations (Sections 27-31)
+- **Section 27:** Error Handling
+- **Section 28:** Data Management
+- **Section 29:** Technical Operations
+- **Section 30:** Testing & Quality Requirements
+- **Section 31:** Operational Procedures
 
 ### Appendices
-- **Appendix A:** Data Models
-- **Appendix B:** API Endpoints
+- **Appendix A:** Data Models (22 complete models)
+- **Appendix B:** API Endpoints (130+ endpoints)
 - **Appendix C:** Glossary
 
 ## Key Technical Decisions (from Specification)

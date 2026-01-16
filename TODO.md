@@ -33,6 +33,7 @@
 - [ ] Set up testing framework (Jest/Vitest)
 
 #### Configuration Architecture [Spec §2]
+> Note: Legal & Compliance requirements are in §5
 - [ ] Create `.env.example` template with all required variables
 - [ ] Implement `config/platform.json` schema and loader
 - [ ] Implement environment-specific config overrides (dev/staging/prod)
@@ -71,7 +72,7 @@
 - [ ] Set up AES-256 encryption for sensitive data at rest
 - [ ] Implement CSRF protection
 
-#### i18n Foundation [Spec §7]
+#### i18n Foundation [Spec §8]
 - [ ] Implement translation file structure (JSON per language)
 - [ ] Set up language detection (browser, user preference, URL)
 - [ ] Implement language switching UI component
@@ -83,7 +84,7 @@
 
 ## Phase 2: Authentication & User System
 
-### 2.1 Authentication [Spec §4, §11, Appendix B]
+### 2.1 Authentication [Spec §4, §12, Appendix B]
 
 #### Core Auth Endpoints
 - [ ] POST /auth/register - User registration
@@ -109,7 +110,7 @@
 - [ ] Facebook OAuth integration
 - [ ] Two-factor authentication (TOTP) - optional
 
-### 2.2 User System [Spec §10, §11, Appendix A]
+### 2.2 User System [Spec §10, §12, Appendix A]
 
 #### User Model
 - [ ] User entity with all fields (id, email, password_hash, display_name, etc.)
@@ -117,7 +118,7 @@
 - [ ] User preferences (language, notifications, interests)
 - [ ] User status tracking (active, suspended, deleted)
 
-#### Role System & Permissions [Spec §10.2]
+#### Role System & Permissions [Spec §10.1-10.2]
 - [ ] Permission matrix implementation
 - [ ] Role-based access control middleware
 - [ ] Guest user capabilities (browse, search, view)
@@ -127,7 +128,7 @@
 - [ ] Administrator permissions (full platform access)
 - [ ] Super Admin permissions (multi-platform, system config)
 
-#### User Profile Features [Spec §11.2]
+#### User Profile Features [Spec §12.2]
 - [ ] Display name editing
 - [ ] Profile photo upload with cropping
 - [ ] Bio field (500 chars max)
@@ -136,10 +137,10 @@
 - [ ] Interest categories selection
 - [ ] Password change flow
 - [ ] Email change with re-verification
-- [ ] Active sessions management (view/revoke) [Spec §11.3]
-- [ ] Account deletion flow (14-day grace period) [Spec §26.4]
+- [ ] Active sessions management (view/revoke) [Spec §12.5]
+- [ ] Account deletion flow (14-day grace period) [Spec §12.5, §5.2.2]
 
-#### Notification Preferences [Spec §11.4]
+#### Notification Preferences [Spec §12.3]
 - [ ] Email notification toggles
 - [ ] Push notification toggles
 - [ ] SMS notification toggles (if enabled)
@@ -151,6 +152,7 @@
 ## Phase 3: Design System & Core Components
 
 ### 3.1 Design System [Spec §6]
+> Note: UI States & Components are covered in §7
 
 #### Colour System
 - [ ] CSS custom properties from platform.json colours
@@ -169,7 +171,7 @@
 - [ ] Line height utilities
 - [ ] Responsive typography
 
-### 3.2 Core UI Components [Spec §8]
+### 3.2 Core UI Components [Spec §7]
 
 #### Layout Components
 - [ ] Header component (sticky, logo, language selector, nav, CTA button)
@@ -179,7 +181,7 @@
 - [ ] Sidebar component
 - [ ] Grid system (12-column)
 
-#### Form Components [Spec §8.1]
+#### Form Components [Spec §7.1]
 - [ ] Button component (Primary, Secondary, Tertiary, Disabled states)
 - [ ] Input field component with validation states
 - [ ] Textarea component
@@ -192,7 +194,7 @@
 - [ ] File upload component
 - [ ] Form validation error display
 
-#### Display Components [Spec §8.2-8.5]
+#### Display Components [Spec §7.2-7.5]
 - [ ] Card component (8px radius, shadow, hover state)
 - [ ] Modal/dialog component
 - [ ] Toast/notification component
@@ -209,7 +211,7 @@
 - [ ] Carousel/slider component
 - [ ] Image gallery component
 
-### 3.3 Accessibility [Spec §9]
+### 3.3 Accessibility [Spec §3.6]
 - [ ] Skip to main content link
 - [ ] Visible focus indicators (2px solid)
 - [ ] Screen reader announcements (aria-live regions)
@@ -224,7 +226,7 @@
 
 ## Phase 4: Business Directory Core
 
-### 4.1 Business Data [Spec §12, Appendix A]
+### 4.1 Business Data [Spec §11, Appendix A]
 
 #### Data Models
 - [ ] Business entity (all fields from spec)
@@ -254,7 +256,7 @@
 - [ ] Results count display
 - [ ] No results state [Spec §8.3]
 
-### 4.3 Business Profile Page [Spec §12]
+### 4.3 Business Profile Page [Spec §11]
 - [ ] Cover photo display (1200x400px)
 - [ ] Logo display (400x400px)
 - [ ] Business name and tagline
@@ -292,7 +294,7 @@
 - [ ] Swipe navigation (mobile)
 - [ ] Photo categories (interior, exterior, products, menu)
 
-### 4.4 SEO & Metadata [Spec §14.5]
+### 4.4 SEO & Metadata [Spec §2.4 (seo config)]
 - [ ] Dynamic meta title and description
 - [ ] Schema.org LocalBusiness structured data
 - [ ] Open Graph tags for social sharing
@@ -372,7 +374,7 @@
 
 ## Phase 6: User Engagement Features
 
-### 6.1 Saved Businesses & Following [Spec §11.3]
+### 6.1 Saved Businesses & Following [Spec §12.4]
 
 #### Data Models
 - [ ] SavedBusiness model (user_id, business_id, list_id, saved_at)
@@ -429,7 +431,7 @@
 - [ ] One response per review limit
 - [ ] Response edit capability
 
-#### Moderation [Spec §26.1-26.2]
+#### Moderation [Spec §23.4, §24.1]
 - [ ] Review submission to moderation queue
 - [ ] Profanity filtering
 - [ ] Spam detection
@@ -440,7 +442,7 @@
 
 ## Phase 7: Business Owner Features
 
-### 7.1 Business Claim & Verification [Spec §13.1]
+### 7.1 Business Claim & Verification [Spec §13.1, §24.3]
 
 #### Claim Flow
 - [ ] "Claim This Business" button on unclaimed profiles
@@ -1078,7 +1080,7 @@
 - [ ] Moderation log (audit trail)
 - [ ] Reports/flags queue
 - [ ] Content removal with reason
-- [ ] Appeal handling workflow [Spec §26.5]
+- [ ] Appeal handling workflow [Spec §24.4]
 
 ### 15.5 Platform Analytics [Spec §24]
 - [ ] Platform-wide metrics dashboard
@@ -1118,7 +1120,7 @@
 
 ## Phase 16: External Integrations
 
-### 16.1 Google Business Profile API [Spec §25.1]
+### 16.1 Google Business Profile API [Spec §26.1]
 - [ ] OAuth 2.0 implementation
 - [ ] Business data import
 - [ ] Hours synchronisation
@@ -1129,7 +1131,7 @@
 - [ ] Conflict resolution (platform vs Google)
 - [ ] Manual override flags
 
-### 16.2 Facebook & Instagram APIs [Spec §25.2]
+### 16.2 Facebook & Instagram APIs [Spec §26.2]
 - [ ] Facebook OAuth implementation
 - [ ] Instagram Basic Display API setup
 - [ ] Page information import
@@ -1139,7 +1141,7 @@
 - [ ] Rate limiting handling
 - [ ] Token refresh automation
 
-### 16.3 Email Service [Spec §25.3]
+### 16.3 Email Service [Spec §26.3]
 - [ ] SendGrid/Mailgun provider setup
 - [ ] Email template system
 - [ ] Template management in admin
@@ -1162,7 +1164,7 @@
 - [ ] Emergency alerts
 - [ ] Newsletter template
 
-### 16.4 Maps Integration [Spec §25.4]
+### 16.4 Maps Integration [Spec §26.4]
 - [ ] Google Maps API or OpenStreetMap setup
 - [ ] Map component for business locations
 - [ ] Multiple business map view
@@ -1173,7 +1175,7 @@
 - [ ] Distance calculation
 - [ ] Boundary polygon display
 
-### 16.5 Translation API [Spec §25.5]
+### 16.5 Translation API [Spec §8.3]
 - [ ] Google Translate API integration
 - [ ] On-demand translation for user content
 - [ ] Translation caching
@@ -1181,7 +1183,7 @@
 - [ ] Language detection
 - [ ] Batch translation for performance
 
-### 16.6 SMS Integration [Spec §28.1]
+### 16.6 SMS Integration [Spec §26.5]
 - [ ] Twilio or similar provider setup
 - [ ] SMS template system
 - [ ] Verification PIN messages
@@ -1189,7 +1191,7 @@
 - [ ] Event reminders
 - [ ] Rate limiting (max 1 per 5 minutes)
 
-### 16.7 Push Notifications (Firebase) [Spec §28.2]
+### 16.7 Push Notifications (Firebase) [Spec §26.6]
 - [ ] Firebase Cloud Messaging setup
 - [ ] Notification payload structure
 - [ ] Notification types configuration
@@ -1238,7 +1240,7 @@
 
 ## Phase 18: Multilingual Expansion
 
-### 18.1 UI Translation [Spec §7]
+### 18.1 UI Translation [Spec §8]
 
 #### High Priority Languages
 - [ ] English (en) - Primary (complete)
@@ -1256,7 +1258,7 @@
 - [ ] Greek (el)
 - [ ] Italian (it)
 
-### 18.2 RTL Support [Spec §7.3]
+### 18.2 RTL Support [Spec §8.4]
 - [ ] RTL stylesheet generation
 - [ ] Arabic layout testing and fixes
 - [ ] Urdu layout testing and fixes
@@ -1288,6 +1290,18 @@
 - [ ] Mobile device testing [Spec §30.3]
 - [ ] RTL layout testing
 - [ ] Load testing scenarios [Spec §30.4]
+
+### Legal & Compliance [Spec §5]
+- [ ] Terms of Service document (all required sections) [Spec §5.1]
+- [ ] Privacy Policy (APP compliant) [Spec §5.2]
+- [ ] Cookie consent flow implementation [Spec §5.3]
+- [ ] Content licensing terms [Spec §5.4]
+- [ ] Dispute resolution process [Spec §5.5]
+
+### Onboarding Flows [Spec §9]
+- [ ] First-time user experience flow [Spec §9.1]
+- [ ] Business owner onboarding wizard [Spec §9.2]
+- [ ] QR code registration flow [Spec §9.3]
 
 ### Documentation
 - [ ] API documentation (OpenAPI/Swagger)

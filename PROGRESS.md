@@ -2,7 +2,7 @@
 
 **Specification Version:** 2.0
 **Project Start:** January 2026
-**Last Updated:** 15 January 2026
+**Last Updated:** 16 January 2026
 **Current Phase:** Pre-Development (Planning Complete)
 
 ---
@@ -29,9 +29,9 @@
 | Phase 16: External Integrations | Not Started | 40 | 0% |
 | Phase 17: PWA & Performance | Not Started | 23 | 0% |
 | Phase 18: Multilingual Expansion | Not Started | 16 | 0% |
-| Ongoing: Testing, Docs, Maintenance | Not Started | 26 | 0% |
+| Ongoing: Testing, Docs, Maintenance | Not Started | 34 | 0% |
 
-**Overall Project Progress: 0% (0/636 tasks)**
+**Overall Project Progress: 0% (0/644 tasks)**
 
 ---
 
@@ -95,7 +95,7 @@
 ### Phase 1: Foundation & Core Infrastructure
 **Status:** Not Started
 **Progress:** 0/47 tasks (0%)
-**Spec Sections:** §2 (Config), §3 (Technical), §4 (Security), §7 (i18n), §27 (Logging)
+**Spec Sections:** §2 (Config), §3 (Technical), §4 (Security), §5 (Legal), §8 (i18n), §29 (Tech Ops)
 
 #### Subsections
 | Section | Tasks | Complete | Progress |
@@ -126,7 +126,7 @@ _None yet_
 ### Phase 2: Authentication & User System
 **Status:** Not Started (Blocked by Phase 1)
 **Progress:** 0/33 tasks (0%)
-**Spec Sections:** §4 (Security/Auth), §10 (User Types), §11 (Community User)
+**Spec Sections:** §4 (Security/Auth), §9 (Onboarding), §10 (User Types), §12 (Community User)
 
 #### Dependencies
 - Requires: Phase 1 backend infrastructure
@@ -142,7 +142,7 @@ _None yet_
 ### Phase 3: Design System & Core Components
 **Status:** Not Started (Can run parallel to Phase 2)
 **Progress:** 0/40 tasks (0%)
-**Spec Sections:** §6 (Design), §8 (UI Components), §9 (Accessibility)
+**Spec Sections:** §6 (Design), §7 (UI Components), §3.6 (Accessibility)
 
 #### Dependencies
 - Requires: Phase 1 frontend infrastructure
@@ -157,7 +157,7 @@ _None yet_
 ### Phase 4: Business Directory Core
 **Status:** Not Started (Blocked by Phases 1-3)
 **Progress:** 0/39 tasks (0%)
-**Spec Sections:** §12 (Business Profile), Appendix A & B
+**Spec Sections:** §11 (Business Profile), Appendix A & B
 
 #### Dependencies
 - Requires: Phase 1 complete
@@ -189,7 +189,7 @@ _None yet_
 ### Phase 6: User Engagement Features
 **Status:** Not Started (Blocked by Phases 2, 4)
 **Progress:** 0/35 tasks (0%)
-**Spec Sections:** §11.3 (User Features), §18 (Reviews)
+**Spec Sections:** §12.4 (User Features), §18 (Reviews)
 
 #### Dependencies
 - Requires: Phase 2 user system
@@ -307,7 +307,7 @@ _None yet_
 ### Phase 14: Emergency & Crisis Communication
 **Status:** Not Started (Blocked by Phase 1)
 **Progress:** 0/33 tasks (0%)
-**Spec Sections:** §22 (Emergency), §28.5 (External Alerts)
+**Spec Sections:** §22 (Emergency), §26.9 (External Alerts)
 
 #### Dependencies
 - Requires: Phase 1 foundation
@@ -337,7 +337,7 @@ _None yet_
 ### Phase 16: External Integrations
 **Status:** Not Started (Blocked by Phase 4)
 **Progress:** 0/40 tasks (0%)
-**Spec Sections:** §25 (Integrations), §28 (SMS/Push)
+**Spec Sections:** §26 (Integrations)
 
 #### Dependencies
 - Requires: Phase 4 business profiles
@@ -367,7 +367,7 @@ _None yet_
 ### Phase 18: Multilingual Expansion
 **Status:** Not Started (Blocked by Phase 1)
 **Progress:** 0/16 tasks (0%)
-**Spec Sections:** §7 (Multilingual)
+**Spec Sections:** §8 (Multilingual)
 
 #### Dependencies
 - Requires: Phase 1 i18n foundation
@@ -481,6 +481,18 @@ Phase 1 (Foundation)
 ---
 
 ## Changelog
+
+### 16 January 2026
+- Aligned all spec section references with v2.0 structure
+- Updated i18n references from §7 to §8
+- Updated UI Components references from §8 to §7
+- Updated Accessibility references from §9 to §3.6
+- Updated Business Profile references from §12 to §11
+- Updated Community User references from §11 to §12
+- Updated Integration references from §25/§28 to §26
+- Added missing Legal & Compliance tasks (§5)
+- Added missing Onboarding Flows tasks (§9)
+- Updated task count from 636 to 644
 
 ### 15 January 2026
 - Updated TODO.md and PROGRESS.md to reference specification v2.0
