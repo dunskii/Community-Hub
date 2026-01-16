@@ -731,7 +731,7 @@ This roadmap outlines the development phases for the Community Hub Platform. The
   - Looking for (partnerships, suppliers, cross-promotion, referrals, mentorship)
   - Can offer (same categories)
   - Business size
-  - Years in Guildford
+  - Years in community (from config)
   - Industry connections
 
 ### 9.2 B2B Directory & Connections
@@ -954,12 +954,12 @@ This roadmap outlines the development phases for the Community Hub Platform. The
 
 ## Phase 11: Social Media Integration
 
-### 11.1 #MyGuildford Community Feed
+### 11.1 Community Feed (Hashtag Integration)
 
 **Objective:** Aggregate community social content.
 
 #### Features
-- [ ] Hashtag aggregation (#MyGuildford, #Guildford, #GuildfordNSW, etc.)
+- [ ] Hashtag aggregation (configurable per deployment, e.g., #MyCommunity, #LocalArea)
 - [ ] Masonry/Pinterest-style grid layout
 - [ ] Multi-platform support (Instagram, Facebook, X)
 - [ ] Content filtering:
