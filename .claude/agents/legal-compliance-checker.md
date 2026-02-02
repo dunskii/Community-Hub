@@ -187,9 +187,9 @@ Cookie Categories:
 | Vendor | Data Shared | DPA Required |
 |--------|-------------|--------------|
 | DigitalOcean | All data (Droplet hosting, self-managed) | Yes |
-| SendGrid | Email addresses | Yes |
+| Mailgun | Email addresses | Yes |
 | Twilio | Phone numbers | Yes |
-| Google Maps | Location queries | Review TOS |
+| Mapbox | Location queries, map tiles | Review TOS |
 | Analytics | Usage data | Yes |
 
 ### Data Processing Agreements

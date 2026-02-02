@@ -80,7 +80,7 @@ Use this agent for identifying market opportunities by analysing trending topics
 │  - Event platforms                               │
 ├─────────────────────────────────────────────────┤
 │                Indirect Competitors              │
-│  - Google Maps / Apple Maps                     │
+│  - Mapbox / Apple Maps                           │
 │  - Facebook Groups                               │
 │  - Yelp / TripAdvisor                           │
 │  - Meetup                                       │

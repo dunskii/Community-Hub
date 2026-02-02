@@ -21,7 +21,7 @@ Use this agent for retrieving information from external knowledge sources includ
 ### Technical Documentation
 - Framework docs (React, Vue, Node.js)
 - Library references (PostgreSQL, Elasticsearch, Redis)
-- API documentation (Google Maps, SendGrid, Twilio)
+- API documentation (Mapbox, Mailgun, Twilio)
 - Standards (WCAG, OWASP, OAuth)
 
 ### Web Sources
@@ -34,7 +34,7 @@ Use this agent for retrieving information from external knowledge sources includ
 
 | Type | Approach | Example |
 |------|----------|---------|
-| API Reference | Fetch official docs | "Google Maps Places API parameters" |
+| API Reference | Fetch official docs | "Mapbox Geocoding API parameters" |
 | How-To | Web search + docs | "Implement JWT refresh tokens in Node.js" |
 | Best Practice | Multiple sources | "PostgreSQL indexing strategies for search" |
 | Troubleshooting | Stack Overflow + issues | "Elasticsearch query timeout solutions" |
@@ -93,10 +93,10 @@ Based on project requirements:
 
 ### APIs to Research
 - Google Business Profile API
-- Google Maps / Places API
+- Mapbox GL JS / Geocoding API
 - Facebook Graph API
 - Instagram Basic Display API
-- SendGrid / Mailgun Email API
+- Mailgun Email API
 - Twilio SMS API
 - NSW Government Alert APIs
 

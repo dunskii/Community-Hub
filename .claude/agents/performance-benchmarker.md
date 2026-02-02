@@ -118,7 +118,7 @@ Use this agent for comprehensive performance testing, profiling, and optimisatio
 ### Medium Effort (Days)
 - [ ] Implement code splitting
 - [ ] Add database indexes
-- [ ] Configure CDN
+- [ ] Configure Cloudflare CDN caching
 - [ ] Implement API caching
 - [ ] Optimise critical rendering path
 
@@ -183,7 +183,7 @@ CREATE INDEX idx_reviews_business ON reviews(business_id);
 ┌─────────────────────────────────────────┐
 │ Browser Cache (static assets)           │
 ├─────────────────────────────────────────┤
-│ CDN Cache (static + API responses)      │
+│ Cloudflare CDN (static + API responses) │
 ├─────────────────────────────────────────┤
 │ Application Cache (Redis)               │
 ├─────────────────────────────────────────┤
@@ -195,7 +195,7 @@ CREATE INDEX idx_reviews_business ON reviews(business_id);
 | Cache Layer | Target |
 |-------------|--------|
 | Browser | > 90% for static |
-| CDN | > 80% for cacheable |
+| Cloudflare CDN | > 80% for cacheable |
 | Application | > 70% for common queries |
 
 ## Performance Report Template

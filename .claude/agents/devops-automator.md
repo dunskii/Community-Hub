@@ -115,9 +115,9 @@ jobs:
 | Search | Elasticsearch (self-hosted on Droplet) | Full-text search |
 | Cache | Redis (self-hosted on Droplet) | Session and data caching |
 | Storage | Local disk on Droplet | Media file storage |
-| CDN | DigitalOcean CDN or Cloudflare | Static asset delivery |
-| DNS | DigitalOcean DNS or Cloudflare | Domain management |
-| Email | SendGrid | Transactional email |
+| CDN | Cloudflare (confirmed) | Static asset delivery, DDoS protection |
+| DNS | Cloudflare (confirmed) | Domain management, SSL edge certificates |
+| Email | Mailgun | Transactional email |
 | SMS | Twilio | Emergency alerts |
 
 ### Security Configuration
@@ -188,7 +188,7 @@ X-XSS-Protection: 1; mode=block
 - Vertical scaling (resize Droplets) as demand grows
 - Horizontal scaling via additional Droplets behind load balancer
 - Disk cleanup policies for old media
-- CDN caching to reduce origin requests
+- Cloudflare CDN caching to reduce origin requests
 
 ## Philosophy
 

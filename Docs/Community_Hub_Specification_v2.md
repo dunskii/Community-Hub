@@ -137,13 +137,14 @@ The platform uses a three-tier configuration system:
 
 | Variable | Description | Required |
 |----------|-------------|----------|
-| `GOOGLE_MAPS_API_KEY` | Google Maps integration | Yes |
+| `MAPBOX_ACCESS_TOKEN` | Mapbox maps integration | Yes |
 | `GOOGLE_TRANSLATE_API_KEY` | Auto-translation service | Yes |
 | `GOOGLE_OAUTH_CLIENT_ID` | Google sign-in | Yes |
 | `GOOGLE_OAUTH_CLIENT_SECRET` | Google sign-in | Yes |
 | `FACEBOOK_APP_ID` | Facebook integration | Optional |
 | `FACEBOOK_APP_SECRET` | Facebook integration | Optional |
-| `SENDGRID_API_KEY` | Email delivery | Yes |
+| `MAILGUN_API_KEY` | Email delivery | Yes |
+| `MAILGUN_DOMAIN` | Mailgun sending domain | Yes |
 | `TWILIO_ACCOUNT_SID` | SMS alerts | Optional |
 | `TWILIO_AUTH_TOKEN` | SMS alerts | Optional |
 | `TWILIO_PHONE_NUMBER` | SMS sender number | Optional |
@@ -171,10 +172,12 @@ The platform uses a three-tier configuration system:
 | `FIREBASE_PRIVATE_KEY` | Firebase service account private key | Yes (for push) |
 | `FIREBASE_CLIENT_EMAIL` | Firebase service account email | Yes (for push) |
 
-#### CDN Configuration
+#### Cloudflare Configuration
 
 | Variable | Description | Example |
 |----------|-------------|---------|
+| `CLOUDFLARE_ZONE_ID` | Cloudflare zone identifier | Zone ID from dashboard |
+| `CLOUDFLARE_API_TOKEN` | Cloudflare API token (cache purge, DNS) | Yes |
 | `CDN_URL` | CDN base URL for static assets | `https://cdn.example.com` |
 | `CDN_ENABLED` | Enable CDN for media delivery | `true`, `false` |
 
@@ -470,10 +473,15 @@ When deploying the platform to a new suburb, follow this checklist:
 - [ ] Set initial system settings
 - [ ] Create admin user accounts
 
-#### 5. DNS & SSL
-- [ ] Configure domain name
-- [ ] Set up SSL certificate
-- [ ] Configure CDN if applicable
+#### 5. Cloudflare, DNS & SSL
+- [ ] Add domain to Cloudflare and update registrar nameservers
+- [ ] Configure DNS records (A record to Droplet IP, CNAME for www)
+- [ ] Enable Cloudflare SSL/TLS (Full Strict mode) with edge certificates
+- [ ] Generate Cloudflare Origin Certificate and install on Nginx
+- [ ] Configure Cloudflare caching rules (static assets, media)
+- [ ] Enable Cloudflare WAF and DDoS protection
+- [ ] Set up Cloudflare Page Rules (force HTTPS, cache levels)
+- [ ] Configure Cloudflare API token for cache purge integration
 
 #### 6. Testing
 - [ ] Verify all location references display correctly
@@ -571,7 +579,7 @@ The application should validate configuration on startup:
 | API Architecture | RESTful API or GraphQL |
 | Authentication | JWT-based authentication |
 | Database | Relational (PostgreSQL) + Search (Elasticsearch) |
-| File Storage | Local disk storage on DigitalOcean Droplets (with CDN for delivery) |
+| File Storage | Local disk storage on DigitalOcean Droplets (with Cloudflare CDN for delivery) |
 | Caching | Redis for session and data caching |
 
 ### 3.2 Performance Requirements
@@ -2556,7 +2564,7 @@ Track per QR code:
 
 | Feature | Specification |
 |---------|---------------|
-| Provider | SendGrid, Mailgun, or similar |
+| Provider | Mailgun (confirmed) |
 | Templates | HTML with personalisation |
 | Tracking | Open and click tracking |
 | Unsubscribe | One-click unsubscribe |
@@ -2566,7 +2574,7 @@ Track per QR code:
 
 | Feature | Specification |
 |---------|---------------|
-| Provider | Google Maps or OpenStreetMap |
+| Provider | Mapbox (confirmed) |
 | Business Locations | Map markers |
 | Directions | Link to navigation |
 | Geocoding | Address to coordinates |

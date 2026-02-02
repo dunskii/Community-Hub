@@ -60,7 +60,7 @@ Use this agent for quickly transforming ideas into functional prototypes, MVPs, 
 ### Services
 - **Hosting:** DigitalOcean Droplets (production) / Vercel / Railway (prototyping)
 - **Storage:** Local disk on Droplets (production) / Supabase (prototyping)
-- **Email:** SendGrid / Resend
+- **Email:** Mailgun
 - **Payments:** Stripe
 
 ## Shortcuts (Document for Later Refactoring)

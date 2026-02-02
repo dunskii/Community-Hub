@@ -44,8 +44,7 @@ This roadmap outlines the development phases for the Community Hub Platform. The
   - Set up Elasticsearch for search functionality
 
 - [ ] **DigitalOcean Droplet Infrastructure**
-  - Configure Nginx as reverse proxy with SSL termination
-  - Set up Let's Encrypt (Certbot) for automated SSL certificate renewal
+  - Configure Nginx as reverse proxy with SSL termination (Cloudflare Origin Certificate)
   - Create Docker and Docker Compose configuration for all services
   - Configure UFW firewall rules (allow 80, 443, 22 only)
   - Set up server hardening (fail2ban, SSH key-only auth, disable root login)
@@ -53,6 +52,16 @@ This roadmap outlines the development phases for the Community Hub Platform. The
   - Set up automated PostgreSQL backups (pg_dump + WAL archiving, daily to separate volume)
   - Configure log rotation (logrotate for application and Nginx logs)
   - Set up basic monitoring (Prometheus + Grafana or DigitalOcean monitoring)
+
+- [ ] **Cloudflare Setup**
+  - Add domain to Cloudflare and update registrar nameservers
+  - Configure DNS records (A record to Droplet, CNAME for www)
+  - Enable SSL/TLS Full (Strict) mode with edge certificates
+  - Generate Origin Certificate and install on Nginx
+  - Configure caching rules (static assets, media, API bypass)
+  - Enable WAF managed rules and DDoS protection
+  - Set up Page Rules (force HTTPS, cache levels)
+  - Configure API token for programmatic cache purge
 
 - [ ] **Frontend Infrastructure**
   - Initialize frontend framework (React/Vue with TypeScript)
@@ -76,7 +85,7 @@ This roadmap outlines the development phases for the Community Hub Platform. The
   - Configure input sanitization middleware (DOMPurify or equivalent)
 
 - [ ] **Email Service (required for auth)**
-  - Set up email provider (SendGrid/Mailgun)
+  - Set up Mailgun email provider
   - Create base HTML email template
   - Implement email verification template
   - Implement password reset template
@@ -181,7 +190,7 @@ This roadmap outlines the development phases for the Community Hub Platform. The
   - Cultural certifications (Halal, Kosher, etc.)
   - Accessibility features display
   - Payment methods
-  - Map integration (Google Maps/OpenStreetMap)
+  - Map integration (Mapbox GL JS)
   - "Get Directions" functionality
 
 - [ ] **SEO Implementation**
@@ -353,7 +362,7 @@ This roadmap outlines the development phases for the Community Hub Platform. The
 > **Note:** Full maps features are in Phase 13, but basic map display is needed for business profiles launched in Phase 2.
 
 #### Features
-- [ ] Google Maps or OpenStreetMap embed on business profiles
+- [ ] Mapbox GL JS embed on business profiles
 - [ ] "Get Directions" link
 - [ ] Geocoding for address-to-coordinates
 - [ ] Distance calculation from user location
@@ -1183,7 +1192,7 @@ This roadmap outlines the development phases for the Community Hub Platform. The
 **Objective:** Send transactional and marketing emails.
 
 #### Features
-- [ ] Provider setup (SendGrid/Mailgun)
+- [ ] Mailgun provider setup and domain verification
 - [ ] HTML email templates:
   - Welcome
   - Email verification
@@ -1267,7 +1276,7 @@ This roadmap outlines the development phases for the Community Hub Platform. The
 - [ ] Bundle optimisation
 - [ ] API response caching
 - [ ] Database query optimisation
-- [ ] CDN configuration
+- [ ] Cloudflare CDN caching optimisation
 
 ---
 

@@ -146,7 +146,7 @@ GET    /users/:id/check-in-history
          ▼             ▼             ▼
     ┌─────────┐  ┌─────────┐  ┌─────────┐
     │  Push   │  │  Email  │  │   SMS   │
-    │ (FCM)   │  │(SendGrid)│ │(Twilio) │
+    │ (FCM)   │  │(Mailgun) │ │(Twilio) │
     └─────────┘  └─────────┘  └─────────┘
 ```
 

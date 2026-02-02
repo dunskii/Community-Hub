@@ -145,7 +145,7 @@ Use this agent for data analysis, creating reports, building dashboards, and tra
 ```
 ┌─────────────────────────────────────────────────┐
 │  SYSTEM HEALTH                                   │
-│  ● API: 99.9%  ● DB: 98ms  ● CDN: OK           │
+│  ● API: 99.9%  ● DB: 98ms  ● Cloudflare: OK    │
 ├─────────────────────────────────────────────────┤
 │  ERROR RATE (24h)      │  RESPONSE TIME (p95)  │
 │  ▁▁▁▁▂▁▁▁▁▁▁▁         │  ▂▂▂▃▂▂▂▂▂▂▂▂        │

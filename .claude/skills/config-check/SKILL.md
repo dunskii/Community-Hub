@@ -20,7 +20,7 @@ The platform is designed to be deployed to multiple suburbs with configuration-o
 
 Should contain:
 - Database connection strings
-- API keys (Google Maps, SendGrid, Twilio, etc.)
+- API keys (Mapbox, Mailgun, Twilio, etc.)
 - JWT secrets
 - DigitalOcean/cloud credentials
 - Environment flags (NODE_ENV, DEBUG)

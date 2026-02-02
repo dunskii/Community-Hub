@@ -34,7 +34,7 @@ Use this agent for system scaling, performance optimisation, infrastructure main
 ### Architecture Overview
 ```
 ┌─────────────────────────────────────────────────┐
-│              CDN (Cloudflare / DO CDN)            │
+│              Cloudflare (CDN, DNS, WAF)            │
 └────────────────────┬────────────────────────────┘
                      │
 ┌────────────────────▼────────────────────────────┐
@@ -242,7 +242,7 @@ System update → Full cache flush (if needed)
    - Manual container restart on Droplet
 
 3. **Droplet/Region Failure**
-   - DNS failover to standby Droplet (if configured)
+   - Cloudflare DNS failover to standby Droplet (if configured)
    - Manual recovery from backups to new Droplet
 
 ## Security Maintenance
@@ -252,7 +252,7 @@ System update → Full cache flush (if needed)
 |------|-----------|
 | Security patches | As released |
 | Dependency updates | Weekly review |
-| SSL certificate renewal | Before expiry |
+| Cloudflare Origin Certificate renewal | Before expiry |
 | Access audit | Monthly |
 | Penetration testing | Annually |
 

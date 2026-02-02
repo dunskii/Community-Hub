@@ -53,8 +53,7 @@
 - [ ] Set up logging infrastructure [Spec §29.1]
 
 #### DigitalOcean Droplet Infrastructure
-- [ ] Configure Nginx as reverse proxy with SSL termination
-- [ ] Set up Let's Encrypt (Certbot) for automated SSL certificate renewal
+- [ ] Configure Nginx as reverse proxy with SSL termination (Cloudflare Origin Certificate)
 - [ ] Create Dockerfile for application
 - [ ] Create Docker Compose configuration for all services (app, PostgreSQL, Redis, Elasticsearch)
 - [ ] Configure UFW firewall rules (allow 80, 443, 22 only)
@@ -64,6 +63,18 @@
 - [ ] Configure log rotation (logrotate for application and Nginx logs)
 - [ ] Set up monitoring (Prometheus + Grafana or DigitalOcean monitoring)
 - [ ] Create health check endpoints (`GET /health`, `GET /status`) [Spec Appendix B]
+
+#### Cloudflare Setup
+- [ ] Add domain to Cloudflare and update registrar nameservers
+- [ ] Configure DNS records (A record to Droplet IP, CNAME for www)
+- [ ] Enable SSL/TLS Full (Strict) mode with Cloudflare edge certificates
+- [ ] Generate Cloudflare Origin Certificate and install on Nginx
+- [ ] Configure caching rules (static assets, media, API bypass)
+- [ ] Enable WAF managed rules and DDoS protection
+- [ ] Set up Page Rules (force HTTPS, cache levels, security level)
+- [ ] Configure API token for programmatic cache purge on content updates
+- [ ] Set up Cloudflare firewall rules (rate limiting, bot management)
+- [ ] Configure Browser Integrity Check and Hotlink Protection
 
 #### Frontend Infrastructure [Spec §3]
 - [ ] Initialize frontend framework (React/Vue + TypeScript)
@@ -88,14 +99,14 @@
 - [ ] Implement input sanitization middleware (DOMPurify or equivalent) [Spec §4.9]
 
 #### Email Service (required for auth) [Spec §26]
-- [ ] Set up email provider (SendGrid/Mailgun) and configure API key
+- [ ] Set up Mailgun and configure API key
 - [ ] Create base HTML email template (branded, responsive)
 - [ ] Implement email verification template
 - [ ] Implement password reset template
 - [ ] Configure delivery, bounce handling, and one-click unsubscribe
 
 #### Maps Integration (required for business profiles) [Spec §26]
-- [ ] Set up Google Maps or OpenStreetMap API
+- [ ] Set up Mapbox API (access token, geocoding, map tiles)
 - [ ] Implement map embed component for business profiles
 - [ ] Implement "Get Directions" link
 - [ ] Implement geocoding (address to coordinates)
@@ -311,7 +322,7 @@
 - [ ] Parking information
 
 #### Location & Map
-- [ ] Embedded map (Google Maps or OpenStreetMap)
+- [ ] Embedded map (Mapbox GL JS)
 - [ ] Business marker on map
 - [ ] Get Directions button (opens native maps)
 - [ ] Address display with copy functionality
@@ -1185,7 +1196,7 @@
 - [ ] Token refresh automation
 
 ### 16.3 Email Service [Spec §26.3]
-- [ ] SendGrid/Mailgun provider setup
+- [ ] Mailgun provider setup
 - [ ] Email template system
 - [ ] Template management in admin
 - [ ] Personalisation tokens
@@ -1208,11 +1219,11 @@
 - [ ] Newsletter template
 
 ### 16.4 Maps Integration [Spec §26.4]
-- [ ] Google Maps API or OpenStreetMap setup
+- [ ] Mapbox GL JS setup and access token configuration
 - [ ] Map component for business locations
 - [ ] Multiple business map view
 - [ ] Custom business markers
-- [ ] Directions deep link (Google Maps, Apple Maps)
+- [ ] Directions deep link (Mapbox, Google Maps, Apple Maps)
 - [ ] Geocoding service (address to coordinates)
 - [ ] Reverse geocoding (coordinates to address)
 - [ ] Distance calculation
@@ -1275,7 +1286,7 @@
 - [ ] API response caching (Redis)
 - [ ] Database query optimisation
 - [ ] Index optimisation
-- [ ] CDN setup for static assets
+- [ ] Cloudflare CDN caching optimisation for static assets and media
 - [ ] Lighthouse CI integration
 - [ ] Performance monitoring (Core Web Vitals)
 

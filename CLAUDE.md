@@ -151,8 +151,8 @@ RESTful endpoints defined in Appendix B:
 - Google Business Profile API (import business data)
 - Facebook/Instagram APIs (social feed, events)
 - Google Translate API (auto-translation)
-- Maps API (Google Maps or OpenStreetMap)
-- SendGrid/Mailgun (email notifications)
+- Maps API (Mapbox)
+- Mailgun (email notifications)
 - Twilio or similar (SMS for emergency alerts)
 - State emergency alerts / Bureau of Meteorology / Transport authority (emergency feeds)
 

@@ -529,7 +529,7 @@ async function processPendingActions() {
 ```html
 <!-- In index.html -->
 <link rel="preconnect" href="https://api.communityhub.local">
-<link rel="dns-prefetch" href="https://maps.googleapis.com">
+<link rel="dns-prefetch" href="https://api.mapbox.com">
 <link rel="preload" href="/fonts/montserrat.woff2" as="font" crossorigin>
 ```
 
