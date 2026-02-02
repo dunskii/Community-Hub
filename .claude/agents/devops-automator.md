@@ -118,7 +118,7 @@ jobs:
 | CDN | Cloudflare (confirmed) | Static asset delivery, DDoS protection |
 | DNS | Cloudflare (confirmed) | Domain management, SSL edge certificates |
 | Email | Mailgun | Transactional email |
-| SMS | Twilio | Emergency alerts |
+| SMS & WhatsApp | Twilio (confirmed) | SMS and WhatsApp messaging |
 
 ### Security Configuration
 

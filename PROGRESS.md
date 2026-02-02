@@ -346,7 +346,7 @@ _None yet_
 #### Notes
 - Google Business Profile is key integration
 - Email templates needed for all notifications
-- SMS and Push notification providers (Twilio, Firebase)
+- SMS/WhatsApp: Twilio (confirmed), Push: Firebase
 
 ---
 

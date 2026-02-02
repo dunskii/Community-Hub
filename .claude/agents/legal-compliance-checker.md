@@ -188,7 +188,7 @@ Cookie Categories:
 |--------|-------------|--------------|
 | DigitalOcean | All data (Droplet hosting, self-managed) | Yes |
 | Mailgun | Email addresses | Yes |
-| Twilio | Phone numbers | Yes |
+| Twilio | Phone numbers (SMS & WhatsApp) | Yes |
 | Mapbox | Location queries, map tiles | Review TOS |
 | Analytics | Usage data | Yes |
 

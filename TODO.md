@@ -621,7 +621,7 @@
 - [ ] Google Calendar "Add" button
 - [ ] Apple Calendar support
 - [ ] Event reminders (24hr, 1hr before)
-- [ ] Social sharing (Facebook, Twitter, WhatsApp)
+- [ ] Social sharing (Facebook, Twitter, WhatsApp deep links)
 - [ ] Copy event link
 
 ### 8.4 Event Management (Business Owners) [Spec §15]
@@ -1056,7 +1056,8 @@
 
 ### 14.3 Alert Distribution [Spec §22.2]
 - [ ] Push notifications for critical alerts
-- [ ] SMS integration for emergency alerts
+- [ ] SMS integration for emergency alerts (Twilio)
+- [ ] WhatsApp integration for emergency alerts (Twilio WhatsApp API)
 - [ ] Email notifications
 - [ ] User alert preferences UI
 - [ ] Category preferences (weather, fire, traffic, health, etc.)
@@ -1238,8 +1239,11 @@
 - [ ] Batch translation for performance
 
 ### 16.6 SMS Integration [Spec §26.5]
-- [ ] Twilio or similar provider setup
+- [ ] Twilio provider setup (Account SID, Auth Token, phone number)
 - [ ] SMS template system
+- [ ] Twilio WhatsApp Business API setup (approved sender number)
+- [ ] WhatsApp message template registration and approval
+- [ ] User preference for notification channel (SMS, WhatsApp, or both)
 - [ ] Verification PIN messages
 - [ ] Critical alert messages
 - [ ] Event reminders

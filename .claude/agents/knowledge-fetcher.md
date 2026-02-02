@@ -97,7 +97,7 @@ Based on project requirements:
 - Facebook Graph API
 - Instagram Basic Display API
 - Mailgun Email API
-- Twilio SMS API
+- Twilio SMS & WhatsApp Business API
 - NSW Government Alert APIs
 
 ### Technical Standards

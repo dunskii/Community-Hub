@@ -148,12 +148,12 @@ RESTful endpoints defined in Appendix B:
 
 ## Integration Points
 
-- Google Business Profile API (import business data)
+- Google Business Profile API (import business data) - confirmed
 - Facebook/Instagram APIs (social feed, events)
-- Google Translate API (auto-translation)
+- Google Translate API (auto-translation) - confirmed
 - Maps API (Mapbox)
 - Mailgun (email notifications)
-- Twilio or similar (SMS for emergency alerts)
+- Twilio (SMS and WhatsApp messaging)
 - State emergency alerts / Bureau of Meteorology / Transport authority (emergency feeds)
 
 ## Configuration Files

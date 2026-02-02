@@ -145,9 +145,10 @@ The platform uses a three-tier configuration system:
 | `FACEBOOK_APP_SECRET` | Facebook integration | Optional |
 | `MAILGUN_API_KEY` | Email delivery | Yes |
 | `MAILGUN_DOMAIN` | Mailgun sending domain | Yes |
-| `TWILIO_ACCOUNT_SID` | SMS alerts | Optional |
-| `TWILIO_AUTH_TOKEN` | SMS alerts | Optional |
-| `TWILIO_PHONE_NUMBER` | SMS sender number | Optional |
+| `TWILIO_ACCOUNT_SID` | Twilio SMS & WhatsApp | Yes |
+| `TWILIO_AUTH_TOKEN` | Twilio authentication | Yes |
+| `TWILIO_PHONE_NUMBER` | SMS sender number | Yes |
+| `TWILIO_WHATSAPP_NUMBER` | WhatsApp sender number (Twilio sandbox or approved) | Yes |
 
 #### Storage Configuration
 
@@ -185,7 +186,7 @@ The platform uses a three-tier configuration system:
 
 | Variable | Description | Required |
 |----------|-------------|----------|
-| `GOOGLE_BUSINESS_API_KEY` | Google Business Profile API key | Optional |
+| `GOOGLE_BUSINESS_API_KEY` | Google Business Profile API key | Yes |
 
 #### Environment Settings
 
@@ -300,7 +301,8 @@ This file contains all location-specific and branding configuration. It should b
     "reviewsAndRatings": true,
     "multilingual": true,
     "pwaInstallation": true,
-    "smsAlerts": true
+    "smsAlerts": true,
+    "whatsappAlerts": true
   },
 
   "multilingual": {
@@ -401,6 +403,7 @@ Feature flags allow enabling/disabling major platform features:
 | `b2bNetworking` | Business-to-business features | true |
 | `emergencyAlerts` | Crisis communication system | true |
 | `smsAlerts` | SMS notification capability | true |
+| `whatsappAlerts` | WhatsApp notification capability (via Twilio) | true |
 
 ### 2.6 Database Configuration
 
@@ -1460,7 +1463,7 @@ Business owners grant similar license for:
 
 #### Auto-Translation
 
-- Powered by Google Translate API or similar
+- Powered by Google Translate API (confirmed)
 - Indicated as "Auto-translated"
 - Owner can override with manual translation
 - Quality flag for community reporting
@@ -1803,7 +1806,7 @@ Track per QR code:
 | Event Reminders | On | Email, Push, Both, Off |
 | Promotions | Off | Email, Push, Both, Off |
 | Community News | On | Email, Push, Both, Off |
-| Emergency Alerts | On (forced for Critical) | Email, Push, SMS, All |
+| Emergency Alerts | On (forced for Critical) | Email, Push, SMS, WhatsApp, All |
 
 #### Digest Options
 
@@ -2350,6 +2353,7 @@ Track per QR code:
 |---------|----------|---------|----------|------|
 | Push | Forced | Default On | Default Off | Off |
 | SMS (opt-in) | Yes | Yes | No | No |
+| WhatsApp (opt-in) | Yes | Yes | No | No |
 | Email | Immediate | Immediate | Digest | Digest |
 | In-App | Prominent | Prominent | Standard | Standard |
 
@@ -2541,7 +2545,7 @@ Track per QR code:
 
 ## 26. Integration Requirements
 
-### 26.1 Google Business Profile API
+### 26.1 Google Business Profile API (confirmed)
 
 | Data | Direction | Frequency |
 |------|-----------|-----------|
@@ -2580,7 +2584,11 @@ Track per QR code:
 | Geocoding | Address to coordinates |
 | Distance | User to business calculation |
 
-### 26.5 SMS Templates (Twilio)
+### 26.5 SMS & WhatsApp Templates (Twilio)
+
+Twilio is the confirmed provider for both SMS and WhatsApp messaging.
+
+#### SMS Templates
 
 | Template | Message |
 |----------|---------|
@@ -2589,6 +2597,27 @@ Track per QR code:
 | Critical Alert | "[Platform] ALERT: {title}. Details: {url}" |
 | Warning Alert | "[Platform]: {title}. More info: {url}" |
 | Event Reminder | "[Platform]: Reminder - {event} starts in 1 hour. {location}" |
+
+#### WhatsApp Templates
+
+WhatsApp messages use Twilio's WhatsApp Business API. Templates must be pre-approved by WhatsApp.
+
+| Template | Message |
+|----------|---------|
+| Welcome | "Welcome to [Platform]! Tap here to explore local businesses: {url}" |
+| Critical Alert | "[Platform] ALERT: {title}. Details: {url}" |
+| Event Reminder | "Reminder: {event} starts in 1 hour at {location}. Details: {url}" |
+| Deal Notification | "New deal from {business}: {deal_title}. View: {url}" |
+
+#### Twilio Configuration
+
+| Setting | Value |
+|---------|-------|
+| Provider | Twilio (confirmed) |
+| SMS Rate Limit | Max 1 SMS per user per 5 minutes (except critical alerts) |
+| WhatsApp Rate Limit | Max 1 message per user per 5 minutes (except critical alerts) |
+| User Preference | Users choose: SMS only, WhatsApp only, or both |
+| Opt-in Required | Yes — explicit opt-in for both SMS and WhatsApp |
 
 ### 26.6 Push Notifications (Firebase)
 

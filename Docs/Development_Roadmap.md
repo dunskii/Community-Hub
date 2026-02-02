@@ -947,12 +947,13 @@ This roadmap outlines the development phases for the Community Hub Platform. The
 #### Features
 - [ ] **Notification Channels**
   - Push notifications (forced for Critical)
-  - SMS opt-in (Critical/Warning only)
+  - SMS opt-in via Twilio (Critical/Warning only)
+  - WhatsApp opt-in via Twilio WhatsApp API (Critical/Warning only)
   - Email (immediate/digest)
   - In-app notifications
 
 - [ ] **User Preferences**
-  - SMS opt-in with phone number
+  - SMS/WhatsApp opt-in with phone number (Twilio)
   - Location-based filtering
   - Alert category selection
   - Quiet hours setting
