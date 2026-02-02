@@ -567,7 +567,7 @@ The application should validate configuration on startup:
 
 | Requirement | Specification |
 |-------------|---------------|
-| Framework | Modern JavaScript framework (React, Vue, or similar) |
+| Framework | React with TypeScript (confirmed) |
 | Responsive Design | Mobile-first approach |
 | PWA Capability | Installable, offline-capable |
 | Browser Support | Chrome, Firefox, Safari, Edge (last 2 versions) |

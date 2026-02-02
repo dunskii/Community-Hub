@@ -77,7 +77,7 @@
 - [ ] Configure Browser Integrity Check and Hotlink Protection
 
 #### Frontend Infrastructure [Spec §3]
-- [ ] Initialize frontend framework (React/Vue + TypeScript)
+- [ ] Initialize React frontend with TypeScript
 - [ ] Configure responsive design system (mobile-first)
 - [ ] Implement design tokens from config (colours, typography, spacing)
 - [ ] Set up component library foundation

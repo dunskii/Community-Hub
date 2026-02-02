@@ -21,7 +21,7 @@ Generate a comprehensive implementation plan for "$1".
    - **Phase 2: Database Layer** - PostgreSQL schema, migrations, Elasticsearch indices
    - **Phase 3: API Layer** - RESTful endpoints with proper validation (per Appendix B)
    - **Phase 4: Service Layer** - Business logic and utilities
-   - **Phase 5: Frontend Layer** - React/Vue components, mobile-first responsive
+   - **Phase 5: Frontend Layer** - React components, mobile-first responsive
    - **Phase 6: Integration** - Connect all layers, test data flow
    - **Phase 7: Multilingual** - i18n setup for 10 languages including RTL
    - **Phase 8: Testing** - Unit tests, integration tests, accessibility tests

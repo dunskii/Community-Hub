@@ -83,7 +83,7 @@ The specification is organised into 7 parts plus appendices:
 ## Key Technical Decisions (from Specification)
 
 ### Planned Stack
-- **Frontend:** Modern JavaScript framework (React/Vue), mobile-first responsive, PWA-capable
+- **Frontend:** React with TypeScript, mobile-first responsive, PWA-capable
 - **Backend:** RESTful API or GraphQL, JWT authentication
 - **Database:** PostgreSQL (relational) + Elasticsearch (search)
 - **ORM:** Prisma >= 7.3.0

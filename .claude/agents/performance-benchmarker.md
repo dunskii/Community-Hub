@@ -135,7 +135,7 @@ Use this agent for comprehensive performance testing, profiling, and optimisatio
 ```
 Total: < 200KB gzipped
 
-Framework:     ~40KB (React/Vue core)
+Framework:     ~40KB (React core)
 UI Library:    ~20KB (Component library)
 Utilities:     ~10KB (Date, validation, etc.)
 Application:   ~80KB (Your code)

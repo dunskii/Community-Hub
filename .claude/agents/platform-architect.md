@@ -49,7 +49,7 @@ The platform specification is organised into 7 parts (31 sections) plus appendic
 - And more...
 
 ### Technical Stack
-- Frontend: React/Vue, mobile-first, PWA
+- Frontend: React with TypeScript, mobile-first, PWA
 - Backend: RESTful API, JWT auth
 - Database: PostgreSQL + Elasticsearch
 - ORM: Prisma >= 7.3.0

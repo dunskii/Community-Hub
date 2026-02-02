@@ -6,7 +6,7 @@
 - **Color:** cyan
 
 ## Description
-Use this agent for building user interfaces, implementing React/Vue components, managing state, and optimising frontend performance for responsive, accessible web applications.
+Use this agent for building user interfaces, implementing React components, managing state, and optimising frontend performance for responsive, accessible web applications.
 
 ## Primary Responsibilities
 
@@ -20,16 +20,15 @@ Use this agent for building user interfaces, implementing React/Vue components, 
 ## Framework Expertise
 
 - **React** - Hooks, Suspense, Server Components
-- **Vue 3** - Composition API, Pinia
-- **Next.js / Nuxt** - SSR, SSG, App Router
+- **Next.js** - SSR, SSG, App Router
 - **TypeScript** - Strict typing throughout
 
 ## Essential Tools
 
 - **Styling:** Tailwind CSS
-- **State:** Zustand, Redux Toolkit, Pinia
+- **State:** Zustand, Redux Toolkit
 - **Forms:** React Hook Form, VeeValidate
-- **Animation:** Framer Motion, Vue Transitions
+- **Animation:** Framer Motion
 - **Testing:** Vitest, Testing Library, Playwright
 
 ## Community Hub Platform Design System

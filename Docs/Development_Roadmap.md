@@ -64,7 +64,7 @@ This roadmap outlines the development phases for the Community Hub Platform. The
   - Configure API token for programmatic cache purge
 
 - [ ] **Frontend Infrastructure**
-  - Initialize frontend framework (React/Vue with TypeScript)
+  - Initialize React frontend with TypeScript
   - Configure responsive design system with breakpoints (Mobile < 768px, Tablet 768-1199px, Desktop ≥ 1200px)
   - Implement design tokens (colours, typography, spacing)
   - Set up component library foundation

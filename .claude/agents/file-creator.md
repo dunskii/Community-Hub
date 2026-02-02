@@ -27,7 +27,7 @@ Use this agent for mechanical file and directory creation tasks, project scaffol
 
 ## File Creation Patterns
 
-### React/Vue Components
+### React Components
 ```
 ComponentName/
 ├── ComponentName.tsx
