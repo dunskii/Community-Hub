@@ -39,29 +39,9 @@ This roadmap outlines the development phases for the Community Hub Platform. The
   - Set up PostgreSQL database with initial schema
   - Install Prisma ORM >= 7.3.0 (`prisma` and `@prisma/client`) — verify installed version meets minimum before proceeding
   - Set up Redis for caching and sessions
-  - Configure local media storage on DigitalOcean Droplets
+  - Configure local media storage
   - Implement RESTful API scaffolding
   - Set up Elasticsearch for search functionality
-
-- [ ] **DigitalOcean Droplet Infrastructure**
-  - Configure Nginx as reverse proxy with SSL termination (Cloudflare Origin Certificate)
-  - Create Docker and Docker Compose configuration for all services
-  - Configure UFW firewall rules (allow 80, 443, 22 only)
-  - Set up server hardening (fail2ban, SSH key-only auth, disable root login)
-  - Configure process management (PM2 or systemd) for application restarts
-  - Set up automated PostgreSQL backups (pg_dump + WAL archiving, daily to separate volume)
-  - Configure log rotation (logrotate for application and Nginx logs)
-  - Set up basic monitoring (Prometheus + Grafana or DigitalOcean monitoring)
-
-- [ ] **Cloudflare Setup**
-  - Add domain to Cloudflare and update registrar nameservers
-  - Configure DNS records (A record to Droplet, CNAME for www)
-  - Enable SSL/TLS Full (Strict) mode with edge certificates
-  - Generate Origin Certificate and install on Nginx
-  - Configure caching rules (static assets, media, API bypass)
-  - Enable WAF managed rules and DDoS protection
-  - Set up Page Rules (force HTTPS, cache levels)
-  - Configure API token for programmatic cache purge
 
 - [ ] **Frontend Infrastructure**
   - Initialize React frontend with TypeScript
@@ -1315,6 +1295,43 @@ This roadmap outlines the development phases for the Community Hub Platform. The
 - [ ] Direction-aware icons
 - [ ] Bidirectional text handling
 - [ ] Number display (LTR within RTL)
+
+---
+
+## Phase 16: Deployment Infrastructure
+
+> **Note:** This phase covers production hosting and CDN setup. It should be completed once all development phases (1-15) are done and the platform is ready for production deployment.
+
+### 16.1 DigitalOcean Droplet Infrastructure
+
+**Objective:** Provision and configure production hosting.
+
+#### Features
+- [ ] Configure Nginx as reverse proxy with SSL termination (Cloudflare Origin Certificate)
+- [ ] Create Docker and Docker Compose configuration for all services (app, PostgreSQL, Redis, Elasticsearch)
+- [ ] Configure UFW firewall rules (allow 80, 443, 22 only)
+- [ ] Set up server hardening (fail2ban, SSH key-only auth, disable root login)
+- [ ] Configure process management (PM2 or systemd) for application restarts
+- [ ] Set up automated PostgreSQL backups (pg_dump + WAL archiving, daily to separate volume)
+- [ ] Configure log rotation (logrotate for application and Nginx logs)
+- [ ] Set up monitoring (Prometheus + Grafana or DigitalOcean monitoring)
+- [ ] Create health check endpoints (`GET /health`, `GET /status`)
+
+### 16.2 Cloudflare Setup
+
+**Objective:** Configure CDN, DNS, SSL, and security.
+
+#### Features
+- [ ] Add domain to Cloudflare and update registrar nameservers
+- [ ] Configure DNS records (A record to Droplet IP, CNAME for www)
+- [ ] Enable SSL/TLS Full (Strict) mode with Cloudflare edge certificates
+- [ ] Generate Cloudflare Origin Certificate and install on Nginx
+- [ ] Configure caching rules (static assets, media, API bypass)
+- [ ] Enable WAF managed rules and DDoS protection
+- [ ] Set up Page Rules (force HTTPS, cache levels, security level)
+- [ ] Configure API token for programmatic cache purge on content updates
+- [ ] Set up Cloudflare firewall rules (rate limiting, bot management)
+- [ ] Configure Browser Integrity Check and Hotlink Protection
 
 ---
 

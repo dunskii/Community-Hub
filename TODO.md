@@ -46,35 +46,11 @@
 - [ ] Install Prisma ORM >= 7.3.0 (`prisma` and `@prisma/client`) and verify version
 - [ ] Create initial database schema and migrations
 - [ ] Set up Redis for caching and sessions
-- [ ] Configure local media storage on DigitalOcean Droplets
+- [ ] Configure local media storage
 - [ ] Implement RESTful API scaffolding
 - [ ] Set up Elasticsearch for search
 - [ ] Implement API versioning strategy
 - [ ] Set up logging infrastructure [Spec §29.1]
-
-#### DigitalOcean Droplet Infrastructure
-- [ ] Configure Nginx as reverse proxy with SSL termination (Cloudflare Origin Certificate)
-- [ ] Create Dockerfile for application
-- [ ] Create Docker Compose configuration for all services (app, PostgreSQL, Redis, Elasticsearch)
-- [ ] Configure UFW firewall rules (allow 80, 443, 22 only)
-- [ ] Set up server hardening (fail2ban, SSH key-only auth, disable root login)
-- [ ] Configure process management (PM2 or systemd) for application restarts
-- [ ] Set up automated PostgreSQL backups (pg_dump + WAL archiving, daily)
-- [ ] Configure log rotation (logrotate for application and Nginx logs)
-- [ ] Set up monitoring (Prometheus + Grafana or DigitalOcean monitoring)
-- [ ] Create health check endpoints (`GET /health`, `GET /status`) [Spec Appendix B]
-
-#### Cloudflare Setup
-- [ ] Add domain to Cloudflare and update registrar nameservers
-- [ ] Configure DNS records (A record to Droplet IP, CNAME for www)
-- [ ] Enable SSL/TLS Full (Strict) mode with Cloudflare edge certificates
-- [ ] Generate Cloudflare Origin Certificate and install on Nginx
-- [ ] Configure caching rules (static assets, media, API bypass)
-- [ ] Enable WAF managed rules and DDoS protection
-- [ ] Set up Page Rules (force HTTPS, cache levels, security level)
-- [ ] Configure API token for programmatic cache purge on content updates
-- [ ] Set up Cloudflare firewall rules (rate limiting, bot management)
-- [ ] Configure Browser Integrity Check and Hotlink Protection
 
 #### Frontend Infrastructure [Spec §3]
 - [ ] Initialize React frontend with TypeScript
@@ -1335,6 +1311,38 @@
 
 ---
 
+## Phase 19: Deployment Infrastructure
+
+> **Note:** This phase covers production hosting and CDN setup. It should be completed once all development phases are done and the platform is ready for production deployment.
+
+### 19.1 DigitalOcean Droplet Infrastructure
+
+- [ ] Configure Nginx as reverse proxy with SSL termination (Cloudflare Origin Certificate)
+- [ ] Create Dockerfile for application
+- [ ] Create Docker Compose configuration for all services (app, PostgreSQL, Redis, Elasticsearch)
+- [ ] Configure UFW firewall rules (allow 80, 443, 22 only)
+- [ ] Set up server hardening (fail2ban, SSH key-only auth, disable root login)
+- [ ] Configure process management (PM2 or systemd) for application restarts
+- [ ] Set up automated PostgreSQL backups (pg_dump + WAL archiving, daily)
+- [ ] Configure log rotation (logrotate for application and Nginx logs)
+- [ ] Set up monitoring (Prometheus + Grafana or DigitalOcean monitoring)
+- [ ] Create health check endpoints (`GET /health`, `GET /status`) [Spec Appendix B]
+
+### 19.2 Cloudflare Setup
+
+- [ ] Add domain to Cloudflare and update registrar nameservers
+- [ ] Configure DNS records (A record to Droplet IP, CNAME for www)
+- [ ] Enable SSL/TLS Full (Strict) mode with Cloudflare edge certificates
+- [ ] Generate Cloudflare Origin Certificate and install on Nginx
+- [ ] Configure caching rules (static assets, media, API bypass)
+- [ ] Enable WAF managed rules and DDoS protection
+- [ ] Set up Page Rules (force HTTPS, cache levels, security level)
+- [ ] Configure API token for programmatic cache purge on content updates
+- [ ] Set up Cloudflare firewall rules (rate limiting, bot management)
+- [ ] Configure Browser Integrity Check and Hotlink Protection
+
+---
+
 ## Ongoing Tasks
 
 ### Testing [Spec §30]
@@ -1388,6 +1396,6 @@ _Add any additional notes, decisions, or blockers here._
 
 ---
 
-**Total Estimated Tasks:** ~650+ items across 18 phases
+**Total Estimated Tasks:** ~650+ items across 19 phases
 
 ---
