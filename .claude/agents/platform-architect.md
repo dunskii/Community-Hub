@@ -52,8 +52,10 @@ The platform specification is organised into 7 parts (31 sections) plus appendic
 - Frontend: React/Vue, mobile-first, PWA
 - Backend: RESTful API, JWT auth
 - Database: PostgreSQL + Elasticsearch
-- Storage: AWS S3
-- Cache: Redis
+- ORM: Prisma >= 7.3.0
+- Hosting: DigitalOcean Droplets (all services self-hosted)
+- Storage: Local disk on Droplets
+- Cache: Redis (self-hosted on Droplet)
 
 ### Non-Negotiable Requirements
 1. **Multilingual from Day 1**: 10 languages including RTL (Arabic, Urdu)

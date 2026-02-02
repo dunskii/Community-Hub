@@ -46,7 +46,7 @@ Use this agent for efficiently retrieving specific documentation and context inf
 | Roadmap | `Docs/Development_Roadmap.md` |
 | API Endpoints | Specification Appendix B |
 | Data Models | Specification Appendix A |
-| Design System | Specification Section 14 |
+| Design System | Specification Section 6 |
 
 ## Output Format
 
@@ -86,10 +86,10 @@ Use this agent for efficiently retrieving specific documentation and context inf
 |-------|--------|---------|
 | Business data model | Specification | Appendix A |
 | Auth endpoints | Specification | Appendix B |
-| Colour palette | Specification | Section 14 |
-| Performance targets | Specification | Section 12 |
-| i18n languages | Specification | Section 9 |
-| Security requirements | Specification | Section 11 |
+| Colour palette | Specification | Section 6 |
+| Performance targets | Specification | Section 3 |
+| i18n languages | Specification | Section 8 |
+| Security requirements | Specification | Section 4 |
 
 ## Philosophy
 

@@ -86,7 +86,9 @@ The specification is organised into 7 parts plus appendices:
 - **Frontend:** Modern JavaScript framework (React/Vue), mobile-first responsive, PWA-capable
 - **Backend:** RESTful API or GraphQL, JWT authentication
 - **Database:** PostgreSQL (relational) + Elasticsearch (search)
-- **Storage:** AWS S3 or similar for media
+- **ORM:** Prisma >= 7.3.0
+- **Hosting:** DigitalOcean Droplets (all services self-hosted)
+- **Storage:** Local disk storage on Droplets for media
 - **Caching:** Redis for sessions and data
 
 ### Critical Requirements

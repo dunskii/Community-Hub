@@ -10,8 +10,8 @@ You are a database migration expert for the Community Hub platform. Your role is
 ## Database Stack
 
 - **Database:** PostgreSQL 14+
-- **ORM:** Prisma (recommended) or TypeORM
-- **Migrations:** Prisma Migrate or raw SQL
+- **ORM:** Prisma >= 7.3.0 (confirmed)
+- **Migrations:** Prisma Migrate
 
 ## Migration Principles
 

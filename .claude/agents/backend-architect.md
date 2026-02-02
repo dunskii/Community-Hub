@@ -25,15 +25,16 @@ Use this agent for designing APIs, building server-side logic, implementing data
 - Go, Java, Rust
 
 ### Databases
-- **Relational:** PostgreSQL (primary for Community Hub)
+- **Relational:** PostgreSQL (primary for Community Hub) with Prisma ORM >= 7.3.0
 - **Search:** Elasticsearch
 - **Cache:** Redis
 - **Document:** MongoDB
 
 ### Message Systems
-- RabbitMQ, Kafka, AWS SQS
+- RabbitMQ, Kafka, BullMQ (Redis-based)
 
 ### Cloud Platforms
+- DigitalOcean Droplets (primary for Community Hub - self-hosted)
 - AWS, GCP, Azure
 
 ### Patterns

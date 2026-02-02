@@ -78,6 +78,7 @@ Perform comprehensive code review of "$1" to ensure quality, security, and compl
    - Proper use of React hooks / Vue composition
    - Component reusability
    - Mobile responsiveness
+   - **No monolithic files (> 1000 lines)** - flag any pages/components exceeding this limit for refactoring
 
 10. **Design System Compliance:**
     - Colors from configuration (default: Teal #2C5F7C, Orange #E67E22, Gold #F39C12)
@@ -94,4 +95,8 @@ The review should identify:
 - Accessibility violations
 - Coding standard violations
 - Missing tests or documentation
+- Monolithic files (> 1000 lines) requiring refactoring
 - Recommendations for improvements
+
+**IMPORTANT - Pre-existing Issues:**
+If any pre-existing issues are discovered during the review (issues not introduced by the current task), these MUST be added to `PROGRESS.md` under a "Pre-existing Issues to Address" section. This ensures they are tracked and rectified before starting subsequent tasks.

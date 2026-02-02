@@ -159,9 +159,9 @@ Use this agent for rapid assessment of development tools, frameworks, and servic
 ### Hosting
 | Tool | Evaluate For |
 |------|--------------|
-| Vercel | Next.js deployment |
-| AWS | Full control |
-| Railway | Simple deployment |
+| DigitalOcean Droplets | Production hosting (confirmed) |
+| Vercel | Next.js deployment (prototyping) |
+| Railway | Simple deployment (prototyping) |
 
 ## Comparison Matrix Template
 

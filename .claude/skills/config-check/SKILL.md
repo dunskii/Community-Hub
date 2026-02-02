@@ -22,7 +22,7 @@ Should contain:
 - Database connection strings
 - API keys (Google Maps, SendGrid, Twilio, etc.)
 - JWT secrets
-- AWS/cloud credentials
+- DigitalOcean/cloud credentials
 - Environment flags (NODE_ENV, DEBUG)
 
 **NEVER** put in code or platform.json:

@@ -58,8 +58,8 @@ Use this agent for quickly transforming ideas into functional prototypes, MVPs, 
 - **Auth:** Clerk / Auth0 / NextAuth
 
 ### Services
-- **Hosting:** Vercel / Railway
-- **Storage:** Supabase / AWS S3
+- **Hosting:** DigitalOcean Droplets (production) / Vercel / Railway (prototyping)
+- **Storage:** Local disk on Droplets (production) / Supabase (prototyping)
 - **Email:** SendGrid / Resend
 - **Payments:** Stripe
 

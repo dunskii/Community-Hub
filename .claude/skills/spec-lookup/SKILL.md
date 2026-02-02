@@ -16,7 +16,7 @@ Docs/Community_Hub_Specification_v2.md
 
 ## Specification Structure (v2.0)
 
-The specification is organised into 8 parts with 31 sections plus appendices:
+The specification is organised into 7 parts with 31 sections plus appendices:
 
 ### Part 1: Foundation & Architecture (Sections 1-5)
 - **Section 1:** Project Overview

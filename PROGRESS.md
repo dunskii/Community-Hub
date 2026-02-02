@@ -81,7 +81,7 @@
 ### Sprint Tasks
 | Task | Assignee | Status | Notes |
 |------|----------|--------|-------|
-| Finalise tech stack decisions | TBD | Not Started | React vs Vue, Node.js vs alternative |
+| Finalise tech stack decisions | TBD | In Progress | Hosting: DO Droplets (confirmed), ORM: Prisma >= 7.3.0 (confirmed). Remaining: React vs Vue, Node.js framework |
 | Set up Git repository structure | TBD | Not Started | Monorepo configuration |
 | Configure CI/CD pipeline | TBD | Not Started | GitHub Actions |
 | Set up development environment | TBD | Not Started | Docker, local setup |
@@ -118,7 +118,7 @@ _None yet_
 
 #### Notes
 - Awaiting tech stack finalisation
-- Need to confirm hosting provider (AWS, Azure, GCP)
+- ~~Need to confirm hosting provider~~ **Confirmed: DigitalOcean Droplets (all services self-hosted)**
 - Configuration architecture is critical for location-agnostic deployment
 
 ---
@@ -529,7 +529,7 @@ Phase 1 (Foundation)
 
 1. **Immediate:**
    - Finalise technology stack decisions (React vs Vue, Node.js backend)
-   - Confirm hosting/cloud provider (AWS, Azure, GCP)
+   - ~~Confirm hosting/cloud provider~~ **Done: DigitalOcean Droplets (self-hosted)**
    - Set up development team and assign roles
 
 2. **This Week:**
@@ -556,13 +556,13 @@ Phase 1 (Foundation)
 | Project Instructions | `CLAUDE.md` | Current |
 
 ### Key Specification Sections (v2.0)
-- **Part 1: Foundation:** §1-5 (Overview, Config, Technical, Security, Performance)
-- **Part 2: Design:** §6-9 (Design System, i18n, UI Components, Accessibility)
-- **Part 3: Users:** §10-13 (User Types, Community User, Business Profile, Business Owner)
-- **Part 4: Core:** §14-18 (Search, Events, Messaging, Deals, Reviews)
-- **Part 5: Community:** §19-22 (Community Features, Social, B2B, Emergency)
-- **Part 6: Admin:** §23-26 (Administration, Analytics, Integrations, Legal)
-- **Part 7: Technical:** §27-31 (Data Management, Error Handling, Tech Ops, Testing, Operations)
+- **Part 1: Foundation & Architecture:** §1-5 (Overview, Config, Technical, Security, Legal & Compliance)
+- **Part 2: Design & User Experience:** §6-9 (Design Specs, UI States & Components, Multilingual Support, Onboarding)
+- **Part 3: Users & Core Entities:** §10-13 (User Types, Business Profile, Community User, Business Owner)
+- **Part 4: Core Functionality:** §14-18 (Search, Events, Messaging, Deals, Reviews)
+- **Part 5: Community & Social:** §19-22 (Community Features, Social, B2B, Emergency)
+- **Part 6: Administration & Operations:** §23-26 (Administration, Content Policies, Analytics, Integrations)
+- **Part 7: Technical Operations:** §27-31 (Error Handling, Data Management, Tech Ops, Testing, Operations)
 - **Appendices:** A (22 Data Models), B (130+ API Endpoints), C (Glossary)
 
 ---

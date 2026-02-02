@@ -376,7 +376,7 @@ export function SafetyCheckIn({ alertId }: { alertId: string }) {
          │              │              │
 ┌────────▼───────┐ ┌────▼────┐ ┌───────▼───────┐
 │  Primary DB    │ │  Redis  │ │   Queue       │
-│  (Multi-AZ)    │ │(Cluster)│ │   (SQS)       │
+│  (Droplet)     │ │(Cluster)│ │  (BullMQ)     │
 └────────────────┘ └─────────┘ └───────────────┘
 ```
 

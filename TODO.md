@@ -43,13 +43,27 @@
 
 #### Backend Infrastructure [Spec §3]
 - [ ] Set up PostgreSQL database
+- [ ] Install Prisma ORM >= 7.3.0 (`prisma` and `@prisma/client`) and verify version
 - [ ] Create initial database schema and migrations
 - [ ] Set up Redis for caching and sessions
-- [ ] Configure AWS S3 for media storage
+- [ ] Configure local media storage on DigitalOcean Droplets
 - [ ] Implement RESTful API scaffolding
 - [ ] Set up Elasticsearch for search
 - [ ] Implement API versioning strategy
-- [ ] Set up logging infrastructure [Spec §27.1]
+- [ ] Set up logging infrastructure [Spec §29.1]
+
+#### DigitalOcean Droplet Infrastructure
+- [ ] Configure Nginx as reverse proxy with SSL termination
+- [ ] Set up Let's Encrypt (Certbot) for automated SSL certificate renewal
+- [ ] Create Dockerfile for application
+- [ ] Create Docker Compose configuration for all services (app, PostgreSQL, Redis, Elasticsearch)
+- [ ] Configure UFW firewall rules (allow 80, 443, 22 only)
+- [ ] Set up server hardening (fail2ban, SSH key-only auth, disable root login)
+- [ ] Configure process management (PM2 or systemd) for application restarts
+- [ ] Set up automated PostgreSQL backups (pg_dump + WAL archiving, daily)
+- [ ] Configure log rotation (logrotate for application and Nginx logs)
+- [ ] Set up monitoring (Prometheus + Grafana or DigitalOcean monitoring)
+- [ ] Create health check endpoints (`GET /health`, `GET /status`) [Spec Appendix B]
 
 #### Frontend Infrastructure [Spec §3]
 - [ ] Initialize frontend framework (React/Vue + TypeScript)
@@ -67,10 +81,25 @@
 - [ ] Implement HSTS header (max-age=31536000)
 - [ ] Implement Referrer-Policy header
 - [ ] Configure TLS 1.3
-- [ ] Set up rate limiting middleware [Spec §24.3]
+- [ ] Set up rate limiting middleware [Spec §4]
 - [ ] Implement input validation middleware
 - [ ] Set up AES-256 encryption for sensitive data at rest
 - [ ] Implement CSRF protection
+- [ ] Implement input sanitization middleware (DOMPurify or equivalent) [Spec §4.9]
+
+#### Email Service (required for auth) [Spec §26]
+- [ ] Set up email provider (SendGrid/Mailgun) and configure API key
+- [ ] Create base HTML email template (branded, responsive)
+- [ ] Implement email verification template
+- [ ] Implement password reset template
+- [ ] Configure delivery, bounce handling, and one-click unsubscribe
+
+#### Maps Integration (required for business profiles) [Spec §26]
+- [ ] Set up Google Maps or OpenStreetMap API
+- [ ] Implement map embed component for business profiles
+- [ ] Implement "Get Directions" link
+- [ ] Implement geocoding (address to coordinates)
+- [ ] Implement distance calculation from user location
 
 #### i18n Foundation [Spec §8]
 - [ ] Implement translation file structure (JSON per language)
@@ -254,7 +283,7 @@
 - [ ] Quick filter chips (category, open now, has deals)
 - [ ] Sort dropdown
 - [ ] Results count display
-- [ ] No results state [Spec §8.3]
+- [ ] No results state [Spec §7]
 
 ### 4.3 Business Profile Page [Spec §11]
 - [ ] Cover photo display (1200x400px)
@@ -323,7 +352,7 @@
 - [ ] Typo tolerance configuration
 - [ ] Multilingual analyzer setup
 
-### 5.2 Search Features [Spec §14.2]
+### 5.2 Search Features [Spec §14.1]
 - [ ] Search bar component (prominent, accessible)
 - [ ] Full-text search with relevance scoring
 - [ ] Autocomplete suggestions (debounced)
@@ -332,7 +361,7 @@
 - [ ] Search result highlighting
 - [ ] Voice search (optional future)
 
-### 5.3 Filters [Spec §14.3]
+### 5.3 Filters [Spec §14.2]
 - [ ] Category filter (multi-select, hierarchical)
 - [ ] Distance/radius filter (slider or dropdown)
 - [ ] Open Now toggle
@@ -438,11 +467,25 @@
 - [ ] Report functionality
 - [ ] Review removal by moderators
 
+### 6.4 Basic Moderation Infrastructure [Spec §23]
+
+> **Note:** Minimum viable moderation — must be in place before UGC scales. Full admin dashboard is in Phase 15.
+
+- [ ] Implement ModerationReport model (A.22)
+- [ ] Implement AuditLog model (A.18)
+- [ ] Create moderation queue page (list all flagged content by type)
+- [ ] Implement approve/reject/remove actions for moderators
+- [ ] Add content reporting endpoints (POST /reviews/:id/report, POST /notices/:id/report)
+- [ ] Implement audit log for all moderation actions
+- [ ] Basic admin: user list with suspend/unsuspend capability
+- [ ] Basic admin: dashboard with pending moderation items count
+- [ ] Email notification to moderators for new flagged content
+
 ---
 
 ## Phase 7: Business Owner Features
 
-### 7.1 Business Claim & Verification [Spec §13.1, §24.3]
+### 7.1 Business Claim & Verification [Spec §13.1, §24]
 
 #### Claim Flow
 - [ ] "Claim This Business" button on unclaimed profiles
@@ -570,7 +613,7 @@
 - [ ] Social sharing (Facebook, Twitter, WhatsApp)
 - [ ] Copy event link
 
-### 8.4 Event Management (Business Owners) [Spec §15.5]
+### 8.4 Event Management (Business Owners) [Spec §15]
 - [ ] Event creation form
 - [ ] Image upload for event
 - [ ] Recurring event setup (daily, weekly, monthly, custom)
@@ -671,7 +714,7 @@
 - [ ] GET /businesses/:id/deals - Business's deals
 - [ ] GET /users/:id/saved-deals - User's saved deals
 
-### 10.2 Deals Discovery [Spec §17.1]
+### 10.2 Deals Discovery [Spec §17.5]
 - [ ] Deals hub page
 - [ ] Deal card component (image, title, discount, business, expiry)
 - [ ] Today's Deals section
@@ -684,7 +727,7 @@
 - [ ] Distance filtering
 - [ ] Search within deals
 
-### 10.3 Flash Deals [Spec §17.2]
+### 10.3 Flash Deals [Spec §17.1]
 - [ ] Flash deal creation (business owners)
 - [ ] Countdown timer component
 - [ ] Quantity limit setting
@@ -694,7 +737,7 @@
 - [ ] Expedited moderation queue
 - [ ] Flash deal badge/styling
 
-### 10.4 Deal Redemption [Spec §17.3]
+### 10.4 Deal Redemption [Spec §17.4]
 - [ ] Show Screen redemption method
 - [ ] Unique code generation
 - [ ] QR code generation
@@ -718,7 +761,7 @@
 - [ ] Featured deal request
 - [ ] Deal analytics dashboard
 
-### 10.6 Deal Alerts [Spec §17.4]
+### 10.6 Deal Alerts [Spec §17.5]
 - [ ] Flash deal push notifications
 - [ ] Category-based alerts
 - [ ] Business-specific alerts
@@ -790,7 +833,7 @@
 - [ ] POST /groups - Submit new group
 - [ ] PUT /groups/:id - Update group
 
-### 11.3 Local News & Announcements [Spec §19.3]
+### 11.3 Local News & Announcements [Spec §19.4]
 
 #### Data Models [Appendix A.12]
 - [ ] Announcement model
@@ -812,7 +855,7 @@
 - [ ] PUT /announcements/:id - Update announcement
 - [ ] DELETE /announcements/:id - Delete announcement
 
-### 11.4 Local History Archive [Spec §19.4]
+### 11.4 Local History Archive [Spec §19.3]
 
 #### Data Models [Appendix A.13]
 - [ ] HistoricalContent model
@@ -863,7 +906,7 @@
 - [ ] Sync mechanism (scheduled fetch)
 - [ ] Manual refresh option
 
-### 12.3 Community Competitions [Spec §20.3]
+### 12.3 Community Competitions [Spec §20]
 - [ ] Competition/challenge announcements
 - [ ] Theme display
 - [ ] Submission tracking via hashtag
@@ -932,7 +975,7 @@
 - [ ] Referral dashboard
 - [ ] Commission/reward tracking
 
-### 13.5 B2B Forum & Events [Spec §21.5, Appendix A.8]
+### 13.5 B2B Forum & Events [Spec §21, Appendix A.8]
 
 #### API Endpoints
 - [ ] GET /b2b/forum - Forum topics
@@ -958,7 +1001,7 @@
 - [ ] Networking event RSVP
 - [ ] Business representative selection
 
-### 13.6 Chamber Integration [Spec §21.6]
+### 13.6 Chamber Integration [Spec §21]
 - [ ] Chamber announcements section
 - [ ] Chamber member badge
 - [ ] Chamber events integration
@@ -1026,7 +1069,7 @@
 - [ ] Evacuation information
 - [ ] Community support resources
 
-### 14.6 External Alert Integrations [Spec §22.5, §28.5]
+### 14.6 External Alert Integrations [Spec §22, §26]
 - [ ] NSW Emergency Services feed integration
 - [ ] Bureau of Meteorology (BOM) weather alerts
 - [ ] Transport NSW disruptions
@@ -1082,7 +1125,7 @@
 - [ ] Content removal with reason
 - [ ] Appeal handling workflow [Spec §24.4]
 
-### 15.5 Platform Analytics [Spec §24]
+### 15.5 Platform Analytics [Spec §25]
 - [ ] Platform-wide metrics dashboard
 - [ ] User analytics (registrations, active users, retention)
 - [ ] Business analytics (total, by category, verification rate)
@@ -1095,7 +1138,7 @@
 - [ ] Custom date range selection
 - [ ] Comparison to previous periods
 
-### 15.6 Reporting [Spec §24.2]
+### 15.6 Reporting [Spec §25]
 - [ ] Standard report templates
 - [ ] Custom report builder
 - [ ] Scheduled report generation
@@ -1106,7 +1149,7 @@
 - [ ] Chamber reporting package
 - [ ] CID pilot metrics
 
-### 15.7 Survey System [Spec §23.5, Appendix B.19]
+### 15.7 Survey System [Spec §23, Appendix B]
 - [ ] Survey builder interface
 - [ ] Question types (text, single choice, multiple choice, scale, matrix)
 - [ ] Conditional logic
@@ -1201,7 +1244,7 @@
 
 ## Phase 17: PWA & Performance
 
-### 17.1 PWA Features [Spec §3, §5]
+### 17.1 PWA Features [Spec §3]
 - [ ] Web App Manifest with all required fields
 - [ ] Install prompt handling (iOS and Android)
 - [ ] App icons (all required sizes)
@@ -1210,7 +1253,7 @@
 - [ ] Push permission request flow
 - [ ] Notification preferences sync
 
-### 17.2 Offline Capability [Spec §5]
+### 17.2 Offline Capability [Spec §3]
 - [ ] Service worker implementation
 - [ ] Cache-first strategy for static assets
 - [ ] Network-first strategy for API calls
@@ -1222,7 +1265,7 @@
 - [ ] Background sync when online
 - [ ] Offline indicator UI
 
-### 17.3 Performance Optimisation [Spec §5]
+### 17.3 Performance Optimisation [Spec §3]
 - [ ] Image optimisation (WebP, responsive sizes)
 - [ ] Lazy loading for images
 - [ ] Code splitting by route
@@ -1319,7 +1362,7 @@
 - [ ] Performance monitoring setup
 - [ ] Error tracking setup (Sentry or similar)
 - [ ] Uptime monitoring
-- [ ] Backup verification [Spec §27.1]
+- [ ] Backup verification [Spec §28.1]
 - [ ] Disaster recovery testing
 
 ---

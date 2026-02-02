@@ -186,7 +186,7 @@ Cookie Categories:
 ### Vendor Assessment
 | Vendor | Data Shared | DPA Required |
 |--------|-------------|--------------|
-| AWS | All data (hosting) | Yes |
+| DigitalOcean | All data (Droplet hosting, self-managed) | Yes |
 | SendGrid | Email addresses | Yes |
 | Twilio | Phone numbers | Yes |
 | Google Maps | Location queries | Review TOS |

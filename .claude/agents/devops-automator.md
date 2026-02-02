@@ -27,23 +27,22 @@ Use this agent for CI/CD pipelines, cloud infrastructure, monitoring, and deploy
 ### Infrastructure as Code
 - Terraform
 - Pulumi
-- AWS CloudFormation
+- Ansible (primary for Droplet provisioning)
 
 ### Container & Orchestration
 - Docker
+- Docker Compose (primary for Community Hub)
 - Kubernetes
-- AWS ECS/Fargate
 
 ### Cloud Providers
-- AWS (primary for Community Hub)
+- DigitalOcean Droplets (primary for Community Hub - all services self-hosted)
+- AWS
 - Google Cloud Platform
-- Azure
 
 ### Monitoring
-- Prometheus + Grafana
-- Datadog
-- AWS CloudWatch
+- Prometheus + Grafana (self-hosted on Droplet)
 - Sentry (errors)
+- DigitalOcean monitoring
 
 ## Community Hub Platform Infrastructure
 
@@ -51,9 +50,9 @@ Use this agent for CI/CD pipelines, cloud infrastructure, monitoring, and deploy
 ```
 ┌─────────────────────────────────────────┐
 │              Production                  │
-│  - Auto-scaling enabled                 │
-│  - Multi-AZ deployment                  │
-│  - Full monitoring                      │
+│  - DigitalOcean Droplets                │
+│  - All services self-hosted             │
+│  - Full monitoring (Prometheus/Grafana) │
 └─────────────────────────────────────────┘
                     ▲
                     │ Promotion
@@ -111,20 +110,20 @@ jobs:
 
 | Component | Service | Purpose |
 |-----------|---------|---------|
-| Compute | AWS ECS Fargate | Container hosting |
-| Database | AWS RDS PostgreSQL | Primary data store |
-| Search | AWS OpenSearch | Elasticsearch-compatible |
-| Cache | AWS ElastiCache Redis | Session and data caching |
-| Storage | AWS S3 | Media file storage |
-| CDN | AWS CloudFront | Static asset delivery |
-| DNS | AWS Route 53 | Domain management |
+| Compute | DigitalOcean Droplets | Application hosting (self-hosted) |
+| Database | PostgreSQL (self-hosted on Droplet) | Primary data store |
+| Search | Elasticsearch (self-hosted on Droplet) | Full-text search |
+| Cache | Redis (self-hosted on Droplet) | Session and data caching |
+| Storage | Local disk on Droplet | Media file storage |
+| CDN | DigitalOcean CDN or Cloudflare | Static asset delivery |
+| DNS | DigitalOcean DNS or Cloudflare | Domain management |
 | Email | SendGrid | Transactional email |
 | SMS | Twilio | Emergency alerts |
 
 ### Security Configuration
 
 ```yaml
-# Security Headers (via CloudFront/ALB)
+# Security Headers (via Nginx reverse proxy)
 Content-Security-Policy: default-src 'self'; ...
 X-Frame-Options: DENY
 X-Content-Type-Options: nosniff
@@ -133,7 +132,7 @@ X-XSS-Protection: 1; mode=block
 ```
 
 ### Secrets Management
-- AWS Secrets Manager for credentials
+- `.env` files with restricted permissions for credentials
 - Environment variables for non-sensitive config
 - Rotation policies for database passwords
 - API keys with least-privilege access
@@ -185,11 +184,11 @@ X-XSS-Protection: 1; mode=block
 
 ## Cost Optimisation
 
-- Reserved instances for baseline capacity
-- Spot instances for non-critical workloads
-- Auto-scaling based on demand
-- S3 lifecycle policies for old media
-- CloudFront caching to reduce origin requests
+- Right-sized Droplets for baseline capacity
+- Vertical scaling (resize Droplets) as demand grows
+- Horizontal scaling via additional Droplets behind load balancer
+- Disk cleanup policies for old media
+- CDN caching to reduce origin requests
 
 ## Philosophy
 

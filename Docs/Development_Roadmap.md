@@ -37,10 +37,22 @@ This roadmap outlines the development phases for the Community Hub Platform. The
 
 - [ ] **Backend Infrastructure**
   - Set up PostgreSQL database with initial schema
+  - Install Prisma ORM >= 7.3.0 (`prisma` and `@prisma/client`) — verify installed version meets minimum before proceeding
   - Set up Redis for caching and sessions
-  - Configure cloud storage (AWS S3) for media files
+  - Configure local media storage on DigitalOcean Droplets
   - Implement RESTful API scaffolding
   - Set up Elasticsearch for search functionality
+
+- [ ] **DigitalOcean Droplet Infrastructure**
+  - Configure Nginx as reverse proxy with SSL termination
+  - Set up Let's Encrypt (Certbot) for automated SSL certificate renewal
+  - Create Docker and Docker Compose configuration for all services
+  - Configure UFW firewall rules (allow 80, 443, 22 only)
+  - Set up server hardening (fail2ban, SSH key-only auth, disable root login)
+  - Configure process management (PM2 or systemd) for application restarts
+  - Set up automated PostgreSQL backups (pg_dump + WAL archiving, daily to separate volume)
+  - Configure log rotation (logrotate for application and Nginx logs)
+  - Set up basic monitoring (Prometheus + Grafana or DigitalOcean monitoring)
 
 - [ ] **Frontend Infrastructure**
   - Initialize frontend framework (React/Vue with TypeScript)
@@ -60,6 +72,15 @@ This roadmap outlines the development phases for the Community Hub Platform. The
   - Set up TLS 1.3 configuration
   - Configure rate limiting infrastructure
   - Implement input validation middleware
+  - Implement CSRF protection (SameSite cookies + CSRF tokens)
+  - Configure input sanitization middleware (DOMPurify or equivalent)
+
+- [ ] **Email Service (required for auth)**
+  - Set up email provider (SendGrid/Mailgun)
+  - Create base HTML email template
+  - Implement email verification template
+  - Implement password reset template
+  - Configure delivery and bounce handling
 
 ### 1.2 Authentication System
 
@@ -306,6 +327,36 @@ This roadmap outlines the development phases for the Community Hub Platform. The
 - [ ] 7-day edit window
 - [ ] Review moderation queue
 - [ ] Aggregate rating calculation
+
+### 3.4 Basic Moderation Infrastructure
+
+**Objective:** Establish moderation tools before user-generated content scales.
+
+> **Note:** This is the minimum viable moderation system. Full admin dashboard and advanced moderation tools are in Phase 12, but basic content moderation must exist before reviews, events, and community content go live.
+
+#### Data Models
+- ModerationReport (A.22)
+- AuditLog (A.18)
+
+#### Features
+- [ ] Content reporting (flag reviews, businesses, events)
+- [ ] Basic moderation queue (list flagged content)
+- [ ] Approve/reject/remove actions for moderators
+- [ ] Audit log for moderation actions
+- [ ] Admin user management (suspend/unsuspend users)
+- [ ] Basic admin dashboard with pending items count
+
+### 3.5 Maps Integration (required for business profiles)
+
+**Objective:** Enable location display and directions on business profiles.
+
+> **Note:** Full maps features are in Phase 13, but basic map display is needed for business profiles launched in Phase 2.
+
+#### Features
+- [ ] Google Maps or OpenStreetMap embed on business profiles
+- [ ] "Get Directions" link
+- [ ] Geocoding for address-to-coordinates
+- [ ] Distance calculation from user location
 
 ---
 

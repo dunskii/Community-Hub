@@ -152,10 +152,37 @@ The platform uses a three-tier configuration system:
 
 | Variable | Description | Example |
 |----------|-------------|---------|
-| `AWS_ACCESS_KEY_ID` | S3 access key | AWS credential |
-| `AWS_SECRET_ACCESS_KEY` | S3 secret key | AWS credential |
-| `AWS_S3_BUCKET` | S3 bucket name | `community-hub-media` |
-| `AWS_S3_REGION` | S3 region | `ap-southeast-2` |
+| `STORAGE_PATH` | Local media storage path | `/var/data/community-hub/media` |
+| `STORAGE_MAX_SIZE_GB` | Maximum storage allocation | `50` |
+| `STORAGE_BACKUP_PATH` | Backup storage path | `/var/backups/community-hub/media` |
+
+#### Search Configuration
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `ELASTICSEARCH_URL` | Elasticsearch connection string | `http://localhost:9200` |
+| `ELASTICSEARCH_API_KEY` | Elasticsearch API key (if auth enabled) | Optional |
+
+#### Push Notification Configuration
+
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `FIREBASE_PROJECT_ID` | Firebase project identifier | Yes (for push) |
+| `FIREBASE_PRIVATE_KEY` | Firebase service account private key | Yes (for push) |
+| `FIREBASE_CLIENT_EMAIL` | Firebase service account email | Yes (for push) |
+
+#### CDN Configuration
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `CDN_URL` | CDN base URL for static assets | `https://cdn.example.com` |
+| `CDN_ENABLED` | Enable CDN for media delivery | `true`, `false` |
+
+#### External API Configuration
+
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `GOOGLE_BUSINESS_API_KEY` | Google Business Profile API key | Optional |
 
 #### Environment Settings
 
@@ -416,7 +443,7 @@ When deploying the platform to a new suburb, follow this checklist:
 - [ ] Create new `.env` file from `.env.example`
 - [ ] Configure database connection
 - [ ] Set up API keys for all services
-- [ ] Configure S3 bucket or storage
+- [ ] Configure media storage on DigitalOcean Droplet
 
 #### 2. Platform Configuration
 - [ ] Copy `config/platform.json` from template
@@ -544,7 +571,7 @@ The application should validate configuration on startup:
 | API Architecture | RESTful API or GraphQL |
 | Authentication | JWT-based authentication |
 | Database | Relational (PostgreSQL) + Search (Elasticsearch) |
-| File Storage | Cloud storage (AWS S3 or similar) |
+| File Storage | Local disk storage on DigitalOcean Droplets (with CDN for delivery) |
 | Caching | Redis for session and data caching |
 
 ### 3.2 Performance Requirements
@@ -700,6 +727,64 @@ The application should validate configuration on startup:
 | X-Content-Type-Options | nosniff |
 | Strict-Transport-Security | max-age=31536000 |
 | Referrer-Policy | strict-origin-when-cross-origin |
+
+### 4.6 JWT Token Lifecycle
+
+| Parameter | Specification |
+|-----------|---------------|
+| Signing Algorithm | RS256 (asymmetric) |
+| Access Token Lifetime | 15 minutes |
+| Refresh Token Lifetime | 7 days (30 days with "remember me") |
+| Refresh Token Rotation | Issue new refresh token on each use; invalidate old |
+| Token Payload | `sub` (user ID), `role`, `iat`, `exp` |
+| Token Revocation | Maintain a Redis blocklist of revoked token JTIs |
+| Cookie Settings | `HttpOnly`, `Secure`, `SameSite=Strict`, `Path=/` |
+
+### 4.7 CSRF Protection
+
+| Requirement | Specification |
+|-------------|---------------|
+| Approach | SameSite=Strict cookies + CSRF token for non-GET requests |
+| Token Source | Server-generated, stored in session, validated per request |
+| Exempt Routes | Public GET endpoints, OAuth callbacks |
+
+### 4.8 Rate Limiting
+
+| Endpoint Category | Limit | Window | Action |
+|-------------------|-------|--------|--------|
+| Authentication (login, register) | 10 requests | 15 minutes | 429 + lockout |
+| Password reset | 3 requests | 1 hour | 429 + silent drop |
+| API (authenticated) | 100 requests | 1 minute | 429 |
+| API (anonymous) | 30 requests | 1 minute | 429 |
+| Search | 30 requests | 1 minute | 429 |
+| File uploads | 20 uploads | 1 hour | 429 |
+| Review submissions | 5 reviews | 24 hours | 429 |
+| New conversations | 10 conversations | 24 hours | 429 |
+| Flash deal creation | 2 deals | 7 days | 429 |
+
+### 4.9 Input Sanitization
+
+| Requirement | Specification |
+|-------------|---------------|
+| Rich Text Fields | Sanitize with allowlist (DOMPurify or equivalent) |
+| Allowed HTML Tags | `p`, `br`, `strong`, `em`, `ul`, `ol`, `li`, `a` (with `rel="nofollow"`) |
+| Blocked Content | `script`, `iframe`, `object`, `embed`, `style`, `onclick` and all event handlers |
+| Plain Text Fields | Strip all HTML tags |
+| SQL Injection | Parameterized queries via ORM (Prisma) |
+| URL Fields | Validate against URL format; block `javascript:` and `data:` schemes |
+
+### 4.10 File Upload Security
+
+| Requirement | Specification |
+|-------------|---------------|
+| MIME Validation | Validate via magic bytes, not file extension alone |
+| Accepted Image Types | `image/jpeg`, `image/png`, `image/webp` |
+| Accepted Document Types | `application/pdf` (for B2B file sharing) |
+| Max File Size | Images: 5MB, Documents: 10MB |
+| Filename Sanitization | Generate UUID filenames; never use original filename in storage path |
+| EXIF Stripping | Remove EXIF metadata from uploaded images (privacy) |
+| Path Traversal | Reject filenames containing `..`, `/`, or `\` |
+| Executable Blocking | Reject any file with executable MIME type or extension |
 
 ---
 
@@ -2590,7 +2675,7 @@ ICS file format for calendar export:
 | INVALID_FORMAT | "Please enter a valid {field}" |
 | TOO_SHORT | "{field} must be at least {min} characters" |
 | TOO_LONG | "{field} must be no more than {max} characters" |
-| WEAK_PASSWORD | "Password must contain uppercase, lowercase, and number" |
+| WEAK_PASSWORD | "Password must be 8+ characters and contain an uppercase letter and a number" |
 | PASSWORDS_MISMATCH | "Passwords do not match" |
 | INVALID_FILE_TYPE | "File type not allowed. Accepted: {types}" |
 | FILE_TOO_LARGE | "File exceeds maximum size of {max}MB" |
@@ -2613,7 +2698,7 @@ ICS file format for calendar export:
 | Search (ES down) | PostgreSQL full-text search |
 | Maps (API down) | Display address text only |
 | Translation (API down) | Show original with "Translation unavailable" |
-| Image upload (S3 down) | Queue uploads, show "Processing" |
+| Image upload (storage unavailable) | Queue uploads, show "Processing" |
 | Social feed (API down) | Show cached content |
 
 ---
@@ -2890,6 +2975,9 @@ Business {
   certifications: [String]
   payment_methods: [String]
   accessibility: [String]
+  price_range: Enum (budget, moderate, premium, luxury)
+  parking_information: String
+  year_established: Integer
   status: Enum (active, pending, suspended)
   claimed: Boolean
   owner: Reference (User)
@@ -2948,12 +3036,14 @@ User {
   profile_photo: Image
   language_preference: String
   suburb: String
+  bio: Text (max 500)
   interests: [String]
   notification_preferences: NotificationPrefs
   role: Enum (community, business_owner, moderator, admin)
   status: Enum (active, suspended, pending)
   email_verified: Boolean
   created_at: DateTime
+  updated_at: DateTime
   last_login: DateTime
 }
 
@@ -2990,7 +3080,7 @@ Event {
   accessibility: [String]
   recurrence: RecurrenceRule
   created_by: Reference (User)
-  status: Enum (active, cancelled, past)
+  status: Enum (pending, active, cancelled, past)
   created_at: DateTime
   updated_at: DateTime
 }
@@ -3546,11 +3636,113 @@ Appeal {
 }
 ```
 
+### A.23 Business Follow
+
+```
+BusinessFollow {
+  id: UUID
+  user_id: Reference (User)
+  business_id: Reference (Business)
+  created_at: DateTime
+}
+```
+
+Unique constraint: `(user_id, business_id)`
+
+### A.24 System Settings
+
+```
+SystemSetting {
+  key: String (primary key)
+  value: JSON
+  description: String
+  updated_by: Reference (User)
+  updated_at: DateTime
+}
+```
+
+Default keys: `maintenance_mode`, `registration_enabled`, `max_upload_size_mb`, `featured_businesses`, `default_search_radius_km`, `max_active_deals_per_business`
+
 ---
 
 ## Appendix B: API Endpoints
 
 This appendix contains all API endpoints for the Community Hub platform.
+
+### B.0 API Conventions
+
+#### API Versioning
+
+All endpoints are prefixed with `/api/v1/`. Future breaking changes will introduce `/api/v2/` while maintaining the previous version during a deprecation period.
+
+```
+Base URL: https://{domain}/api/v1
+Example:  https://{domain}/api/v1/businesses
+```
+
+#### Success Response Format
+
+```json
+{
+  "success": true,
+  "data": { ... }
+}
+```
+
+For list endpoints:
+
+```json
+{
+  "success": true,
+  "data": [ ... ],
+  "pagination": {
+    "page": 1,
+    "limit": 20,
+    "total": 156,
+    "totalPages": 8
+  }
+}
+```
+
+#### Pagination
+
+All list endpoints support cursor-based or offset pagination via query parameters:
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `page` | integer | 1 | Page number (1-indexed) |
+| `limit` | integer | 20 | Items per page (max 100) |
+
+Response includes a `pagination` object with `page`, `limit`, `total`, and `totalPages`.
+
+#### Common Query Parameters
+
+| Parameter | Type | Applies To | Description |
+|-----------|------|------------|-------------|
+| `q` | string | Search endpoints | Search query string |
+| `sort` | string | List endpoints | Sort field (prefix with `-` for descending, e.g., `-created_at`) |
+| `fields` | string | All endpoints | Comma-separated list of fields to include (sparse fieldsets) |
+
+#### Filtering
+
+List endpoints support filtering via query parameters matching field names:
+
+```
+GET /api/v1/businesses?category=restaurant&open_now=true&rating_min=4
+GET /api/v1/events?date_from=2026-03-01&date_to=2026-03-31&category=music
+GET /api/v1/deals?discount_type=percentage&category=food&expiring_soon=true
+```
+
+#### CORS Configuration
+
+The API supports cross-origin requests from configured frontend domains:
+
+| Header | Value |
+|--------|-------|
+| `Access-Control-Allow-Origin` | Configured frontend domain(s) |
+| `Access-Control-Allow-Methods` | `GET, POST, PUT, DELETE, OPTIONS` |
+| `Access-Control-Allow-Headers` | `Content-Type, Authorization` |
+| `Access-Control-Allow-Credentials` | `true` |
 
 ### B.1 Authentication
 

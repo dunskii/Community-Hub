@@ -34,57 +34,58 @@ Use this agent for system scaling, performance optimisation, infrastructure main
 ### Architecture Overview
 ```
 ┌─────────────────────────────────────────────────┐
-│                  CloudFront CDN                  │
+│              CDN (Cloudflare / DO CDN)            │
 └────────────────────┬────────────────────────────┘
                      │
 ┌────────────────────▼────────────────────────────┐
-│              Application Load Balancer           │
+│            Nginx Reverse Proxy (Droplet)         │
 └────────────────────┬────────────────────────────┘
                      │
          ┌───────────┴───────────┐
          │                       │
 ┌────────▼────────┐   ┌─────────▼─────────┐
-│  ECS Fargate    │   │  ECS Fargate      │
-│  (Container 1)  │   │  (Container 2)    │
+│  App Server     │   │  App Server       │
+│  (Droplet 1)    │   │  (Droplet 2)      │
 └────────┬────────┘   └─────────┬─────────┘
          │                       │
          └───────────┬───────────┘
                      │
     ┌────────────────┼────────────────┐
     │                │                │
-┌───▼───┐      ┌─────▼─────┐    ┌────▼────┐
-│  RDS  │      │ OpenSearch│    │  Redis  │
-│  (PG) │      │           │    │ Cache   │
-└───────┘      └───────────┘    └─────────┘
+┌───▼───┐    ┌──────▼──────┐   ┌─────▼─────┐
+│  PG   │    │Elasticsearch│   │   Redis   │
+│(Drplt)│    │  (Droplet)  │   │ (Droplet) │
+└───────┘    └─────────────┘   └───────────┘
 ```
 
 ### Component Specifications
 
 | Component | Specification | Scaling |
 |-----------|---------------|---------|
-| ECS Fargate | 0.5-2 vCPU, 1-4GB RAM | Horizontal (2-10 tasks) |
-| RDS PostgreSQL | db.t3.medium | Vertical + Read Replicas |
-| OpenSearch | t3.small.search (2 nodes) | Horizontal |
-| ElastiCache Redis | cache.t3.micro | Vertical |
-| S3 | Standard storage | Automatic |
+| App Droplet | 2-4 vCPU, 4-8GB RAM | Horizontal (add Droplets) |
+| PostgreSQL Droplet | 2 vCPU, 4GB RAM | Vertical resize + Read Replicas |
+| Elasticsearch Droplet | 2 vCPU, 4GB RAM | Vertical / add nodes |
+| Redis Droplet | 1 vCPU, 2GB RAM | Vertical resize |
+| Media Storage | Droplet attached volumes | Add/resize volumes |
 
 ## Scaling Strategies
 
-### Horizontal Scaling (Add Instances)
+### Horizontal Scaling (Add Droplets)
 ```yaml
-# ECS Auto Scaling Policy
-TargetTrackingScaling:
-  TargetValue: 70  # CPU percentage
-  ScaleOutCooldown: 60
-  ScaleInCooldown: 300
+# Scaling trigger thresholds
+scaling:
+  cpu_threshold: 70%    # Add Droplet when exceeded
+  cooldown_period: 300  # Seconds between scale events
+  min_droplets: 1
+  max_droplets: 4
 ```
 
 ### Vertical Scaling (Bigger Instances)
 | Trigger | Action |
 |---------|--------|
-| Consistent high CPU | Upgrade instance size |
-| Memory pressure | Increase RAM allocation |
-| Database bottleneck | Upgrade RDS instance |
+| Consistent high CPU | Resize Droplet (more vCPUs) |
+| Memory pressure | Resize Droplet (more RAM) |
+| Database bottleneck | Resize database Droplet |
 
 ### Scaling Checklist
 - [ ] Monitor metrics before scaling
@@ -98,7 +99,7 @@ TargetTrackingScaling:
 ### Regular Tasks
 | Task | Frequency | Automation |
 |------|-----------|------------|
-| Backups | Daily + Transaction logs | Automated (RDS) |
+| Backups | Daily + Transaction logs | Automated (pg_dump + WAL archiving) |
 | VACUUM ANALYZE | Weekly | Scheduled |
 | Index maintenance | Monthly | Manual review |
 | Statistics update | Weekly | Automated |
@@ -151,7 +152,7 @@ System update → Full cache flush (if needed)
 
 ## Search Infrastructure
 
-### Elasticsearch/OpenSearch Maintenance
+### Elasticsearch Maintenance (self-hosted on Droplet)
 | Task | Frequency |
 |------|-----------|
 | Index health check | Daily |
@@ -237,12 +238,12 @@ System update → Full cache flush (if needed)
    - Restore from backup
 
 2. **Application Failure**
-   - Auto-healing via ECS
-   - Manual container restart
+   - Auto-restart via Docker/systemd
+   - Manual container restart on Droplet
 
-3. **Region Failure**
-   - DNS failover (if multi-region)
-   - Manual recovery from backups
+3. **Droplet/Region Failure**
+   - DNS failover to standby Droplet (if configured)
+   - Manual recovery from backups to new Droplet
 
 ## Security Maintenance
 
@@ -256,7 +257,7 @@ System update → Full cache flush (if needed)
 | Penetration testing | Annually |
 
 ### Security Monitoring
-- CloudWatch for AWS access
+- DigitalOcean monitoring + Prometheus/Grafana
 - Application audit logs
 - Failed login monitoring
 - Unusual traffic patterns
