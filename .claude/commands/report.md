@@ -22,7 +22,9 @@ Generate comprehensive report of completed work and update all project documenta
    - Accessibility improvements
    - Multilingual support added
    - Performance optimizations
-   - **Save complete report to:** `md/report/$1.md`
+   - **Save complete report to:** `md/report/<descriptive-name>.md`
+
+   Generate a descriptive kebab-case filename based on the work accomplished (e.g., `phase-1-foundation-config.md`, `business-profiles-crud-implementation.md`, `events-calendar-rsvp-feature.md`). The filename should make it immediately clear what the report covers without opening the file. Do NOT use generic names like `1.md` or raw `$1` values with spaces.
 
 2. **Update Progress Tracking Files (CRITICAL):**
    - **`PROGRESS.md`** - Update the following sections:

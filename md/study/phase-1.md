@@ -1,7 +1,7 @@
 # Phase 1: Foundation & Core Infrastructure - Study Notes
 
-**Specification References:** Sections 2-8, 26, 29 of `Docs/Community_Hub_Specification_v2.md`
-**Planning References:** `TODO.md` (lines 19-123), `PROGRESS.md` (lines 94-123), `Docs/Development_Roadmap.md` (lines 24-156)
+**Specification References:** Sections 2-8, 26, 29 of `docs/Community_Hub_Specification_v2.md`
+**Planning References:** `TODO.md` (lines 19-123), `PROGRESS.md` (lines 94-123), `docs/Development_Roadmap.md` (lines 24-156)
 **Duration:** January 2026 - July 2026 (6 months)
 **Status:** Not Started (pre-development phase complete)
 **Task Count:** 59 tasks across 8 subsections

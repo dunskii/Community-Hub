@@ -1,0 +1,9 @@
+{
+  "platform": {
+    "id": "guildford-staging"
+  },
+  "analytics": {
+    "googleAnalyticsId": "",
+    "enableCookieConsent": true
+  }
+}

@@ -47,6 +47,8 @@ I need to thoroughly understand "$1" in the Community Hub platform before starti
    - **Related Features:** What other features depend on or relate to this?
    - **Key Files:** Most important files to understand
 
-6. **Save research findings** to `md/study/$1.md` for future reference.
+6. **Save research findings** to `md/study/<descriptive-name>.md` for future reference.
+
+Generate a descriptive kebab-case filename based on the topic content (e.g., `phase-1-foundation-config.md`, `business-profiles-data-models.md`, `emergency-alerts-architecture.md`). The filename should make it immediately clear what the study covers without opening the file. Do NOT use generic names like `1.md` or raw `$1` values with spaces.
 
 Make this a thorough research session - understand every aspect of "$1" from documentation, specification, and implementation before starting any work.

@@ -1,8 +1,8 @@
 # Community Hub Platform - Development TODO
 
 **Specification Version:** 2.0
-**Last Updated:** January 2026
-**Current Phase:** Pre-Development (Planning Complete)
+**Last Updated:** 3 February 2026
+**Current Phase:** Phase 1 (Sub-phases 1.1-1.3 Complete, 1.4 Next)
 
 ---
 
@@ -16,43 +16,51 @@
 
 ---
 
-## Phase 1: Foundation & Core Infrastructure
+## Phase 1: Foundation & Core Infrastructure (25/59 tasks, 42%)
+
+> **Sub-phases 1.1, 1.2, 1.3 = COMPLETE (25/25 tasks)**
+> Remaining: 1.4 Frontend (0/7), 1.5 Security (0/11), 1.6 Email (0/5), 1.7 Maps (0/5), 1.8 i18n (0/6)
 
 ### 1.1 Project Setup & Architecture
 
-#### Development Environment
-- [ ] Set up monorepo structure
-- [ ] Configure Git repository and branching strategy
-- [ ] Configure CI/CD pipelines (GitHub Actions)
-- [ ] Set up development environment (Docker)
-- [ ] Set up staging environment
-- [ ] Set up production environment
-- [ ] Configure ESLint
-- [ ] Configure Prettier
-- [ ] Configure TypeScript
-- [ ] Set up testing framework (Jest/Vitest)
+#### Development Environment (100% Complete)
 
-#### Configuration Architecture [Spec §2]
+- [x] Set up monorepo structure
+- [x] Configure Git repository and branching strategy
+- [x] Configure CI/CD pipelines (GitHub Actions)
+- [x] Set up development environment (Docker)
+- [x] Set up staging environment
+- [x] Set up production environment
+- [x] Configure ESLint
+- [x] Configure Prettier
+- [x] Configure TypeScript
+- [x] Set up testing framework (Jest/Vitest)
+
+#### Configuration Architecture [Spec §2] (100% Complete)
+
 > Note: Legal & Compliance requirements are in §5
-- [ ] Create `.env.example` template with all required variables
-- [ ] Implement `config/platform.json` schema and loader
-- [ ] Implement environment-specific config overrides (dev/staging/prod)
-- [ ] Create configuration validation on startup
-- [ ] Implement feature flags system from config
-- [ ] Create deployment checklist documentation
 
-#### Backend Infrastructure [Spec §3]
-- [ ] Set up PostgreSQL database
-- [ ] Install Prisma ORM >= 7.3.0 (`prisma` and `@prisma/client`) and verify version
-- [ ] Create initial database schema and migrations
-- [ ] Set up Redis for caching and sessions
-- [ ] Configure local media storage
-- [ ] Implement RESTful API scaffolding
-- [ ] Set up Elasticsearch for search
-- [ ] Implement API versioning strategy
-- [ ] Set up logging infrastructure [Spec §29.1]
+- [x] Create `.env.example` template with all required variables
+- [x] Implement `config/platform.json` schema and loader
+- [x] Implement environment-specific config overrides (dev/staging/prod)
+- [x] Create configuration validation on startup
+- [x] Implement feature flags system from config
+- [x] Create deployment checklist documentation
+
+#### Backend Infrastructure [Spec §3] (100% Complete)
+
+- [x] Set up PostgreSQL database
+- [x] Install Prisma ORM >= 7.3.0 (`prisma` and `@prisma/client`) and verify version
+- [x] Create initial database schema and migrations
+- [x] Set up Redis for caching and sessions
+- [x] Configure local media storage
+- [x] Implement RESTful API scaffolding
+- [x] Set up Elasticsearch for search
+- [x] Implement API versioning strategy
+- [x] Set up logging infrastructure [Spec §29.1]
 
 #### Frontend Infrastructure [Spec §3]
+
 - [ ] Initialize React frontend with TypeScript
 - [ ] Configure responsive design system (mobile-first)
 - [ ] Implement design tokens from config (colours, typography, spacing)
@@ -62,6 +70,7 @@
 - [ ] Configure build optimisation (code splitting, tree shaking)
 
 #### Security Foundation [Spec §4]
+
 - [ ] Implement Content-Security-Policy header
 - [ ] Implement X-Frame-Options header (DENY)
 - [ ] Implement X-Content-Type-Options header (nosniff)
@@ -75,6 +84,7 @@
 - [ ] Implement input sanitization middleware (DOMPurify or equivalent) [Spec §4.9]
 
 #### Email Service (required for auth) [Spec §26]
+
 - [ ] Set up Mailgun and configure API key
 - [ ] Create base HTML email template (branded, responsive)
 - [ ] Implement email verification template
@@ -82,6 +92,7 @@
 - [ ] Configure delivery, bounce handling, and one-click unsubscribe
 
 #### Maps Integration (required for business profiles) [Spec §26]
+
 - [ ] Set up Mapbox API (access token, geocoding, map tiles)
 - [ ] Implement map embed component for business profiles
 - [ ] Implement "Get Directions" link
@@ -89,6 +100,7 @@
 - [ ] Implement distance calculation from user location
 
 #### i18n Foundation [Spec §8]
+
 - [ ] Implement translation file structure (JSON per language)
 - [ ] Set up language detection (browser, user preference, URL)
 - [ ] Implement language switching UI component
@@ -103,6 +115,7 @@
 ### 2.1 Authentication [Spec §4, §12, Appendix B]
 
 #### Core Auth Endpoints
+
 - [ ] POST /auth/register - User registration
 - [ ] POST /auth/login - User login
 - [ ] POST /auth/logout - User logout
@@ -114,6 +127,7 @@
 - [ ] POST /auth/refresh - Refresh JWT token
 
 #### Auth Features
+
 - [ ] Email/password registration form
 - [ ] Email verification flow (24-hour expiry link)
 - [ ] Password validation (8+ chars, uppercase, number)
@@ -129,12 +143,14 @@
 ### 2.2 User System [Spec §10, §12, Appendix A]
 
 #### User Model
+
 - [ ] User entity with all fields (id, email, password_hash, display_name, etc.)
 - [ ] Role enum (Guest, Community, BusinessOwner, Moderator, Admin, SuperAdmin)
 - [ ] User preferences (language, notifications, interests)
 - [ ] User status tracking (active, suspended, deleted)
 
 #### Role System & Permissions [Spec §10.1-10.2]
+
 - [ ] Permission matrix implementation
 - [ ] Role-based access control middleware
 - [ ] Guest user capabilities (browse, search, view)
@@ -145,6 +161,7 @@
 - [ ] Super Admin permissions (multi-platform, system config)
 
 #### User Profile Features [Spec §12.2]
+
 - [ ] Display name editing
 - [ ] Profile photo upload with cropping
 - [ ] Bio field (500 chars max)
@@ -157,6 +174,7 @@
 - [ ] Account deletion flow (14-day grace period) [Spec §12.5, §5.2.2]
 
 #### Notification Preferences [Spec §12.3]
+
 - [ ] Email notification toggles
 - [ ] Push notification toggles
 - [ ] SMS notification toggles (if enabled)
@@ -168,9 +186,11 @@
 ## Phase 3: Design System & Core Components
 
 ### 3.1 Design System [Spec §6]
+
 > Note: UI States & Components are covered in §7
 
 #### Colour System
+
 - [ ] CSS custom properties from platform.json colours
 - [ ] Primary colour (#2C5F7C) implementation
 - [ ] Secondary colour (#E67E22) implementation
@@ -180,6 +200,7 @@
 - [ ] Dark mode support (optional future)
 
 #### Typography System
+
 - [ ] Montserrat font loading (headings)
 - [ ] Open Sans font loading (body)
 - [ ] Type scale implementation (H1-H6, body, small, caption)
@@ -190,6 +211,7 @@
 ### 3.2 Core UI Components [Spec §7]
 
 #### Layout Components
+
 - [ ] Header component (sticky, logo, language selector, nav, CTA button)
 - [ ] Footer component (nav links, social links, partner logos, copyright)
 - [ ] Page container with responsive breakpoints
@@ -198,6 +220,7 @@
 - [ ] Grid system (12-column)
 
 #### Form Components [Spec §7.1]
+
 - [ ] Button component (Primary, Secondary, Tertiary, Disabled states)
 - [ ] Input field component with validation states
 - [ ] Textarea component
@@ -211,6 +234,7 @@
 - [ ] Form validation error display
 
 #### Display Components [Spec §7.2-7.5]
+
 - [ ] Card component (8px radius, shadow, hover state)
 - [ ] Modal/dialog component
 - [ ] Toast/notification component
@@ -228,6 +252,7 @@
 - [ ] Image gallery component
 
 ### 3.3 Accessibility [Spec §3.6]
+
 - [ ] Skip to main content link
 - [ ] Visible focus indicators (2px solid)
 - [ ] Screen reader announcements (aria-live regions)
@@ -245,6 +270,7 @@
 ### 4.1 Business Data [Spec §11, Appendix A]
 
 #### Data Models
+
 - [ ] Business entity (all fields from spec)
 - [ ] Category model (hierarchical with parent_id)
 - [ ] OperatingHours model (day, open, close, is_closed)
@@ -255,6 +281,7 @@
 - [ ] BusinessSocialLink model (platform, URL)
 
 #### API Endpoints [Appendix B.2]
+
 - [ ] GET /businesses - List businesses with pagination
 - [ ] GET /businesses/:id - Get business details
 - [ ] POST /businesses - Create business (admin)
@@ -264,6 +291,7 @@
 - [ ] GET /categories/:id/businesses - Businesses by category
 
 ### 4.2 Business Listing Page
+
 - [ ] Business card component (photo, name, category, rating, distance)
 - [ ] Grid/list view toggle
 - [ ] Pagination or infinite scroll
@@ -273,6 +301,7 @@
 - [ ] No results state [Spec §7]
 
 ### 4.3 Business Profile Page [Spec §11]
+
 - [ ] Cover photo display (1200x400px)
 - [ ] Logo display (400x400px)
 - [ ] Business name and tagline
@@ -283,6 +312,7 @@
 - [ ] Navigation tabs (Overview, Photos, Reviews, Events, Deals)
 
 #### Overview Tab
+
 - [ ] About section with description
 - [ ] Features and amenities list
 - [ ] Operating hours with Open/Closed status
@@ -298,6 +328,7 @@
 - [ ] Parking information
 
 #### Location & Map
+
 - [ ] Embedded map (Mapbox GL JS)
 - [ ] Business marker on map
 - [ ] Get Directions button (opens native maps)
@@ -305,12 +336,14 @@
 - [ ] Distance from user (if location enabled)
 
 #### Photos Tab
+
 - [ ] Photo gallery grid
 - [ ] Lightbox/fullscreen view
 - [ ] Swipe navigation (mobile)
 - [ ] Photo categories (interior, exterior, products, menu)
 
 ### 4.4 SEO & Metadata [Spec §2.4 (seo config)]
+
 - [ ] Dynamic meta title and description
 - [ ] Schema.org LocalBusiness structured data
 - [ ] Open Graph tags for social sharing
@@ -326,12 +359,14 @@
 ### 5.1 Search Infrastructure [Spec §14]
 
 #### Search API Endpoints [Appendix B.5]
+
 - [ ] GET /search/businesses - Full business search
 - [ ] GET /search/events - Event search
 - [ ] GET /search/suggestions - Autocomplete suggestions
 - [ ] GET /search/all - Combined search
 
 #### Search Engine Setup
+
 - [ ] Elasticsearch index configuration
 - [ ] Business document indexing
 - [ ] Field weighting (name > description > category)
@@ -340,6 +375,7 @@
 - [ ] Multilingual analyzer setup
 
 ### 5.2 Search Features [Spec §14.1]
+
 - [ ] Search bar component (prominent, accessible)
 - [ ] Full-text search with relevance scoring
 - [ ] Autocomplete suggestions (debounced)
@@ -349,6 +385,7 @@
 - [ ] Voice search (optional future)
 
 ### 5.3 Filters [Spec §14.2]
+
 - [ ] Category filter (multi-select, hierarchical)
 - [ ] Distance/radius filter (slider or dropdown)
 - [ ] Open Now toggle
@@ -365,6 +402,7 @@
 - [ ] Active filter chips display
 
 ### 5.4 Sort Options [Spec §14.3]
+
 - [ ] Relevance (default for search)
 - [ ] Distance (requires location)
 - [ ] Rating (highest first)
@@ -374,6 +412,7 @@
 - [ ] Newest First
 
 ### 5.5 Homepage Discovery [Spec §14.4]
+
 - [ ] Hero section with background image
 - [ ] Prominent search bar
 - [ ] Quick filter chips
@@ -393,11 +432,13 @@
 ### 6.1 Saved Businesses & Following [Spec §12.4]
 
 #### Data Models
+
 - [ ] SavedBusiness model (user_id, business_id, list_id, saved_at)
 - [ ] BusinessFollow model (user_id, business_id, followed_at)
 - [ ] SavedList model (user_id, name, is_default)
 
 #### API Endpoints [Appendix B.4]
+
 - [ ] GET /users/:id/saved - Get saved businesses
 - [ ] POST /users/:id/saved - Save a business
 - [ ] DELETE /users/:id/saved/:businessId - Unsave business
@@ -405,6 +446,7 @@
 - [ ] DELETE /businesses/:id/follow - Unfollow
 
 #### UI Features
+
 - [ ] Save/heart button on business cards and profiles
 - [ ] Saved businesses page with list view
 - [ ] Custom lists creation and management
@@ -415,12 +457,14 @@
 ### 6.2 Reviews & Ratings [Spec §18]
 
 #### Data Models [Appendix A.4]
+
 - [ ] Review model (user_id, business_id, rating, text, photos, language)
 - [ ] ReviewPhoto model (review_id, url, order)
 - [ ] ReviewHelpful model (review_id, user_id)
 - [ ] ReviewResponse model (review_id, business_id, text, responded_at)
 
 #### API Endpoints [Appendix B.7]
+
 - [ ] GET /businesses/:id/reviews - List reviews for business
 - [ ] POST /businesses/:id/reviews - Create review
 - [ ] PUT /reviews/:id - Edit review (within 7 days)
@@ -430,6 +474,7 @@
 - [ ] POST /reviews/:id/respond - Business owner response
 
 #### Review Features
+
 - [ ] Star rating component (1-5, half stars)
 - [ ] Review form (50-1000 characters)
 - [ ] Photo upload (up to 3 images)
@@ -442,12 +487,14 @@
 - [ ] Review filtering by rating
 
 #### Business Response
+
 - [ ] Response form for business owners
 - [ ] Response display below review
 - [ ] One response per review limit
 - [ ] Response edit capability
 
 #### Moderation [Spec §23.4, §24.1]
+
 - [ ] Review submission to moderation queue
 - [ ] Profanity filtering
 - [ ] Spam detection
@@ -475,6 +522,7 @@
 ### 7.1 Business Claim & Verification [Spec §13.1, §24]
 
 #### Claim Flow
+
 - [ ] "Claim This Business" button on unclaimed profiles
 - [ ] Claim request form
 - [ ] Phone verification method
@@ -486,6 +534,7 @@
 - [ ] Claim notification emails
 
 #### Ownership Management
+
 - [ ] Multiple owner support
 - [ ] Staff account creation
 - [ ] Ownership transfer flow
@@ -494,6 +543,7 @@
 ### 7.2 Business Dashboard [Spec §13.2]
 
 #### Dashboard Overview
+
 - [ ] Dashboard home with key metrics
 - [ ] Profile views (today, week, month)
 - [ ] Search appearances
@@ -504,6 +554,7 @@
 - [ ] Quick action buttons
 
 #### Profile Management
+
 - [ ] Basic info editing form
 - [ ] Description editor (rich text)
 - [ ] Category selection
@@ -522,9 +573,11 @@
 ### 7.3 Business Analytics [Spec §13.4, Appendix B.2]
 
 #### Analytics Endpoint
+
 - [ ] GET /businesses/:id/analytics - Business performance data
 
 #### Analytics Dashboard
+
 - [ ] Date range selector
 - [ ] Profile views chart
 - [ ] Search impressions chart
@@ -545,6 +598,7 @@
 ### 8.1 Event Data [Spec §15, Appendix A.3]
 
 #### Data Models
+
 - [ ] Event entity (all fields from spec)
 - [ ] EventCategory model
 - [ ] RecurrenceRule model (frequency, interval, end conditions)
@@ -552,6 +606,7 @@
 - [ ] EventReminder model
 
 #### API Endpoints [Appendix B.3]
+
 - [ ] GET /events - List events with filters
 - [ ] GET /events/:id - Event details
 - [ ] POST /events - Create event
@@ -565,6 +620,7 @@
 ### 8.2 Event Display [Spec §15.3]
 
 #### Event Listing Page
+
 - [ ] Event card component
 - [ ] Month calendar view
 - [ ] Week view
@@ -578,6 +634,7 @@
 - [ ] Accessibility filter
 
 #### Event Detail Page
+
 - [ ] Event header (image, title, date/time)
 - [ ] Host/organiser information
 - [ ] Location with map
@@ -590,6 +647,7 @@
 - [ ] Related events
 
 ### 8.3 Event Interaction [Spec §15.4]
+
 - [ ] RSVP options (Going, Interested, Not Going)
 - [ ] Guest count for RSVPs
 - [ ] RSVP confirmation email
@@ -601,6 +659,7 @@
 - [ ] Copy event link
 
 ### 8.4 Event Management (Business Owners) [Spec §15]
+
 - [ ] Event creation form
 - [ ] Image upload for event
 - [ ] Recurring event setup (daily, weekly, monthly, custom)
@@ -618,12 +677,14 @@
 ### 9.1 Messaging Data [Spec §16, Appendix A.5]
 
 #### Data Models
+
 - [ ] Conversation model (participants, business_id, status, created_at)
 - [ ] Message model (conversation_id, sender_id, content, attachments, read_at)
 - [ ] ConversationParticipant model
 - [ ] MessageAttachment model
 
 #### API Endpoints [Appendix B.6]
+
 - [ ] GET /conversations - User's conversations
 - [ ] GET /conversations/:id - Conversation detail with messages
 - [ ] POST /conversations - Start new conversation
@@ -635,6 +696,7 @@
 ### 9.2 User Messaging [Spec §16.1]
 
 #### Enquiry Flow
+
 - [ ] "Send Message" button on business profiles
 - [ ] Enquiry form (subject, message, contact preference)
 - [ ] Pre-defined enquiry types (general, booking, quote, complaint)
@@ -642,6 +704,7 @@
 - [ ] Confirmation message on send
 
 #### Conversation UI
+
 - [ ] Conversations list (inbox view)
 - [ ] Unread indicator/badge
 - [ ] Conversation thread view
@@ -652,6 +715,7 @@
 - [ ] Real-time message updates (WebSocket or polling)
 
 ### 9.3 Business Inbox [Spec §16.2]
+
 - [ ] Business inbox dashboard
 - [ ] Unread count badge
 - [ ] Mark as read/unread
@@ -665,6 +729,7 @@
 - [ ] Messaging analytics (response time, volume)
 
 ### 9.4 Privacy & Safety [Spec §16.3]
+
 - [ ] Contact info privacy (no direct email/phone in messages)
 - [ ] Block user functionality
 - [ ] Report message/conversation
@@ -680,6 +745,7 @@
 ### 10.1 Deals Data [Spec §17, Appendix A.6]
 
 #### Data Models
+
 - [ ] Deal model (all fields from spec)
 - [ ] DealCategory model
 - [ ] DealRedemption model (deal_id, user_id, redeemed_at, method)
@@ -687,6 +753,7 @@
 - [ ] DealAlert model (user_id, preferences)
 
 #### API Endpoints [Appendix B.8]
+
 - [ ] GET /deals - List deals with filters
 - [ ] GET /deals/featured - Featured deals
 - [ ] GET /deals/flash - Active flash deals
@@ -702,6 +769,7 @@
 - [ ] GET /users/:id/saved-deals - User's saved deals
 
 ### 10.2 Deals Discovery [Spec §17.5]
+
 - [ ] Deals hub page
 - [ ] Deal card component (image, title, discount, business, expiry)
 - [ ] Today's Deals section
@@ -715,6 +783,7 @@
 - [ ] Search within deals
 
 ### 10.3 Flash Deals [Spec §17.1]
+
 - [ ] Flash deal creation (business owners)
 - [ ] Countdown timer component
 - [ ] Quantity limit setting
@@ -725,6 +794,7 @@
 - [ ] Flash deal badge/styling
 
 ### 10.4 Deal Redemption [Spec §17.4]
+
 - [ ] Show Screen redemption method
 - [ ] Unique code generation
 - [ ] QR code generation
@@ -736,6 +806,7 @@
 - [ ] User's redemption history
 
 ### 10.5 Deal Management (Business Owners)
+
 - [ ] Deal creation form
 - [ ] Deal types (percentage, fixed, BOGO, free item, etc.)
 - [ ] Validity period setting
@@ -749,6 +820,7 @@
 - [ ] Deal analytics dashboard
 
 ### 10.6 Deal Alerts [Spec §17.5]
+
 - [ ] Flash deal push notifications
 - [ ] Category-based alerts
 - [ ] Business-specific alerts
@@ -764,10 +836,12 @@
 ### 11.1 Community Noticeboard [Spec §19.1]
 
 #### Data Models [Appendix A.10]
+
 - [ ] Notice model (user_id, type, title, content, images, expires_at)
 - [ ] NoticeCategory model
 
 #### Notice Types
+
 - [ ] Items for Sale/Wanted
 - [ ] Services Offered/Wanted
 - [ ] Lost & Found
@@ -777,6 +851,7 @@
 - [ ] Carpool/Rideshare
 
 #### Noticeboard Features
+
 - [ ] Notice listing page
 - [ ] Category filtering
 - [ ] Search within notices
@@ -790,6 +865,7 @@
 - [ ] Report functionality
 
 #### API Endpoints [Appendix B.12]
+
 - [ ] GET /notices - List active notices
 - [ ] GET /notices/:id - Get single notice
 - [ ] POST /notices - Create notice
@@ -800,11 +876,13 @@
 ### 11.2 Community Groups Hub [Spec §19.2]
 
 #### Data Models [Appendix A.11]
+
 - [ ] CommunityGroup model
 - [ ] GroupCategory model
 - [ ] GroupModerator model
 
 #### Group Features
+
 - [ ] Group listing page
 - [ ] Category filtering (sports, cultural, hobby, etc.)
 - [ ] Group detail page
@@ -815,6 +893,7 @@
 - [ ] Moderator management
 
 #### API Endpoints [Appendix B.13]
+
 - [ ] GET /groups - List community groups
 - [ ] GET /groups/:id - Get group details
 - [ ] POST /groups - Submit new group
@@ -823,10 +902,12 @@
 ### 11.3 Local News & Announcements [Spec §19.4]
 
 #### Data Models [Appendix A.12]
+
 - [ ] Announcement model
 - [ ] AnnouncementSource model (council, chamber, platform)
 
 #### News Features
+
 - [ ] News feed page
 - [ ] Pinned/featured announcements
 - [ ] Category filtering
@@ -836,6 +917,7 @@
 - [ ] Share functionality
 
 #### API Endpoints [Appendix B.15]
+
 - [ ] GET /announcements - List announcements
 - [ ] GET /announcements/:id - Get single announcement
 - [ ] POST /announcements - Create announcement (admin)
@@ -845,10 +927,12 @@
 ### 11.4 Local History Archive [Spec §19.3]
 
 #### Data Models [Appendix A.13]
+
 - [ ] HistoricalContent model
 - [ ] HistoricalCategory model (era, topic, type)
 
 #### History Features
+
 - [ ] History archive page
 - [ ] Browse by era/decade
 - [ ] Browse by category
@@ -860,6 +944,7 @@
 - [ ] Timeline view
 
 #### API Endpoints [Appendix B.14]
+
 - [ ] GET /history - List historical content
 - [ ] GET /history/:id - Get single item
 - [ ] POST /history - Submit historical content
@@ -873,6 +958,7 @@
 ### 12.1 Community Feed [Spec §20.1]
 
 #### Aggregation Features
+
 - [ ] Hashtag aggregation (configurable hashtags)
 - [ ] Instagram post import
 - [ ] Facebook post import
@@ -886,6 +972,7 @@
 - [ ] Refresh/update mechanism
 
 ### 12.2 Business Social Feeds [Spec §20.2]
+
 - [ ] Latest posts display on business profiles
 - [ ] Facebook post embedding
 - [ ] Instagram post embedding
@@ -894,6 +981,7 @@
 - [ ] Manual refresh option
 
 ### 12.3 Community Competitions [Spec §20]
+
 - [ ] Competition/challenge announcements
 - [ ] Theme display
 - [ ] Submission tracking via hashtag
@@ -908,10 +996,12 @@
 ### 13.1 B2B Profiles [Spec §21.1, Appendix A.7]
 
 #### Data Models
+
 - [ ] BusinessNetworkProfile model
 - [ ] BusinessConnection model (status, message, connected_at)
 
 #### B2B Profile Fields
+
 - [ ] Services offered to other businesses
 - [ ] Services needed from other businesses
 - [ ] Partnership interests
@@ -919,6 +1009,7 @@
 - [ ] Availability for collaboration
 
 #### API Endpoints [Appendix B.9]
+
 - [ ] GET /b2b/directory - B2B directory
 - [ ] GET /b2b/profile/:businessId - B2B profile
 - [ ] PUT /b2b/profile/:businessId - Update B2B profile
@@ -926,12 +1017,14 @@
 ### 13.2 B2B Directory & Connections [Spec §21.2]
 
 #### API Endpoints
+
 - [ ] GET /b2b/connections - List connections
 - [ ] POST /b2b/connections - Request connection
 - [ ] PUT /b2b/connections/:id - Accept/reject connection
 - [ ] DELETE /b2b/connections/:id - Remove connection
 
 #### Directory Features
+
 - [ ] B2B directory page
 - [ ] Filter by services offered
 - [ ] Filter by services needed
@@ -945,10 +1038,12 @@
 ### 13.3 B2B Messaging [Spec §21.3]
 
 #### API Endpoints
+
 - [ ] GET /b2b/messages - B2B messages
 - [ ] POST /b2b/messages - Send B2B message
 
 #### Features
+
 - [ ] B2B inbox (separate from customer messages)
 - [ ] Rich message support
 - [ ] File sharing (documents, images)
@@ -956,6 +1051,7 @@
 - [ ] Message threading
 
 ### 13.4 Collaboration Tools [Spec §21.4]
+
 - [ ] Joint promotion creation
 - [ ] Cross-promotion partnerships
 - [ ] Referral tracking system
@@ -965,6 +1061,7 @@
 ### 13.5 B2B Forum & Events [Spec §21, Appendix A.8]
 
 #### API Endpoints
+
 - [ ] GET /b2b/forum - Forum topics
 - [ ] GET /b2b/forum/:topicId - Topic detail
 - [ ] POST /b2b/forum - Create topic
@@ -975,6 +1072,7 @@
 - [ ] GET /b2b/referrals - Referral history
 
 #### Forum Features
+
 - [ ] Forum topic listing
 - [ ] Create topic form
 - [ ] Threaded replies
@@ -984,11 +1082,13 @@
 - [ ] Notification on replies
 
 #### B2B Events
+
 - [ ] B2B events listing
 - [ ] Networking event RSVP
 - [ ] Business representative selection
 
 ### 13.6 Chamber Integration [Spec §21]
+
 - [ ] Chamber announcements section
 - [ ] Chamber member badge
 - [ ] Chamber events integration
@@ -1003,11 +1103,13 @@
 ### 14.1 Alert System [Spec §22, Appendix A.9]
 
 #### Data Models
+
 - [ ] Alert model (all fields from spec)
 - [ ] BusinessEmergencyStatus model
 - [ ] AlertCheckIn model
 
 #### API Endpoints [Appendix B.10]
+
 - [ ] GET /alerts - All alerts
 - [ ] GET /alerts/active - Currently active alerts
 - [ ] GET /alerts/:id - Alert details
@@ -1021,6 +1123,7 @@
 - [ ] PUT /businesses/:id/emergency-status - Update business status
 
 ### 14.2 Alert Display [Spec §22.1]
+
 - [ ] Alert level styling (Critical-red, Warning-orange, Advisory-yellow, Info-blue)
 - [ ] Full-width banner for critical alerts
 - [ ] Header indicator for active alerts
@@ -1031,6 +1134,7 @@
 - [ ] Action buttons (share, check-in)
 
 ### 14.3 Alert Distribution [Spec §22.2]
+
 - [ ] Push notifications for critical alerts
 - [ ] SMS integration for emergency alerts (Twilio)
 - [ ] WhatsApp integration for emergency alerts (Twilio WhatsApp API)
@@ -1041,6 +1145,7 @@
 - [ ] Critical override option
 
 ### 14.4 Business Emergency Status [Spec §22.3]
+
 - [ ] Status options (Open, Modified Hours, Closed Temporarily, Affected, Closed Until Further Notice)
 - [ ] Quick update buttons in dashboard
 - [ ] Status message (custom text)
@@ -1050,6 +1155,7 @@
 - [ ] Status history log
 
 ### 14.5 Community Safety [Spec §22.4]
+
 - [ ] Safety check-in system
 - [ ] Resource information display
 - [ ] Emergency contacts page
@@ -1058,6 +1164,7 @@
 - [ ] Community support resources
 
 ### 14.6 External Alert Integrations [Spec §22, §26]
+
 - [ ] NSW Emergency Services feed integration
 - [ ] Bureau of Meteorology (BOM) weather alerts
 - [ ] Transport NSW disruptions
@@ -1070,6 +1177,7 @@
 ## Phase 15: Administration & Analytics
 
 ### 15.1 Admin Dashboard [Spec §23.1]
+
 - [ ] Admin dashboard overview
 - [ ] Key metrics widgets
 - [ ] Active users chart
@@ -1080,6 +1188,7 @@
 - [ ] Quick action buttons
 
 ### 15.2 User Management [Spec §23.2, Appendix B.20]
+
 - [ ] User listing with search/filter
 - [ ] User detail view
 - [ ] Role assignment
@@ -1090,6 +1199,7 @@
 - [ ] Account deletion processing
 
 ### 15.3 Business Management [Spec §23.3]
+
 - [ ] Business listing with search/filter
 - [ ] Business detail/edit view
 - [ ] Claim request queue
@@ -1102,6 +1212,7 @@
 - [ ] Bulk update functionality
 
 ### 15.4 Content Moderation [Spec §23.4]
+
 - [ ] Moderation queue dashboard
 - [ ] Queue filtering (type, status, age)
 - [ ] Quick approve/reject actions
@@ -1114,6 +1225,7 @@
 - [ ] Appeal handling workflow [Spec §24.4]
 
 ### 15.5 Platform Analytics [Spec §25]
+
 - [ ] Platform-wide metrics dashboard
 - [ ] User analytics (registrations, active users, retention)
 - [ ] Business analytics (total, by category, verification rate)
@@ -1127,6 +1239,7 @@
 - [ ] Comparison to previous periods
 
 ### 15.6 Reporting [Spec §25]
+
 - [ ] Standard report templates
 - [ ] Custom report builder
 - [ ] Scheduled report generation
@@ -1138,6 +1251,7 @@
 - [ ] CID pilot metrics
 
 ### 15.7 Survey System [Spec §23, Appendix B]
+
 - [ ] Survey builder interface
 - [ ] Question types (text, single choice, multiple choice, scale, matrix)
 - [ ] Conditional logic
@@ -1152,6 +1266,7 @@
 ## Phase 16: External Integrations
 
 ### 16.1 Google Business Profile API [Spec §26.1]
+
 - [ ] OAuth 2.0 implementation
 - [ ] Business data import
 - [ ] Hours synchronisation
@@ -1163,6 +1278,7 @@
 - [ ] Manual override flags
 
 ### 16.2 Facebook & Instagram APIs [Spec §26.2]
+
 - [ ] Facebook OAuth implementation
 - [ ] Instagram Basic Display API setup
 - [ ] Page information import
@@ -1173,6 +1289,7 @@
 - [ ] Token refresh automation
 
 ### 16.3 Email Service [Spec §26.3]
+
 - [ ] Mailgun provider setup
 - [ ] Email template system
 - [ ] Template management in admin
@@ -1183,6 +1300,7 @@
 - [ ] Email queue system
 
 #### Email Templates Required
+
 - [ ] Welcome email
 - [ ] Email verification
 - [ ] Password reset
@@ -1196,6 +1314,7 @@
 - [ ] Newsletter template
 
 ### 16.4 Maps Integration [Spec §26.4]
+
 - [ ] Mapbox GL JS setup and access token configuration
 - [ ] Map component for business locations
 - [ ] Multiple business map view
@@ -1207,6 +1326,7 @@
 - [ ] Boundary polygon display
 
 ### 16.5 Translation API [Spec §8.3]
+
 - [ ] Google Translate API integration
 - [ ] On-demand translation for user content
 - [ ] Translation caching
@@ -1215,6 +1335,7 @@
 - [ ] Batch translation for performance
 
 ### 16.6 SMS Integration [Spec §26.5]
+
 - [ ] Twilio provider setup (Account SID, Auth Token, phone number)
 - [ ] SMS template system
 - [ ] Twilio WhatsApp Business API setup (approved sender number)
@@ -1226,6 +1347,7 @@
 - [ ] Rate limiting (max 1 per 5 minutes)
 
 ### 16.7 Push Notifications (Firebase) [Spec §26.6]
+
 - [ ] Firebase Cloud Messaging setup
 - [ ] Notification payload structure
 - [ ] Notification types configuration
@@ -1236,6 +1358,7 @@
 ## Phase 17: PWA & Performance
 
 ### 17.1 PWA Features [Spec §3]
+
 - [ ] Web App Manifest with all required fields
 - [ ] Install prompt handling (iOS and Android)
 - [ ] App icons (all required sizes)
@@ -1245,6 +1368,7 @@
 - [ ] Notification preferences sync
 
 ### 17.2 Offline Capability [Spec §3]
+
 - [ ] Service worker implementation
 - [ ] Cache-first strategy for static assets
 - [ ] Network-first strategy for API calls
@@ -1257,6 +1381,7 @@
 - [ ] Offline indicator UI
 
 ### 17.3 Performance Optimisation [Spec §3]
+
 - [ ] Image optimisation (WebP, responsive sizes)
 - [ ] Lazy loading for images
 - [ ] Code splitting by route
@@ -1277,22 +1402,26 @@
 ### 18.1 UI Translation [Spec §8]
 
 #### High Priority Languages
+
 - [ ] English (en) - Primary (complete)
 - [ ] Arabic (ar) - High priority
 - [ ] Chinese Simplified (zh-CN) - High priority
 - [ ] Vietnamese (vi) - High priority
 
 #### Medium Priority Languages
+
 - [ ] Chinese Traditional (zh-TW)
 - [ ] Hindi (hi)
 - [ ] Urdu (ur)
 
 #### Lower Priority Languages
+
 - [ ] Korean (ko)
 - [ ] Greek (el)
 - [ ] Italian (it)
 
 ### 18.2 RTL Support [Spec §8.4]
+
 - [ ] RTL stylesheet generation
 - [ ] Arabic layout testing and fixes
 - [ ] Urdu layout testing and fixes
@@ -1302,6 +1431,7 @@
 - [ ] Navigation RTL layout
 
 ### 18.3 Translation Management
+
 - [ ] Translation key extraction
 - [ ] Missing translation detection
 - [ ] Translation file validation
@@ -1346,6 +1476,7 @@
 ## Ongoing Tasks
 
 ### Testing [Spec §30]
+
 - [ ] Unit test coverage > 80%
 - [ ] Integration tests for all API endpoints
 - [ ] E2E tests for critical user journeys
@@ -1358,6 +1489,7 @@
 - [ ] Load testing scenarios [Spec §30.4]
 
 ### Legal & Compliance [Spec §5]
+
 - [ ] Terms of Service document (all required sections) [Spec §5.1]
 - [ ] Privacy Policy (APP compliant) [Spec §5.2]
 - [ ] Cookie consent flow implementation [Spec §5.3]
@@ -1365,11 +1497,13 @@
 - [ ] Dispute resolution process [Spec §5.5]
 
 ### Onboarding Flows [Spec §9]
+
 - [ ] First-time user experience flow [Spec §9.1]
 - [ ] Business owner onboarding wizard [Spec §9.2]
 - [ ] QR code registration flow [Spec §9.3]
 
 ### Documentation
+
 - [ ] API documentation (OpenAPI/Swagger)
 - [ ] Component documentation (Storybook)
 - [ ] Architecture documentation
@@ -1380,6 +1514,7 @@
 - [ ] Translation contributor guide
 
 ### Maintenance [Spec §31]
+
 - [ ] Dependency update schedule
 - [ ] Security patch process
 - [ ] Performance monitoring setup
@@ -1397,5 +1532,7 @@ _Add any additional notes, decisions, or blockers here._
 ---
 
 **Total Estimated Tasks:** ~650+ items across 19 phases
+**Completed:** 25 tasks (Phase 1.1 + 1.2 + 1.3) -- ~4% overall
+**Next:** Phase 1.4 (Frontend Infrastructure)
 
 ---

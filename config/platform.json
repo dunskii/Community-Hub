@@ -1,0 +1,183 @@
+{
+  "platform": {
+    "id": "guildford",
+    "version": "1.0.0"
+  },
+
+  "location": {
+    "suburbName": "Guildford",
+    "suburbNameShort": "Guildford",
+    "region": "Guildford South",
+    "city": "Sydney",
+    "state": "NSW",
+    "stateFullName": "New South Wales",
+    "country": "Australia",
+    "countryCode": "AU",
+    "postcode": "2161",
+    "postcodeRange": ["2161", "2162"],
+    "coordinates": {
+      "latitude": -33.8567,
+      "longitude": 150.9876
+    },
+    "boundingBox": {
+      "north": -33.84,
+      "south": -33.87,
+      "east": 151.0,
+      "west": 150.97
+    },
+    "timezone": "Australia/Sydney",
+    "locale": "en-AU",
+    "currency": "AUD",
+    "currencySymbol": "$",
+    "phoneCountryCode": "+61",
+    "defaultSearchRadiusKm": 5,
+    "maxSearchRadiusKm": 20
+  },
+
+  "branding": {
+    "platformName": "Guildford Community Hub",
+    "platformNameShort": "Guildford Hub",
+    "tagline": "Connecting locals with local business",
+    "description": "Your digital guide to local businesses and community in Guildford",
+    "legalEntityName": "Guildford Community Digital Platform",
+    "copyrightHolder": "Greater Cumberland Chamber of Commerce",
+    "colors": {
+      "primary": "#2C5F7C",
+      "secondary": "#E67E22",
+      "accent": "#F39C12",
+      "success": "#27AE60",
+      "error": "#E74C3C",
+      "warning": "#F39C12",
+      "info": "#3498DB"
+    },
+    "logos": {
+      "primary": "/assets/branding/logo-primary.svg",
+      "light": "/assets/branding/logo-light.svg",
+      "dark": "/assets/branding/logo-dark.svg",
+      "favicon": "/assets/branding/favicon.ico",
+      "appleTouchIcon": "/assets/branding/apple-touch-icon.png"
+    },
+    "socialHashtags": {
+      "primary": "#MyGuildford",
+      "secondary": ["#Guildford", "#GuildfordNSW", "#GuildfordSydney", "#ShopGuildford"]
+    }
+  },
+
+  "partners": {
+    "council": {
+      "name": "Cumberland Council",
+      "website": "https://www.cumberland.nsw.gov.au",
+      "logo": "/assets/partners/cumberland-council.png",
+      "contactEmail": "council@cumberland.nsw.gov.au"
+    },
+    "chamber": {
+      "name": "Greater Cumberland Chamber of Commerce",
+      "website": "https://www.cumberlandchamber.com.au",
+      "logo": "/assets/partners/chamber.png",
+      "contactEmail": "info@cumberlandchamber.com.au"
+    }
+  },
+
+  "features": {
+    "businessDirectory": true,
+    "eventsCalendar": true,
+    "communityNoticeboard": true,
+    "communityGroups": true,
+    "localHistory": true,
+    "messaging": true,
+    "dealsHub": true,
+    "b2bNetworking": true,
+    "emergencyAlerts": true,
+    "socialFeedAggregation": true,
+    "surveySystem": true,
+    "reviewsAndRatings": true,
+    "multilingual": true,
+    "pwaInstallation": true,
+    "smsAlerts": true,
+    "whatsappAlerts": true
+  },
+
+  "multilingual": {
+    "defaultLanguage": "en",
+    "supportedLanguages": [
+      { "code": "en", "name": "English", "nativeName": "English", "rtl": false, "enabled": true },
+      { "code": "ar", "name": "Arabic", "nativeName": "العربية", "rtl": true, "enabled": true },
+      {
+        "code": "zh-CN",
+        "name": "Chinese (Simplified)",
+        "nativeName": "简体中文",
+        "rtl": false,
+        "enabled": true
+      },
+      {
+        "code": "zh-TW",
+        "name": "Chinese (Traditional)",
+        "nativeName": "繁體中文",
+        "rtl": false,
+        "enabled": true
+      },
+      {
+        "code": "vi",
+        "name": "Vietnamese",
+        "nativeName": "Tiếng Việt",
+        "rtl": false,
+        "enabled": true
+      },
+      { "code": "hi", "name": "Hindi", "nativeName": "हिन्दी", "rtl": false, "enabled": true },
+      { "code": "ur", "name": "Urdu", "nativeName": "اردو", "rtl": true, "enabled": true },
+      { "code": "ko", "name": "Korean", "nativeName": "한국어", "rtl": false, "enabled": true },
+      { "code": "el", "name": "Greek", "nativeName": "Ελληνικά", "rtl": false, "enabled": true },
+      { "code": "it", "name": "Italian", "nativeName": "Italiano", "rtl": false, "enabled": true }
+    ],
+    "autoTranslationEnabled": true
+  },
+
+  "seo": {
+    "titleTemplate": "{page} | {platformName}",
+    "defaultTitle": "Guildford Community Hub - Local Business Directory",
+    "defaultDescription": "Discover local businesses, events, and community in Guildford South, Sydney. Connect with your neighbourhood.",
+    "defaultKeywords": [
+      "Guildford",
+      "local business",
+      "Sydney",
+      "community",
+      "NSW",
+      "Guildford South"
+    ],
+    "ogImage": "/assets/branding/og-image.jpg",
+    "twitterHandle": "@GuildfordHub"
+  },
+
+  "contact": {
+    "supportEmail": "support@guildfordhub.com.au",
+    "generalEmail": "hello@guildfordhub.com.au",
+    "feedbackEmail": "feedback@guildfordhub.com.au",
+    "privacyEmail": "privacy@guildfordhub.com.au"
+  },
+
+  "legal": {
+    "termsUrl": "/legal/terms",
+    "privacyUrl": "/legal/privacy",
+    "cookieUrl": "/legal/cookies",
+    "accessibilityUrl": "/legal/accessibility",
+    "abn": "XX XXX XXX XXX"
+  },
+
+  "limits": {
+    "maxBusinessPhotos": 50,
+    "maxPhotoSizeMb": 5,
+    "maxMenuFileSizeMb": 10,
+    "maxActivePromotions": 5,
+    "maxNoticeboardPostsPerUser": 3,
+    "noticeboardExpiryDays": 30,
+    "maxNewConversationsPerDay": 10,
+    "maxFlashDealsPerWeek": 2,
+    "reviewEditWindowDays": 7,
+    "accountDeletionGracePeriodDays": 14
+  },
+
+  "analytics": {
+    "googleAnalyticsId": "G-XXXXXXXXXX",
+    "enableCookieConsent": true
+  }
+}

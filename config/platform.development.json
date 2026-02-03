@@ -1,0 +1,14 @@
+{
+  "platform": {
+    "id": "guildford-dev"
+  },
+  "limits": {
+    "maxBusinessPhotos": 10,
+    "maxPhotoSizeMb": 2,
+    "maxActivePromotions": 2
+  },
+  "analytics": {
+    "googleAnalyticsId": "",
+    "enableCookieConsent": false
+  }
+}

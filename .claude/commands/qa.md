@@ -39,14 +39,14 @@ Perform comprehensive code review of "$1" to ensure quality, security, and compl
    - Ensure all required fields and validations are present
 
 4. **Plan File Verification:**
-   - Review `md/plan/$1.md` if it exists
+   - Search `md/plan/` for any plan files related to "$1"
    - Verify all planned tasks were completed
    - Check task dependencies were followed in correct sequence
    - Confirm all success criteria were met
    - Ensure all phases completed
 
 5. **Study File Cross-Reference:**
-   - Review `md/study/$1.md` if it exists
+   - Search `md/study/` for any study files related to "$1"
    - Verify all documented requirements are implemented
    - Ensure architecture matches what was researched
    - Check for gaps in implementation vs documentation
@@ -86,7 +86,9 @@ Perform comprehensive code review of "$1" to ensure quality, security, and compl
     - Alert colors (Red critical, Orange warning, Yellow advisory, Blue info)
     - Responsive breakpoints (Mobile < 768px, Tablet 768-1199px, Desktop >= 1200px)
 
-**Save the complete review to:** `md/review/$1.md`
+**Save the complete review to:** `md/review/<descriptive-name>.md`
+
+Generate a descriptive kebab-case filename based on the review scope (e.g., `phase-1-foundation-config.md`, `business-profiles-api-security.md`, `events-calendar-accessibility.md`). If multiple reviews exist for the same scope, append a revision number (e.g., `phase-1-foundation-config-r2.md`). The filename should make it immediately clear what was reviewed without opening the file. Do NOT use generic names like `1.md` or raw `$1` values with spaces.
 
 The review should identify:
 - Critical issues that must be fixed

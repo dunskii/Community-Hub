@@ -65,6 +65,8 @@ Generate a comprehensive implementation plan for "$1".
    - Shared components and utilities
    - Database relationships (per Appendix A)
 
-**Save the complete plan to:** `md/plan/$1.md`
+**Save the complete plan to:** `md/plan/<descriptive-name>.md`
+
+Generate a descriptive kebab-case filename based on the topic content (e.g., `phase-1-foundation-config.md`, `business-profiles-crud.md`, `events-calendar-rsvp.md`). The filename should make it immediately clear what the plan covers without opening the file. Do NOT use generic names like `1.md` or raw `$1` values with spaces.
 
 The plan should be detailed enough that any developer can follow it step-by-step to implement the feature correctly.

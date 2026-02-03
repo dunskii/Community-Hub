@@ -31,6 +31,7 @@ When implementing features, always reference configuration values rather than ha
 The specification is organised into 7 parts plus appendices:
 
 ### Part 1: Foundation & Architecture (Sections 1-5)
+
 - **Section 1:** Project Overview
 - **Section 2:** Platform Configuration Architecture (location-agnostic config)
 - **Section 3:** Technical Requirements (stack, performance, scalability, accessibility)
@@ -38,18 +39,21 @@ The specification is organised into 7 parts plus appendices:
 - **Section 5:** Legal & Compliance (Terms, Privacy Policy, Cookie Consent)
 
 ### Part 2: Design & User Experience (Sections 6-9)
+
 - **Section 6:** Design Specifications (colours, typography, components)
 - **Section 7:** UI States & Components (loading, empty, error states)
 - **Section 8:** Multilingual Support (10 languages, RTL)
 - **Section 9:** Onboarding & User Journeys
 
 ### Part 3: Users & Core Entities (Sections 10-13)
+
 - **Section 10:** User Types & Roles
 - **Section 11:** Business Profile Features
 - **Section 12:** Community User Features
 - **Section 13:** Business Owner Features
 
 ### Part 4: Core Functionality (Sections 14-18)
+
 - **Section 14:** Search & Discovery
 - **Section 15:** Events & Calendar System
 - **Section 16:** Messaging & Communication System
@@ -57,18 +61,21 @@ The specification is organised into 7 parts plus appendices:
 - **Section 18:** Reviews & Ratings
 
 ### Part 5: Community & Social Features (Sections 19-22)
+
 - **Section 19:** Community Features (noticeboard, groups, history)
 - **Section 20:** Social Media Integration
 - **Section 21:** Business-to-Business Networking
 - **Section 22:** Emergency & Crisis Communication
 
 ### Part 6: Administration & Operations (Sections 23-26)
+
 - **Section 23:** Administration & Moderation
 - **Section 24:** Content Policies
 - **Section 25:** Analytics & Reporting
 - **Section 26:** Integration Requirements
 
 ### Part 7: Technical Operations (Sections 27-31)
+
 - **Section 27:** Error Handling
 - **Section 28:** Data Management
 - **Section 29:** Technical Operations
@@ -76,6 +83,7 @@ The specification is organised into 7 parts plus appendices:
 - **Section 31:** Operational Procedures
 
 ### Appendices
+
 - **Appendix A:** Data Models (22 complete models)
 - **Appendix B:** API Endpoints (130+ endpoints)
 - **Appendix C:** Glossary
@@ -83,6 +91,7 @@ The specification is organised into 7 parts plus appendices:
 ## Key Technical Decisions (from Specification)
 
 ### Planned Stack
+
 - **Frontend:** React with TypeScript, mobile-first responsive, PWA-capable
 - **Backend:** RESTful API or GraphQL, JWT authentication
 - **Database:** PostgreSQL (relational) + Elasticsearch (search)
@@ -92,6 +101,7 @@ The specification is organised into 7 parts plus appendices:
 - **Caching:** Redis for sessions and data
 
 ### Critical Requirements
+
 - **Multilingual Support:** 10 languages including RTL (Arabic, Urdu) - must be built in from the start, not retrofitted
 - **WCAG 2.1 AA Accessibility:** All components must meet accessibility standards
 - **Mobile-First:** Primary breakpoint < 768px, 44px minimum touch targets
@@ -99,6 +109,7 @@ The specification is organised into 7 parts plus appendices:
 - **Location-Agnostic:** All location data from configuration, never hardcoded
 
 ### Performance Targets
+
 - Page load < 3 seconds on 3G
 - API response < 200ms (95th percentile)
 - Lighthouse performance score > 80
@@ -106,6 +117,7 @@ The specification is organised into 7 parts plus appendices:
 ## Data Models
 
 Key entities defined in Appendix A of the specification:
+
 - **Business:** Profile, hours, media, promotions, social links, certifications
 - **User:** Community members, business owners, moderators, admins
 - **Event:** Recurring events with RSVPs, calendar export
@@ -119,6 +131,7 @@ Key entities defined in Appendix A of the specification:
 ## API Structure
 
 RESTful endpoints defined in Appendix B:
+
 - `/auth/*` - Registration, login, password reset
 - `/businesses/*` - CRUD, claim, analytics, emergency status
 - `/events/*` - CRUD, RSVP
@@ -160,9 +173,9 @@ RESTful endpoints defined in Appendix B:
 
 When the codebase is implemented, the following configuration files will be present:
 
-| File | Purpose |
-|------|---------|
-| `.env.example` | Template for environment variables |
-| `config/platform.json` | Location and branding configuration |
-| `config/platform.development.json` | Development overrides |
-| `config/platform.staging.json` | Staging overrides |
+| File                               | Purpose                             |
+| ---------------------------------- | ----------------------------------- |
+| `.env.example`                     | Template for environment variables  |
+| `config/platform.json`             | Location and branding configuration |
+| `config/platform.development.json` | Development overrides               |
+| `config/platform.staging.json`     | Staging overrides                   |

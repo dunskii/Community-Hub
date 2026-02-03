@@ -1,0 +1,22 @@
+services:
+  postgres:
+    ports:
+      - '5433:5432'
+
+  redis:
+    ports:
+      - '6379:6379'
+
+  elasticsearch:
+    environment:
+      - xpack.security.enabled=false
+    ports:
+      - '9200:9200'
+
+  mailpit:
+    image: axllent/mailpit:v1.21
+    ports:
+      - '1025:1025'
+      - '8025:8025'
+    networks:
+      - backend

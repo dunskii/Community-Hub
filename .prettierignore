@@ -1,0 +1,8 @@
+dist
+coverage
+generated
+pnpm-lock.yaml
+node_modules
+.claude/
+docs/
+md/

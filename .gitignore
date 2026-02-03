@@ -1,0 +1,52 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build output
+dist/
+build/
+*.tsbuildinfo
+
+# Environment
+.env
+.env.*
+!.env.example
+!docker/.env.docker.example
+
+# Coverage
+coverage/
+
+# Uploads & media
+uploads/
+storage/
+backups/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+nul
+
+# Logs
+*.log
+logs/
+
+# Docker volumes
+docker/data/
+
+# Cache
+.cache/
+.turbo/
+
+# Prisma
+packages/backend/prisma/*.db
+packages/backend/prisma/migrations/*.sql.bak
+packages/backend/src/generated/
+
+# Testing
+.vitest/
