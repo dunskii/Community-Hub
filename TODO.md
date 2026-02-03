@@ -2,7 +2,7 @@
 
 **Specification Version:** 2.0
 **Last Updated:** 3 February 2026
-**Current Phase:** Phase 1 (Sub-phases 1.1-1.3 Complete, 1.4 Next)
+**Current Phase:** Phase 1 (Sub-phases 1.1-1.4 Complete, 1.5 Next)
 
 ---
 
@@ -16,10 +16,10 @@
 
 ---
 
-## Phase 1: Foundation & Core Infrastructure (25/59 tasks, 42%)
+## Phase 1: Foundation & Core Infrastructure (32/59 tasks, 54%)
 
-> **Sub-phases 1.1, 1.2, 1.3 = COMPLETE (25/25 tasks)**
-> Remaining: 1.4 Frontend (0/7), 1.5 Security (0/11), 1.6 Email (0/5), 1.7 Maps (0/5), 1.8 i18n (0/6)
+> **Sub-phases 1.1, 1.2, 1.3, 1.4 = COMPLETE (32/32 tasks)**
+> Remaining: 1.5 Security (0/11), 1.6 Email (0/5), 1.7 Maps (0/5), 1.8 i18n (0/6)
 
 ### 1.1 Project Setup & Architecture
 
@@ -59,15 +59,15 @@
 - [x] Implement API versioning strategy
 - [x] Set up logging infrastructure [Spec §29.1]
 
-#### Frontend Infrastructure [Spec §3]
+#### Frontend Infrastructure [Spec §3] (100% Complete)
 
-- [ ] Initialize React frontend with TypeScript
-- [ ] Configure responsive design system (mobile-first)
-- [ ] Implement design tokens from config (colours, typography, spacing)
-- [ ] Set up component library foundation
-- [ ] Configure PWA manifest
-- [ ] Set up service worker skeleton
-- [ ] Configure build optimisation (code splitting, tree shaking)
+- [x] Initialize React frontend with TypeScript
+- [x] Configure responsive design system (mobile-first)
+- [x] Implement design tokens from config (colours, typography, spacing)
+- [x] Set up component library foundation
+- [x] Configure PWA manifest
+- [x] Set up service worker skeleton
+- [x] Configure build optimisation (code splitting, tree shaking)
 
 #### Security Foundation [Spec §4]
 
@@ -1532,7 +1532,7 @@ _Add any additional notes, decisions, or blockers here._
 ---
 
 **Total Estimated Tasks:** ~650+ items across 19 phases
-**Completed:** 25 tasks (Phase 1.1 + 1.2 + 1.3) -- ~4% overall
-**Next:** Phase 1.4 (Frontend Infrastructure)
+**Completed:** 32 tasks (Phase 1.1 + 1.2 + 1.3 + 1.4) -- ~5% overall
+**Next:** Phase 1.5 (Security Foundation)
 
 ---

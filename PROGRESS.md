@@ -3,7 +3,7 @@
 **Specification Version:** 2.0
 **Project Start:** January 2026
 **Last Updated:** 3 February 2026
-**Current Phase:** Phase 1 -- Foundation & Core Infrastructure (Sub-phases 1.1-1.3 Complete)
+**Current Phase:** Phase 1 -- Foundation & Core Infrastructure (Sub-phases 1.1-1.4 Complete)
 
 ---
 
@@ -11,7 +11,7 @@
 
 | Phase                                      | Status      | Tasks | Progress |
 | ------------------------------------------ | ----------- | ----- | -------- |
-| Phase 1: Foundation & Core Infrastructure  | In Progress | 59    | 42%  (1.1-1.3 = 100%) |
+| Phase 1: Foundation & Core Infrastructure  | In Progress | 59    | 54%  (1.1-1.4 = 100%) |
 | Phase 2: Authentication & User System      | Not Started | 33    | 0%       |
 | Phase 3: Design System & Core Components   | Not Started | 40    | 0%       |
 | Phase 4: Business Directory Core           | Not Started | 39    | 0%       |
@@ -32,8 +32,8 @@
 | Phase 19: Deployment Infrastructure        | Not Started | 20    | 0%       |
 | Ongoing: Testing, Docs, Maintenance        | Not Started | 34    | 0%       |
 
-**Overall Project Progress: ~4% (25/644 tasks across 19 phases)**
-**Phase 1 Sub-phase Progress: 1.1 = 100%, 1.2 = 100%, 1.3 = 100% (25/59 Phase 1 tasks)**
+**Overall Project Progress: ~5% (32/644 tasks across 19 phases)**
+**Phase 1 Sub-phase Progress: 1.1 = 100%, 1.2 = 100%, 1.3 = 100%, 1.4 = 100% (32/59 Phase 1 tasks)**
 
 ---
 
@@ -55,6 +55,8 @@
 - [x] **Milestone 2: "Config Loads"** -- Platform config validates on startup. Feature flags gate routes and UI. (2026-02-03)
 - [x] **Milestone 3: "API Responds"** -- `GET /api/v1/health` returns 200 with DB, Redis, ES status. Prisma schema defined. (2026-02-03)
 - [x] **QA Review R3: PASS CLEAN** -- 115 tests, 18 test files, 43 findings resolved across 4 review rounds. (2026-02-03)
+- [x] **Milestone 4: "Frontend Boots"** -- Tailwind CSS 4 with config-driven design tokens. Base UI components (Button, Card, FormField, SkipLink). PWA manifest and service worker with Workbox caching. Build optimisation with chunk splitting. 180 total tests. (2026-02-03)
+- [x] **QA Review Phase 1.4: PASS** -- 0 critical, 3 high (all fixed), 7 medium (4 fixed, 3 deferred), 3 low. Fixed: FormField aria-describedby, Card hover translate, favicon references, warning colour comment. (2026-02-03)
 
 ### MVP Milestones
 
@@ -85,8 +87,8 @@
 
 ## Current Sprint
 
-**Sprint:** Phase 1 - Foundation (Batches 1-3 Complete)
-**Sprint Goal:** Sub-phases 1.1-1.3 complete. Next: Phase 1.4 (Frontend Infrastructure)
+**Sprint:** Phase 1 - Foundation (Batches 1-4 Complete)
+**Sprint Goal:** Sub-phases 1.1-1.4 complete. Next: Phase 1.5 (Security Foundation)
 
 ### Completed Sprint Tasks (1.1 + 1.2 + 1.3)
 
@@ -110,6 +112,13 @@
 | Structured logging                   | -        | Complete | Pino with pino-pretty dev transport                  |
 | Security hardening                   | -        | Complete | Helmet, rate limiting (4 tiers), CORS, path safety   |
 | QA review (4 rounds)                 | -        | Complete | 43 findings resolved, R3 PASS CLEAN                  |
+| Tailwind CSS 4 + design tokens       | -        | Complete | @theme CSS tokens from platform.json, Montserrat/Open Sans |
+| Responsive breakpoints               | -        | Complete | Mobile <768px, Tablet 768-1199px, Desktop >=1200px   |
+| Base UI component library            | -        | Complete | Button, Card, FormField, SkipLink, Spinner           |
+| PWA manifest + service worker        | -        | Complete | vite-plugin-pwa, Workbox caching (4 strategies)      |
+| Build optimisation                   | -        | Complete | ES2022 target, react-vendor chunk, code splitting    |
+| Backend config endpoint              | -        | Complete | GET /api/v1/config serves platform.json              |
+| Frontend tests (Phase 1.4)           | -        | Complete | 57 tests across 9 files (components, utils)          |
 
 ---
 
@@ -117,10 +126,10 @@
 
 ### Phase 1: Foundation & Core Infrastructure
 
-**Status:** In Progress (Sub-phases 1.1, 1.2, 1.3 = COMPLETE)
-**Progress:** 25/59 tasks (42%) -- remaining 34 tasks in sub-phases 1.4-1.8
-**Spec Sections:** §2 (Config), §3 (Technical), §4 (Security), §8 (i18n), §26 (Email, Maps), §29 (Tech Ops)
-**Tests:** 115 passing across 18 test files (backend)
+**Status:** In Progress (Sub-phases 1.1, 1.2, 1.3, 1.4 = COMPLETE)
+**Progress:** 32/59 tasks (54%) -- remaining 27 tasks in sub-phases 1.5-1.8
+**Spec Sections:** §2 (Config), §3 (Technical), §4 (Security), §6 (Design), §8 (i18n), §26 (Email, Maps), §29 (Tech Ops)
+**Tests:** 118 backend (19 files) + 62 frontend (9 files) = 180 total
 **QA Reviews:** 4 rounds, 43 findings resolved, final verdict: PASS CLEAN
 
 > **Note:** DigitalOcean and Cloudflare deployment infrastructure moved to Phase 19 (post-development).
@@ -132,7 +141,7 @@
 | 1.1 Development Environment      | 10    | 10       | **100%** |
 | 1.2 Configuration Architecture   | 6     | 6        | **100%** |
 | 1.3 Backend Infrastructure       | 9     | 9        | **100%** |
-| 1.4 Frontend Infrastructure      | 7     | 0        | 0%       |
+| 1.4 Frontend Infrastructure      | 7     | 7        | **100%** |
 | 1.5 Security Foundation          | 11    | 0        | 0%       |
 | 1.6 Email Service                | 5     | 0        | 0%       |
 | 1.7 Maps Integration             | 5     | 0        | 0%       |
@@ -143,10 +152,11 @@
 - [x] 1.1 Development Environment (monorepo, tooling, Docker, CI/CD, testing)
 - [x] 1.2 Configuration Architecture (platform.json, env validation, feature flags)
 - [x] 1.3 Backend Infrastructure (Express 5, Prisma 7.3, Redis, Elasticsearch, media storage, 115 tests across 18 files)
+- [x] 1.4 Frontend Infrastructure (Tailwind CSS 4, design tokens, base UI components, PWA manifest, service worker, build optimisation, 62 tests across 9 files)
 
 #### In Progress
 
-_Phase 1.4 (Frontend Infrastructure) is next_
+_Phase 1.5 (Security Foundation) is next_
 
 #### Blockers
 
@@ -163,6 +173,14 @@ _From QA Review #3 (all resolved):_
 - [x] L2: `validate.test.ts` missing `afterEach`
 - [x] L3: Location-specific `'guildford'` string in deep-merge test
 - [x] L4: `defaultKeywords` schema allows empty strings
+
+_From QA Review Phase 1.4 (deferred to future phases):_
+
+- [ ] M-01: Config endpoint (`GET /api/v1/config`) serves full platform.json without field filtering. Add whitelist in Phase 1.5.
+- [ ] M-03: PWA manifest has only SVG icon placeholders. Generate PNG icons at 192px + 512px when branded assets are created.
+- [ ] M-07: No React error boundary in main.tsx. Add in Phase 3 when routing/layout is built.
+- [ ] L-03: Spinner component lacks `role="status"` for standalone use. Add when standalone usage is needed.
+- [ ] P-03: `platform.json` has `googleAnalyticsId` placeholder that may belong in `.env`.
 - [x] L5: `featureGate` missing explicit return type annotation
 - [x] L6: Unused `globals: true` in vitest configs
 - [x] L7: BCP 47 regex subset undocumented
@@ -641,14 +659,15 @@ R2 fixes verified correct. Review found 0 high, 0 medium, 0 low new issues. Phas
 
 | Metric                  | Target  | Current                     |
 | ----------------------- | ------- | --------------------------- |
-| Test Coverage           | > 80%   | 60% thresholds (115 tests)  |
-| Backend Tests           | -       | 115 across 18 files         |
-| QA Reviews              | Clean   | PASS CLEAN (R3, 43 resolved)|
-| Lighthouse Performance  | > 80    | N/A (frontend not started)  |
-| Accessibility Score     | 100%    | N/A (frontend not started)  |
+| Test Coverage           | > 80%   | 60% thresholds (180 tests)  |
+| Backend Tests           | -       | 118 across 19 files         |
+| Frontend Tests          | -       | 62 across 9 files           |
+| QA Reviews              | Clean   | 10 reviews, 50 findings resolved |
+| Lighthouse Performance  | > 80    | N/A (not benchmarked yet)   |
+| Accessibility Score     | 100%    | WCAG 2.1 AA base components |
 | API Response Time (p95) | < 200ms | N/A (not benchmarked yet)   |
-| First Contentful Paint  | < 1.5s  | N/A (frontend not started)  |
-| Time to Interactive     | < 5s    | N/A (frontend not started)  |
+| First Contentful Paint  | < 1.5s  | N/A (not benchmarked yet)   |
+| Time to Interactive     | < 5s    | N/A (not benchmarked yet)   |
 
 ### Platform Metrics (Post-Launch)
 
@@ -677,7 +696,12 @@ R2 fixes verified correct. Review found 0 high, 0 medium, 0 low new issues. Phas
 | Feb 2026 | ioredis (not node-redis)              | Mature, TypeScript-first, scanStream for production use  | Project Team |
 | Feb 2026 | User.status defaults to PENDING       | Security: email verification required before ACTIVE      | Project Team |
 | Feb 2026 | Coverage thresholds start at 60%      | Pragmatic start; documented path to 80% target           | Project Team |
-| Feb 2026 | Phase 1.1-1.3 complete (2026-02-03)   | Foundation established, QA PASS CLEAN                    | Project Team |
+| Feb 2026 | Tailwind CSS 4 (not 3.x JS config)    | CSS-first `@theme` block, native custom properties       | Project Team |
+| Feb 2026 | Runtime design tokens via CSS vars    | Override colours without rebuild, platform.json driven   | Project Team |
+| Feb 2026 | vite-plugin-pwa for service worker    | Integrates with Vite build, generates Workbox SW         | Project Team |
+| Feb 2026 | SVG icon (defer PNG generation)       | Single scalable file; PNGs deferred to design phase      | Project Team |
+| Feb 2026 | cloneElement for ARIA injection       | Transparent aria-describedby on FormField children       | Project Team |
+| Feb 2026 | Phase 1.1-1.4 complete (2026-02-03)   | Foundation established, 10 QA reviews, 180 tests         | Project Team |
 
 ---
 
@@ -748,18 +772,33 @@ Phase 19 (Deployment Infrastructure) ◄── All development phases complete
 
 ### Week of 3 February 2026
 
-**Phase 1 Sub-phases 1.1, 1.2, 1.3 declared COMPLETE.**
+**Phase 1 Sub-phases 1.1, 1.2, 1.3, 1.4 declared COMPLETE.**
 
-- Completed all 25 tasks across sub-phases 1.1 (Project Setup), 1.2 (Configuration System), and 1.3 (Backend Infrastructure)
-- 115 backend tests passing across 18 test files
-- 4 QA review rounds completed with 43 total findings -- all resolved
-- QA Review R3 (final): PASS CLEAN with zero new issues
-- Accomplishment report written: `md/report/phase-1-foundation-and-backend-infrastructure.md`
-- Next priority: Phase 1.4 (Frontend Infrastructure)
+- Completed all 32 tasks across sub-phases 1.1 (Project Setup), 1.2 (Configuration System), 1.3 (Backend Infrastructure), and 1.4 (Frontend Infrastructure)
+- 180 total tests passing: 118 backend (19 files) + 62 frontend (9 files)
+- Phase 1.4 QA review: PASS -- 0 critical, 3 high fixed, 4 medium fixed, 5 deferred
+- Cumulative: 10 QA reviews, 50 total findings resolved
+- Accomplishment reports:
+  - `md/report/phase-1-foundation-and-backend-infrastructure.md` (Phases 1.1-1.3)
+  - `md/report/phase-1-4-frontend-infrastructure.md` (Phase 1.4)
+- Next priority: Phase 1.5 (Security Foundation)
 
 ---
 
 ## Changelog
+
+### 3 February 2026 (Phase 1.4 Complete)
+
+- Phase 1.4 (Frontend Infrastructure) declared complete -- 7/7 tasks
+- Tailwind CSS 4 with `@theme` design tokens and runtime CSS variable injection
+- 5 base UI components: Button, Card, FormField, SkipLink, Spinner
+- PWA manifest + Workbox service worker with 4 caching strategies
+- Build optimisation: ES2022, react-vendor chunk, asset inlining
+- Backend `GET /api/v1/config` endpoint for frontend config loading
+- 62 frontend tests across 9 files; 180 total tests project-wide
+- QA Review Phase 1.4: PASS -- 7 fixed (H-01 FormField aria-describedby, H-02 ARIA tests, H-03 warning comment, M-02 Card translate, M-04 favicon), 5 deferred
+- Accomplishment report: `md/report/phase-1-4-frontend-infrastructure.md`
+- PROGRESS.md and TODO.md updated with Phase 1.4 status
 
 ### 3 February 2026 (Phase 1.1-1.3 Complete)
 
@@ -851,23 +890,22 @@ Phase 19 (Deployment Infrastructure) ◄── All development phases complete
 ## Next Steps
 
 1. **Immediate (Next Session):**
-   - Begin Phase 1.4 (Frontend Infrastructure: React+Vite init, Tailwind, design tokens, PWA manifest, service worker skeleton)
-   - Phase 1.4 depends on 1.1 and 1.2 (both complete)
+   - Begin Phase 1.5 (Security Foundation: CSP fine-tuning, CSRF, input validation, sanitization, AES-256 encryption)
+   - Phase 1.5 depends on 1.3 (complete)
 
 2. **Short Term:**
-   - Phase 1.5 (Security Foundation: CSP fine-tuning, CSRF, input validation, sanitization, AES-256 encryption)
-   - Phase 1.5 depends on 1.3 (complete)
-   - Phase 1.4 and 1.5 can proceed in parallel
-
-3. **Medium Term:**
    - Phase 1.6 (Email Service -- Mailgun, templates, queue)
    - Phase 1.7 (Maps Integration -- Mapbox, geocoding, directions)
    - Phase 1.8 (i18n Foundation -- react-i18next, RTL, language detection)
-   - These three can proceed in parallel once 1.4/1.5 are done
+   - These three can proceed in parallel once 1.5 is done
+
+3. **Medium Term:**
+   - Complete all of Phase 1 (sub-phases 1.5 through 1.8)
+   - Begin Phases 2 & 3 in parallel (Auth/Users + Design System)
 
 4. **This Month:**
-   - Complete all of Phase 1 (sub-phases 1.4 through 1.8)
-   - Begin Phases 2 & 3 in parallel (Auth/Users + Design System)
+   - Phase 1 complete (all 59 tasks)
+   - Phase 2 (Authentication) and Phase 3 (Design System) underway
 
 ---
 

@@ -1,0 +1,81 @@
+@import 'tailwindcss';
+
+/*
+ * Design tokens from Community Hub specification [Spec §6.1-6.2].
+ * Runtime values injected from platform.json via CSS custom properties on :root.
+ * Tailwind @theme defaults match the Guildford config for JIT compilation.
+ */
+
+@theme {
+  /* Colours [Spec §6.1] - defaults from platform.json Guildford config */
+  --color-primary: var(--ch-color-primary, #2C5F7C);
+  --color-secondary: var(--ch-color-secondary, #E67E22);
+  --color-accent: var(--ch-color-accent, #F39C12);
+  --color-success: var(--ch-color-success, #27AE60);
+  --color-error: var(--ch-color-error, #E74C3C);
+  /* Note: UI warning (#F39C12) differs from Spec §6.5 alert-level Warning (#E67E22).
+     Alert colours for the emergency system (Phase 14) will use Spec §6.5 values directly. */
+  --color-warning: var(--ch-color-warning, #F39C12);
+  --color-info: var(--ch-color-info, #3498DB);
+  --color-neutral-light: #F5F5F5;
+  --color-neutral-medium: #CCCCCC;
+  --color-text-dark: #2C3E50;
+  --color-text-light: #7F8C8D;
+
+  /* Typography [Spec §6.2] */
+  --font-heading: 'Montserrat', ui-sans-serif, system-ui, sans-serif;
+  --font-body: 'Open Sans', ui-sans-serif, system-ui, sans-serif;
+
+  /* Font sizes */
+  --text-h1: 2rem;
+  --text-h2: 1.625rem;
+  --text-h3: 1.375rem;
+  --text-body: 1rem;
+  --text-sm: 0.875rem;
+  --text-caption: 0.75rem;
+
+  /* Breakpoints [Spec §3.4] - mobile-first */
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1200px;
+
+  /* Spacing */
+  --spacing-touch: 2.75rem;
+
+  /* Border radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-full: 9999px;
+
+  /* Shadows [Spec §6.3] */
+  --shadow-card: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-card-hover: 0 4px 8px rgba(0, 0, 0, 0.15);
+  --shadow-dropdown: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Base styles */
+body {
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: 1.5;
+  color: var(--color-text-dark);
+  background-color: var(--color-neutral-light);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  line-height: 1.2;
+}
+
+/* Focus visible ring utility - accessibility [Spec §3.6] */
+@utility focus-ring {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}

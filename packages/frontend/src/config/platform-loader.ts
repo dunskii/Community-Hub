@@ -10,7 +10,7 @@ const DEFAULT_TIMEOUT_MS = 10_000;
  * Called once at app initialization.
  */
 export async function loadPlatformConfig(
-  configUrl = '/api/config',
+  configUrl = '/api/v1/config',
   timeoutMs = DEFAULT_TIMEOUT_MS,
 ): Promise<PlatformConfig> {
   if (cachedConfig) {
