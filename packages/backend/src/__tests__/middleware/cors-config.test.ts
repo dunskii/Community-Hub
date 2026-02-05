@@ -76,4 +76,14 @@ describe('corsConfig', () => {
     );
     expect(methodsCall?.[1]).not.toContain('PATCH');
   });
+
+  it('should include X-CSRF-Token in allowed headers', () => {
+    const { req, res, next } = mockReqRes('http://localhost:5173');
+    corsConfig(req, res, next);
+
+    const headersCall = vi.mocked(res.setHeader).mock.calls.find(
+      ([header]) => header === 'Access-Control-Allow-Headers',
+    );
+    expect(headersCall?.[1]).toContain('X-CSRF-Token');
+  });
 });

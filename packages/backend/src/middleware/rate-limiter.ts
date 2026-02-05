@@ -8,50 +8,48 @@ const RATE_LIMIT_MESSAGE = {
 };
 
 /**
- * Global rate limiter -- applies to all routes as a baseline.
- * Spec Section 4.8: 30 req/min for anonymous, 100 req/min for authenticated.
- * Using the lower anonymous limit globally; per-route limiters below provide tighter controls.
+ * Rate limit configuration per Spec Section 4.8.
+ * Exported for testing; consumed by the limiter factories below.
  */
-export const rateLimiter = rateLimit({
-  windowMs: 1 * 60 * 1000, // 1 minute
-  limit: 30,
-  standardHeaders: 'draft-7',
-  legacyHeaders: false,
-  message: RATE_LIMIT_MESSAGE,
-});
+export const RATE_LIMIT_CONFIG = {
+  global:        { windowMs: 1 * 60 * 1000,      limit: 30  },  // 30 req / 1 min (anonymous baseline)
+  auth:          { windowMs: 15 * 60 * 1000,     limit: 10  },  // 10 req / 15 min
+  api:           { windowMs: 1 * 60 * 1000,      limit: 100 },  // 100 req / 1 min (authenticated)
+  upload:        { windowMs: 60 * 60 * 1000,     limit: 20  },  // 20 req / 1 hr
+  passwordReset: { windowMs: 60 * 60 * 1000,     limit: 3   },  // 3 req / 1 hr
+  search:        { windowMs: 1 * 60 * 1000,      limit: 30  },  // 30 req / 1 min
+  review:        { windowMs: 24 * 60 * 60 * 1000, limit: 5   },  // 5 req / 24 hrs
+} as const;
 
-/**
- * Strict rate limiter for auth endpoints (login, register, password reset).
- * Spec Section 4.8: 10 requests per 15 minutes.
- */
-export const authRateLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  limit: 10,
-  standardHeaders: 'draft-7',
-  legacyHeaders: false,
-  message: RATE_LIMIT_MESSAGE,
-});
+function createLimiter(config: { windowMs: number; limit: number }) {
+  return rateLimit({
+    ...config,
+    standardHeaders: 'draft-7',
+    legacyHeaders: false,
+    message: RATE_LIMIT_MESSAGE,
+  });
+}
 
-/**
- * Standard rate limiter for authenticated API endpoints.
- * Spec Section 4.8: 100 requests per minute.
- */
-export const apiRateLimiter = rateLimit({
-  windowMs: 1 * 60 * 1000, // 1 minute
-  limit: 100,
-  standardHeaders: 'draft-7',
-  legacyHeaders: false,
-  message: RATE_LIMIT_MESSAGE,
-});
+/** Global rate limiter -- applies to all routes as a baseline. */
+export const rateLimiter = createLimiter(RATE_LIMIT_CONFIG.global);
 
-/**
- * Upload rate limiter for file upload endpoints.
- * Spec Section 4.8: 20 uploads per hour.
- */
-export const uploadRateLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000, // 1 hour
-  limit: 20,
-  standardHeaders: 'draft-7',
-  legacyHeaders: false,
-  message: RATE_LIMIT_MESSAGE,
-});
+/** Strict rate limiter for auth endpoints (login, register). */
+export const authRateLimiter = createLimiter(RATE_LIMIT_CONFIG.auth);
+
+/** Standard rate limiter for authenticated API endpoints. */
+export const apiRateLimiter = createLimiter(RATE_LIMIT_CONFIG.api);
+
+/** Upload rate limiter for file upload endpoints. */
+export const uploadRateLimiter = createLimiter(RATE_LIMIT_CONFIG.upload);
+
+/** Password reset rate limiter. */
+export const passwordResetRateLimiter = createLimiter(RATE_LIMIT_CONFIG.passwordReset);
+
+/** Search rate limiter. */
+export const searchRateLimiter = createLimiter(RATE_LIMIT_CONFIG.search);
+
+/** Review submission rate limiter. */
+export const reviewRateLimiter = createLimiter(RATE_LIMIT_CONFIG.review);
+
+// TODO: Add conversationRateLimiter (10/day) in Phase 9 (Messaging)
+// TODO: Add flashDealRateLimiter (2/week) in Phase 10 (Deals)

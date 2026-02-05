@@ -5,7 +5,7 @@ const ALLOWED_ORIGINS = (process.env['ALLOWED_ORIGINS'] ?? 'http://localhost:517
   .map((s) => s.trim())
   .filter(Boolean);
 const ALLOWED_METHODS = 'GET,POST,PUT,DELETE,OPTIONS';
-const ALLOWED_HEADERS = 'Content-Type,Authorization';
+const ALLOWED_HEADERS = 'Content-Type,Authorization,X-CSRF-Token';
 const EXPOSED_HEADERS = 'X-Request-Id';
 
 export function corsConfig(req: Request, res: Response, next: NextFunction): void {

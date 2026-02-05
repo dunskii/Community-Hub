@@ -93,5 +93,44 @@ describe('config routes', () => {
       const colors = branding['colors'] as Record<string, unknown>;
       expect(colors['primary']).toBeDefined();
     });
+
+    it('should exclude partner contactEmail fields', async () => {
+      const { body } = await app.request('/config');
+
+      const data = body['data'] as Record<string, unknown>;
+      const partners = data['partners'] as Record<string, Record<string, unknown>>;
+      expect(partners['council']['contactEmail']).toBeUndefined();
+      expect(partners['chamber']['contactEmail']).toBeUndefined();
+      // Should still include non-sensitive partner fields
+      expect(partners['council']['name']).toBe('Test Council');
+      expect(partners['chamber']['name']).toBe('Test Chamber');
+    });
+
+    it('should exclude contact section entirely', async () => {
+      const { body } = await app.request('/config');
+
+      const data = body['data'] as Record<string, unknown>;
+      expect(data['contact']).toBeUndefined();
+    });
+
+    it('should exclude analytics section entirely', async () => {
+      const { body } = await app.request('/config');
+
+      const data = body['data'] as Record<string, unknown>;
+      expect(data['analytics']).toBeUndefined();
+    });
+
+    it('should exclude sensitive location fields', async () => {
+      const { body } = await app.request('/config');
+
+      const data = body['data'] as Record<string, unknown>;
+      const location = data['location'] as Record<string, unknown>;
+      expect(location['boundingBox']).toBeUndefined();
+      expect(location['postcodeRange']).toBeUndefined();
+      expect(location['phoneCountryCode']).toBeUndefined();
+      // Should still include non-sensitive location fields
+      expect(location['suburbName']).toBe('Test');
+      expect(location['coordinates']).toBeDefined();
+    });
   });
 });

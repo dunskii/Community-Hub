@@ -2,8 +2,8 @@
 
 **Specification Version:** 2.0
 **Project Start:** January 2026
-**Last Updated:** 3 February 2026
-**Current Phase:** Phase 1 -- Foundation & Core Infrastructure (Sub-phases 1.1-1.4 Complete)
+**Last Updated:** 5 February 2026
+**Current Phase:** Phase 1 -- Foundation & Core Infrastructure (Sub-phases 1.1-1.5 Complete)
 
 ---
 
@@ -11,7 +11,7 @@
 
 | Phase                                      | Status      | Tasks | Progress |
 | ------------------------------------------ | ----------- | ----- | -------- |
-| Phase 1: Foundation & Core Infrastructure  | In Progress | 59    | 54%  (1.1-1.4 = 100%) |
+| Phase 1: Foundation & Core Infrastructure  | In Progress | 59    | 71%  (1.1-1.5 = 100%) |
 | Phase 2: Authentication & User System      | Not Started | 33    | 0%       |
 | Phase 3: Design System & Core Components   | Not Started | 40    | 0%       |
 | Phase 4: Business Directory Core           | Not Started | 39    | 0%       |
@@ -32,8 +32,8 @@
 | Phase 19: Deployment Infrastructure        | Not Started | 20    | 0%       |
 | Ongoing: Testing, Docs, Maintenance        | Not Started | 34    | 0%       |
 
-**Overall Project Progress: ~5% (32/644 tasks across 19 phases)**
-**Phase 1 Sub-phase Progress: 1.1 = 100%, 1.2 = 100%, 1.3 = 100%, 1.4 = 100% (32/59 Phase 1 tasks)**
+**Overall Project Progress: ~6.5% (42/644 tasks across 19 phases)**
+**Phase 1 Sub-phase Progress: 1.1 = 100%, 1.2 = 100%, 1.3 = 100%, 1.4 = 100%, 1.5 = 100% (42/59 Phase 1 tasks)**
 
 ---
 
@@ -57,6 +57,9 @@
 - [x] **QA Review R3: PASS CLEAN** -- 115 tests, 18 test files, 43 findings resolved across 4 review rounds. (2026-02-03)
 - [x] **Milestone 4: "Frontend Boots"** -- Tailwind CSS 4 with config-driven design tokens. Base UI components (Button, Card, FormField, SkipLink). PWA manifest and service worker with Workbox caching. Build optimisation with chunk splitting. 180 total tests. (2026-02-03)
 - [x] **QA Review Phase 1.4: PASS** -- 0 critical, 3 high (all fixed), 7 medium (4 fixed, 3 deferred), 3 low. Fixed: FormField aria-describedby, Card hover translate, favicon references, warning colour comment. (2026-02-03)
+- [x] **Milestone 5: "Security Hardened"** -- All 5 security headers configured (CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy). CSRF protection with signed double-submit cookies. AES-256-GCM encryption utility. Input validation middleware (Zod). Input sanitization (isomorphic-dompurify). 7 rate limiters. Config endpoint field filtering. 220 backend tests, 322 total tests. (2026-02-04)
+- [x] **QA Review Phase 1.5 R1:** 1 critical (S-01 fixed), 3 important (all fixed), 5 minor (fixed), 3 pre-existing (P-01 fixed, P-02/P-03 tracked). (2026-02-04)
+- [x] **QA Review Phase 1.5 R2: PASS CLEAN** -- All 9 findings from R1 verified fixed. No new issues. 322 tests passing. (2026-02-05)
 
 ### MVP Milestones
 
@@ -87,8 +90,8 @@
 
 ## Current Sprint
 
-**Sprint:** Phase 1 - Foundation (Batches 1-4 Complete)
-**Sprint Goal:** Sub-phases 1.1-1.4 complete. Next: Phase 1.5 (Security Foundation)
+**Sprint:** Phase 1 - Foundation (Batches 1-5 Complete)
+**Sprint Goal:** Sub-phases 1.1-1.5 complete. Next: Phase 1.6 (Email Service)
 
 ### Completed Sprint Tasks (1.1 + 1.2 + 1.3)
 
@@ -119,6 +122,13 @@
 | Build optimisation                   | -        | Complete | ES2022 target, react-vendor chunk, code splitting    |
 | Backend config endpoint              | -        | Complete | GET /api/v1/config serves platform.json              |
 | Frontend tests (Phase 1.4)           | -        | Complete | 57 tests across 9 files (components, utils)          |
+| Security headers (CSP, HSTS, etc.)   | -        | Complete | helmet configured with strict CSP, HSTS, Referrer-Policy |
+| CSRF protection                      | -        | Complete | Double-submit cookie, signed tokens, timing-safe     |
+| AES-256-GCM encryption               | -        | Complete | encrypt/decrypt with node:crypto, random IV          |
+| Input validation middleware           | -        | Complete | Zod-based factory for body/query/params              |
+| Input sanitization middleware         | -        | Complete | isomorphic-dompurify, HTML allowlist, URL validation |
+| Rate limiting (7 tiers)              | -        | Complete | +passwordReset (3/hr), search (30/min), review (5/day) |
+| Config endpoint filtering            | -        | Complete | Whitelist filter removes sensitive fields             |
 
 ---
 
@@ -126,11 +136,11 @@
 
 ### Phase 1: Foundation & Core Infrastructure
 
-**Status:** In Progress (Sub-phases 1.1, 1.2, 1.3, 1.4 = COMPLETE)
-**Progress:** 32/59 tasks (54%) -- remaining 27 tasks in sub-phases 1.5-1.8
+**Status:** In Progress (Sub-phases 1.1, 1.2, 1.3, 1.4, 1.5 = COMPLETE)
+**Progress:** 42/59 tasks (71%) -- remaining 17 tasks in sub-phases 1.6-1.8
 **Spec Sections:** §2 (Config), §3 (Technical), §4 (Security), §6 (Design), §8 (i18n), §26 (Email, Maps), §29 (Tech Ops)
-**Tests:** 118 backend (19 files) + 62 frontend (9 files) = 180 total
-**QA Reviews:** 4 rounds, 43 findings resolved, final verdict: PASS CLEAN
+**Tests:** 220 backend (25 files) + 62 frontend (9 files) + 40 shared (5 files) = 322 total
+**QA Reviews:** 5 rounds for Phase 1.3, 1 for Phase 1.4, 2 for Phase 1.5; 64+ findings resolved
 
 > **Note:** DigitalOcean and Cloudflare deployment infrastructure moved to Phase 19 (post-development).
 
@@ -142,7 +152,7 @@
 | 1.2 Configuration Architecture   | 6     | 6        | **100%** |
 | 1.3 Backend Infrastructure       | 9     | 9        | **100%** |
 | 1.4 Frontend Infrastructure      | 7     | 7        | **100%** |
-| 1.5 Security Foundation          | 11    | 0        | 0%       |
+| 1.5 Security Foundation          | 11    | 10       | **91%** (1 deferred to Phase 19) |
 | 1.6 Email Service                | 5     | 0        | 0%       |
 | 1.7 Maps Integration             | 5     | 0        | 0%       |
 | 1.8 i18n Foundation              | 6     | 0        | 0%       |
@@ -153,10 +163,11 @@
 - [x] 1.2 Configuration Architecture (platform.json, env validation, feature flags)
 - [x] 1.3 Backend Infrastructure (Express 5, Prisma 7.3, Redis, Elasticsearch, media storage, 115 tests across 18 files)
 - [x] 1.4 Frontend Infrastructure (Tailwind CSS 4, design tokens, base UI components, PWA manifest, service worker, build optimisation, 62 tests across 9 files)
+- [x] 1.5 Security Foundation (CSP/HSTS/Referrer-Policy headers, CSRF protection, AES-256-GCM encryption, input validation, input sanitization, 7 rate limiters, config endpoint filtering, 90 new tests)
 
 #### In Progress
 
-_Phase 1.5 (Security Foundation) is next_
+_Phase 1.6 (Email Service) is next_
 
 #### Blockers
 
@@ -176,11 +187,21 @@ _From QA Review #3 (all resolved):_
 
 _From QA Review Phase 1.4 (deferred to future phases):_
 
-- [ ] M-01: Config endpoint (`GET /api/v1/config`) serves full platform.json without field filtering. Add whitelist in Phase 1.5.
+- [x] M-01: Config endpoint (`GET /api/v1/config`) serves full platform.json without field filtering. Fixed in Phase 1.5: whitelist filter removes partner emails, analytics IDs, sensitive location details.
 - [ ] M-03: PWA manifest has only SVG icon placeholders. Generate PNG icons at 192px + 512px when branded assets are created.
 - [ ] M-07: No React error boundary in main.tsx. Add in Phase 3 when routing/layout is built.
 - [ ] L-03: Spinner component lacks `role="status"` for standalone use. Add when standalone usage is needed.
 - [ ] P-03: `platform.json` has `googleAnalyticsId` placeholder that may belong in `.env`.
+
+_From QA Review Phase 1.5:_
+
+- [x] S-01: CORS `ALLOWED_HEADERS` did not include `X-CSRF-Token` -- added, test added. Fixed immediately.
+- [x] S-02: `sanitizeRichText` ALLOWED_ATTR included `rel`, causing duplicate attributes -- removed `rel` from ALLOWED_ATTR. Fixed immediately.
+- [x] T-01: Config endpoint filter had no test assertions for excluded fields -- 4 tests added verifying contactEmail, contact, analytics, sensitive location fields are absent. Fixed immediately.
+- [x] T-02: Rate limiter tests only checked exports exist -- enhanced with RATE_LIMIT_CONFIG export and 7 config value assertion tests matching Spec Section 4.8. Fixed immediately.
+- [x] P-01: CORS middleware ran after CSRF in app.ts -- reordered so CORS runs before CSRF (error responses include CORS headers). Fixed immediately.
+- [ ] P-02: Rate limiters use in-memory store (acknowledged since Phase 1.3). Migrate to Redis store before multi-instance deployment (Phase 19).
+- [ ] P-03: `trust proxy` hardcoded to `1` in app.ts. Should come from configuration for different deployment environments.
 - [x] L5: `featureGate` missing explicit return type annotation
 - [x] L6: Unused `globals: true` in vitest configs
 - [x] L7: BCP 47 regex subset undocumented
@@ -659,10 +680,11 @@ R2 fixes verified correct. Review found 0 high, 0 medium, 0 low new issues. Phas
 
 | Metric                  | Target  | Current                     |
 | ----------------------- | ------- | --------------------------- |
-| Test Coverage           | > 80%   | 60% thresholds (180 tests)  |
-| Backend Tests           | -       | 118 across 19 files         |
+| Test Coverage           | > 80%   | 60% thresholds (321 tests)  |
+| Backend Tests           | -       | 219 across 25 files         |
 | Frontend Tests          | -       | 62 across 9 files           |
-| QA Reviews              | Clean   | 10 reviews, 50 findings resolved |
+| Shared Tests            | -       | 40 across 5 files           |
+| QA Reviews              | Clean   | 12 reviews, 55+ findings resolved |
 | Lighthouse Performance  | > 80    | N/A (not benchmarked yet)   |
 | Accessibility Score     | 100%    | WCAG 2.1 AA base components |
 | API Response Time (p95) | < 200ms | N/A (not benchmarked yet)   |
@@ -702,6 +724,11 @@ R2 fixes verified correct. Review found 0 high, 0 medium, 0 low new issues. Phas
 | Feb 2026 | SVG icon (defer PNG generation)       | Single scalable file; PNGs deferred to design phase      | Project Team |
 | Feb 2026 | cloneElement for ARIA injection       | Transparent aria-describedby on FormField children       | Project Team |
 | Feb 2026 | Phase 1.1-1.4 complete (2026-02-03)   | Foundation established, 10 QA reviews, 180 tests         | Project Team |
+| Feb 2026 | AES-256-GCM over CBC                  | Authenticated encryption, NIST standard, no separate HMAC | Project Team |
+| Feb 2026 | isomorphic-dompurify for sanitization | Standard approach for server-side DOMPurify, 1M+ downloads | Project Team |
+| Feb 2026 | Double-submit cookie for CSRF         | Stateless pattern; no sessions needed until Phase 2       | Project Team |
+| Feb 2026 | TLS 1.3 deferred to Phase 19          | Server/Cloudflare config, not application code            | Project Team |
+| Feb 2026 | Phase 1.5 complete (2026-02-04)       | Security hardened: 10/11 tasks, 310 tests                 | Project Team |
 
 ---
 
@@ -772,20 +799,68 @@ Phase 19 (Deployment Infrastructure) ◄── All development phases complete
 
 ### Week of 3 February 2026
 
-**Phase 1 Sub-phases 1.1, 1.2, 1.3, 1.4 declared COMPLETE.**
+**Phase 1 Sub-phases 1.1, 1.2, 1.3, 1.4, 1.5 declared COMPLETE.**
 
-- Completed all 32 tasks across sub-phases 1.1 (Project Setup), 1.2 (Configuration System), 1.3 (Backend Infrastructure), and 1.4 (Frontend Infrastructure)
-- 180 total tests passing: 118 backend (19 files) + 62 frontend (9 files)
+- Completed all 42 tasks across sub-phases 1.1 (Project Setup), 1.2 (Configuration System), 1.3 (Backend Infrastructure), 1.4 (Frontend Infrastructure), and 1.5 (Security Foundation)
+- 322 total tests passing: 220 backend (25 files) + 62 frontend (9 files) + 40 shared (5 files)
+- Phase 1.5 added 102 new backend tests (7 new test files + 3 enhanced existing)
+- Phase 1.5 QA Review R1: 1 critical fixed (S-01 CORS+CSRF), 3 important fixed, 5 minor fixed
+- Phase 1.5 QA Review R2: PASS CLEAN -- All 9 findings verified fixed, no new issues
 - Phase 1.4 QA review: PASS -- 0 critical, 3 high fixed, 4 medium fixed, 5 deferred
-- Cumulative: 10 QA reviews, 50 total findings resolved
+- Cumulative: 13 QA reviews, 64+ total findings resolved
 - Accomplishment reports:
   - `md/report/phase-1-foundation-and-backend-infrastructure.md` (Phases 1.1-1.3)
   - `md/report/phase-1-4-frontend-infrastructure.md` (Phase 1.4)
-- Next priority: Phase 1.5 (Security Foundation)
+  - `md/report/phase-1-5-security-foundation.md` (Phase 1.5)
+- Next priority: Phase 1.6 (Email Service)
 
 ---
 
 ## Changelog
+
+### 5 February 2026 (Phase 1.5 QA Review Round 2)
+
+- QA Review Phase 1.5 R2: PASS CLEAN -- All 9 findings from R1 verified fixed
+- No new issues introduced by fixes
+- Backend tests: 220 (25 files); Total: 322 tests
+- TypeScript compilation: Clean (0 errors)
+- ESLint: Clean (0 warnings/errors)
+- Review saved to `md/review/phase-1-5-security-foundation-r2.md`
+- Accomplishment report saved to `md/report/phase-1-5-security-foundation.md`
+- **Phase 1.5 (Security Foundation) declared COMPLETE** (10/11 tasks, 1 deferred to Phase 19)
+
+### 4 February 2026 (Phase 1.5 QA Review Round 1)
+
+- QA Review Phase 1.5 R1: PASS WITH ISSUES -- 1 critical, 3 important, 5 minor, 3 pre-existing
+- Fixed S-01: Added `X-CSRF-Token` to CORS `ALLOWED_HEADERS` + test assertion
+- Fixed S-02: Removed `rel` from DOMPurify `ALLOWED_ATTR` to prevent duplicate attributes
+- Fixed T-01: Added 4 config filter test assertions (contactEmail, contact, analytics, location fields excluded)
+- Fixed T-02: Extracted `RATE_LIMIT_CONFIG` constant, added 7 spec-compliance config value tests
+- Fixed P-01: Reordered middleware in app.ts so CORS runs before CSRF (error responses include CORS headers)
+- Tracked P-02 (in-memory rate limiter store, Phase 19) and P-03 (hardcoded trust proxy)
+- Backend tests: 219 (up from 208); Total: 321 (up from 310)
+- Review saved to `md/review/phase-1-5-security-foundation.md`
+
+### 4 February 2026 (Phase 1.5 Complete)
+
+- Phase 1.5 (Security Foundation) declared complete -- 10/11 tasks (1 deferred to Phase 19)
+- Configured helmet with strict CSP (self-only scripts, Google Fonts, Mapbox), HSTS (1 year, preload), Referrer-Policy (strict-origin-when-cross-origin)
+- X-Frame-Options: DENY and X-Content-Type-Options: nosniff verified via helmet defaults
+- CSRF protection: double-submit cookie pattern with HMAC-signed tokens, timing-safe comparison
+- AES-256-GCM encryption utility using node:crypto (authenticated encryption with random IV)
+- Input validation middleware: Zod-based factory for body/query/params validation
+- Input sanitization: isomorphic-dompurify with HTML tag allowlist per Spec S4.9 (p, br, strong, em, ul, ol, li, a), URL scheme validation
+- Rate limiting expanded to 7 tiers: +passwordReset (3/hr), search (30/min), review (5/day)
+- Config endpoint field filtering: whitelist removes partner emails, analytics IDs, bounding box, postcodeRange, phoneCountryCode
+- Resolved deferred QA item M-01 (config endpoint filtering)
+- TLS 1.3 (task 6) deferred to Phase 19 (server/Cloudflare config, not application code)
+- New dependencies: isomorphic-dompurify, cookie-parser, @types/dompurify, @types/cookie-parser
+- 90 new backend tests across 6 new test files; 208 backend tests total (25 files)
+- 310 total tests project-wide, all passing
+- Lint clean, typecheck clean
+- Decision: AES-256-GCM over AES-256-CBC (authenticated encryption, NIST recommended)
+- Decision: isomorphic-dompurify over manual jsdom+dompurify (standard approach, 1M+ weekly downloads)
+- Decision: Double-submit cookie over synchronizer token (stateless, no sessions needed until Phase 2)
 
 ### 3 February 2026 (Phase 1.4 Complete)
 
@@ -890,17 +965,16 @@ Phase 19 (Deployment Infrastructure) ◄── All development phases complete
 ## Next Steps
 
 1. **Immediate (Next Session):**
-   - Begin Phase 1.5 (Security Foundation: CSP fine-tuning, CSRF, input validation, sanitization, AES-256 encryption)
-   - Phase 1.5 depends on 1.3 (complete)
+   - Begin Phase 1.6 (Email Service -- Mailgun, templates, delivery)
+   - Phases 1.6, 1.7, 1.8 can proceed in parallel
 
 2. **Short Term:**
    - Phase 1.6 (Email Service -- Mailgun, templates, queue)
    - Phase 1.7 (Maps Integration -- Mapbox, geocoding, directions)
    - Phase 1.8 (i18n Foundation -- react-i18next, RTL, language detection)
-   - These three can proceed in parallel once 1.5 is done
 
 3. **Medium Term:**
-   - Complete all of Phase 1 (sub-phases 1.5 through 1.8)
+   - Complete all of Phase 1 (sub-phases 1.6 through 1.8)
    - Begin Phases 2 & 3 in parallel (Auth/Users + Design System)
 
 4. **This Month:**

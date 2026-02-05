@@ -1,8 +1,8 @@
 # Community Hub Platform - Development TODO
 
 **Specification Version:** 2.0
-**Last Updated:** 3 February 2026
-**Current Phase:** Phase 1 (Sub-phases 1.1-1.4 Complete, 1.5 Next)
+**Last Updated:** 4 February 2026
+**Current Phase:** Phase 1 (Sub-phases 1.1-1.5 Complete, 1.6 Next)
 
 ---
 
@@ -16,10 +16,10 @@
 
 ---
 
-## Phase 1: Foundation & Core Infrastructure (32/59 tasks, 54%)
+## Phase 1: Foundation & Core Infrastructure (42/59 tasks, 71%)
 
-> **Sub-phases 1.1, 1.2, 1.3, 1.4 = COMPLETE (32/32 tasks)**
-> Remaining: 1.5 Security (0/11), 1.6 Email (0/5), 1.7 Maps (0/5), 1.8 i18n (0/6)
+> **Sub-phases 1.1, 1.2, 1.3, 1.4, 1.5 = COMPLETE (42/43 tasks, 1 deferred)**
+> Remaining: 1.6 Email (0/5), 1.7 Maps (0/5), 1.8 i18n (0/6)
 
 ### 1.1 Project Setup & Architecture
 
@@ -69,19 +69,19 @@
 - [x] Set up service worker skeleton
 - [x] Configure build optimisation (code splitting, tree shaking)
 
-#### Security Foundation [Spec §4]
+#### Security Foundation [Spec §4] (100% Complete, 1 deferred)
 
-- [ ] Implement Content-Security-Policy header
-- [ ] Implement X-Frame-Options header (DENY)
-- [ ] Implement X-Content-Type-Options header (nosniff)
-- [ ] Implement HSTS header (max-age=31536000)
-- [ ] Implement Referrer-Policy header
-- [ ] Configure TLS 1.3
-- [ ] Set up rate limiting middleware [Spec §4]
-- [ ] Implement input validation middleware
-- [ ] Set up AES-256 encryption for sensitive data at rest
-- [ ] Implement CSRF protection
-- [ ] Implement input sanitization middleware (DOMPurify or equivalent) [Spec §4.9]
+- [x] Implement Content-Security-Policy header
+- [x] Implement X-Frame-Options header (DENY)
+- [x] Implement X-Content-Type-Options header (nosniff)
+- [x] Implement HSTS header (max-age=31536000)
+- [x] Implement Referrer-Policy header
+- [ ] Configure TLS 1.3 (deferred to Phase 19 -- server/Cloudflare config)
+- [x] Set up rate limiting middleware [Spec §4] (7 tiers: global, auth, api, upload, passwordReset, search, review)
+- [x] Implement input validation middleware
+- [x] Set up AES-256 encryption for sensitive data at rest
+- [x] Implement CSRF protection
+- [x] Implement input sanitization middleware (isomorphic-dompurify) [Spec §4.9]
 
 #### Email Service (required for auth) [Spec §26]
 
@@ -1532,7 +1532,7 @@ _Add any additional notes, decisions, or blockers here._
 ---
 
 **Total Estimated Tasks:** ~650+ items across 19 phases
-**Completed:** 32 tasks (Phase 1.1 + 1.2 + 1.3 + 1.4) -- ~5% overall
-**Next:** Phase 1.5 (Security Foundation)
+**Completed:** 42 tasks (Phase 1.1 + 1.2 + 1.3 + 1.4 + 1.5) -- ~6.5% overall
+**Next:** Phase 1.6 (Email Service)
 
 ---
