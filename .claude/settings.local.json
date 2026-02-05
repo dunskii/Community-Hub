@@ -3,7 +3,13 @@
     "allow": [
       "WebFetch(domain:raw.githubusercontent.com)",
       "Bash(pnpm install:*)",
-      "Bash(pnpm add:*)"
+      "Bash(pnpm add:*)",
+      "Bash(pnpm --filter @community-hub/backend typecheck:*)",
+      "Bash(pnpm --filter @community-hub/backend test)",
+      "Bash(pnpm --filter @community-hub/shared test:*)",
+      "Bash(pnpm --filter @community-hub/frontend test)",
+      "Bash(npm run test:*)",
+      "Bash(pnpm test:*)"
     ]
   }
 }

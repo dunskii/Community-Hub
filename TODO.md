@@ -85,11 +85,11 @@
 
 #### Email Service (required for auth) [Spec §26]
 
-- [ ] Set up Mailgun and configure API key
-- [ ] Create base HTML email template (branded, responsive)
-- [ ] Implement email verification template
-- [ ] Implement password reset template
-- [ ] Configure delivery, bounce handling, and one-click unsubscribe
+- [x] Set up Mailgun and configure API key
+- [x] Create base HTML email template (branded, responsive)
+- [x] Implement email verification template
+- [x] Implement password reset template
+- [x] Configure delivery, bounce handling, and one-click unsubscribe
 
 #### Maps Integration (required for business profiles) [Spec §26]
 

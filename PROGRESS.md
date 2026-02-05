@@ -3,7 +3,7 @@
 **Specification Version:** 2.0
 **Project Start:** January 2026
 **Last Updated:** 5 February 2026
-**Current Phase:** Phase 1 -- Foundation & Core Infrastructure (Sub-phases 1.1-1.5 Complete)
+**Current Phase:** Phase 1 -- Foundation & Core Infrastructure (Sub-phases 1.1-1.6 Complete)
 
 ---
 
@@ -11,7 +11,7 @@
 
 | Phase                                      | Status      | Tasks | Progress |
 | ------------------------------------------ | ----------- | ----- | -------- |
-| Phase 1: Foundation & Core Infrastructure  | In Progress | 59    | 71%  (1.1-1.5 = 100%) |
+| Phase 1: Foundation & Core Infrastructure  | In Progress | 59    | 80%  (1.1-1.6 = 100%) |
 | Phase 2: Authentication & User System      | Not Started | 33    | 0%       |
 | Phase 3: Design System & Core Components   | Not Started | 40    | 0%       |
 | Phase 4: Business Directory Core           | Not Started | 39    | 0%       |
@@ -32,8 +32,8 @@
 | Phase 19: Deployment Infrastructure        | Not Started | 20    | 0%       |
 | Ongoing: Testing, Docs, Maintenance        | Not Started | 34    | 0%       |
 
-**Overall Project Progress: ~6.5% (42/644 tasks across 19 phases)**
-**Phase 1 Sub-phase Progress: 1.1 = 100%, 1.2 = 100%, 1.3 = 100%, 1.4 = 100%, 1.5 = 100% (42/59 Phase 1 tasks)**
+**Overall Project Progress: ~7.3% (47/644 tasks across 19 phases)**
+**Phase 1 Sub-phase Progress: 1.1 = 100%, 1.2 = 100%, 1.3 = 100%, 1.4 = 100%, 1.5 = 100%, 1.6 = 100% (47/59 Phase 1 tasks)**
 
 ---
 
@@ -60,6 +60,7 @@
 - [x] **Milestone 5: "Security Hardened"** -- All 5 security headers configured (CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy). CSRF protection with signed double-submit cookies. AES-256-GCM encryption utility. Input validation middleware (Zod). Input sanitization (isomorphic-dompurify). 7 rate limiters. Config endpoint field filtering. 220 backend tests, 322 total tests. (2026-02-04)
 - [x] **QA Review Phase 1.5 R1:** 1 critical (S-01 fixed), 3 important (all fixed), 5 minor (fixed), 3 pre-existing (P-01 fixed, P-02/P-03 tracked). (2026-02-04)
 - [x] **QA Review Phase 1.5 R2: PASS CLEAN** -- All 9 findings from R1 verified fixed. No new issues. 322 tests passing. (2026-02-05)
+- [x] **Milestone 6: "Email Delivered"** -- Mailgun integration complete. Email service layer with Redis queue. Email templates (verification, password reset) seeded with 10 languages. Bounce handling framework documented. 23 email tests passing. (2026-02-05)
 
 ### MVP Milestones
 
@@ -90,8 +91,8 @@
 
 ## Current Sprint
 
-**Sprint:** Phase 1 - Foundation (Batches 1-5 Complete)
-**Sprint Goal:** Sub-phases 1.1-1.5 complete. Next: Phase 1.6 (Email Service)
+**Sprint:** Phase 1 - Foundation (Batches 1-6 Complete)
+**Sprint Goal:** Sub-phases 1.1-1.6 complete. Next: Phase 1.7 (Maps) or 1.8 (i18n)
 
 ### Completed Sprint Tasks (1.1 + 1.2 + 1.3)
 

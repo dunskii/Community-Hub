@@ -3,6 +3,7 @@ import { PrismaPg } from '@prisma/adapter-pg';
 
 import { PrismaClient } from '../generated/prisma/client.js';
 import { logger } from '../utils/logger.js';
+import { seedEmailTemplates } from './seeds/email-templates.js';
 
 const connectionString = process.env['DATABASE_URL'];
 if (!connectionString) {
@@ -92,57 +93,7 @@ async function main(): Promise<void> {
 
   // ── Email Templates ──────────────────────────────────
 
-  const templates = [
-    {
-      templateKey: 'welcome',
-      name: 'Welcome Email',
-      description: 'Sent to new users after registration',
-      subject: { en: 'Welcome to {{platformName}}' },
-      bodyHtml: {
-        en: '<h1>Welcome, {{displayName}}!</h1><p>Thank you for joining our community.</p>',
-      },
-      bodyText: {
-        en: 'Welcome, {{displayName}}! Thank you for joining our community.',
-      },
-      variables: ['platformName', 'displayName'],
-    },
-    {
-      templateKey: 'verify_email',
-      name: 'Email Verification',
-      description: 'Sent to verify user email address',
-      subject: { en: 'Verify your email address' },
-      bodyHtml: {
-        en: '<p>Please verify your email by clicking: <a href="{{verificationLink}}">Verify Email</a></p>',
-      },
-      bodyText: {
-        en: 'Please verify your email by visiting: {{verificationLink}}',
-      },
-      variables: ['verificationLink', 'displayName'],
-    },
-    {
-      templateKey: 'password_reset',
-      name: 'Password Reset',
-      description: 'Sent when user requests a password reset',
-      subject: { en: 'Reset your password' },
-      bodyHtml: {
-        en: '<p>Click here to reset your password: <a href="{{resetLink}}">Reset Password</a></p>',
-      },
-      bodyText: {
-        en: 'Reset your password by visiting: {{resetLink}}',
-      },
-      variables: ['resetLink', 'displayName'],
-    },
-  ];
-
-  for (const tmpl of templates) {
-    await prisma.emailTemplate.upsert({
-      where: { templateKey: tmpl.templateKey },
-      update: {},
-      create: tmpl,
-    });
-  }
-
-  logger.info('Email templates seeded');
+  await seedEmailTemplates();
   logger.info('Database seeded successfully.');
 }
 
