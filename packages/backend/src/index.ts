@@ -8,6 +8,7 @@ import { closeEsClient } from './search/elasticsearch-client.js';
 import { setupIndices } from './search/index.js';
 import { logger } from './utils/logger.js';
 import { checkPrismaVersion } from './utils/prisma-version-check.js';
+import { verifyMapboxConnection } from './services/maps/mapbox-client.js';
 
 async function main(): Promise<void> {
   // Validate configuration
@@ -19,6 +20,16 @@ async function main(): Promise<void> {
 
   // Connect services
   await connectRedis();
+
+  // Verify Mapbox API (optional -- graceful degradation)
+  try {
+    const mapboxOk = await verifyMapboxConnection();
+    if (!mapboxOk) {
+      logger.warn('Mapbox API verification failed -- map features will be limited');
+    }
+  } catch {
+    logger.warn('Mapbox API connection check failed -- map features will be limited');
+  }
 
   // Set up Elasticsearch indices (optional -- graceful degradation)
   try {

@@ -23,3 +23,15 @@ export type {
   FeatureFlag,
   SupportedLanguage,
 } from './config/types.js';
+
+// Maps
+export type { Coordinates, DistanceFilter } from './types/maps.js';
+export { calculateDistance, formatDistance } from './utils/geo.js';
+
+// i18n
+export type {
+  LanguageCode,
+  LanguageConfig,
+  MultilingualConfig as I18nMultilingualConfig,
+  LanguagesResponse,
+} from './types/i18n.js';

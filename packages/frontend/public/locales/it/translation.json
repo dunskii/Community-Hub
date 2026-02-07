@@ -1,0 +1,67 @@
+{
+  "common": {
+    "loading": "[UNTRANSLATED] Loading...",
+    "error": "[UNTRANSLATED] An error occurred",
+    "success": "[UNTRANSLATED] Success",
+    "save": "[UNTRANSLATED] Save",
+    "cancel": "[UNTRANSLATED] Cancel",
+    "submit": "[UNTRANSLATED] Submit",
+    "delete": "[UNTRANSLATED] Delete",
+    "edit": "[UNTRANSLATED] Edit",
+    "search": "[UNTRANSLATED] Search",
+    "filter": "[UNTRANSLATED] Filter",
+    "clear": "[UNTRANSLATED] Clear",
+    "close": "[UNTRANSLATED] Close",
+    "back": "[UNTRANSLATED] Back",
+    "next": "[UNTRANSLATED] Next",
+    "previous": "[UNTRANSLATED] Previous",
+    "yes": "[UNTRANSLATED] Yes",
+    "no": "[UNTRANSLATED] No",
+    "viewDetails": "[UNTRANSLATED] View Details",
+    "learnMore": "[UNTRANSLATED] Learn More"
+  },
+  "navigation": {
+    "home": "[UNTRANSLATED] Home",
+    "businesses": "[UNTRANSLATED] Businesses",
+    "events": "[UNTRANSLATED] Events",
+    "deals": "[UNTRANSLATED] Deals",
+    "profile": "[UNTRANSLATED] Profile",
+    "settings": "[UNTRANSLATED] Settings",
+    "logout": "[UNTRANSLATED] Log Out",
+    "login": "[UNTRANSLATED] Log In",
+    "register": "[UNTRANSLATED] Sign Up",
+    "about": "[UNTRANSLATED] About",
+    "contact": "[UNTRANSLATED] Contact",
+    "help": "[UNTRANSLATED] Help"
+  },
+  "validation": {
+    "required": "[UNTRANSLATED] This field is required",
+    "invalidEmail": "[UNTRANSLATED] Invalid email address",
+    "invalidPhone": "[UNTRANSLATED] Invalid phone number",
+    "minLength": "[UNTRANSLATED] Must be at least {{count}} characters",
+    "maxLength": "[UNTRANSLATED] Must be no more than {{count}} characters",
+    "passwordMismatch": "[UNTRANSLATED] Passwords do not match",
+    "invalidUrl": "[UNTRANSLATED] Invalid URL",
+    "invalidFormat": "[UNTRANSLATED] Invalid format",
+    "mustAccept": "[UNTRANSLATED] You must accept the terms and conditions"
+  },
+  "errors": {
+    "generic": "[UNTRANSLATED] Something went wrong. Please try again.",
+    "network": "[UNTRANSLATED] Network error. Please check your connection.",
+    "notFound": "[UNTRANSLATED] The requested resource was not found.",
+    "unauthorized": "[UNTRANSLATED] You are not authorized to access this resource.",
+    "forbidden": "[UNTRANSLATED] Access forbidden.",
+    "serverError": "[UNTRANSLATED] Server error. Please try again later.",
+    "timeout": "[UNTRANSLATED] Request timed out. Please try again.",
+    "badRequest": "[UNTRANSLATED] Invalid request. Please check your input."
+  },
+  "accessibility": {
+    "selectLanguage": "[UNTRANSLATED] Select language",
+    "languageChanged": "[UNTRANSLATED] Language changed to {{language}}",
+    "skipToMain": "[UNTRANSLATED] Skip to main content",
+    "openMenu": "[UNTRANSLATED] Open menu",
+    "closeMenu": "[UNTRANSLATED] Close menu",
+    "openDialog": "[UNTRANSLATED] Open dialog",
+    "closeDialog": "[UNTRANSLATED] Close dialog"
+  }
+}

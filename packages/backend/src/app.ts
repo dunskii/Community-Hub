@@ -68,6 +68,9 @@ export function createApp(): express.Express {
 
   app.use(requestLogger);
 
+  // Static file serving for uploads
+  app.use('/uploads', express.static('uploads'));
+
   // Routes
   setupRoutes(app);
 

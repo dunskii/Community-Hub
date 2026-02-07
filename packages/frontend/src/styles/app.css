@@ -1,5 +1,11 @@
 @import 'tailwindcss';
 
+/* Phase 3 Design System */
+@import './colours.css';
+@import './typography.css';
+@import './utilities.css';
+@import './accessibility.css';
+
 /*
  * Design tokens from Community Hub specification [Spec §6.1-6.2].
  * Runtime values injected from platform.json via CSS custom properties on :root.

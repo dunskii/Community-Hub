@@ -8,7 +8,7 @@ function errorMessage(err: unknown): string {
   return err instanceof Error ? err.message : String(err);
 }
 
-export const cache = {
+export const cacheService = {
   async get<T>(key: string): Promise<T | null> {
     try {
       const raw = await getRedis().get(ENV_PREFIX + key);
@@ -58,3 +58,6 @@ export const cache = {
     }
   },
 };
+
+// Legacy export for backwards compatibility
+export const cache = cacheService;

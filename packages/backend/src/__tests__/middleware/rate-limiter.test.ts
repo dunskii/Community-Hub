@@ -6,18 +6,20 @@ import {
   authRateLimiter,
   apiRateLimiter,
   uploadRateLimiter,
-  passwordResetRateLimiter,
+  forgotPasswordRateLimiter,
+  resetPasswordRateLimiter,
   searchRateLimiter,
   reviewRateLimiter,
 } from '../../middleware/rate-limiter.js';
 
 describe('rate limiters', () => {
-  it('should export all 7 limiters as functions', () => {
+  it('should export all 8 limiters as functions', () => {
     expect(typeof rateLimiter).toBe('function');
     expect(typeof authRateLimiter).toBe('function');
     expect(typeof apiRateLimiter).toBe('function');
     expect(typeof uploadRateLimiter).toBe('function');
-    expect(typeof passwordResetRateLimiter).toBe('function');
+    expect(typeof forgotPasswordRateLimiter).toBe('function');
+    expect(typeof resetPasswordRateLimiter).toBe('function');
     expect(typeof searchRateLimiter).toBe('function');
     expect(typeof reviewRateLimiter).toBe('function');
   });
@@ -43,9 +45,14 @@ describe('rate limiters', () => {
       expect(RATE_LIMIT_CONFIG.upload.limit).toBe(20);
     });
 
-    it('password reset: 3 req / 1 hour', () => {
-      expect(RATE_LIMIT_CONFIG.passwordReset.windowMs).toBe(3_600_000);
-      expect(RATE_LIMIT_CONFIG.passwordReset.limit).toBe(3);
+    it('forgot password: 3 req / 1 hour', () => {
+      expect(RATE_LIMIT_CONFIG.forgotPassword.windowMs).toBe(3_600_000);
+      expect(RATE_LIMIT_CONFIG.forgotPassword.limit).toBe(3);
+    });
+
+    it('reset password: 5 req / 1 hour', () => {
+      expect(RATE_LIMIT_CONFIG.resetPassword.windowMs).toBe(3_600_000);
+      expect(RATE_LIMIT_CONFIG.resetPassword.limit).toBe(5);
     });
 
     it('search: 30 req / 1 minute', () => {

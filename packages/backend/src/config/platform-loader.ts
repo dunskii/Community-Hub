@@ -82,3 +82,13 @@ export function clearPlatformConfigCache(): void {
   cachedConfig = null;
   cachedConfigDir = null;
 }
+
+/**
+ * Get the loaded platform config
+ */
+export function getPlatformConfig(): PlatformConfig {
+  if (!cachedConfig) {
+    return loadPlatformConfig();
+  }
+  return cachedConfig;
+}

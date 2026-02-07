@@ -12,13 +12,14 @@ const RATE_LIMIT_MESSAGE = {
  * Exported for testing; consumed by the limiter factories below.
  */
 export const RATE_LIMIT_CONFIG = {
-  global:        { windowMs: 1 * 60 * 1000,      limit: 30  },  // 30 req / 1 min (anonymous baseline)
-  auth:          { windowMs: 15 * 60 * 1000,     limit: 10  },  // 10 req / 15 min
-  api:           { windowMs: 1 * 60 * 1000,      limit: 100 },  // 100 req / 1 min (authenticated)
-  upload:        { windowMs: 60 * 60 * 1000,     limit: 20  },  // 20 req / 1 hr
-  passwordReset: { windowMs: 60 * 60 * 1000,     limit: 3   },  // 3 req / 1 hr
-  search:        { windowMs: 1 * 60 * 1000,      limit: 30  },  // 30 req / 1 min
-  review:        { windowMs: 24 * 60 * 60 * 1000, limit: 5   },  // 5 req / 24 hrs
+  global:             { windowMs: 1 * 60 * 1000,      limit: 30  },  // 30 req / 1 min (anonymous baseline)
+  auth:               { windowMs: 15 * 60 * 1000,     limit: 10  },  // 10 req / 15 min
+  api:                { windowMs: 1 * 60 * 1000,      limit: 100 },  // 100 req / 1 min (authenticated)
+  upload:             { windowMs: 60 * 60 * 1000,     limit: 20  },  // 20 req / 1 hr
+  forgotPassword:     { windowMs: 60 * 60 * 1000,     limit: 3   },  // 3 req / 1 hr
+  resetPassword:      { windowMs: 60 * 60 * 1000,     limit: 5   },  // 5 req / 1 hr
+  search:             { windowMs: 1 * 60 * 1000,      limit: 30  },  // 30 req / 1 min
+  review:             { windowMs: 24 * 60 * 60 * 1000, limit: 5   },  // 5 req / 24 hrs
 } as const;
 
 function createLimiter(config: { windowMs: number; limit: number }) {
@@ -42,8 +43,14 @@ export const apiRateLimiter = createLimiter(RATE_LIMIT_CONFIG.api);
 /** Upload rate limiter for file upload endpoints. */
 export const uploadRateLimiter = createLimiter(RATE_LIMIT_CONFIG.upload);
 
-/** Password reset rate limiter. */
-export const passwordResetRateLimiter = createLimiter(RATE_LIMIT_CONFIG.passwordReset);
+/** Forgot password rate limiter (initiating reset). */
+export const forgotPasswordRateLimiter = createLimiter(RATE_LIMIT_CONFIG.forgotPassword);
+
+/** Reset password rate limiter (completing reset with token). */
+export const resetPasswordRateLimiter = createLimiter(RATE_LIMIT_CONFIG.resetPassword);
+
+/** @deprecated Use forgotPasswordRateLimiter instead */
+export const passwordResetRateLimiter = forgotPasswordRateLimiter;
 
 /** Search rate limiter. */
 export const searchRateLimiter = createLimiter(RATE_LIMIT_CONFIG.search);

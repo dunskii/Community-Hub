@@ -1,0 +1,129 @@
+/**
+ * Colour System
+ *
+ * All colours are loaded from config/platform.json at runtime.
+ * Use CSS custom properties (--color-*) in all components.
+ *
+ * NEVER hardcode hex values in components.
+ */
+
+:root {
+  /* Base colours (injected by design-tokens.ts) */
+  /* --color-primary: #2C5F7C (Guildford South default) */
+  /* --color-secondary: #E67E22 */
+  /* --color-accent: #F39C12 */
+
+  /* Primary tints (lighter) */
+  /* --color-primary-tint-10: calculated */
+  /* --color-primary-tint-20: calculated */
+  /* --color-primary-tint-30: calculated */
+  /* --color-primary-tint-50: calculated */
+  /* --color-primary-tint-70: calculated */
+  /* --color-primary-tint-90: calculated */
+
+  /* Primary shades (darker) */
+  /* --color-primary-shade-10: calculated */
+  /* --color-primary-shade-20: calculated */
+  /* --color-primary-shade-30: calculated */
+  /* --color-primary-shade-50: calculated */
+  /* --color-primary-shade-70: calculated */
+  /* --color-primary-shade-90: calculated */
+
+  /* Semantic colours */
+  /* --color-success: #27AE60 */
+  /* --color-error: #E74C3C */
+  /* --color-warning: #E67E22 */
+  /* --color-info: #3498DB */
+
+  /* Neutral colours */
+  /* --color-neutral-light: #F5F5F5 */
+  /* --color-neutral-medium: #CCCCCC */
+
+  /* Text colours */
+  /* --color-text-dark: #2C3E50 */
+  /* --color-text-light: #7F8C8D */
+
+  /* RGB values (for rgba() usage) */
+  /* --color-primary-rgb: 44, 95, 124 */
+}
+
+/* Utility classes for text colours */
+.text-primary {
+  color: var(--color-primary);
+}
+.text-secondary {
+  color: var(--color-secondary);
+}
+.text-accent {
+  color: var(--color-accent);
+}
+.text-success {
+  color: var(--color-success);
+}
+.text-error {
+  color: var(--color-error);
+}
+.text-warning {
+  color: var(--color-warning);
+}
+.text-info {
+  color: var(--color-info);
+}
+.text-dark {
+  color: var(--color-text-dark);
+}
+.text-light {
+  color: var(--color-text-light);
+}
+
+/* Utility classes for background colours */
+.bg-primary {
+  background-color: var(--color-primary);
+}
+.bg-secondary {
+  background-color: var(--color-secondary);
+}
+.bg-accent {
+  background-color: var(--color-accent);
+}
+.bg-success {
+  background-color: var(--color-success);
+}
+.bg-error {
+  background-color: var(--color-error);
+}
+.bg-warning {
+  background-color: var(--color-warning);
+}
+.bg-info {
+  background-color: var(--color-info);
+}
+.bg-neutral-light {
+  background-color: var(--color-neutral-light);
+}
+.bg-neutral-medium {
+  background-color: var(--color-neutral-medium);
+}
+
+/* Utility classes for border colours */
+.border-primary {
+  border-color: var(--color-primary);
+}
+.border-secondary {
+  border-color: var(--color-secondary);
+}
+.border-accent {
+  border-color: var(--color-accent);
+}
+.border-neutral-medium {
+  border-color: var(--color-neutral-medium);
+}
+
+/* Opacity utilities for hover/disabled states */
+.hover-darken:hover {
+  filter: brightness(0.9);
+}
+
+.disabled-opacity {
+  opacity: 0.5;
+}

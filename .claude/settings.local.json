@@ -9,7 +9,14 @@
       "Bash(pnpm --filter @community-hub/shared test:*)",
       "Bash(pnpm --filter @community-hub/frontend test)",
       "Bash(npm run test:*)",
-      "Bash(pnpm test:*)"
+      "Bash(pnpm test:*)",
+      "Bash(pnpm build:*)",
+      "Bash(pnpm typecheck:*)",
+      "Bash(test:*)",
+      "Bash(npm test:*)",
+      "Bash(npx prisma migrate dev:*)",
+      "Bash(npm run build:*)",
+      "Skill(qa)"
     ]
   }
 }

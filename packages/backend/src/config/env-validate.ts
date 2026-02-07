@@ -95,3 +95,6 @@ export function validateEnv(env: Record<string, string | undefined> = process.en
   }
   return result.data;
 }
+
+// Export validated env config globally
+export const env = validateEnv();

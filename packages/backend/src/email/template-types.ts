@@ -4,10 +4,10 @@
  */
 export type EmailTemplateKey =
   | 'email_verification'
-  | 'password_reset';
-  // Future templates (Phase 2+):
-  // | 'welcome'
-  // | 'password_changed'
+  | 'password_reset'
+  | 'welcome'
+  | 'password_changed';
+  // Future templates (Phase 3+):
   // | 'business_claim_notification'
   // | 'claim_approved'
   // | 'claim_rejected'
@@ -33,6 +33,12 @@ export interface TemplateVariables {
     expiryMinutes: number; // 60
     ipAddress: string;
     timestamp: string;
+  };
+  welcome: {
+    userName: string;
+  };
+  password_changed: {
+    userName: string;
   };
 }
 

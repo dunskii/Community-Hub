@@ -1,0 +1,44 @@
+feat(phase-1.7): complete maps integration with Mapbox
+
+Implements geolocation and mapping capabilities for business discovery:
+
+Backend (9 files):
+- Mapbox SDK integration with connectivity verification
+- Geocoding service (forward/reverse) with 30-day Redis caching
+- Bounding box validation for location-agnostic deployment
+- POST /api/v1/geocode endpoint with rate limiting
+- Custom TypeScript declarations for Mapbox SDK
+
+Frontend (10 files):
+- BusinessMap component with interactive controls
+- Custom SVG markers with accessibility
+- Platform-specific deep links (iOS/Android/desktop)
+- DirectionsButton component with 44px touch targets
+- MapFallback component for graceful degradation
+- useUserLocation hook with explicit permission
+- BusinessDistance component with Haversine calculation
+
+Shared (2 files):
+- Haversine distance calculation (±0.5% accuracy)
+- Locale-aware distance formatting (m/km)
+- Type-safe coordinate interfaces
+
+Features:
+✅ Location-agnostic (all coords from platform.json)
+✅ WCAG 2.1 AA compliant (keyboard nav, ARIA, focus rings)
+✅ Graceful degradation (static address if API down)
+✅ Privacy-first (explicit location permission)
+✅ Mobile-first responsive design
+✅ Zero TypeScript errors
+
+Dependencies:
+- @mapbox/mapbox-sdk@^0.16.2 (backend)
+- mapbox-gl@^3.18.1 (frontend)
+- react-map-gl@^7.1.9 (frontend)
+
+Phase 1.7: 5/5 tasks complete (100%)
+Phase 1 overall: 7/8 subsections complete (87.5%)
+
+One day I will add something of substance here.
+
+Co-Authored-By: Dunskii <andrew@dunskii.com>

@@ -22,6 +22,16 @@ if (process.env['NODE_ENV'] !== 'production') {
 }
 
 // TODO: Phase 2 - add slow query logging via Prisma middleware (M-10)
+export async function connectDb(): Promise<void> {
+  logger.info('Connecting to database...');
+  try {
+    await prisma.$connect();
+  } catch (err) {
+    logger.error(err instanceof Error ? { err } : { err: String(err) }, 'Error connecting to database');
+    throw err;
+  }
+}
+
 export async function disconnectDb(): Promise<void> {
   logger.info('Disconnecting database...');
   try {
