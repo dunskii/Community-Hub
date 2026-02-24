@@ -20,16 +20,16 @@
   },
   "dependencies": {
     "@community-hub/shared": "workspace:*",
-    "@tailwindcss/vite": "^4.1.18",
-    "i18next": "^25.8.4",
-    "i18next-browser-languagedetector": "^8.2.0",
+    "@tailwindcss/vite": "^4.2.1",
+    "i18next": "^25.8.13",
+    "i18next-browser-languagedetector": "^8.2.1",
     "mapbox-gl": "^3.18.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-i18next": "^16.5.4",
-    "react-map-gl": "^7.1.9",
-    "react-router-dom": "^7.13.0",
-    "tailwindcss": "^4.1.18"
+    "react-map-gl": "^8.1.0",
+    "react-router-dom": "^7.13.1",
+    "tailwindcss": "^4.2.1"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.9.1",
