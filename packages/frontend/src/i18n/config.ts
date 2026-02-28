@@ -17,9 +17,23 @@ import translationKO from '../../public/locales/ko/translation.json';
 import translationEL from '../../public/locales/el/translation.json';
 import translationIT from '../../public/locales/it/translation.json';
 
+// Import business-specific translations
+import businessEN from './locales/en/business.json';
+import businessAR from './locales/ar/business.json';
+import categoryEN from './locales/en/category.json';
+import categoryAR from './locales/ar/category.json';
+
 const resources = {
-  en: { translation: translationEN },
-  ar: { translation: translationAR },
+  en: {
+    translation: translationEN,
+    business: businessEN,
+    category: categoryEN,
+  },
+  ar: {
+    translation: translationAR,
+    business: businessAR,
+    category: categoryAR,
+  },
   'zh-CN': { translation: translationZH_CN },
   'zh-TW': { translation: translationZH_TW },
   vi: { translation: translationVI },
@@ -44,6 +58,8 @@ i18n
   .init({
     resources,
     fallbackLng: 'en',
+    defaultNS: 'translation',
+    ns: ['translation', 'business', 'category'],
     debug: import.meta.env.DEV,
     interpolation: {
       escapeValue: false, // React already escapes

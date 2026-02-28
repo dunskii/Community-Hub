@@ -1,0 +1,131 @@
+/**
+ * CategoryGrid Styles
+ * Mobile-first, responsive grid
+ */
+
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-400);
+}
+
+/* Category Card */
+.category-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-200);
+  padding: var(--spacing-500);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: var(--color-text-primary);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  min-height: 120px;
+  position: relative;
+}
+
+.category-card:hover,
+.category-card:focus {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.category-card:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.category-card__icon {
+  font-size: 48px;
+  line-height: 1;
+}
+
+.category-card__name {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  text-align: center;
+  line-height: var(--line-height-tight);
+}
+
+.category-card__count {
+  position: absolute;
+  top: var(--spacing-200);
+  right: var(--spacing-200);
+  background: var(--color-primary);
+  color: var(--color-primary-contrast);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  padding: var(--spacing-100) var(--spacing-200);
+  border-radius: var(--radius-full);
+  min-width: 24px;
+  text-align: center;
+}
+
+/* Skeleton state */
+.category-card--skeleton {
+  pointer-events: none;
+}
+
+/* Tablet */
+@media (min-width: 768px) {
+  .category-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-500);
+  }
+
+  .category-card {
+    min-height: 140px;
+    padding: var(--spacing-600);
+  }
+
+  .category-card__icon {
+    font-size: 56px;
+  }
+
+  .category-card__name {
+    font-size: var(--font-size-lg);
+  }
+}
+
+/* Desktop */
+@media (min-width: 1200px) {
+  .category-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .category-card {
+    min-height: 160px;
+  }
+
+  .category-card__icon {
+    font-size: 64px;
+  }
+}
+
+/* RTL support */
+[dir="rtl"] .category-card__count {
+  right: auto;
+  left: var(--spacing-200);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .category-card {
+    transition: none;
+  }
+
+  .category-card:hover,
+  .category-card:focus {
+    transform: none;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .category-card {
+    border-width: 2px;
+  }
+}

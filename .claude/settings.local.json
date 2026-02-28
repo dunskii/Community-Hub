@@ -16,7 +16,10 @@
       "Bash(npm test:*)",
       "Bash(npx prisma migrate dev:*)",
       "Bash(npm run build:*)",
-      "Skill(qa)"
+      "Skill(qa)",
+      "Bash(powershell.exe -Command \"Get-Service -Name *postgres* | Select-Object Name, Status\")",
+      "Bash(npx prisma generate:*)",
+      "Bash(npx tsc:*)"
     ]
   }
 }

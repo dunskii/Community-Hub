@@ -65,7 +65,7 @@ export class EmailService {
       tags: [templateKey],
     });
 
-    logger.info('Email queued for sending', { templateKey, to, language: rendered.language });
+    logger.info({ templateKey, to, language: rendered.language }, 'Email queued for sending');
   }
 
   /**
@@ -79,9 +79,9 @@ export class EmailService {
     try {
       const mailgun = getMailgunClient();
       await mailgun.sendEmail(email);
-      logger.info('Email sent successfully', { to: email.to, subject: email.subject });
+      logger.info({ to: email.to, subject: email.subject }, 'Email sent successfully');
     } catch (error) {
-      logger.error('Failed to send email', { to: email.to, subject: email.subject, error });
+      logger.error({ to: email.to, subject: email.subject, error }, 'Failed to send email');
       await this.queue.retry(email);
     }
   }

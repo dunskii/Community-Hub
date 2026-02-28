@@ -16,9 +16,17 @@ import {
   RefreshTokenPayload,
 } from '../types/auth';
 import { TIME_SECONDS } from '../constants/time';
+import { logger } from '../utils/logger';
 
-// Get Redis client instance
-const redis = getRedis();
+// Lazy-load Redis client to avoid startup errors when Redis is not configured
+function getRedisClient() {
+  try {
+    return getRedis();
+  } catch (error) {
+    logger.warn('Redis not available - token revocation and session management disabled');
+    return null;
+  }
+}
 
 // Token configuration from environment
 const JWT_SECRET = process.env.JWT_SECRET || process.env.SESSION_SECRET;
@@ -35,12 +43,13 @@ const REFRESH_TOKEN_EXPIRY_REMEMBER_ME =
  * Convert time string to seconds
  * Examples: "15m" => 900, "7d" => 604800
  */
-function parseExpiry(expiry: string): number {
-  const match = expiry.match(/^(\d+)([smhd])$/);
+function parseExpiry(expiry: string | undefined): number {
+  if (!expiry) return 900; // default 15 minutes
+  const match = expiry?.match(/^(\d+)([smhd])$/);
   if (!match) return 900; // default 15 minutes
 
   const [, value, unit] = match;
-  const num = parseInt(value, 10);
+  const num = parseInt(value ?? '15', 10);
 
   switch (unit) {
     case 's':
@@ -84,8 +93,9 @@ export function generateAccessToken(
     jti,
   };
 
-  return jwt.sign(payload, JWT_SECRET as string, {
-    expiresIn: ACCESS_TOKEN_EXPIRY,
+  if (!JWT_SECRET) throw new Error('JWT_SECRET is not set');
+  return jwt.sign(payload, JWT_SECRET, {
+    expiresIn: parseExpiry(ACCESS_TOKEN_EXPIRY),
   });
 }
 
@@ -111,8 +121,9 @@ export function generateRefreshToken(
     jti,
   };
 
-  return jwt.sign(payload, JWT_SECRET as string, {
-    expiresIn: expiry,
+  if (!JWT_SECRET) throw new Error('JWT_SECRET is not set');
+  return jwt.sign(payload, JWT_SECRET, {
+    expiresIn: parseExpiry(expiry),
   });
 }
 
@@ -138,8 +149,9 @@ export function generateRefreshTokenWithJti(
     jti,
   };
 
-  const token = jwt.sign(payload, JWT_SECRET as string, {
-    expiresIn: expiry,
+  if (!JWT_SECRET) throw new Error('JWT_SECRET is not set');
+  const token = jwt.sign(payload, JWT_SECRET, {
+    expiresIn: parseExpiry(expiry),
   });
 
   // Calculate expiration date
@@ -159,7 +171,8 @@ export async function verifyAccessToken(
   token: string
 ): Promise<AccessTokenPayload | null> {
   try {
-    const payload = jwt.verify(token, JWT_SECRET as string) as AccessTokenPayload;
+    if (!JWT_SECRET) throw new Error('JWT_SECRET is not set');
+    const payload = jwt.verify(token, JWT_SECRET) as AccessTokenPayload;
 
     // Check if token is revoked
     const isRevoked = await isTokenRevoked(payload.jti);
@@ -183,7 +196,8 @@ export async function verifyRefreshToken(
   token: string
 ): Promise<RefreshTokenPayload | null> {
   try {
-    const payload = jwt.verify(token, JWT_SECRET as string) as RefreshTokenPayload;
+    if (!JWT_SECRET) throw new Error('JWT_SECRET is not set');
+    const payload = jwt.verify(token, JWT_SECRET) as RefreshTokenPayload;
 
     // Check type
     if (payload.type !== 'refresh') {
@@ -346,13 +360,16 @@ export async function verifyPasswordResetToken(
     return null;
   }
 
-  const data = await redis.get(keys[0]);
+  const firstKey = keys[0];
+  if (!firstKey) return null;
+
+  const data = await redis.get(firstKey);
   if (!data) {
     return null;
   }
 
   const parsed = JSON.parse(data);
-  await redis.del(keys[0]); // Delete token after use
+  await redis.del(firstKey); // Delete token after use
   return parsed;
 }
 

@@ -1,0 +1,8 @@
+{
+  "browseTitle": "تصفح الفئات",
+  "browseDescription": "استكشف الأعمال حسب الفئة",
+  "noCategoriesTitle": "لا توجد فئات متاحة",
+  "noCategoriesDescription": "ستظهر الفئات هنا بمجرد إنشائها.",
+  "errorTitle": "خطأ في تحميل الفئات",
+  "subcategories": "فئات فرعية"
+}

@@ -1,5 +1,9 @@
-import 'dotenv/config';
+import { config as dotenvConfig } from 'dotenv';
+import { resolve } from 'path';
 import { defineConfig } from 'prisma/config';
+
+// Load .env from monorepo root
+dotenvConfig({ path: resolve(__dirname, '../../.env') });
 
 const databaseUrl = process.env['DATABASE_URL'];
 if (!databaseUrl) {

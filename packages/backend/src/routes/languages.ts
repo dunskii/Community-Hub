@@ -1,12 +1,11 @@
 import { Router, type Request, type Response } from 'express';
-import { getPlatformConfig } from '@community-hub/shared';
 import type { LanguagesResponse } from '@community-hub/shared';
-import { CacheService } from '../cache/cache-service.js';
+import { cacheService } from '../cache/cache-service.js';
+import { loadPlatformConfig } from '../config/platform-loader.js';
 import { rateLimiter } from '../middleware/rate-limiter.js';
 import { logger } from '../utils/logger.js';
 
-const router = Router();
-const cacheService = CacheService.getInstance();
+const router: ReturnType<typeof Router> = Router();
 
 /**
  * GET /api/v1/languages
@@ -14,7 +13,7 @@ const cacheService = CacheService.getInstance();
  * Public endpoint (no auth required)
  * Rate limited to 30 requests per minute (baseline for public endpoints)
  */
-router.get('/languages', rateLimiter, async (req: Request, res: Response) => {
+router.get('/languages', rateLimiter, async (_req: Request, res: Response) => {
   try {
     // Check cache first (30-day TTL)
     const cacheKey = 'platform:languages';
@@ -25,7 +24,7 @@ router.get('/languages', rateLimiter, async (req: Request, res: Response) => {
     }
 
     // Load from platform config
-    const config = await getPlatformConfig();
+    const config = loadPlatformConfig();
     const { defaultLanguage, supportedLanguages } = config.multilingual;
 
     // Filter enabled languages
@@ -39,8 +38,8 @@ router.get('/languages', rateLimiter, async (req: Request, res: Response) => {
       }));
 
     const response: LanguagesResponse = {
-      defaultLanguage,
-      languages: enabledLanguages,
+      defaultLanguage: defaultLanguage as any,
+      languages: enabledLanguages as any,
     };
 
     // Cache for 30 days (languages rarely change)

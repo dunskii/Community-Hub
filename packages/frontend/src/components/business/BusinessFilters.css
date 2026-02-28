@@ -1,0 +1,79 @@
+/**
+ * BusinessFilters Styles
+ * Mobile-first, responsive layout
+ */
+
+.business-filters {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-400);
+  padding: var(--spacing-400);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.business-filters__search {
+  width: 100%;
+}
+
+.business-filters__controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-400);
+}
+
+.business-filters__toggle {
+  display: flex;
+  align-items: center;
+  min-height: 44px; /* Touch target */
+}
+
+/* Tablet and up */
+@media (min-width: 768px) {
+  .business-filters {
+    padding: var(--spacing-500);
+  }
+
+  .business-filters__controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: var(--spacing-400);
+    align-items: end;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1200px) {
+  .business-filters {
+    flex-direction: row;
+    align-items: end;
+  }
+
+  .business-filters__search {
+    flex: 1;
+    max-width: 400px;
+  }
+
+  .business-filters__controls {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    gap: var(--spacing-400);
+  }
+
+  .business-filters__controls > * {
+    flex: 1;
+    max-width: 200px;
+  }
+
+  .business-filters__toggle {
+    flex: 0 0 auto;
+    max-width: none;
+  }
+}
+
+/* RTL support */
+[dir="rtl"] .business-filters {
+  direction: rtl;
+}

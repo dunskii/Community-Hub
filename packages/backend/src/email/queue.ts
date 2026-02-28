@@ -1,4 +1,4 @@
-import { getRedisClient } from '../cache/redis-client.js';
+import { getRedis } from '../cache/redis-client.js';
 import { logger } from '../utils/logger.js';
 
 interface QueuedEmail {
@@ -25,7 +25,7 @@ export class EmailQueue {
    * Enqueue an email for sending.
    */
   async enqueue(email: Omit<QueuedEmail, 'retryCount' | 'queuedAt'>): Promise<void> {
-    const redis = getRedisClient();
+    const redis = getRedis();
     const queuedEmail: QueuedEmail = {
       ...email,
       retryCount: 0,
@@ -33,7 +33,7 @@ export class EmailQueue {
     };
 
     await redis.rpush(QUEUE_KEY, JSON.stringify(queuedEmail));
-    logger.info('Email enqueued', { to: email.to, subject: email.subject });
+    logger.info({ to: email.to, subject: email.subject }, 'Email enqueued');
   }
 
   /**
@@ -41,7 +41,7 @@ export class EmailQueue {
    * Returns null if queue is empty.
    */
   async dequeue(): Promise<QueuedEmail | null> {
-    const redis = getRedisClient();
+    const redis = getRedis();
     const result = await redis.lpop(QUEUE_KEY);
     if (!result) return null;
 
@@ -53,25 +53,25 @@ export class EmailQueue {
    */
   async retry(email: QueuedEmail): Promise<void> {
     if (email.retryCount >= MAX_RETRIES) {
-      logger.error('Email max retries exceeded', { to: email.to, subject: email.subject });
+      logger.error({ to: email.to, subject: email.subject }, 'Email max retries exceeded');
       return; // Move to dead-letter queue (implement in Phase 16)
     }
 
-    const redis = getRedisClient();
+    const redis = getRedis();
     const retryEmail: QueuedEmail = {
       ...email,
       retryCount: email.retryCount + 1,
     };
 
     await redis.rpush(QUEUE_KEY, JSON.stringify(retryEmail));
-    logger.warn('Email re-queued for retry', { to: email.to, retryCount: retryEmail.retryCount });
+    logger.warn({ to: email.to, retryCount: retryEmail.retryCount }, 'Email re-queued for retry');
   }
 
   /**
    * Get queue length.
    */
   async length(): Promise<number> {
-    const redis = getRedisClient();
+    const redis = getRedis();
     return redis.llen(QUEUE_KEY);
   }
 }

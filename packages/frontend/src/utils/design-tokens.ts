@@ -117,19 +117,20 @@ export async function loadAndInjectDesignTokens(): Promise<void> {
     const response = await fetch('/api/v1/config');
     if (!response.ok) throw new Error('Failed to load platform config');
 
-    const config = await response.json();
+    const result = await response.json();
+    const config = result.data || result; // Handle API response wrapper
     const colors: PlatformColors = {
-      primary: config.branding.colors.primary,
-      secondary: config.branding.colors.secondary,
-      accent: config.branding.colors.accent,
-      success: config.branding.colors.success || '#27AE60',
-      error: config.branding.colors.error || '#E74C3C',
-      warning: config.branding.colors.warning || '#E67E22',
-      info: config.branding.colors.info || '#3498DB',
-      neutralLight: config.branding.colors.neutralLight || '#F5F5F5',
-      neutralMedium: config.branding.colors.neutralMedium || '#CCCCCC',
-      textDark: config.branding.colors.textDark || '#2C3E50',
-      textLight: config.branding.colors.textLight || '#7F8C8D',
+      primary: config.branding?.colors?.primary || '#2C5F7C',
+      secondary: config.branding?.colors?.secondary || '#E67E22',
+      accent: config.branding?.colors?.accent || '#F39C12',
+      success: config.branding?.colors?.success || '#27AE60',
+      error: config.branding?.colors?.error || '#E74C3C',
+      warning: config.branding?.colors?.warning || '#E67E22',
+      info: config.branding?.colors?.info || '#3498DB',
+      neutralLight: config.branding?.colors?.neutralLight || '#F5F5F5',
+      neutralMedium: config.branding?.colors?.neutralMedium || '#CCCCCC',
+      textDark: config.branding?.colors?.textDark || '#2C3E50',
+      textLight: config.branding?.colors?.textLight || '#7F8C8D',
     };
 
     injectDesignTokens(colors);

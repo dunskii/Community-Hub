@@ -25,7 +25,6 @@ import {
 } from '../services/auth-service';
 import {
   generateAccessToken,
-  generateRefreshToken,
   generateRefreshTokenWithJti,
   verifyRefreshToken,
   revokeToken,
@@ -42,7 +41,7 @@ import { ApiError } from '../utils/api-error';
 import { logger } from '../utils/logger';
 import { getClientIp } from '../utils/ip-address';
 
-const router = Router();
+const router: ReturnType<typeof Router> = Router();
 
 // ─── Validation Schemas ──────────────────────────────────────────
 

@@ -1,0 +1,261 @@
+{
+  "platform": {
+    "id": "guildford-community-hub",
+    "version": "1.0.0",
+    "deploymentDate": "2026-02-08"
+  },
+  "location": {
+    "suburbName": "Guilford",
+    "suburbNameShort": "Guilford",
+    "region": "Greater Western Sydney",
+    "city": "Sydney",
+    "state": "NSW",
+    "stateFullName": "New South Wales",
+    "country": "Australia",
+    "countryCode": "AU",
+    "locale": "en-AU",
+    "currency": "AUD",
+    "currencySymbol": "$",
+    "phoneCountryCode": "+61",
+    "postcode": "2161",
+    "postcodeRange": ["2161"],
+    "timezone": "Australia/Sydney",
+    "coordinates": {
+      "latitude": -33.8522,
+      "longitude": 150.9878
+    },
+    "boundingBox": {
+      "north": -33.8400,
+      "south": -33.8600,
+      "east": 151.0000,
+      "west": 150.9700
+    },
+    "defaultSearchRadiusKm": 5,
+    "maxSearchRadiusKm": 10
+  },
+  "branding": {
+    "platformName": "Guilford Community Hub",
+    "platformNameShort": "GCH",
+    "legalEntityName": "Guilford Community Hub Pty Ltd",
+    "tagline": "Connecting Guilford's Local Businesses & Community",
+    "description": "Your local directory for Guilford businesses, events, and community engagement",
+    "copyrightHolder": "Guilford Community Hub",
+    "logoUrl": "/assets/logo.svg",
+    "faviconUrl": "/assets/favicon.ico",
+    "logos": {
+      "main": "/assets/logo.svg",
+      "primary": "/assets/logo-primary.svg",
+      "light": "/assets/logo-light.svg",
+      "dark": "/assets/logo-dark.svg",
+      "icon": "/assets/icon.png",
+      "favicon": "/assets/favicon.ico",
+      "appleTouchIcon": "/assets/apple-touch-icon.png"
+    },
+    "socialHashtags": {
+      "primary": "#GuilfordCommunity",
+      "secondary": ["#GuilfordNSW", "#LocalGuilford"],
+      "tertiary": "#SydneyLocal"
+    },
+    "colors": {
+      "primary": "#2C5F7C",
+      "secondary": "#E67E22",
+      "accent": "#F39C12",
+      "success": "#27AE60",
+      "warning": "#F39C12",
+      "error": "#E74C3C",
+      "info": "#3498DB"
+    },
+    "typography": {
+      "headingFont": "Montserrat",
+      "bodyFont": "Open Sans"
+    }
+  },
+  "contact": {
+    "generalEmail": "info@guilfordcommunityhub.com.au",
+    "supportEmail": "support@guilfordcommunityhub.com.au",
+    "businessEmail": "business@guilfordcommunityhub.com.au",
+    "feedbackEmail": "feedback@guilfordcommunityhub.com.au",
+    "privacyEmail": "privacy@guilfordcommunityhub.com.au",
+    "emergencyEmail": "emergency@guilfordcommunityhub.com.au",
+    "phone": "+61 2 9999 9999",
+    "address": "123 Guilford Road, Guilford NSW 2161, Australia"
+  },
+  "social": {
+    "facebook": "https://facebook.com/guilfordcommunityhub",
+    "instagram": "https://instagram.com/guilfordcommunityhub",
+    "twitter": "https://twitter.com/guilfordch"
+  },
+  "legal": {
+    "termsUrl": "/legal/terms",
+    "privacyUrl": "/legal/privacy",
+    "cookieUrl": "/legal/cookies",
+    "accessibilityUrl": "/legal/accessibility",
+    "privacyPolicyUrl": "/legal/privacy",
+    "termsOfServiceUrl": "/legal/terms",
+    "cookiePolicyUrl": "/legal/cookies",
+    "communityGuidelinesUrl": "/legal/guidelines",
+    "businessOwner": "Guilford Community Hub Pty Ltd",
+    "abn": "12 345 678 901",
+    "registeredAddress": "123 Guilford Road, Guilford NSW 2161, Australia"
+  },
+  "features": {
+    "businessDirectory": true,
+    "eventsCalendar": true,
+    "communityNoticeboard": true,
+    "communityGroups": true,
+    "localHistory": true,
+    "dealsHub": true,
+    "b2bNetworking": true,
+    "socialFeedAggregation": true,
+    "surveySystem": true,
+    "reviewsAndRatings": true,
+    "multilingual": true,
+    "pwaInstallation": true,
+    "smsAlerts": false,
+    "whatsappAlerts": false,
+    "events": true,
+    "deals": true,
+    "reviews": true,
+    "messaging": true,
+    "jobs": false,
+    "marketplace": false,
+    "crowdfunding": false,
+    "emergencyAlerts": true,
+    "socialSharing": true,
+    "pushNotifications": false,
+    "sms": false,
+    "whatsapp": false
+  },
+  "multilingual": {
+    "defaultLanguage": "en",
+    "autoTranslationEnabled": false,
+    "supportedLanguages": [
+      {
+        "code": "en",
+        "name": "English",
+        "nativeName": "English",
+        "enabled": true,
+        "rtl": false
+      },
+      {
+        "code": "ar",
+        "name": "Arabic",
+        "nativeName": "العربية",
+        "enabled": true,
+        "rtl": true
+      },
+      {
+        "code": "zh-CN",
+        "name": "Chinese (Simplified)",
+        "nativeName": "简体中文",
+        "enabled": true,
+        "rtl": false
+      },
+      {
+        "code": "zh-TW",
+        "name": "Chinese (Traditional)",
+        "nativeName": "繁體中文",
+        "enabled": true,
+        "rtl": false
+      },
+      {
+        "code": "vi",
+        "name": "Vietnamese",
+        "nativeName": "Tiếng Việt",
+        "enabled": true,
+        "rtl": false
+      },
+      {
+        "code": "hi",
+        "name": "Hindi",
+        "nativeName": "हिन्दी",
+        "enabled": true,
+        "rtl": false
+      },
+      {
+        "code": "ur",
+        "name": "Urdu",
+        "nativeName": "اردو",
+        "enabled": true,
+        "rtl": true
+      },
+      {
+        "code": "ko",
+        "name": "Korean",
+        "nativeName": "한국어",
+        "enabled": true,
+        "rtl": false
+      },
+      {
+        "code": "el",
+        "name": "Greek",
+        "nativeName": "Ελληνικά",
+        "enabled": true,
+        "rtl": false
+      },
+      {
+        "code": "it",
+        "name": "Italian",
+        "nativeName": "Italiano",
+        "enabled": true,
+        "rtl": false
+      }
+    ]
+  },
+  "seo": {
+    "siteName": "Guilford Community Hub",
+    "defaultTitle": "Guilford Community Hub - Local Business Directory & Community Platform",
+    "titleTemplate": "%s | Guilford Community Hub",
+    "defaultDescription": "Discover local businesses, events, and community resources in Guilford, Sydney. Connect with your neighborhood and support local.",
+    "description": "Discover local businesses, events, and community resources in Guilford, Sydney",
+    "defaultKeywords": ["Guilford", "Sydney", "NSW", "community", "local business", "events", "directory"],
+    "keywords": ["Guilford", "Sydney", "NSW", "community", "local business", "events", "directory"],
+    "author": "Guilford Community Hub",
+    "twitterHandle": "@guilfordch",
+    "ogImage": "/assets/og-image.jpg"
+  },
+  "limits": {
+    "maxBusinessPhotos": 20,
+    "maxEventPhotos": 10,
+    "maxPhotoSizeMB": 5,
+    "maxPhotoSizeMb": 5,
+    "maxMenuFileSizeMb": 10,
+    "maxReviewLength": 2000,
+    "maxMessageLength": 5000,
+    "messagesPerDay": 50,
+    "newConversationsPerDay": 10,
+    "maxNewConversationsPerDay": 10,
+    "reviewsPerBusinessPerUser": 1,
+    "businessClaimsPerUser": 5,
+    "maxActivePromotions": 3,
+    "maxNoticeboardPostsPerUser": 5,
+    "noticeboardExpiryDays": 30,
+    "maxFlashDealsPerWeek": 2,
+    "reviewEditWindowDays": 7,
+    "accountDeletionGracePeriodDays": 30
+  },
+  "analytics": {
+    "googleAnalyticsId": "",
+    "facebookPixelId": "",
+    "enableTracking": false,
+    "enableCookieConsent": true
+  },
+  "partners": {
+    "council": {
+      "name": "Cumberland City Council",
+      "url": "https://www.cumberland.nsw.gov.au",
+      "website": "https://www.cumberland.nsw.gov.au",
+      "contactEmail": "council@cumberland.nsw.gov.au",
+      "logo": "/assets/partners/council.png",
+      "featured": true
+    },
+    "chamber": {
+      "name": "Guilford Chamber of Commerce",
+      "url": "https://example.com",
+      "website": "https://example.com",
+      "contactEmail": "info@guilfordchamber.com.au",
+      "logo": "/assets/partners/chamber.png",
+      "featured": true
+    }
+  }
+}

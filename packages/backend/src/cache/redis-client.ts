@@ -7,7 +7,12 @@ let redis: Redis | null = null;
 export function getRedis(): Redis {
   if (!redis) {
     const url = process.env['REDIS_URL'];
-    if (!url) throw new Error('REDIS_URL is not set');
+    if (!url) {
+      throw new Error(
+        'Redis is not configured. Features requiring Redis (sessions, caching, rate limiting) will not work. ' +
+        'Set REDIS_URL in .env or install Redis for full functionality.'
+      );
+    }
 
     redis = new Redis(url, {
       maxRetriesPerRequest: 3,
@@ -26,7 +31,17 @@ export function getRedis(): Redis {
 }
 
 export async function connectRedis(): Promise<void> {
-  await getRedis().connect();
+  const url = process.env['REDIS_URL'];
+  if (!url) {
+    logger.warn('REDIS_URL not set - Redis features disabled (sessions, caching, rate limiting)');
+    return;
+  }
+
+  try {
+    await getRedis().connect();
+  } catch (error) {
+    logger.warn({ error }, 'Redis connection failed - continuing without Redis');
+  }
 }
 
 export async function disconnectRedis(): Promise<void> {

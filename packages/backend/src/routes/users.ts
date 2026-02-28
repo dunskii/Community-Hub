@@ -30,13 +30,12 @@ import {
   findSessionByJti,
 } from '../services/session-service';
 import { verifyRefreshToken } from '../services/token-service';
-import { prisma } from '../db/index';
 import { ApiError } from '../utils/api-error';
 import { logger } from '../utils/logger';
 import { getClientIp } from '../utils/ip-address';
 import { uploadSingle } from '../middleware/upload';
 
-const router = Router();
+const router: ReturnType<typeof Router> = Router();
 
 // ─── Validation Schemas ──────────────────────────────────────────
 
@@ -128,7 +127,7 @@ router.put(
   validate({ params: userIdParamSchema, body: updateProfileBodySchema }),
   async (req: Request, res: Response) => {
     try {
-      const userId = req.params.id!;
+      const userId = req.params.id as string;
       const user = await updateUserProfile(userId, req.body);
 
       res.json({
@@ -160,7 +159,7 @@ router.put(
         throw ApiError.validation('No photo file provided');
       }
 
-      const userId = req.params.id!;
+      const userId = req.params.id as string;
       const user = await updateProfilePhoto(userId, req.file.buffer);
 
       res.json({
@@ -197,7 +196,7 @@ router.delete(
   validate({ params: userIdParamSchema }),
   async (req: Request, res: Response) => {
     try {
-      const userId = req.params.id!;
+      const userId = req.params.id as string;
       const user = await deleteProfilePhoto(userId);
 
       res.json({
@@ -232,7 +231,7 @@ router.put(
   validate({ params: userIdParamSchema, body: changePasswordBodySchema }),
   async (req: Request, res: Response) => {
     try {
-      const userId = req.params.id!;
+      const userId = req.params.id as string;
       const ipAddress = getClientIp(req);
 
       // Get current session ID from refresh token (to exclude from revocation)
@@ -287,7 +286,7 @@ router.put(
   validate({ params: userIdParamSchema, body: changeEmailBodySchema }),
   async (req: Request, res: Response) => {
     try {
-      const userId = req.params.id!;
+      const userId = req.params.id as string;
       const ipAddress = getClientIp(req);
       await changeEmail(userId, req.body.newEmail, ipAddress);
 
@@ -324,7 +323,7 @@ router.post(
   validate({ params: userIdParamSchema, body: verifyEmailChangeBodySchema }),
   async (req: Request, res: Response) => {
     try {
-      const userId = req.params.id!;
+      const userId = req.params.id as string;
       const user = await verifyEmailChange(userId, req.body.token);
 
       res.json({
@@ -360,7 +359,7 @@ router.put(
   validate({ params: userIdParamSchema, body: updatePreferencesBodySchema }),
   async (req: Request, res: Response) => {
     try {
-      const userId = req.params.id!;
+      const userId = req.params.id as string;
       const user = await updateNotificationPreferences(userId, req.body);
 
       res.json({
@@ -389,7 +388,7 @@ router.get(
   validate({ params: userIdParamSchema }),
   async (req: Request, res: Response) => {
     try {
-      const userId = req.params.id!;
+      const userId = req.params.id as string;
       const sessions = await listUserSessions(userId);
 
       res.json({
@@ -415,8 +414,8 @@ router.delete(
   validate({ params: userIdParamSchema }),
   async (req: Request, res: Response) => {
     try {
-      const userId = req.params.id!;
-      const sessionId = req.params.sessionId;
+      const userId = req.params.id as string;
+      const sessionId = req.params.sessionId as string;
 
       const revoked = await revokeSession(sessionId, userId);
 
@@ -449,7 +448,7 @@ router.delete(
   validate({ params: userIdParamSchema }),
   async (req: Request, res: Response) => {
     try {
-      const userId = req.params.id!;
+      const userId = req.params.id as string;
       const count = await revokeAllUserSessions(userId);
 
       res.json({
@@ -478,7 +477,7 @@ router.delete(
   validate({ params: userIdParamSchema }),
   async (req: Request, res: Response) => {
     try {
-      const userId = req.params.id!;
+      const userId = req.params.id as string;
       const ipAddress = getClientIp(req);
       await requestAccountDeletion(userId, ipAddress);
 
@@ -508,7 +507,7 @@ router.post(
   validate({ params: userIdParamSchema }),
   async (req: Request, res: Response) => {
     try {
-      const userId = req.params.id!;
+      const userId = req.params.id as string;
       await cancelAccountDeletion(userId);
 
       res.json({

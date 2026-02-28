@@ -1,20 +1,27 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code when working with this repository.
 
 ## Project Overview
 
-This is **Community Hub** - a location-agnostic Digital Community Improvement Hub (DCIH) platform for local business discovery and community engagement. The platform connects residents with local businesses that face competition from large shopping centres.
+**Community Hub** - A location-agnostic Digital Community Improvement Hub (DCIH) platform for local business discovery and community engagement.
 
 **First Deployment:** Guildford South precinct (Sydney, Australia)
+**Architecture:** Designed for multi-suburb deployment with configuration-only changes (no code modifications)
 
-**Future Deployments:** The platform is designed to be deployed to multiple suburbs with configuration-only changes (no code modifications required).
+### Current Status (February 2026)
 
-**Current Status:** Phase 3 Design System & Core Components complete (100%). Phases 1, 2, and 3 all complete. 424 frontend tests passing (100% pass rate). Ready for Phase 4 (Business Directory Core).
+- **Phase 1 (Foundation):** ✅ Complete (59/59 tasks) - 575 total tests passing
+- **Phase 2 (Authentication):** ✅ Complete (33/33 tasks) - 392 auth tests passing
+- **Phase 3 (Design System):** ✅ Complete (40/40 tasks) - 31 components, 424/424 tests (100%), WCAG 2.1 AA
+- **Phase 4 (Business Directory):** Ready to start (0/39 tasks)
+- **Overall Progress:** 20.5% (132/644 tasks)
 
-**Primary Reference:** `Docs/Community_Hub_Specification_v2.md` - this is the authoritative source for all functional requirements, data models, API endpoints, and design specifications.
+### Key References
 
-**Specification Version:** 2.0 (January 2026)
+- **Primary Spec:** `Docs/Community_Hub_Specification_v2.md` (authoritative source for all requirements, data models, API endpoints)
+- **Progress:** `PROGRESS.md` (detailed phase status, milestones, QA reviews)
+- **Tasks:** `TODO.md` (644 tasks across 19 phases)
 
 ## Location-Agnostic Architecture
 
@@ -26,156 +33,153 @@ This is **Community Hub** - a location-agnostic Digital Community Improvement Hu
 
 When implementing features, always reference configuration values rather than hardcoding suburb names, coordinates, or other location-specific data.
 
-## Specification Document Structure (v2.0)
+## Architecture & Stack
 
-The specification is organised into 7 parts plus appendices:
+### Implemented Stack
 
-### Part 1: Foundation & Architecture (Sections 1-5)
+- **Frontend:** React 18.3 + TypeScript, Vite 6.0, Tailwind CSS 4
+- **Backend:** Express 5.0, Node.js (ESM)
+- **Database:** PostgreSQL 17 + Prisma 7.3 (PrismaPg adapter)
+- **Caching:** Redis 7.4 (ioredis)
+- **Search:** Elasticsearch 8.17
+- **Testing:** Vitest 3.0, React Testing Library, jest-axe
+- **Code Quality:** ESLint 9 (flat config), Prettier, TypeScript strict mode
 
-- **Section 1:** Project Overview
-- **Section 2:** Platform Configuration Architecture (location-agnostic config)
-- **Section 3:** Technical Requirements (stack, performance, scalability, accessibility)
-- **Section 4:** Security & Privacy
-- **Section 5:** Legal & Compliance (Terms, Privacy Policy, Cookie Consent)
+### Integrations Configured
 
-### Part 2: Design & User Experience (Sections 6-9)
+- **Maps:** Google Maps API (Google Maps JavaScript API, Google Places API, Google Directions API)
+- **Analytics:** Google Analytics 4 (GA4)
+- **Email:** Mailgun v12.7.0
+- **i18n:** react-i18next v16.5.4 (10 languages, RTL support)
+- **Future:** Google Business Profile API, Facebook/Instagram APIs, Google Translate API, Twilio (SMS/WhatsApp), Firebase (push notifications)
 
-- **Section 6:** Design Specifications (colours, typography, components)
-- **Section 7:** UI States & Components (loading, empty, error states)
-- **Section 8:** Multilingual Support (10 languages, RTL)
-- **Section 9:** Onboarding & User Journeys
+## Critical Requirements
 
-### Part 3: Users & Core Entities (Sections 10-13)
+### Location-Agnostic Architecture
 
-- **Section 10:** User Types & Roles
-- **Section 11:** Business Profile Features
-- **Section 12:** Community User Features
-- **Section 13:** Business Owner Features
+**NEVER hardcode location-specific data.** Use the three-tier configuration system:
 
-### Part 4: Core Functionality (Sections 14-18)
+1. **`.env`** - Secrets, API keys, environment settings (never commit `.env`, only `.env.example`)
+2. **`config/platform.json`** - Location, branding, feature flags (edit for new suburb deployments)
+3. **Database** - Runtime-editable settings (categories, templates, system settings)
 
-- **Section 14:** Search & Discovery
-- **Section 15:** Events & Calendar System
-- **Section 16:** Messaging & Communication System
-- **Section 17:** Deals & Promotions Hub
-- **Section 18:** Reviews & Ratings
+### Non-Negotiable Standards
 
-### Part 5: Community & Social Features (Sections 19-22)
-
-- **Section 19:** Community Features (noticeboard, groups, history)
-- **Section 20:** Social Media Integration
-- **Section 21:** Business-to-Business Networking
-- **Section 22:** Emergency & Crisis Communication
-
-### Part 6: Administration & Operations (Sections 23-26)
-
-- **Section 23:** Administration & Moderation
-- **Section 24:** Content Policies
-- **Section 25:** Analytics & Reporting
-- **Section 26:** Integration Requirements
-
-### Part 7: Technical Operations (Sections 27-31)
-
-- **Section 27:** Error Handling
-- **Section 28:** Data Management
-- **Section 29:** Technical Operations
-- **Section 30:** Testing & Quality Requirements
-- **Section 31:** Operational Procedures
-
-### Appendices
-
-- **Appendix A:** Data Models (22 complete models)
-- **Appendix B:** API Endpoints (130+ endpoints)
-- **Appendix C:** Glossary
-
-## Key Technical Decisions (from Specification)
-
-### Planned Stack
-
-- **Frontend:** React with TypeScript, mobile-first responsive, PWA-capable
-- **Backend:** RESTful API or GraphQL, JWT authentication
-- **Database:** PostgreSQL (relational) + Elasticsearch (search)
-- **ORM:** Prisma >= 7.3.0
-- **Hosting:** DigitalOcean Droplets (all services self-hosted)
-- **Storage:** Local disk storage on Droplets for media
-- **Caching:** Redis for sessions and data
-
-### Critical Requirements
-
-- **Multilingual Support:** 10 languages including RTL (Arabic, Urdu) - must be built in from the start, not retrofitted
-- **WCAG 2.1 AA Accessibility:** All components must meet accessibility standards
-- **Mobile-First:** Primary breakpoint < 768px, 44px minimum touch targets
-- **PWA:** Installable, offline-capable with service worker
-- **Location-Agnostic:** All location data from configuration, never hardcoded
+- **Accessibility:** WCAG 2.1 AA compliance (all components tested with jest-axe, zero violations)
+- **Mobile-First:** Breakpoints: <768px (mobile), 768-1199px (tablet), ≥1200px (desktop), 44px touch targets
+- **Multilingual:** 10 languages with RTL support (Arabic, Urdu) - use react-i18next, never hardcode strings
+- **Security:** bcrypt (cost 12+), CSRF protection, CSP/HSTS headers, input validation/sanitization, rate limiting
+- **Testing:** >80% coverage target (current: 60% enforced), all new features require tests
 
 ### Performance Targets
 
-- Page load < 3 seconds on 3G
-- API response < 200ms (95th percentile)
-- Lighthouse performance score > 80
+- Page load: <3s on 3G
+- API response: <200ms (p95)
+- Lighthouse score: >80
 
-## Data Models
+## Implemented Features (Phases 1-3)
 
-Key entities defined in Appendix A of the specification:
+### Phase 1: Foundation (59/59 tasks ✅)
 
-- **Business:** Profile, hours, media, promotions, social links, certifications
-- **User:** Community members, business owners, moderators, admins
-- **Event:** Recurring events with RSVPs, calendar export
-- **Review:** Star ratings, photos, business responses
-- **Message/Conversation:** Business enquiries and responses
-- **Deal:** Promotions with redemption tracking
-- **BusinessConnection:** B2B networking relationships
-- **Alert:** Emergency and crisis communications
-- **BusinessEmergencyStatus:** Real-time business status during incidents
+- Monorepo (pnpm workspaces): `packages/backend`, `packages/frontend`, `packages/shared`
+- Configuration system with validation (Zod schemas)
+- Express 5 API with middleware pipeline (CORS, rate limiting, error handling, request logging)
+- Prisma 7.3 with 6 models: User, Category, UserSession, AuditLog, EmailTemplate, SystemSetting
+- Redis caching, Elasticsearch search, local media storage (Sharp for images)
+- Security: 5 headers (CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy), CSRF, AES-256-GCM, 7 rate limiters
+- Email service: Mailgun integration, template rendering (10 languages)
+- Maps: Google Maps API integration with geocoding, BusinessMap component, DirectionsButton
+- Analytics: Google Analytics 4 implementation with event tracking
+- i18n: react-i18next, 10 translation files, RTL support, useLanguage hook
 
-## API Structure
+### Phase 2: Authentication (33/33 tasks ✅)
 
-RESTful endpoints defined in Appendix B:
+- JWT authentication with HttpOnly cookies (access + refresh tokens)
+- 9 auth endpoints: register, login, logout, verify-email, forgot-password, reset-password, refresh
+- 10 user profile endpoints: get, update, password change, preferences, sessions, photo upload, deletion
+- bcrypt hashing (cost 12), email verification, password reset (1hr expiry), session management
+- Rate limiting: 10/15min (login), 3/hr (forgot password), 5/hr (reset password)
+- User deletion grace period (30 days), profile photo upload (800x800px WebP)
 
-- `/auth/*` - Registration, login, password reset
-- `/businesses/*` - CRUD, claim, analytics, emergency status
-- `/events/*` - CRUD, RSVP
-- `/users/*` - Profile, saved businesses, alert preferences
-- `/search/*` - Business/event search with filters
-- `/conversations/*` - Messaging between users and businesses
-- `/deals/*` - Deals hub, flash deals, redemptions
-- `/b2b/*` - Business networking, connections, forum
-- `/alerts/*` - Emergency alerts, check-ins
+### Phase 3: Design System (40/40 tasks ✅)
 
-## Design System
+- **31 production-ready components:** 6 layout, 9 form, 12 display, 3 accessibility
+- Runtime CSS variables from platform.json (colors, typography, spacing)
+- WCAG 2.1 AA compliant (zero jest-axe violations across 424 tests)
+- Mobile-first responsive (all components tested at 3 breakpoints)
+- Components: Header, Footer, PageContainer, BottomNavigation, Sidebar, Grid, Input, Textarea, Select, Checkbox, RadioButton, Toggle, DatePicker, TimePicker, FileUpload, Modal, Toast, Alert, Badge, Avatar, Skeleton, EmptyState, Pagination, Tabs, Accordion, Carousel, LiveRegion, useFocusTrap, useAnnounce
 
-- **Colors:** Teal (#2C5F7C), Orange (#E67E22), Gold (#F39C12) - configurable per deployment
-- **Typography:** Montserrat (headings), Open Sans (body)
-- **Responsive breakpoints:** Mobile (< 768px), Tablet (768-1199px), Desktop (≥ 1200px)
-- **Alert Colors:** Red (Critical), Orange (Warning), Yellow (Advisory), Blue (Information)
+## Specification Structure (v2.0)
 
-## Security Requirements
+The spec (`Docs/Community_Hub_Specification_v2.md`) is organized into 7 parts + appendices:
 
-- Australian Privacy Principles (APP) compliance
-- bcrypt password hashing (cost factor 12+)
-- TLS 1.3, AES-256 encryption at rest
-- Security headers: CSP, X-Frame-Options, HSTS
-- Rate limiting, input validation on all endpoints
-- Message spam detection and rate limiting (max 10 new conversations/day)
-- API keys and secrets in `.env` only, never in platform.json or code
+1. **Foundation & Architecture (§1-5):** Overview, Config, Technical, Security, Legal
+2. **Design & UX (§6-9):** Design Specs, UI Components, Multilingual, Onboarding
+3. **Users & Entities (§10-13):** User Types, Business Profile, Community User, Business Owner
+4. **Core Functionality (§14-18):** Search, Events, Messaging, Deals, Reviews
+5. **Community & Social (§19-22):** Community Features, Social Media, B2B, Emergency
+6. **Administration (§23-26):** Admin, Content Policies, Analytics, Integrations
+7. **Technical Ops (§27-31):** Error Handling, Data Management, Tech Ops, Testing, Operations
 
-## Integration Points
+**Appendices:** A (22 data models), B (130+ API endpoints), C (Glossary)
 
-- Google Business Profile API (import business data) - confirmed
-- Facebook/Instagram APIs (social feed, events)
-- Google Translate API (auto-translation) - confirmed
-- Maps API (Mapbox)
-- Mailgun (email notifications)
-- Twilio (SMS and WhatsApp messaging)
-- State emergency alerts / Bureau of Meteorology / Transport authority (emergency feeds)
+## Development Workflow
 
-## Configuration Files
+### When Starting Work
 
-When the codebase is implemented, the following configuration files will be present:
+1. Check `TODO.md` for current phase tasks
+2. Review relevant spec sections (§X references in TODO)
+3. Read `PROGRESS.md` for context on what's complete
+4. Review recent QA findings in `md/review/` for patterns to avoid
 
-| File                               | Purpose                             |
-| ---------------------------------- | ----------------------------------- |
-| `.env.example`                     | Template for environment variables  |
-| `config/platform.json`             | Location and branding configuration |
-| `config/platform.development.json` | Development overrides               |
-| `config/platform.staging.json`     | Staging overrides                   |
+### Code Standards
+
+- **TypeScript:** Strict mode, no `any` types, explicit return types on functions
+- **Testing:** Write tests before marking tasks complete (Vitest + React Testing Library)
+- **Accessibility:** Run jest-axe on all UI components, test keyboard navigation
+- **Git Commits:** Conventional commits format: `feat(phase-X): description`
+- **Code Style:** ESLint + Prettier (run `pnpm lint:fix` and `pnpm format` before committing)
+
+### Phase 4 Focus (Current)
+
+Next phase is **Business Directory Core** (39 tasks):
+
+- Implement Business entity with all fields (Appendix A.1)
+- Create API endpoints: GET/POST/PUT/DELETE `/businesses/*` (Appendix B.2)
+- Build business listing page with filters, sorting, pagination
+- Build business profile page with tabs (Overview, Photos, Reviews, Events, Deals)
+- Implement SEO metadata (Schema.org LocalBusiness, Open Graph, Twitter Cards)
+
+## Common Patterns
+
+### Configuration Loading
+
+```typescript
+import { getPlatformConfig } from '@community-hub/shared';
+const config = getPlatformConfig(); // Validated, merged config
+const primaryColor = config.branding.colors.primary; // #2C5F7C by default
+```
+
+### Translations
+
+```typescript
+import { useTranslation } from 'react-i18next';
+const { t } = useTranslation();
+return <h1>{t('common.welcome')}</h1>; // Never hardcode English strings
+```
+
+### API Responses
+
+```typescript
+import { sendSuccess, sendError } from '../utils/response.js';
+sendSuccess(res, data, 200);
+sendError(res, 'ERROR_CODE', 'Message', 400); // Use spec error codes (§27)
+```
+
+## Key Files
+
+- `packages/shared/src/config/platform-config.ts` - Config loading and validation
+- `packages/shared/src/config/platform-schema.ts` - Zod schema for platform.json
+- `packages/backend/src/middleware/` - Auth, rate limiting, validation, sanitization
+- `packages/frontend/src/components/` - 31 reusable components (Phase 3)
+- `packages/frontend/src/i18n/locales/` - Translation files (10 languages)

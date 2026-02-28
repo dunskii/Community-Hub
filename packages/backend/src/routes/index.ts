@@ -9,6 +9,8 @@ import { geocodingRouter } from './geocoding.js';
 import languagesRouter from './languages.js';
 import authRouter from './auth.js';
 import usersRouter from './users.js';
+import businessRouter from './business.js';
+import categoryRouter from './category.js';
 
 export function setupRoutes(app: Express): void {
   // API v1
@@ -19,7 +21,9 @@ export function setupRoutes(app: Express): void {
   v1.use('/', languagesRouter);
   v1.use('/auth', authRouter);
   v1.use('/users', usersRouter);
-  // Future route modules: businesses, events, search, etc.
+  v1.use('/', businessRouter);
+  v1.use('/', categoryRouter);
+  // Future route modules: events, search, etc.
 
   app.use('/api/v1', v1);
 

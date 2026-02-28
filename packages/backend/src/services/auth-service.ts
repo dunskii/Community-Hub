@@ -30,7 +30,6 @@ import {
   LoginData,
   LoginResponse,
   UserPublic,
-  LanguageCode,
 } from '../types/auth';
 import { User } from '../generated/prisma';
 import { logger } from '../utils/logger';
@@ -51,11 +50,11 @@ function toUserPublic(user: User): UserPublic {
     email: user.email,
     displayName: user.displayName,
     profilePhoto: user.profilePhoto,
-    languagePreference: user.languagePreference,
+    languagePreference: user.languagePreference as any,
     suburb: user.suburb,
     bio: user.bio,
     interests: user.interests,
-    notificationPreferences: user.notificationPreferences,
+    notificationPreferences: user.notificationPreferences as any,
     role: user.role,
     status: user.status,
     emailVerified: user.emailVerified,
@@ -316,7 +315,7 @@ export async function verifyEmail(
       {
         userName: user.displayName,
       },
-      user.languagePreference as LanguageCode
+      user.languagePreference as any
     );
   } catch (error) {
     logger.error({ error, userId }, 'Failed to send welcome email');
@@ -369,7 +368,7 @@ export async function resendVerificationEmail(email: string): Promise<void> {
         verificationLink,
         expiryHours: 24,
       },
-      user.languagePreference
+      user.languagePreference as any
     );
   } catch (error) {
     logger.error({ error, userId: user.id }, 'Failed to resend verification email');
@@ -422,7 +421,7 @@ export async function initiatePasswordReset(
         ipAddress: ipAddress || 'unknown',
         timestamp: new Date().toISOString(),
       },
-      user.languagePreference as LanguageCode
+      user.languagePreference as any
     );
   } catch (error) {
     logger.error({ error, userId: user.id }, 'Failed to send password reset email');
@@ -484,7 +483,7 @@ export async function completePasswordReset(
         {
           userName: user.displayName,
         },
-        user.languagePreference as LanguageCode
+        user.languagePreference as any
       );
     } catch (error) {
       logger.error({ error, userId: user.id }, 'Failed to send password changed email');

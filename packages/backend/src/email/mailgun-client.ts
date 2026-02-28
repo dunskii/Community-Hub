@@ -1,6 +1,5 @@
 import FormData from 'form-data';
 import Mailgun from 'mailgun.js';
-import type { MailgunMessageData, MessagesSendResult } from 'mailgun.js/interfaces/Messages';
 
 import { logger } from '../utils/logger.js';
 
@@ -46,7 +45,7 @@ export class MailgunClient {
   async sendEmail(params: SendEmailParams): Promise<string> {
     const { to, from, subject, html, text, headers, tags } = params;
 
-    const messageData: MailgunMessageData = {
+    const messageData: any = {
       from,
       to: Array.isArray(to) ? to : [to],
       subject,
@@ -60,25 +59,25 @@ export class MailgunClient {
     if (headers) {
       for (const [key, value] of Object.entries(headers)) {
         // Mailgun expects headers in the format 'h:HeaderName'
-        const headerKey = `h:${key}` as keyof MailgunMessageData;
-        (messageData as any)[headerKey] = value;
+        const headerKey = `h:${key}`;
+        messageData[headerKey] = value;
       }
     }
 
     try {
-      const result: MessagesSendResult = await this.client.messages.create(this.domain, messageData);
-      logger.info('Email sent via Mailgun', {
+      const result = await this.client.messages.create(this.domain, messageData);
+      logger.info({
         messageId: result.id,
         to: Array.isArray(to) ? to.join(', ') : to,
         subject,
-      });
-      return result.id;
+      }, 'Email sent via Mailgun');
+      return result.id as string;
     } catch (error) {
-      logger.error('Failed to send email via Mailgun', {
+      logger.error({
         error,
         to: Array.isArray(to) ? to.join(', ') : to,
         subject,
-      });
+      }, 'Failed to send email via Mailgun');
       throw new Error(`Mailgun send failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -91,13 +90,13 @@ export class MailgunClient {
     try {
       const domain = await this.client.domains.get(this.domain);
       if (domain.state !== 'active') {
-        logger.warn('Mailgun domain is not active', { domain: this.domain, state: domain.state });
+        logger.warn({ domain: this.domain, state: domain.state }, 'Mailgun domain is not active');
         return false;
       }
-      logger.info('Mailgun domain verified', { domain: this.domain });
+      logger.info({ domain: this.domain }, 'Mailgun domain verified');
       return true;
     } catch (error) {
-      logger.error('Failed to verify Mailgun domain', { domain: this.domain, error });
+      logger.error({ domain: this.domain, error }, 'Failed to verify Mailgun domain');
       return false;
     }
   }

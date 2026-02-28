@@ -80,6 +80,12 @@ export default defineConfig({
   ],
   server: {
     port: 4002,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+      },
+    },
   },
   build: {
     target: 'es2022',

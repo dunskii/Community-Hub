@@ -57,7 +57,7 @@ export class TemplateRenderer {
     let bodyText = bodyTextJson[language] ?? bodyTextJson['en'];
 
     if (!subject || !bodyHtml || !bodyText) {
-      logger.error('Missing template content for language', { templateKey, language });
+      logger.error({ templateKey, language }, 'Missing template content for language');
       throw new Error(`Template content missing for language: ${language}`);
     }
 

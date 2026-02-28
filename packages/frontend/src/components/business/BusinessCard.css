@@ -1,0 +1,181 @@
+/**
+ * BusinessCard Styles
+ * Mobile-first, RTL-aware
+ */
+
+.business-card {
+  display: flex;
+  gap: var(--spacing-400);
+  padding: var(--spacing-400);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  transition: box-shadow 0.2s ease;
+}
+
+.business-card-link,
+.business-card-button {
+  display: block;
+  width: 100%;
+  text-decoration: none;
+  color: inherit;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-align: start;
+}
+
+.business-card-link:hover .business-card,
+.business-card-link:focus .business-card,
+.business-card-button:hover .business-card,
+.business-card-button:focus .business-card {
+  box-shadow: var(--shadow-md);
+}
+
+.business-card-link:focus,
+.business-card-button:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-md);
+}
+
+/* Image */
+.business-card__image {
+  flex-shrink: 0;
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--color-background-alt);
+}
+
+.business-card__photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.business-card__avatar {
+  width: 100%;
+  height: 100%;
+}
+
+/* Content */
+.business-card__content {
+  flex: 1;
+  min-width: 0; /* Allow text truncation */
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-200);
+}
+
+.business-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--spacing-300);
+}
+
+.business-card__name {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+  margin: 0;
+  color: var(--color-text-primary);
+}
+
+.business-card__status {
+  flex-shrink: 0;
+}
+
+.business-card__description {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-height: var(--line-height-normal);
+}
+
+/* Metadata */
+.business-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-200) var(--spacing-300);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.business-card__category,
+.business-card__price,
+.business-card__distance,
+.business-card__rating {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-100);
+}
+
+.business-card__review-count {
+  color: var(--color-text-tertiary);
+}
+
+/* Address */
+.business-card__address {
+  font-style: normal;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-tertiary);
+  margin: 0;
+}
+
+/* Tablet and up */
+@media (min-width: 768px) {
+  .business-card {
+    padding: var(--spacing-500);
+    gap: var(--spacing-500);
+  }
+
+  .business-card__image {
+    width: 120px;
+    height: 120px;
+  }
+
+  .business-card__name {
+    font-size: var(--font-size-xl);
+  }
+
+  .business-card__description {
+    font-size: var(--font-size-base);
+    -webkit-line-clamp: 3;
+  }
+
+  .business-card__meta {
+    font-size: var(--font-size-base);
+  }
+
+  .business-card__address {
+    font-size: var(--font-size-base);
+  }
+}
+
+/* RTL support */
+[dir="rtl"] .business-card {
+  direction: rtl;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .business-card {
+    border-width: 2px;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .business-card {
+    transition: none;
+  }
+}

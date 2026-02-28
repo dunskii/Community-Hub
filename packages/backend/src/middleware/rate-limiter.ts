@@ -10,16 +10,19 @@ const RATE_LIMIT_MESSAGE = {
 /**
  * Rate limit configuration per Spec Section 4.8.
  * Exported for testing; consumed by the limiter factories below.
+ * Note: Limits are relaxed in development mode
  */
+const isDevelopment = process.env.NODE_ENV === 'development';
+
 export const RATE_LIMIT_CONFIG = {
-  global:             { windowMs: 1 * 60 * 1000,      limit: 30  },  // 30 req / 1 min (anonymous baseline)
-  auth:               { windowMs: 15 * 60 * 1000,     limit: 10  },  // 10 req / 15 min
-  api:                { windowMs: 1 * 60 * 1000,      limit: 100 },  // 100 req / 1 min (authenticated)
-  upload:             { windowMs: 60 * 60 * 1000,     limit: 20  },  // 20 req / 1 hr
-  forgotPassword:     { windowMs: 60 * 60 * 1000,     limit: 3   },  // 3 req / 1 hr
-  resetPassword:      { windowMs: 60 * 60 * 1000,     limit: 5   },  // 5 req / 1 hr
-  search:             { windowMs: 1 * 60 * 1000,      limit: 30  },  // 30 req / 1 min
-  review:             { windowMs: 24 * 60 * 60 * 1000, limit: 5   },  // 5 req / 24 hrs
+  global:             { windowMs: 1 * 60 * 1000,      limit: isDevelopment ? 1000 : 30  },  // 30 req / 1 min (anonymous baseline)
+  auth:               { windowMs: 15 * 60 * 1000,     limit: isDevelopment ? 1000 : 10  },  // 10 req / 15 min
+  api:                { windowMs: 1 * 60 * 1000,      limit: isDevelopment ? 1000 : 100 },  // 100 req / 1 min (authenticated)
+  upload:             { windowMs: 60 * 60 * 1000,     limit: isDevelopment ? 1000 : 20  },  // 20 req / 1 hr
+  forgotPassword:     { windowMs: 60 * 60 * 1000,     limit: isDevelopment ? 100 : 3   },  // 3 req / 1 hr
+  resetPassword:      { windowMs: 60 * 60 * 1000,     limit: isDevelopment ? 100 : 5   },  // 5 req / 1 hr
+  search:             { windowMs: 1 * 60 * 1000,      limit: isDevelopment ? 1000 : 30  },  // 30 req / 1 min
+  review:             { windowMs: 24 * 60 * 60 * 1000, limit: isDevelopment ? 1000 : 5   },  // 5 req / 24 hrs
 } as const;
 
 function createLimiter(config: { windowMs: number; limit: number }) {

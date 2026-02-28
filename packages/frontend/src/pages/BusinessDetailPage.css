@@ -1,0 +1,232 @@
+/**
+ * BusinessDetailPage Styles
+ */
+
+.business-detail-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-600);
+}
+
+/* Hero Image */
+.business-detail-page__hero {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--color-background-alt);
+}
+
+.business-detail-page__hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Header */
+.business-detail-page__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-400);
+}
+
+.business-detail-page__title-row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-300);
+}
+
+.business-detail-page__title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.business-detail-page__status {
+  display: flex;
+}
+
+.business-detail-page__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-200) var(--spacing-400);
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+}
+
+.business-detail-page__category,
+.business-detail-page__price,
+.business-detail-page__rating {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-100);
+}
+
+.business-detail-page__review-count {
+  color: var(--color-text-tertiary);
+}
+
+.business-detail-page__description {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-relaxed);
+  margin: 0;
+}
+
+/* Tab Content */
+.business-detail-page__tab-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-600);
+  padding: var(--spacing-500) 0;
+}
+
+/* Detail Sections */
+.business-detail-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-400);
+}
+
+.business-detail-section h2 {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.business-detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-100);
+  font-size: var(--font-size-base);
+}
+
+.business-detail-item strong {
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-medium);
+}
+
+.business-detail-item a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.business-detail-item a:hover,
+.business-detail-item a:focus {
+  text-decoration: underline;
+}
+
+.business-detail-item address {
+  font-style: normal;
+  color: var(--color-text-secondary);
+}
+
+.business-detail-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-200);
+}
+
+.business-detail-list li {
+  padding-left: var(--spacing-500);
+  position: relative;
+}
+
+.business-detail-list li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--color-success);
+  font-weight: var(--font-weight-bold);
+}
+
+.business-detail-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-300);
+}
+
+/* Photo Gallery */
+.business-detail-gallery {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-400);
+}
+
+.business-detail-gallery__image {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  background: var(--color-background-alt);
+}
+
+/* Tablet */
+@media (min-width: 768px) {
+  .business-detail-page__hero {
+    height: 300px;
+  }
+
+  .business-detail-page__title-row {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .business-detail-page__title {
+    font-size: var(--font-size-3xl);
+  }
+
+  .business-detail-page__tab-content {
+    padding: var(--spacing-600) 0;
+  }
+
+  .business-detail-item {
+    flex-direction: row;
+    gap: var(--spacing-400);
+  }
+
+  .business-detail-item strong {
+    min-width: 120px;
+    flex-shrink: 0;
+  }
+
+  .business-detail-gallery {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Desktop */
+@media (min-width: 1200px) {
+  .business-detail-page__hero {
+    height: 400px;
+  }
+
+  .business-detail-page__title {
+    font-size: var(--font-size-4xl);
+  }
+
+  .business-detail-gallery {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* RTL support */
+[dir="rtl"] .business-detail-page {
+  direction: rtl;
+}
+
+[dir="rtl"] .business-detail-list li {
+  padding-left: 0;
+  padding-right: var(--spacing-500);
+}
+
+[dir="rtl"] .business-detail-list li::before {
+  left: auto;
+  right: 0;
+}

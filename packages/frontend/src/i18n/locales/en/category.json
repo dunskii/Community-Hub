@@ -1,0 +1,8 @@
+{
+  "browseTitle": "Browse Categories",
+  "browseDescription": "Explore businesses by category",
+  "noCategoriesTitle": "No Categories Available",
+  "noCategoriesDescription": "Categories will appear here once they are created.",
+  "errorTitle": "Error Loading Categories",
+  "subcategories": "subcategories"
+}

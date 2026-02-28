@@ -28,9 +28,10 @@ function fileFilter(
   } else {
     cb(
       new ApiError(
-        400,
-        `Invalid file type. Allowed types: ${ALLOWED_MIME_TYPES.join(', ')}`
-      )
+        'INVALID_FILE_TYPE',
+        `Invalid file type. Allowed types: ${ALLOWED_MIME_TYPES.join(', ')}`,
+        400
+      ) as any
     );
   }
 }
@@ -49,7 +50,7 @@ const upload = multer({
 /**
  * Single file upload middleware
  */
-export const uploadSingle = upload.single('photo');
+export const uploadSingle: ReturnType<typeof upload.single> = upload.single('photo');
 
 /**
  * Export upload instance for custom configurations

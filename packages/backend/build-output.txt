@@ -1,0 +1,10 @@
+
+> @community-hub/backend@0.1.0 build
+> tsc
+
+src/services/auth-service.ts(487,9): error TS2345: Argument of type 'LanguageCode' is not assignable to parameter of type 'LanguageCode | undefined'.
+  Type '"zh"' is not assignable to type 'LanguageCode | undefined'.
+src/services/token-service.ts(43,24): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/services/user-service.ts(12,22): error TS6133: 'LanguageCode' is declared but its value is never read.
+src/services/user-service.ts(477,9): error TS6133: 'frontendUrl' is declared but its value is never read.

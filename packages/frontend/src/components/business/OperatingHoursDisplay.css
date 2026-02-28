@@ -1,0 +1,83 @@
+/**
+ * OperatingHoursDisplay Styles
+ */
+
+.operating-hours {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-300);
+}
+
+.operating-hours--compact {
+  gap: var(--spacing-200);
+}
+
+.operating-hours__status {
+  display: flex;
+  align-items: center;
+}
+
+.operating-hours__no-data,
+.operating-hours__appointment {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.operating-hours__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-200);
+}
+
+.operating-hours__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-200) 0;
+  font-size: var(--font-size-sm);
+}
+
+.operating-hours__row--current {
+  background: var(--color-background-alt);
+  padding: var(--spacing-200) var(--spacing-300);
+  border-radius: var(--radius-sm);
+  margin: 0 calc(-1 * var(--spacing-300));
+}
+
+.operating-hours__day {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  text-transform: capitalize;
+  min-width: 100px;
+}
+
+.operating-hours__day--current {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary);
+}
+
+.operating-hours__time {
+  color: var(--color-text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Tablet and up */
+@media (min-width: 768px) {
+  .operating-hours__row {
+    font-size: var(--font-size-base);
+  }
+
+  .operating-hours__day {
+    min-width: 120px;
+  }
+}
+
+/* RTL support */
+[dir="rtl"] .operating-hours {
+  direction: rtl;
+}
+
+[dir="rtl"] .operating-hours__row {
+  flex-direction: row-reverse;
+}
