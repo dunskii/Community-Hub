@@ -14,6 +14,10 @@ vi.mock('../../db/index', () => ({
       findUnique: vi.fn(),
       update: vi.fn(),
     },
+    userSession: {
+      findMany: vi.fn(),
+      updateMany: vi.fn(),
+    },
   },
 }));
 
@@ -27,6 +31,29 @@ vi.mock('../../email/email-service', () => {
     __mockSendTemplatedEmail: mockSendTemplatedEmail,
   };
 });
+
+vi.mock('../../services/session-service', () => ({
+  revokeAllUserSessions: vi.fn().mockResolvedValue(0),
+}));
+
+vi.mock('../../cache/redis-client', () => ({
+  getRedis: vi.fn(() => ({
+    setex: vi.fn().mockResolvedValue('OK'),
+    get: vi.fn().mockResolvedValue(null),
+    del: vi.fn().mockResolvedValue(1),
+  })),
+}));
+
+vi.mock('../../utils/image-processor', () => ({
+  processProfilePhoto: vi.fn((buffer) => Promise.resolve(buffer)),
+  validateImageDimensions: vi.fn(() => Promise.resolve(true)),
+}));
+
+vi.mock('fs/promises', () => ({
+  mkdir: vi.fn().mockResolvedValue(undefined),
+  writeFile: vi.fn().mockResolvedValue(undefined),
+  unlink: vi.fn().mockResolvedValue(undefined),
+}));
 
 vi.mock('../../utils/password', () => ({
   hashPassword: vi.fn((password) => Promise.resolve(`hashed_${password}`)),
@@ -198,13 +225,13 @@ describe('User Service', () => {
 
   describe('updateProfilePhoto', () => {
     it('should update profile photo', async () => {
-      const photoUrl = 'https://example.com/photos/user-123.jpg';
+      const expectedPhotoUrl = '/uploads/profiles/user-123.webp';
 
-      const mockUpdatedUser = {
+      const mockUser = {
         id: 'user-123',
         email: 'test@example.com',
         displayName: 'Test User',
-        profilePhoto: photoUrl,
+        profilePhoto: null,
         passwordHash: 'hashed',
         role: UserRole.COMMUNITY,
         status: UserStatus.ACTIVE,
@@ -219,15 +246,23 @@ describe('User Service', () => {
         lastLogin: null,
       };
 
+      const mockUpdatedUser = {
+        ...mockUser,
+        profilePhoto: expectedPhotoUrl,
+      };
+
+      // Mock findUnique to return the user
+      (prisma.user.findUnique as any).mockResolvedValue(mockUser);
+      // Mock update to return the updated user
       (prisma.user.update as any).mockResolvedValue(mockUpdatedUser);
 
-      const result = await updateProfilePhoto('user-123', photoUrl);
+      const result = await updateProfilePhoto('user-123', Buffer.from('fake-image'));
 
-      expect(result.profilePhoto).toBe(photoUrl);
+      expect(result.profilePhoto).toBe(expectedPhotoUrl);
 
       expect(prisma.user.update).toHaveBeenCalledWith({
         where: { id: 'user-123' },
-        data: { profilePhoto: photoUrl },
+        data: { profilePhoto: expectedPhotoUrl },
       });
     });
   });
@@ -320,6 +355,7 @@ describe('User Service', () => {
         id: 'user-123',
         email: 'old@example.com',
         displayName: 'Test User',
+        languagePreference: 'en',
       };
 
       (prisma.user.findUnique as any)
@@ -328,9 +364,7 @@ describe('User Service', () => {
 
       (prisma.user.update as any).mockResolvedValue({
         ...mockUser,
-        email: 'new@example.com',
-        emailVerified: false,
-        status: UserStatus.PENDING,
+        pendingEmail: 'new@example.com',
       });
 
       await changeEmail('user-123', 'new@example.com');
@@ -338,9 +372,7 @@ describe('User Service', () => {
       expect(prisma.user.update).toHaveBeenCalledWith({
         where: { id: 'user-123' },
         data: {
-          email: 'new@example.com',
-          emailVerified: false,
-          status: UserStatus.PENDING,
+          pendingEmail: 'new@example.com',
         },
       });
     });
@@ -360,13 +392,18 @@ describe('User Service', () => {
       const mockUser = {
         id: 'user-123',
         email: 'test@example.com',
+        displayName: 'Test User',
+        languagePreference: 'en',
       };
 
       (prisma.user.findUnique as any)
         .mockResolvedValueOnce(mockUser) // Same user
         .mockResolvedValueOnce(mockUser); // Current user
 
-      (prisma.user.update as any).mockResolvedValue(mockUser);
+      (prisma.user.update as any).mockResolvedValue({
+        ...mockUser,
+        pendingEmail: 'test@example.com',
+      });
 
       await expect(changeEmail('user-123', 'Test@Example.com')).resolves.not.toThrow();
     });
@@ -375,20 +412,25 @@ describe('User Service', () => {
       const mockUser = {
         id: 'user-123',
         email: 'old@example.com',
+        displayName: 'Test User',
+        languagePreference: 'en',
       };
 
       (prisma.user.findUnique as any)
         .mockResolvedValueOnce(null)
         .mockResolvedValueOnce(mockUser);
 
-      (prisma.user.update as any).mockResolvedValue(mockUser);
+      (prisma.user.update as any).mockResolvedValue({
+        ...mockUser,
+        pendingEmail: 'new@example.com',
+      });
 
       await changeEmail('user-123', 'NEW@EXAMPLE.COM');
 
       expect(prisma.user.update).toHaveBeenCalledWith({
         where: { id: 'user-123' },
         data: expect.objectContaining({
-          email: 'new@example.com',
+          pendingEmail: 'new@example.com',
         }),
       });
     });

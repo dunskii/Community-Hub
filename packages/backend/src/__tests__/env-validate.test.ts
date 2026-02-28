@@ -35,9 +35,10 @@ describe('validateEnv', () => {
     expect(() => validateEnv(env)).toThrow('DATABASE_URL');
   });
 
-  it('should throw for missing REDIS_URL', () => {
+  it('should accept missing REDIS_URL (optional in development)', () => {
     const { REDIS_URL: _, ...env } = validEnv;
-    expect(() => validateEnv(env)).toThrow('REDIS_URL');
+    const result = validateEnv(env);
+    expect(result.REDIS_URL).toBeUndefined();
   });
 
   it('should throw for short SESSION_SECRET', () => {

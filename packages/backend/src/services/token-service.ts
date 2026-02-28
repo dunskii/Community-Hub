@@ -246,6 +246,11 @@ export async function rotateRefreshToken(
  * @param ttl - Time to live in seconds (should match token expiry)
  */
 export async function revokeToken(jti: string, ttl: number): Promise<void> {
+  const redis = getRedisClient();
+  if (!redis) {
+    logger.warn('Cannot revoke token - Redis not available');
+    return;
+  }
   const key = `revoked:jti:${jti}`;
   await redis.setex(key, ttl, '1');
 }
@@ -257,6 +262,11 @@ export async function revokeToken(jti: string, ttl: number): Promise<void> {
  * @returns True if token is revoked
  */
 export async function isTokenRevoked(jti: string): Promise<boolean> {
+  const redis = getRedisClient();
+  if (!redis) {
+    // If Redis is not available, assume token is not revoked
+    return false;
+  }
   const key = `revoked:jti:${jti}`;
   const result = await redis.get(key);
   return result === '1';
@@ -284,6 +294,11 @@ export async function storeEmailVerificationToken(
   email: string,
   token: string
 ): Promise<void> {
+  const redis = getRedisClient();
+  if (!redis) {
+    logger.warn('Cannot store email verification token - Redis not available');
+    return;
+  }
   const key = `verify:${userId}:${token}`;
   const data = JSON.stringify({ userId, email });
   // 24 hour expiry
@@ -301,6 +316,11 @@ export async function verifyEmailVerificationToken(
   userId: string,
   token: string
 ): Promise<string | null> {
+  const redis = getRedisClient();
+  if (!redis) {
+    logger.warn('Cannot verify email verification token - Redis not available');
+    return null;
+  }
   const key = `verify:${userId}:${token}`;
   const data = await redis.get(key);
 
@@ -326,6 +346,11 @@ export async function storePasswordResetToken(
   email: string,
   token: string
 ): Promise<void> {
+  const redis = getRedisClient();
+  if (!redis) {
+    logger.warn('Cannot store password reset token - Redis not available');
+    return;
+  }
   const key = `reset:${userId}:${token}`;
   const data = JSON.stringify({ userId, email });
   // 1 hour expiry
@@ -344,6 +369,11 @@ export async function storePasswordResetToken(
 export async function verifyPasswordResetToken(
   token: string
 ): Promise<{ userId: string; email: string } | null> {
+  const redis = getRedisClient();
+  if (!redis) {
+    logger.warn('Cannot verify password reset token - Redis not available');
+    return null;
+  }
   // Search for token across all user IDs (we don't know userId from URL)
   // Use SCAN instead of KEYS for production safety
   const pattern = `reset:*:${token}`;
@@ -382,6 +412,11 @@ export async function verifyPasswordResetToken(
 export async function incrementFailedLoginAttempts(
   userId: string
 ): Promise<number> {
+  const redis = getRedisClient();
+  if (!redis) {
+    logger.warn('Cannot increment failed login attempts - Redis not available');
+    return 0;
+  }
   const key = `lockout:${userId}`;
   const current = await redis.get(key);
   const count = current ? parseInt(current, 10) + 1 : 1;
@@ -398,6 +433,10 @@ export async function incrementFailedLoginAttempts(
  * @returns Attempt count
  */
 export async function getFailedLoginAttempts(userId: string): Promise<number> {
+  const redis = getRedisClient();
+  if (!redis) {
+    return 0;
+  }
   const key = `lockout:${userId}`;
   const result = await redis.get(key);
   return result ? parseInt(result, 10) : 0;
@@ -409,6 +448,11 @@ export async function getFailedLoginAttempts(userId: string): Promise<number> {
  * @param userId - User ID
  */
 export async function clearFailedLoginAttempts(userId: string): Promise<void> {
+  const redis = getRedisClient();
+  if (!redis) {
+    logger.warn('Cannot clear failed login attempts - Redis not available');
+    return;
+  }
   const key = `lockout:${userId}`;
   await redis.del(key);
 }
