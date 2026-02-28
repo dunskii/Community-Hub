@@ -1,7 +1,7 @@
 # Community Hub Platform - Development TODO
 
 **Specification Version:** 2.0
-**Last Updated:** 7 February 2026
+**Last Updated:** 8 February 2026
 **Current Phase:** Phase 3 Complete → Phase 4 Ready (Business Directory Core)
 
 ---
@@ -93,11 +93,12 @@
 
 #### Maps Integration (required for business profiles) [Spec §26]
 
-- [x] Set up Mapbox API (access token, geocoding, map tiles)
-- [x] Implement map embed component for business profiles
-- [x] Implement "Get Directions" link
-- [x] Implement geocoding (address to coordinates)
-- [x] Implement distance calculation from user location
+- [ ] Set up Google Maps API (JavaScript API, Places API, Directions API, API keys)
+- [ ] Implement map embed component for business profiles using Google Maps
+- [ ] Implement "Get Directions" link using Google Directions API
+- [ ] Implement geocoding (address to coordinates) using Google Places API
+- [ ] Implement distance calculation from user location
+- [ ] Note: Migrate from previously completed Mapbox GL JS implementation
 
 #### i18n Foundation [Spec §8] (100% Complete)
 
@@ -275,92 +276,124 @@
 
 ---
 
-## Phase 4: Business Directory Core
+## Phase 4: Business Directory Core (33/39 tasks, ~85%) 🔄 IN PROGRESS
+
+> **Status:** Testing Phase (2026-03-01)
+> **QA:** 2 rounds complete (34 findings resolved)
+> **Tests:** 177/251+ passing (70% of target achieved)
+> **Reports:** `md/review/phase-4-business-directory-core.md`, `md/review/phase-4-business-directory-core-r2.md`, `md/phase-4.5-testing-qa-summary.md`
 
 ### 4.1 Business Data [Spec §11, Appendix A]
 
 #### Data Models
 
-- [ ] Business entity (all fields from spec)
-- [ ] Category model (hierarchical with parent_id)
-- [ ] OperatingHours model (day, open, close, is_closed)
-- [ ] SpecialHours model (date-specific overrides)
-- [ ] Address model (street, suburb, postcode, coordinates)
-- [ ] BusinessMedia model (photos, videos, documents)
-- [ ] BusinessCertification model (halal, kosher, organic, etc.)
-- [ ] BusinessSocialLink model (platform, URL)
+- [x] Business entity (all fields from spec)
+- [x] Category model (hierarchical with parent_id)
+- [x] OperatingHours model (day, open, close, is_closed)
+- [ ] SpecialHours model (date-specific overrides) - deferred
+- [x] Address model (street, suburb, postcode, coordinates)
+- [ ] BusinessMedia model (photos, videos, documents) - deferred
+- [ ] BusinessCertification model (halal, kosher, organic, etc.) - deferred
+- [ ] BusinessSocialLink model (platform, URL) - deferred
 
 #### API Endpoints [Appendix B.2]
 
-- [ ] GET /businesses - List businesses with pagination
-- [ ] GET /businesses/:id - Get business details
-- [ ] POST /businesses - Create business (admin)
-- [ ] PUT /businesses/:id - Update business
-- [ ] DELETE /businesses/:id - Delete business (admin)
-- [ ] GET /categories - List all categories
-- [ ] GET /categories/:id/businesses - Businesses by category
+- [x] GET /businesses - List businesses with pagination
+- [x] GET /businesses/:id - Get business details
+- [x] POST /businesses - Create business (admin)
+- [x] PUT /businesses/:id - Update business
+- [x] DELETE /businesses/:id - Delete business (admin)
+- [x] GET /categories - List all categories
+- [x] GET /categories/:id/businesses - Businesses by category
+
+#### Security & Quality (COMPLETE)
+
+- [x] Per-endpoint rate limiting (5 custom limiters)
+- [x] Audit logging with IP/user-agent/role tracking
+- [x] Input validation and sanitization
+- [x] Accept-Language header parsing
+- [x] Location-agnostic architecture (zero hardcoded values)
+- [x] Environment variable validation (fail-fast)
 
 ### 4.2 Business Listing Page
 
-- [ ] Business card component (photo, name, category, rating, distance)
-- [ ] Grid/list view toggle
-- [ ] Pagination or infinite scroll
-- [ ] Quick filter chips (category, open now, has deals)
-- [ ] Sort dropdown
-- [ ] Results count display
-- [ ] No results state [Spec §7]
+- [x] Business card component (photo, name, category, rating, distance)
+- [x] Grid/list view toggle
+- [x] Pagination or infinite scroll
+- [x] Quick filter chips (category, open now, has deals)
+- [x] Sort dropdown
+- [x] Results count display
+- [x] No results state [Spec §7]
 
 ### 4.3 Business Profile Page [Spec §11]
 
-- [ ] Cover photo display (1200x400px)
-- [ ] Logo display (400x400px)
-- [ ] Business name and tagline
-- [ ] Category badges
-- [ ] Star rating and review count
-- [ ] Verification badge display
-- [ ] Action buttons (Save, Share, Directions, Call, Message)
-- [ ] Navigation tabs (Overview, Photos, Reviews, Events, Deals)
+- [x] Cover photo display (1200x400px)
+- [x] Logo display (400x400px)
+- [x] Business name and tagline
+- [x] Category badges
+- [x] Star rating and review count
+- [x] Verification badge display
+- [x] Action buttons (Save, Share, Directions, Call, Message)
+- [x] Navigation tabs (Overview, Photos, Reviews, Events, Deals)
 
 #### Overview Tab
 
-- [ ] About section with description
-- [ ] Features and amenities list
-- [ ] Operating hours with Open/Closed status
-- [ ] Special hours display
-- [ ] "Open Now" calculation using timezone
-- [ ] Holiday hours handling
-- [ ] Contact information (phone, email, website)
-- [ ] Social media links
-- [ ] Languages spoken display
-- [ ] Cultural certifications display (halal, kosher, vegan, etc.)
-- [ ] Accessibility features display
-- [ ] Payment methods display
-- [ ] Parking information
+- [x] About section with description
+- [x] Features and amenities list
+- [x] Operating hours with Open/Closed status
+- [ ] Special hours display - deferred
+- [x] "Open Now" calculation using timezone (BREAKING CHANGE: timezone required)
+- [ ] Holiday hours handling - deferred
+- [x] Contact information (phone, email, website)
+- [x] Social media links
+- [x] Languages spoken display
+- [x] Cultural certifications display (halal, kosher, vegan, etc.)
+- [x] Accessibility features display
+- [x] Payment methods display
+- [x] Parking information
 
 #### Location & Map
 
-- [ ] Embedded map (Mapbox GL JS)
-- [ ] Business marker on map
-- [ ] Get Directions button (opens native maps)
-- [ ] Address display with copy functionality
-- [ ] Distance from user (if location enabled)
+- [x] Embedded map (Mapbox GL JS)
+- [x] Business marker on map
+- [x] Get Directions button (opens native maps)
+- [x] Address display with copy functionality
+- [x] Distance from user (if location enabled)
 
 #### Photos Tab
 
-- [ ] Photo gallery grid
-- [ ] Lightbox/fullscreen view
-- [ ] Swipe navigation (mobile)
-- [ ] Photo categories (interior, exterior, products, menu)
+- [ ] Photo gallery grid - deferred to Phase 4.5
+- [ ] Lightbox/fullscreen view - deferred to Phase 4.5
+- [ ] Swipe navigation (mobile) - deferred to Phase 4.5
+- [ ] Photo categories (interior, exterior, products, menu) - deferred to Phase 4.5
 
 ### 4.4 SEO & Metadata [Spec §2.4 (seo config)]
 
-- [ ] Dynamic meta title and description
-- [ ] Schema.org LocalBusiness structured data
-- [ ] Open Graph tags for social sharing
-- [ ] Twitter Card tags
-- [ ] Canonical URL implementation
-- [ ] SEO-friendly URL slugs (/business/[slug])
-- [ ] Sitemap generation for businesses
+- [x] Dynamic meta title and description
+- [x] Schema.org LocalBusiness structured data
+- [x] Open Graph tags for social sharing
+- [x] Twitter Card tags
+- [x] Canonical URL implementation
+- [x] SEO-friendly URL slugs (/business/[slug])
+- [ ] Sitemap generation for businesses - deferred
+
+### 4.5 Testing & QA (50% Complete - 6/12 tasks ✅)
+
+- [x] **Unit tests for business-service.ts** (CRITICAL) - 26 tests passing
+- [x] **Unit tests for business-controller.ts** (CRITICAL) - 32 tests passing
+- [x] **Unit tests for business.validator.ts** (CRITICAL) - 73 tests passing
+- [x] **Unit tests for category routes** (CRITICAL) - 14 tests passing
+- [x] **Unit tests for business-rate-limiter.ts** (CRITICAL) - 6 tests passing
+- [x] **Unit tests for language-negotiation.ts** (CRITICAL) - 26 tests passing
+- [ ] **Integration tests for business API endpoints** (HIGH)
+- [ ] **Component tests for BusinessListPage** (HIGH)
+- [ ] **Component tests for BusinessProfilePage** (HIGH)
+- [ ] **Accessibility tests (jest-axe) for all Phase 4 components** (HIGH)
+- [ ] **E2E tests for business discovery flow** (MEDIUM)
+- [ ] **E2E tests for business profile viewing** (MEDIUM)
+
+**Status:** 177 Phase 4 tests created and passing
+**Target:** 251+ tests needed for 60-80% coverage (70% achieved)
 
 ---
 
@@ -1483,6 +1516,24 @@
 
 ---
 
+## Google Analytics Integration
+
+### GA4 Implementation [Spec §25, §26.7]
+
+- [ ] Set up Google Analytics 4 property
+- [ ] Install gtag.js library on frontend
+- [ ] Configure GA4 measurement ID in environment variables
+- [ ] Implement page view tracking
+- [ ] Implement event tracking (searches, business views, reviews, deals)
+- [ ] Configure user identification and demographics
+- [ ] Set up conversion tracking
+- [ ] Implement goal tracking (registrations, business claims, reviews, deals redeemed)
+- [ ] Dashboard creation and monitoring
+- [ ] Privacy and GDPR compliance for analytics
+- [ ] Create documentation for analytics implementation
+
+---
+
 ## Ongoing Tasks
 
 ### Testing [Spec §30]
@@ -1542,7 +1593,8 @@ _Add any additional notes, decisions, or blockers here._
 ---
 
 **Total Estimated Tasks:** ~650+ items across 19 phases
-**Completed:** 52 tasks (Phase 1.1-1.7) -- ~8.1% overall
-**Next:** Phase 1.8 (i18n Foundation)
+**Completed:** 159 tasks (Phases 1-3 complete, Phase 4 ~69%) -- ~24.7% overall
+**Current:** Phase 4 Testing (CRITICAL: 0/251+ tests needed)
+**Next:** Phase 5 (Search & Discovery - 34 tasks)
 
 ---
