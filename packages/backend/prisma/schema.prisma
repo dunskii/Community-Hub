@@ -159,6 +159,11 @@ model Business {
   claimedByUser          User?          @relation(fields: [claimedBy], references: [id], onDelete: SetNull)
   verifiedAt             DateTime?      @map("verified_at")
 
+  // Phase 5: Search & Discovery Fields
+  timezone               String         @default("Australia/Sydney") @db.VarChar(50)
+  featured               Boolean        @default(false)
+  displayOrder           Int            @default(0) @map("display_order")
+
   // Timestamps
   createdAt              DateTime       @default(now()) @map("created_at")
   updatedAt              DateTime       @updatedAt @map("updated_at")
@@ -166,6 +171,8 @@ model Business {
   @@index([status, createdAt])
   @@index([categoryPrimaryId])
   @@index([claimed])
+  @@index([featured, displayOrder])
+  @@index([createdAt(sort: Desc)])
   @@map("businesses")
 }
 

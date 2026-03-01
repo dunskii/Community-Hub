@@ -98,6 +98,11 @@ export interface Business {
   claimedBy?: string;
   verifiedAt?: Date;
 
+  // Phase 5: Search & Discovery Fields
+  timezone: string; // IANA timezone (e.g., "Australia/Sydney")
+  featured: boolean; // For homepage featured carousel
+  displayOrder: number; // Order in featured list (lower = first)
+
   // Timestamps
   createdAt: Date;
   updatedAt: Date;
@@ -121,6 +126,9 @@ export interface BusinessCreateInput {
   priceRange?: PriceRange;
   parkingInformation?: string;
   yearEstablished?: number;
+  timezone?: string; // Optional, defaults to platform config timezone
+  featured?: boolean; // Optional, defaults to false
+  displayOrder?: number; // Optional, defaults to 0
 }
 
 export interface BusinessUpdateInput {
@@ -141,4 +149,7 @@ export interface BusinessUpdateInput {
   priceRange?: PriceRange;
   parkingInformation?: string;
   yearEstablished?: number;
+  timezone?: string;
+  featured?: boolean;
+  displayOrder?: number;
 }

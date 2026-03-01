@@ -1,0 +1,58 @@
+{
+  "hero": {
+    "title": "Discover {{platformName}}",
+    "subtitle": "Find and connect with local businesses in {{location}}",
+    "searchPlaceholder": "Search for businesses, services, or deals...",
+    "cta": "Join thousands discovering their community"
+  },
+  "quickFilters": {
+    "title": "Quick search:",
+    "openNow": "Open Now",
+    "restaurants": "Restaurants",
+    "retail": "Shopping",
+    "health": "Health & Wellness",
+    "services": "Services",
+    "verified": "Verified"
+  },
+  "stats": {
+    "businesses": "Businesses",
+    "users": "Community Members",
+    "categories": "Categories",
+    "reviews": "Reviews"
+  },
+  "featured": {
+    "title": "Featured Businesses",
+    "viewAll": "View all featured",
+    "verified": "Verified"
+  },
+  "nearYou": {
+    "title": "Near You",
+    "subtitle": "Businesses close to your location",
+    "viewAll": "See more nearby"
+  },
+  "highlyRated": {
+    "title": "Highly Rated",
+    "subtitle": "Top-rated businesses in your community",
+    "viewAll": "See all top-rated"
+  },
+  "newBusinesses": {
+    "title": "New to the Platform",
+    "subtitle": "Recently added businesses",
+    "viewAll": "See all new businesses",
+    "badge": "New"
+  },
+  "categories": {
+    "title": "Browse by Category",
+    "subtitle": "Explore businesses by type",
+    "viewAll": "View All Categories",
+    "businesses": "businesses",
+    "restaurants": "Restaurants & Food",
+    "retail": "Retail & Shopping",
+    "services": "Services",
+    "health": "Health & Wellness",
+    "education": "Education & Learning",
+    "entertainment": "Entertainment",
+    "automotive": "Automotive",
+    "home": "Home & Garden"
+  }
+}

@@ -10,21 +10,73 @@ const INDICES = {
       number_of_shards: 1,
       number_of_replicas: ES_REPLICAS,
       analysis: {
+        filter: {
+          // Synonym filter for common business terms
+          business_synonyms: {
+            type: 'synonym' as const,
+            synonyms: [
+              'restaurant, eatery, dining, diner',
+              'grocery, supermarket, market, grocer',
+              'pharmacy, chemist, drugstore',
+              'petrol, gas station, service station, fuel',
+              'cafe, coffee shop, coffeehouse',
+              'bakery, patisserie, boulangerie',
+              'butcher, meat shop, butchery',
+              'doctor, physician, gp, general practitioner',
+              'dentist, dental clinic, dental surgery',
+              'gym, fitness center, health club, fitness centre',
+            ],
+          },
+          // English stopwords filter
+          english_stop: {
+            type: 'stop' as const,
+            stopwords: '_english_' as const,
+          },
+          // English stemmer
+          english_stemmer: {
+            type: 'stemmer' as const,
+            language: 'english' as const,
+          },
+        },
         analyzer: {
-          multilingual: { type: 'standard' as const, stopwords: ['_english_'] },
+          // Enhanced multilingual analyzer with synonyms, stopwords, and stemming
+          multilingual: {
+            type: 'custom' as const,
+            tokenizer: 'standard' as const,
+            filter: [
+              'lowercase',
+              'asciifolding', // Remove accents (café → cafe)
+              'business_synonyms',
+              'english_stop',
+              'english_stemmer',
+            ],
+          },
         },
       },
     },
     mappings: {
       properties: {
         id: { type: 'keyword' as const },
-        name: { type: 'text' as const, analyzer: 'multilingual' },
+        name: {
+          type: 'text' as const,
+          analyzer: 'multilingual',
+          fields: {
+            keyword: { type: 'keyword' as const }, // For exact sorting
+          },
+        },
         description: { type: 'text' as const, analyzer: 'multilingual' },
         categorySlug: { type: 'keyword' as const },
         suburb: { type: 'keyword' as const },
         location: { type: 'geo_point' as const },
         rating: { type: 'float' as const },
+        reviewCount: { type: 'integer' as const },
         status: { type: 'keyword' as const },
+        verified: { type: 'boolean' as const },
+        featured: { type: 'boolean' as const },
+        languagesSpoken: { type: 'keyword' as const },
+        certifications: { type: 'keyword' as const },
+        accessibilityFeatures: { type: 'keyword' as const },
+        priceRange: { type: 'keyword' as const },
         createdAt: { type: 'date' as const },
         updatedAt: { type: 'date' as const },
       },

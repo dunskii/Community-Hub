@@ -12,6 +12,7 @@ import { Prisma } from '@prisma/client';
 import { prisma } from '../db/index.js';
 import { geocodeAddress } from './maps/geocoding-service.js';
 import { getEsClient } from '../search/index.js';
+import { indexBusiness, deindexBusiness } from '../search/indexing-service.js';
 import { seoService } from './seo-service.js';
 import { logger } from '../utils/logger.js';
 import { ApiError } from '../utils/api-error.js';
@@ -124,7 +125,7 @@ export class BusinessService {
     });
 
     // Index in Elasticsearch (async, don't block)
-    this.indexBusiness(business.id).catch((error) => {
+    indexBusiness(business).catch((error) => {
       logger.error({ error, businessId: business.id }, 'Failed to index business in Elasticsearch');
     });
 
@@ -336,7 +337,7 @@ export class BusinessService {
     });
 
     // Re-index in Elasticsearch (async)
-    this.indexBusiness(id).catch((error) => {
+    indexBusiness(business).catch((error) => {
       logger.error({ error, businessId: id }, 'Failed to re-index business in Elasticsearch');
     });
 
@@ -368,7 +369,7 @@ export class BusinessService {
     });
 
     // Remove from Elasticsearch index (async)
-    this.removeFromIndex(id).catch((error) => {
+    deindexBusiness(id).catch((error) => {
       logger.error({ error, businessId: id }, 'Failed to remove business from Elasticsearch');
     });
 

@@ -11,6 +11,7 @@ import authRouter from './auth.js';
 import usersRouter from './users.js';
 import businessRouter from './business.js';
 import categoryRouter from './category.js';
+import searchRouter from './search.js';
 
 export function setupRoutes(app: Express): void {
   // API v1
@@ -23,7 +24,8 @@ export function setupRoutes(app: Express): void {
   v1.use('/users', usersRouter);
   v1.use('/', businessRouter);
   v1.use('/', categoryRouter);
-  // Future route modules: events, search, etc.
+  v1.use('/search', searchRouter);
+  // Future route modules: events, deals, etc.
 
   app.use('/api/v1', v1);
 

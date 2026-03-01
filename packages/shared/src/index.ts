@@ -79,3 +79,14 @@ export {
   formatAustralianPostcode,
 } from './utils/postcode-validator.js';
 export { isOpenNow, getNextOpeningTime } from './utils/open-now.js';
+
+// Search (Phase 5)
+export type {
+  SearchParams,
+  SearchResponse,
+  BusinessSearchResult,
+  AutocompleteSuggestion,
+  AutocompleteResponse,
+} from './types/search.js';
+
+export { searchBusinessesSchema, autocompleteSuggestionsSchema } from './validators/search.js';
