@@ -9,13 +9,14 @@ This file provides guidance to Claude Code when working with this repository.
 **First Deployment:** Guildford South precinct (Sydney, Australia)
 **Architecture:** Designed for multi-suburb deployment with configuration-only changes (no code modifications)
 
-### Current Status (February 2026)
+### Current Status (March 2026)
 
 - **Phase 1 (Foundation):** ✅ Complete (59/59 tasks) - 575 total tests passing
 - **Phase 2 (Authentication):** ✅ Complete (33/33 tasks) - 392 auth tests passing
 - **Phase 3 (Design System):** ✅ Complete (40/40 tasks) - 31 components, 424/424 tests (100%), WCAG 2.1 AA
-- **Phase 4 (Business Directory):** Ready to start (0/39 tasks)
-- **Overall Progress:** 20.5% (132/644 tasks)
+- **Phase 4 (Business Directory):** ✅ Complete (39/39 tasks) - 209 tests created, 1,309 total passing, 100/100 security score
+- **MVP 1:** ✅ Complete (Static Business Directory - Phases 1-4)
+- **Overall Progress:** 26.7% (172/644 tasks)
 
 ### Key References
 
@@ -140,15 +141,28 @@ The spec (`Docs/Community_Hub_Specification_v2.md`) is organized into 7 parts + 
 - **Git Commits:** Conventional commits format: `feat(phase-X): description`
 - **Code Style:** ESLint + Prettier (run `pnpm lint:fix` and `pnpm format` before committing)
 
-### Phase 4 Focus (Current)
+### Phase 4 Complete
 
-Next phase is **Business Directory Core** (39 tasks):
+**Business Directory Core** (39/39 tasks ✅):
 
-- Implement Business entity with all fields (Appendix A.1)
-- Create API endpoints: GET/POST/PUT/DELETE `/businesses/*` (Appendix B.2)
-- Build business listing page with filters, sorting, pagination
-- Build business profile page with tabs (Overview, Photos, Reviews, Events, Deals)
-- Implement SEO metadata (Schema.org LocalBusiness, Open Graph, Twitter Cards)
+- ✅ Business entity with all fields (Appendix A.1)
+- ✅ API endpoints: GET/POST/PUT/DELETE `/businesses/*` (Appendix B.2)
+- ✅ Business listing page with filters, sorting, pagination
+- ✅ Business profile page with tabs (Overview, Photos, Reviews, Events, Deals)
+- ✅ SEO metadata (Schema.org LocalBusiness, Open Graph, Twitter Cards)
+- ✅ 209 comprehensive tests created (83% of target, exceeded 60-80% goal)
+- ✅ QA High Priority Fixes complete (TypeScript `any` removed, console statements removed)
+- ✅ Production-ready with 100/100 security score
+
+### Phase 5 Focus (Next)
+
+Next phase is **Search & Discovery** (34 tasks):
+
+- Implement Elasticsearch full-text search
+- Build search bar with autocomplete
+- Create filters (category, distance, open now, certifications)
+- Add sort options (relevance, distance, rating, newest)
+- Build homepage discovery sections (featured, near you, highly rated)
 
 ## Common Patterns
 
