@@ -13,6 +13,7 @@ import { geocodeAddress } from './maps/geocoding-service.js';
 import { getEsClient } from '../search/index.js';
 import { seoService } from './seo-service.js';
 import { logger } from '../utils/logger.js';
+import { ApiError } from '../utils/api-error.js';
 
 export interface BusinessListFilters {
   category?: string; // Category ID
@@ -43,6 +44,15 @@ export class BusinessService {
     data: BusinessCreateInput,
     auditContext: AuditContext
   ): Promise<Record<string, unknown>> {
+    // Validate category exists
+    const category = await prisma.category.findUnique({
+      where: { id: data.categoryPrimaryId },
+    });
+
+    if (!category) {
+      throw ApiError.notFound('CATEGORY_NOT_FOUND', 'Category not found');
+    }
+
     // Generate unique slug
     const slug = await seoService.generateBusinessSlug(data.name);
 
@@ -256,7 +266,7 @@ export class BusinessService {
     });
 
     if (!existingBusiness) {
-      throw new Error('Business not found');
+      throw ApiError.notFound('BUSINESS_NOT_FOUND', 'Business not found');
     }
 
     // If address changed, re-geocode
@@ -345,7 +355,7 @@ export class BusinessService {
     });
 
     if (!existingBusiness) {
-      throw new Error('Business not found');
+      throw ApiError.notFound('BUSINESS_NOT_FOUND', 'Business not found');
     }
 
     // Soft delete: set status to DELETED

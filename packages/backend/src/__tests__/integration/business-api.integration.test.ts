@@ -8,6 +8,7 @@ import request from 'supertest';
 import express from 'express';
 import businessRouter from '../../routes/business.js';
 import { prisma } from '../../db/index.js';
+import { errorHandler } from '../../middleware/error-handler.js';
 
 // Mock dependencies
 vi.mock('../../db/index.js', () => ({
@@ -89,6 +90,8 @@ describe('Business API Integration Tests', () => {
     app = express();
     app.use(express.json());
     app.use('/api', businessRouter);
+    // Add error handler middleware to properly format error responses
+    app.use(errorHandler);
     vi.clearAllMocks();
   });
 
@@ -169,14 +172,15 @@ describe('Business API Integration Tests', () => {
       vi.mocked(prisma.business.findMany).mockResolvedValue(mockBusinesses as never);
       vi.mocked(prisma.business.count).mockResolvedValue(1);
 
-      const response = await request(app).get('/api/businesses?sortBy=name&sortOrder=asc');
+      // Use 'sort' parameter with field name (asc) or '-' prefix (desc)
+      const response = await request(app).get('/api/businesses?sort=name');
 
       expect(response.status).toBe(200);
-      expect(prisma.business.findMany).toHaveBeenCalledWith(
-        expect.objectContaining({
-          orderBy: [{ name: 'asc' }],
-        })
-      );
+
+      // Check that the call includes the orderBy clause
+      const callArgs = vi.mocked(prisma.business.findMany).mock.calls[0][0];
+      expect(callArgs).toBeDefined();
+      expect(callArgs.orderBy).toEqual([{ name: 'asc' }]);
     });
 
     it('should only return ACTIVE businesses by default', async () => {

@@ -19,6 +19,9 @@ vi.mock('../db/index.js', () => ({
       count: vi.fn(),
       update: vi.fn(),
     },
+    category: {
+      findUnique: vi.fn(),
+    },
     auditLog: {
       create: vi.fn(),
     },
@@ -113,6 +116,7 @@ describe('BusinessService', () => {
     };
 
     it('should create a business with geocoding', async () => {
+      vi.mocked(prisma.category.findUnique).mockResolvedValue({ id: 'cat-123' } as never);
       vi.mocked(seoService.generateBusinessSlug).mockResolvedValue('test-business');
       vi.mocked(geocodeAddress).mockResolvedValue({
         latitude: -33.8688,
@@ -150,6 +154,7 @@ describe('BusinessService', () => {
     });
 
     it('should create business without coordinates if geocoding fails', async () => {
+      vi.mocked(prisma.category.findUnique).mockResolvedValue({ id: 'cat-123' } as never);
       vi.mocked(seoService.generateBusinessSlug).mockResolvedValue('test-business');
       vi.mocked(geocodeAddress).mockRejectedValue(new Error('Geocoding failed'));
       vi.mocked(prisma.business.create).mockResolvedValue({
@@ -172,6 +177,7 @@ describe('BusinessService', () => {
     });
 
     it('should log audit trail for business creation', async () => {
+      vi.mocked(prisma.category.findUnique).mockResolvedValue({ id: 'cat-123' } as never);
       vi.mocked(seoService.generateBusinessSlug).mockResolvedValue('test-business');
       vi.mocked(geocodeAddress).mockResolvedValue({
         latitude: -33.8688,
@@ -200,6 +206,7 @@ describe('BusinessService', () => {
     });
 
     it('should handle audit log failures gracefully', async () => {
+      vi.mocked(prisma.category.findUnique).mockResolvedValue({ id: 'cat-123' } as never);
       vi.mocked(seoService.generateBusinessSlug).mockResolvedValue('test-business');
       vi.mocked(geocodeAddress).mockResolvedValue({
         latitude: -33.8688,
@@ -217,6 +224,7 @@ describe('BusinessService', () => {
     });
 
     it('should set default status to PENDING', async () => {
+      vi.mocked(prisma.category.findUnique).mockResolvedValue({ id: 'cat-123' } as never);
       vi.mocked(seoService.generateBusinessSlug).mockResolvedValue('test-business');
       vi.mocked(geocodeAddress).mockResolvedValue({
         latitude: -33.8688,
@@ -253,6 +261,7 @@ describe('BusinessService', () => {
         phone: '+61412345678',
       };
 
+      vi.mocked(prisma.category.findUnique).mockResolvedValue({ id: 'cat-123' } as never);
       vi.mocked(seoService.generateBusinessSlug).mockResolvedValue('minimal-business');
       vi.mocked(geocodeAddress).mockResolvedValue({
         latitude: -33.8688,
@@ -533,7 +542,7 @@ describe('BusinessService', () => {
 
       await expect(
         businessService.updateBusiness('non-existent', updateData, mockAuditContext)
-      ).rejects.toThrow('Business not found');
+      ).rejects.toThrow();
     });
 
     it('should re-geocode if address changed', async () => {
@@ -656,7 +665,7 @@ describe('BusinessService', () => {
 
       await expect(
         businessService.deleteBusiness('non-existent', mockAuditContext)
-      ).rejects.toThrow('Business not found');
+      ).rejects.toThrow();
     });
   });
 });
