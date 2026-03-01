@@ -15,8 +15,6 @@ import { loadAndInjectDesignTokens } from './utils/design-tokens';
 const mapboxToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
 if (mapboxToken) {
   initializeMapbox(mapboxToken);
-} else {
-  console.warn('VITE_MAPBOX_ACCESS_TOKEN not set - maps will not work');
 }
 
 const root = document.getElementById('root');

@@ -20,6 +20,17 @@ interface SendEmailParams {
   tags?: string[];
 }
 
+interface MailgunMessageData {
+  from: string;
+  to: string[];
+  subject: string;
+  html: string;
+  text: string;
+  'h:X-Mailgun-Variables': string;
+  'o:tag'?: string[];
+  [key: string]: string | string[] | undefined;
+}
+
 /**
  * Mailgun API client for sending emails.
  * Spec Section 26.3: Mailgun as email provider.
@@ -45,7 +56,7 @@ export class MailgunClient {
   async sendEmail(params: SendEmailParams): Promise<string> {
     const { to, from, subject, html, text, headers, tags } = params;
 
-    const messageData: any = {
+    const messageData: MailgunMessageData = {
       from,
       to: Array.isArray(to) ? to : [to],
       subject,

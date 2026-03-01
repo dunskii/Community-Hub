@@ -135,8 +135,7 @@ export async function loadAndInjectDesignTokens(): Promise<void> {
 
     injectDesignTokens(colors);
   } catch (error) {
-    console.error('Failed to load design tokens:', error);
-    // Fallback to Guildford South default colours
+    // Fallback to default colours if config loading fails
     injectDesignTokens({
       primary: '#2C5F7C',
       secondary: '#E67E22',

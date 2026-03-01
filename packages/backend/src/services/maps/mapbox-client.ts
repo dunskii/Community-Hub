@@ -1,4 +1,5 @@
 import mbxGeocoding from '@mapbox/mapbox-sdk/services/geocoding';
+import type { GeocodeRequest } from '@mapbox/mapbox-sdk/services/geocoding';
 import { logger } from '../../utils/logger.js';
 import { env } from '../../config/env-validate.js';
 import { getPlatformConfig } from '../../config/platform-loader.js';
@@ -33,8 +34,8 @@ function getGeocodingClient(): ReturnType<typeof mbxGeocoding> {
  * Export geocoding client that initializes lazily on first access
  */
 export const geocodingClient = {
-  forwardGeocode: (options: any) => getGeocodingClient().forwardGeocode(options),
-  reverseGeocode: (options: any) => getGeocodingClient().reverseGeocode(options),
+  forwardGeocode: (options: GeocodeRequest) => getGeocodingClient().forwardGeocode(options),
+  reverseGeocode: (options: GeocodeRequest) => getGeocodingClient().reverseGeocode(options),
 };
 
 /**

@@ -9,7 +9,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || '/api/v1';
 export interface ApiError {
   error: string;
   message: string;
-  details?: any;
+  details?: unknown;
 }
 
 export interface ApiResponse<T> {
@@ -22,7 +22,7 @@ class HttpError extends Error {
     public status: number,
     public error: string,
     message: string,
-    public details?: any
+    public details?: unknown
   ) {
     super(message);
     this.name = 'HttpError';
@@ -97,7 +97,7 @@ export async function get<T>(endpoint: string): Promise<T> {
 /**
  * POST request
  */
-export async function post<T>(endpoint: string, data?: any): Promise<T> {
+export async function post<T>(endpoint: string, data?: unknown): Promise<T> {
   return request<T>(endpoint, {
     method: 'POST',
     body: data ? JSON.stringify(data) : undefined,
@@ -107,7 +107,7 @@ export async function post<T>(endpoint: string, data?: any): Promise<T> {
 /**
  * PUT request
  */
-export async function put<T>(endpoint: string, data?: any): Promise<T> {
+export async function put<T>(endpoint: string, data?: unknown): Promise<T> {
   return request<T>(endpoint, {
     method: 'PUT',
     body: data ? JSON.stringify(data) : undefined,

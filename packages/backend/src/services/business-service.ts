@@ -8,6 +8,7 @@ import type {
   BusinessUpdateInput,
   BusinessStatus,
 } from '@community-hub/shared';
+import { Prisma } from '@prisma/client';
 import { prisma } from '../db/index.js';
 import { geocodeAddress } from './maps/geocoding-service.js';
 import { getEsClient } from '../search/index.js';
@@ -93,13 +94,13 @@ export class BusinessService {
         description: data.description,
         categoryPrimaryId: data.categoryPrimaryId,
         categoriesSecondary: data.categoriesSecondary || [],
-        address: address as any,
+        address: address as Prisma.JsonValue,
         phone: data.phone,
         email: data.email,
         website: data.website,
         secondaryPhone: data.secondaryPhone,
-        operatingHours: data.operatingHours as any,
-        socialLinks: (data as any).socialLinks,
+        operatingHours: data.operatingHours as Prisma.JsonValue,
+        socialLinks: data.socialLinks as Prisma.JsonValue,
         languagesSpoken: data.languagesSpoken || [],
         certifications: data.certifications || [],
         paymentMethods: data.paymentMethods || [],
@@ -307,13 +308,13 @@ export class BusinessService {
         description: data.description,
         categoryPrimaryId: data.categoryPrimaryId,
         categoriesSecondary: data.categoriesSecondary,
-        address: address as any,
+        address: address as Prisma.JsonValue,
         phone: data.phone,
         email: data.email,
         website: data.website,
         secondaryPhone: data.secondaryPhone,
-        operatingHours: data.operatingHours as any,
-        socialLinks: (data as any).socialLinks,
+        operatingHours: data.operatingHours as Prisma.JsonValue,
+        socialLinks: data.socialLinks as Prisma.JsonValue,
         languagesSpoken: data.languagesSpoken,
         certifications: data.certifications,
         paymentMethods: data.paymentMethods,
@@ -457,12 +458,12 @@ export class BusinessService {
       await prisma.auditLog.create({
         data: {
           actorId: auditContext.actorId,
-          actorRole: auditContext.actorRole as any,
+          actorRole: auditContext.actorRole as Prisma.JsonValue,
           action: `business.${action}`,
           targetType: 'Business',
           targetId: businessId,
-          previousValue: (previousValue || undefined) as any,
-          newValue: (newValue || undefined) as any,
+          previousValue: (previousValue || undefined) as Prisma.JsonValue,
+          newValue: (newValue || undefined) as Prisma.JsonValue,
           ipAddress: auditContext.ipAddress || '0.0.0.0',
           userAgent: auditContext.userAgent || 'unknown',
         },

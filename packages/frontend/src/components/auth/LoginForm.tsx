@@ -78,8 +78,7 @@ export const LoginForm: React.FC = () => {
       const from = (location.state as any)?.from?.pathname || '/';
       navigate(from, { replace: true });
     } catch (err) {
-      // Error is handled by AuthContext
-      console.error('Login error:', err);
+      // Error is handled by AuthContext (silent error handling)
     }
   };
 

@@ -16,15 +16,6 @@ interface AppConfig {
   };
 }
 
-// Validate required environment variables
-if (!import.meta.env.VITE_TIMEZONE) {
-  console.error('CRITICAL: VITE_TIMEZONE environment variable is required');
-}
-
-if (!import.meta.env.VITE_DEFAULT_SUBURB) {
-  console.error('CRITICAL: VITE_DEFAULT_SUBURB environment variable is required');
-}
-
 // Load from environment variables (NO DEFAULTS - must be explicitly set)
 const appConfig: AppConfig = {
   location: {

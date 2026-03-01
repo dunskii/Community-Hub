@@ -197,7 +197,7 @@ describe('BusinessListPage', () => {
   });
 
   it('should render pagination component when there are multiple pages', () => {
-    vi.mocked(await import('../../hooks/useBusinesses')).useBusinesses.mockReturnValue({
+    vi.mocked(useBusinessesModule.useBusinesses).mockReturnValue({
       businesses: [],
       pagination: { page: 1, limit: 20, total: 50, totalPages: 3 },
       loading: false,
@@ -212,7 +212,7 @@ describe('BusinessListPage', () => {
   });
 
   it('should not render pagination when there is only one page', () => {
-    vi.mocked(await import('../../hooks/useBusinesses')).useBusinesses.mockReturnValue({
+    vi.mocked(useBusinessesModule.useBusinesses).mockReturnValue({
       businesses: [],
       pagination: { page: 1, limit: 20, total: 10, totalPages: 1 },
       loading: false,
@@ -228,7 +228,7 @@ describe('BusinessListPage', () => {
 
   it('should update filters when filter component changes', () => {
     const mockSetFilters = vi.fn();
-    vi.mocked(await import('../../hooks/useBusinesses')).useBusinesses.mockReturnValue({
+    vi.mocked(useBusinessesModule.useBusinesses).mockReturnValue({
       businesses: [],
       pagination: { page: 1, limit: 20, total: 0, totalPages: 0 },
       loading: false,
@@ -243,7 +243,7 @@ describe('BusinessListPage', () => {
   });
 
   it('should handle empty results', () => {
-    vi.mocked(await import('../../hooks/useBusinesses')).useBusinesses.mockReturnValue({
+    vi.mocked(useBusinessesModule.useBusinesses).mockReturnValue({
       businesses: [],
       pagination: { page: 1, limit: 20, total: 0, totalPages: 0 },
       loading: false,
@@ -263,7 +263,7 @@ describe('BusinessListPage', () => {
       { id: 'cat-2', name: 'Cafes' },
     ];
 
-    vi.mocked(await import('../../hooks/useCategories')).useCategories.mockReturnValue({
+    vi.mocked(useCategoriesModule.useCategories).mockReturnValue({
       categories: mockCategories,
       loading: false,
     } as any);
@@ -274,7 +274,7 @@ describe('BusinessListPage', () => {
   });
 
   it('should handle categories loading state', () => {
-    vi.mocked(await import('../../hooks/useCategories')).useCategories.mockReturnValue({
+    vi.mocked(useCategoriesModule.useCategories).mockReturnValue({
       categories: [],
       loading: true,
     } as any);

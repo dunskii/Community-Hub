@@ -173,8 +173,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       await apiLogout();
     } catch (err) {
-      // Continue with logout even if API call fails
-      console.error('Logout error:', err);
+      // Continue with logout even if API call fails (silent error handling)
     } finally {
       // Clear local state
       setUser(null);

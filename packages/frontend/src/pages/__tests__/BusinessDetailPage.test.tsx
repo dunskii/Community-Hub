@@ -7,6 +7,8 @@ import { render } from '@testing-library/react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { BusinessDetailPage } from '../BusinessDetailPage';
+import * as useBusinessDetailModule from '../../hooks/useBusinessDetail';
+import * as useIsOpenNowModule from '../../hooks/useIsOpenNow';
 
 // Mock dependencies
 vi.mock('react-i18next', () => ({
@@ -52,7 +54,7 @@ describe('BusinessDetailPage', () => {
   });
 
   it('should display loading state', () => {
-    vi.mocked(await import('../../hooks/useBusinessDetail')).useBusinessDetail.mockReturnValue({
+    vi.mocked(useBusinessDetailModule.useBusinessDetail).mockReturnValue({
       business: null,
       loading: true,
       error: null,
@@ -63,7 +65,7 @@ describe('BusinessDetailPage', () => {
   });
 
   it('should display error state for 404', () => {
-    vi.mocked(await import('../../hooks/useBusinessDetail')).useBusinessDetail.mockReturnValue({
+    vi.mocked(useBusinessDetailModule.useBusinessDetail).mockReturnValue({
       business: null,
       loading: false,
       error: new Error('Not found'),
@@ -87,7 +89,7 @@ describe('BusinessDetailPage', () => {
       phone: '0412345678',
     };
 
-    vi.mocked(await import('../../hooks/useBusinessDetail')).useBusinessDetail.mockReturnValue({
+    vi.mocked(useBusinessDetailModule.useBusinessDetail).mockReturnValue({
       business: mockBusiness,
       loading: false,
       error: null,
@@ -105,7 +107,7 @@ describe('BusinessDetailPage', () => {
       description: 'Great food',
     };
 
-    vi.mocked(await import('../../hooks/useBusinessDetail')).useBusinessDetail.mockReturnValue({
+    vi.mocked(useBusinessDetailModule.useBusinessDetail).mockReturnValue({
       business: mockBusiness,
       loading: false,
       error: null,
@@ -122,7 +124,7 @@ describe('BusinessDetailPage', () => {
       slug: 'test-restaurant',
     };
 
-    vi.mocked(await import('../../hooks/useBusinessDetail')).useBusinessDetail.mockReturnValue({
+    vi.mocked(useBusinessDetailModule.useBusinessDetail).mockReturnValue({
       business: mockBusiness,
       loading: false,
       error: null,
@@ -140,7 +142,7 @@ describe('BusinessDetailPage', () => {
       description: 'Amazing food and great service',
     };
 
-    vi.mocked(await import('../../hooks/useBusinessDetail')).useBusinessDetail.mockReturnValue({
+    vi.mocked(useBusinessDetailModule.useBusinessDetail).mockReturnValue({
       business: mockBusiness,
       loading: false,
       error: null,
@@ -160,7 +162,7 @@ describe('BusinessDetailPage', () => {
       website: 'https://test.com',
     };
 
-    vi.mocked(await import('../../hooks/useBusinessDetail')).useBusinessDetail.mockReturnValue({
+    vi.mocked(useBusinessDetailModule.useBusinessDetail).mockReturnValue({
       business: mockBusiness,
       loading: false,
       error: null,
@@ -183,7 +185,7 @@ describe('BusinessDetailPage', () => {
       },
     };
 
-    vi.mocked(await import('../../hooks/useBusinessDetail')).useBusinessDetail.mockReturnValue({
+    vi.mocked(useBusinessDetailModule.useBusinessDetail).mockReturnValue({
       business: mockBusiness,
       loading: false,
       error: null,
@@ -204,7 +206,7 @@ describe('BusinessDetailPage', () => {
       },
     };
 
-    vi.mocked(await import('../../hooks/useBusinessDetail')).useBusinessDetail.mockReturnValue({
+    vi.mocked(useBusinessDetailModule.useBusinessDetail).mockReturnValue({
       business: mockBusiness,
       loading: false,
       error: null,
@@ -226,7 +228,7 @@ describe('BusinessDetailPage', () => {
       },
     };
 
-    vi.mocked(await import('../../hooks/useBusinessDetail')).useBusinessDetail.mockReturnValue({
+    vi.mocked(useBusinessDetailModule.useBusinessDetail).mockReturnValue({
       business: mockBusiness,
       loading: false,
       error: null,
@@ -244,7 +246,7 @@ describe('BusinessDetailPage', () => {
       verified: true,
     };
 
-    vi.mocked(await import('../../hooks/useBusinessDetail')).useBusinessDetail.mockReturnValue({
+    vi.mocked(useBusinessDetailModule.useBusinessDetail).mockReturnValue({
       business: mockBusiness,
       loading: false,
       error: null,
@@ -262,13 +264,13 @@ describe('BusinessDetailPage', () => {
       operatingHours: {},
     };
 
-    vi.mocked(await import('../../hooks/useBusinessDetail')).useBusinessDetail.mockReturnValue({
+    vi.mocked(useBusinessDetailModule.useBusinessDetail).mockReturnValue({
       business: mockBusiness,
       loading: false,
       error: null,
     } as any);
 
-    vi.mocked(await import('../../hooks/useIsOpenNow')).useIsOpenNow.mockReturnValue({
+    vi.mocked(useIsOpenNowModule.useIsOpenNow).mockReturnValue({
       isOpen: true,
       opensAt: null,
       closesAt: '17:00',
@@ -286,7 +288,7 @@ describe('BusinessDetailPage', () => {
       photos: [],
     };
 
-    vi.mocked(await import('../../hooks/useBusinessDetail')).useBusinessDetail.mockReturnValue({
+    vi.mocked(useBusinessDetailModule.useBusinessDetail).mockReturnValue({
       business: mockBusiness,
       loading: false,
       error: null,
@@ -307,7 +309,7 @@ describe('BusinessDetailPage', () => {
       },
     };
 
-    vi.mocked(await import('../../hooks/useBusinessDetail')).useBusinessDetail.mockReturnValue({
+    vi.mocked(useBusinessDetailModule.useBusinessDetail).mockReturnValue({
       business: mockBusiness,
       loading: false,
       error: null,
@@ -325,7 +327,7 @@ describe('BusinessDetailPage', () => {
       certifications: ['HALAL', 'VEGAN'],
     };
 
-    vi.mocked(await import('../../hooks/useBusinessDetail')).useBusinessDetail.mockReturnValue({
+    vi.mocked(useBusinessDetailModule.useBusinessDetail).mockReturnValue({
       business: mockBusiness,
       loading: false,
       error: null,
@@ -343,7 +345,7 @@ describe('BusinessDetailPage', () => {
       accessibilityFeatures: ['WHEELCHAIR_ACCESS', 'ACCESSIBLE_BATHROOM'],
     };
 
-    vi.mocked(await import('../../hooks/useBusinessDetail')).useBusinessDetail.mockReturnValue({
+    vi.mocked(useBusinessDetailModule.useBusinessDetail).mockReturnValue({
       business: mockBusiness,
       loading: false,
       error: null,
@@ -361,7 +363,7 @@ describe('BusinessDetailPage', () => {
       paymentMethods: ['CASH', 'CARD', 'APPLE_PAY'],
     };
 
-    vi.mocked(await import('../../hooks/useBusinessDetail')).useBusinessDetail.mockReturnValue({
+    vi.mocked(useBusinessDetailModule.useBusinessDetail).mockReturnValue({
       business: mockBusiness,
       loading: false,
       error: null,
@@ -379,7 +381,7 @@ describe('BusinessDetailPage', () => {
       languagesSpoken: ['English', 'Arabic', 'Chinese'],
     };
 
-    vi.mocked(await import('../../hooks/useBusinessDetail')).useBusinessDetail.mockReturnValue({
+    vi.mocked(useBusinessDetailModule.useBusinessDetail).mockReturnValue({
       business: mockBusiness,
       loading: false,
       error: null,
@@ -397,7 +399,7 @@ describe('BusinessDetailPage', () => {
       parkingInformation: 'Street parking available',
     };
 
-    vi.mocked(await import('../../hooks/useBusinessDetail')).useBusinessDetail.mockReturnValue({
+    vi.mocked(useBusinessDetailModule.useBusinessDetail).mockReturnValue({
       business: mockBusiness,
       loading: false,
       error: null,
@@ -415,7 +417,7 @@ describe('BusinessDetailPage', () => {
       priceRange: 'MODERATE',
     };
 
-    vi.mocked(await import('../../hooks/useBusinessDetail')).useBusinessDetail.mockReturnValue({
+    vi.mocked(useBusinessDetailModule.useBusinessDetail).mockReturnValue({
       business: mockBusiness,
       loading: false,
       error: null,
@@ -436,7 +438,7 @@ describe('BusinessDetailPage', () => {
       },
     };
 
-    vi.mocked(await import('../../hooks/useBusinessDetail')).useBusinessDetail.mockReturnValue({
+    vi.mocked(useBusinessDetailModule.useBusinessDetail).mockReturnValue({
       business: mockBusiness,
       loading: false,
       error: null,
@@ -453,7 +455,7 @@ describe('BusinessDetailPage', () => {
   });
 
   it('should handle network errors gracefully', () => {
-    vi.mocked(await import('../../hooks/useBusinessDetail')).useBusinessDetail.mockReturnValue({
+    vi.mocked(useBusinessDetailModule.useBusinessDetail).mockReturnValue({
       business: null,
       loading: false,
       error: new Error('Network error'),

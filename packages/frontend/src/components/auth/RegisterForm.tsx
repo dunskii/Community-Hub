@@ -110,8 +110,7 @@ export const RegisterForm: React.FC = () => {
       // Show success message
       setShowSuccess(true);
     } catch (err) {
-      // Error is handled by AuthContext
-      console.error('Registration error:', err);
+      // Error is handled by AuthContext (silent error handling)
     }
   };
 

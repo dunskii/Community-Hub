@@ -13,7 +13,7 @@ export function isValidLanguageCode(code: string): boolean {
 
     return enabledLanguages.includes(code as LanguageCode);
   } catch (error) {
-    console.error('Error validating language code:', error);
+    // Silently return false if config cannot be loaded
     return false;
   }
 }
@@ -28,8 +28,8 @@ export function getEnabledLanguages(): LanguageCode[] {
       .filter((lang) => lang.enabled)
       .map((lang) => lang.code);
   } catch (error) {
-    console.error('Error getting enabled languages:', error);
-    return ['en']; // Fallback to English
+    // Fallback to English if config cannot be loaded
+    return ['en'];
   }
 }
 
@@ -45,7 +45,7 @@ export function isRTL(languageCode: string): boolean {
     );
     return language?.rtl ?? false;
   } catch (error) {
-    console.error('Error checking RTL status:', error);
+    // Silently return false if config cannot be loaded
     return false;
   }
 }
@@ -79,7 +79,7 @@ export function validateLanguageCode(code: string): string {
     const isValid = isValidLanguageCode(code);
     return isValid ? code : defaultLanguage;
   } catch (error) {
-    console.error('Error validating language code:', error);
-    return 'en'; // Fallback to English
+    // Fallback to English if config cannot be loaded
+    return 'en';
   }
 }

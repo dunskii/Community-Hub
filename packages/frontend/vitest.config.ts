@@ -5,6 +5,11 @@ export default defineConfig({
     environment: 'jsdom',
     include: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
     setupFiles: ['src/__tests__/setup.ts'],
+    env: {
+      VITE_TIMEZONE: 'Australia/Sydney',
+      VITE_DEFAULT_SUBURB: 'Guildford South',
+      VITE_API_BASE_URL: '/api/v1',
+    },
     css: {
       include: [], // Don't process CSS in tests
     },

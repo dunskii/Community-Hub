@@ -30,7 +30,7 @@ export function useLanguage(): UseLanguageReturn {
       const languages = getEnabledLanguages();
       setAvailableLanguages(languages);
     } catch (error) {
-      console.error('Error loading languages:', error);
+      // Fallback to English if languages cannot be loaded
       setAvailableLanguages(['en']);
     } finally {
       setIsLoading(false);
