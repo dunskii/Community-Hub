@@ -1,0 +1,141 @@
+{
+  "reviews": {
+    "rating": "Valutazione",
+    "yourRating": "La tua valutazione",
+    "outOfFive": "su 5 stelle",
+    "stars": "stelle",
+    "title": "Titolo",
+    "titlePlaceholder": "Riassumi la tua esperienza (facoltativo)",
+    "yourReview": "La tua recensione",
+    "contentPlaceholder": "Condividi i tuoi pensieri su questa attività...",
+    "characterCount": "{{current}} / {{max}} caratteri (minimo {{min}})",
+    "addPhotos": "Aggiungi foto",
+    "photosHelpText": "Aggiungi fino a {{max}} foto alla tua recensione",
+    "submitReview": "Invia recensione",
+    "editReview": "Modifica recensione",
+    "writeReview": "Scrivi una recensione",
+    "writeReviewFor": "Scrivi una recensione per {{business}}",
+    "alreadyReviewed": "Hai già recensito questa attività. Puoi modificare o eliminare la tua recensione qui sotto.",
+    "helpful": "Utile",
+    "markHelpful": "Segna come utile",
+    "unmarkHelpful": "Rimuovi segno utile",
+    "report": "Segnala",
+    "edited": "Modificato",
+    "reviewPhoto": "Foto recensione",
+    "showMorePhotos": "Mostra altre {{count}} foto",
+    "businessResponse": "Risposta dell'attività",
+    "totalReviews": "{{count}} recensioni",
+    "basedOn": "Basato su {{count}} recensioni",
+    "noReviews": "Ancora nessuna recensione",
+    "noReviewsDescription": "Sii il primo a recensire questa attività!",
+    "reviewsComingSoon": "Recensioni in arrivo",
+    "reviewsComingSoonDescription": "Stiamo lavorando per portarti le recensioni della community.",
+    "deleteConfirmTitle": "Eliminare la recensione?",
+    "deleteConfirmMessage": "Sei sicuro di voler eliminare la tua recensione? Questa azione non può essere annullata.",
+    "sort": {
+      "recent": "Più recenti",
+      "helpful": "Più utili",
+      "ratingHigh": "Valutazione più alta",
+      "ratingLow": "Valutazione più bassa"
+    },
+    "errors": {
+      "ratingRequired": "Seleziona una valutazione",
+      "contentTooShort": "La recensione deve contenere almeno {{min}} caratteri",
+      "contentTooLong": "La recensione non deve superare {{max}} caratteri",
+      "tooManyPhotos": "Puoi caricare solo fino a {{max}} foto"
+    }
+  },
+  "saved": {
+    "save": "Salva",
+    "saved": "Salvato",
+    "saveForLater": "Salva per dopo",
+    "unsave": "Rimuovi",
+    "remove": "Elimina",
+    "pageTitle": "Attività salvate",
+    "pageDescription": "Visualizza e gestisci le tue attività salvate",
+    "allSaved": "Tutti i salvati",
+    "noBusinesses": "Nessuna attività salvata",
+    "noBusinessesDescription": "Inizia a salvare le attività per trovarle qui in seguito!",
+    "createList": "Crea lista",
+    "createNewList": "Crea nuova lista",
+    "listName": "Nome lista",
+    "listNamePlaceholder": "es. Preferiti, Da provare, Piani weekend",
+    "listNameRequired": "Inserisci il nome della lista",
+    "deleteList": "Elimina lista",
+    "deleteListConfirm": "Sei sicuro di voler eliminare questa lista? Le attività verranno spostate nella tua lista principale.",
+    "loginRequired": "Accesso richiesto",
+    "loginRequiredDescription": "Effettua l'accesso per salvare attività e creare liste personalizzate."
+  },
+  "follow": {
+    "follow": "Segui",
+    "following": "Seguendo",
+    "unfollow": "Smetti di seguire",
+    "followerCount": "{{count}} follower",
+    "followerCount_plural": "{{count}} follower"
+  },
+  "moderation": {
+    "pageTitle": "Moderazione contenuti",
+    "pageDescription": "Rivedi e modera i contenuti generati dagli utenti",
+    "pageSubtitle": "Rivedi i contenuti segnalati e approva o rifiuta le proposte",
+    "queueTitle": "{{count}} elementi in coda",
+    "noItems": "Coda vuota",
+    "noItemsDescription": "Al momento non ci sono elementi in attesa di moderazione.",
+    "approve": "Approva",
+    "reject": "Rifiuta",
+    "approveTitle": "Approva contenuto",
+    "rejectTitle": "Rifiuta contenuto",
+    "confirmApprove": "Conferma approvazione",
+    "confirmReject": "Conferma rifiuto",
+    "notes": "Note di moderazione",
+    "notesPlaceholder": "Aggiungi note interne (facoltativo)...",
+    "rejectReason": "Motivo del rifiuto",
+    "selectReason": "Seleziona un motivo",
+    "language": "Lingua",
+    "flags": "{{count}} segnalazioni",
+    "filterByStatus": "Filtra per stato",
+    "loginRequired": "Accesso richiesto",
+    "loginRequiredDescription": "Effettua l'accesso per accedere al pannello di moderazione.",
+    "accessDenied": "Accesso negato",
+    "accessDeniedDescription": "Non hai il permesso di accedere al pannello di moderazione.",
+    "type": {
+      "review": "Recensione"
+    },
+    "status": {
+      "pending": "In attesa",
+      "approved": "Approvato",
+      "rejected": "Rifiutato"
+    },
+    "priority": {
+      "low": "Priorità bassa",
+      "medium": "Priorità media",
+      "high": "Priorità alta"
+    },
+    "reasons": {
+      "spam": "Spam o pubblicità",
+      "offensive": "Offensivo o inappropriato",
+      "irrelevant": "Irrilevante o fuori tema",
+      "duplicate": "Contenuto duplicato",
+      "fake": "Falso o fraudolento",
+      "other": "Altro"
+    }
+  },
+  "time": {
+    "justNow": "Proprio ora",
+    "minutesAgo": "{{count}} minuto fa",
+    "minutesAgo_plural": "{{count}} minuti fa",
+    "hoursAgo": "{{count}} ora fa",
+    "hoursAgo_plural": "{{count}} ore fa",
+    "daysAgo": "{{count}} giorno fa",
+    "daysAgo_plural": "{{count}} giorni fa"
+  },
+  "common": {
+    "cancel": "Annulla",
+    "delete": "Elimina",
+    "deleting": "Eliminazione...",
+    "edit": "Modifica",
+    "create": "Crea",
+    "creating": "Creazione...",
+    "loading": "Caricamento...",
+    "submitting": "Invio..."
+  }
+}

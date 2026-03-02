@@ -13,8 +13,13 @@ import { Badge } from '../components/display/Badge';
 import { Skeleton } from '../components/display/Skeleton';
 import { EmptyState } from '../components/display/EmptyState';
 import { OperatingHoursDisplay } from '../components/business/OperatingHoursDisplay';
+import { ReviewsTab } from '../components/business/ReviewsTab';
+import { SaveButton } from '../components/SaveButton';
+import { FollowButton } from '../components/FollowButton';
 import { useBusinessDetail } from '../hooks/useBusinessDetail';
 import { useIsOpenNow } from '../hooks/useIsOpenNow';
+import { useSavedBusiness } from '../hooks/useSavedBusiness';
+import { useFollowBusiness } from '../hooks/useFollowBusiness';
 import {
   generateBusinessSchema,
   generateBusinessTitle,
@@ -27,6 +32,9 @@ export function BusinessDetailPage() {
   const { t, i18n } = useTranslation();
   const { business, loading, error } = useBusinessDetail({ slug });
   const { isOpen } = useIsOpenNow(business?.operatingHours);
+
+  const { isSaved, toggleSaved } = useSavedBusiness(business?.id || '');
+  const { isFollowing, followerCount, toggleFollow } = useFollowBusiness(business?.id || '');
 
   // Loading state
   if (loading) {
@@ -113,14 +121,27 @@ export function BusinessDetailPage() {
           <header className="business-detail-page__header">
             <div className="business-detail-page__title-row">
               <h1 className="business-detail-page__title">{name}</h1>
-              <div className="business-detail-page__status">
-                {isOpen === null ? (
-                  <Badge variant="neutral">{t('business.byAppointment')}</Badge>
-                ) : isOpen ? (
-                  <Badge variant="success">{t('business.openNow')}</Badge>
-                ) : (
-                  <Badge variant="neutral">{t('business.closed')}</Badge>
-                )}
+              <div className="business-detail-page__actions">
+                <SaveButton
+                  isSaved={isSaved}
+                  onClick={toggleSaved}
+                  variant="full"
+                />
+                <FollowButton
+                  isFollowing={isFollowing}
+                  onClick={toggleFollow}
+                  variant="primary"
+                  followerCount={followerCount}
+                />
+                <div className="business-detail-page__status">
+                  {isOpen === null ? (
+                    <Badge variant="neutral">{t('business.byAppointment')}</Badge>
+                  ) : isOpen ? (
+                    <Badge variant="success">{t('business.openNow')}</Badge>
+                  ) : (
+                    <Badge variant="neutral">{t('business.closed')}</Badge>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -276,11 +297,7 @@ export function BusinessDetailPage() {
                 label: t('business.tabs.reviews'),
                 content: (
                   <div className="business-detail-page__tab-content">
-                    <EmptyState
-                      title={t('business.reviewsComingSoon')}
-                      description={t('business.reviewsComingSoonDescription')}
-                      icon="⭐"
-                    />
+                    <ReviewsTab businessId={business.id} businessName={name} />
                   </div>
                 ),
               },

@@ -1,0 +1,141 @@
+{
+  "reviews": {
+    "rating": "التقييم",
+    "yourRating": "تقييمك",
+    "outOfFive": "من 5 نجوم",
+    "stars": "نجوم",
+    "title": "العنوان",
+    "titlePlaceholder": "لخص تجربتك (اختياري)",
+    "yourReview": "مراجعتك",
+    "contentPlaceholder": "شارك أفكارك حول هذا النشاط التجاري...",
+    "characterCount": "{{current}} / {{max}} حرف (الحد الأدنى {{min}})",
+    "addPhotos": "إضافة صور",
+    "photosHelpText": "أضف ما يصل إلى {{max}} صور إلى مراجعتك",
+    "submitReview": "إرسال المراجعة",
+    "editReview": "تعديل المراجعة",
+    "writeReview": "كتابة مراجعة",
+    "writeReviewFor": "كتابة مراجعة لـ {{business}}",
+    "alreadyReviewed": "لقد قمت بالفعل بمراجعة هذا النشاط التجاري. يمكنك تعديل أو حذف مراجعتك أدناه.",
+    "helpful": "مفيد",
+    "markHelpful": "وضع علامة كمفيد",
+    "unmarkHelpful": "إزالة علامة مفيد",
+    "report": "إبلاغ",
+    "edited": "معدل",
+    "reviewPhoto": "صورة المراجعة",
+    "showMorePhotos": "عرض {{count}} صور إضافية",
+    "businessResponse": "رد من النشاط التجاري",
+    "totalReviews": "{{count}} مراجعة",
+    "basedOn": "بناءً على {{count}} مراجعة",
+    "noReviews": "لا توجد مراجعات بعد",
+    "noReviewsDescription": "كن أول من يراجع هذا النشاط التجاري!",
+    "reviewsComingSoon": "المراجعات قريباً",
+    "reviewsComingSoonDescription": "نحن نعمل على تقديم مراجعات من المجتمع.",
+    "deleteConfirmTitle": "حذف المراجعة؟",
+    "deleteConfirmMessage": "هل أنت متأكد من أنك تريد حذف مراجعتك؟ لا يمكن التراجع عن هذا الإجراء.",
+    "sort": {
+      "recent": "الأحدث",
+      "helpful": "الأكثر إفادة",
+      "ratingHigh": "أعلى تقييم",
+      "ratingLow": "أقل تقييم"
+    },
+    "errors": {
+      "ratingRequired": "يرجى اختيار تقييم",
+      "contentTooShort": "يجب أن تكون المراجعة {{min}} حرفاً على الأقل",
+      "contentTooLong": "يجب ألا تتجاوز المراجعة {{max}} حرفاً",
+      "tooManyPhotos": "يمكنك تحميل ما يصل إلى {{max}} صور فقط"
+    }
+  },
+  "saved": {
+    "save": "حفظ",
+    "saved": "محفوظ",
+    "saveForLater": "احفظ لوقت لاحق",
+    "unsave": "إلغاء الحفظ",
+    "remove": "إزالة",
+    "pageTitle": "الأنشطة التجارية المحفوظة",
+    "pageDescription": "عرض وإدارة الأنشطة التجارية المحفوظة الخاصة بك",
+    "allSaved": "جميع المحفوظات",
+    "noBusinesses": "لا توجد أنشطة تجارية محفوظة",
+    "noBusinessesDescription": "ابدأ في حفظ الأنشطة التجارية للعثور عليها هنا لاحقاً!",
+    "createList": "إنشاء قائمة",
+    "createNewList": "إنشاء قائمة جديدة",
+    "listName": "اسم القائمة",
+    "listNamePlaceholder": "على سبيل المثال، المفضلة، للتجربة، خطط عطلة نهاية الأسبوع",
+    "listNameRequired": "يرجى إدخال اسم القائمة",
+    "deleteList": "حذف القائمة",
+    "deleteListConfirm": "هل أنت متأكد من أنك تريد حذف هذه القائمة؟ سيتم نقل الأنشطة التجارية إلى قائمتك الرئيسية المحفوظة.",
+    "loginRequired": "يتطلب تسجيل الدخول",
+    "loginRequiredDescription": "يرجى تسجيل الدخول لحفظ الأنشطة التجارية وإنشاء قوائم مخصصة."
+  },
+  "follow": {
+    "follow": "متابعة",
+    "following": "يتابع",
+    "unfollow": "إلغاء المتابعة",
+    "followerCount": "{{count}} متابع",
+    "followerCount_plural": "{{count}} متابعين"
+  },
+  "moderation": {
+    "pageTitle": "إدارة المحتوى",
+    "pageDescription": "مراجعة وإدارة المحتوى الذي ينشئه المستخدمون",
+    "pageSubtitle": "مراجعة المحتوى المبلغ عنه والموافقة على العروض أو رفضها",
+    "queueTitle": "{{count}} عنصر في قائمة الانتظار",
+    "noItems": "قائمة الانتظار فارغة",
+    "noItemsDescription": "لا توجد عناصر في انتظار الإدارة في هذا الوقت.",
+    "approve": "موافقة",
+    "reject": "رفض",
+    "approveTitle": "الموافقة على المحتوى",
+    "rejectTitle": "رفض المحتوى",
+    "confirmApprove": "تأكيد الموافقة",
+    "confirmReject": "تأكيد الرفض",
+    "notes": "ملاحظات الإدارة",
+    "notesPlaceholder": "إضافة ملاحظات داخلية (اختياري)...",
+    "rejectReason": "سبب الرفض",
+    "selectReason": "اختر سبباً",
+    "language": "اللغة",
+    "flags": "{{count}} إبلاغات",
+    "filterByStatus": "تصفية حسب الحالة",
+    "loginRequired": "يتطلب تسجيل الدخول",
+    "loginRequiredDescription": "يرجى تسجيل الدخول للوصول إلى لوحة الإدارة.",
+    "accessDenied": "تم رفض الوصول",
+    "accessDeniedDescription": "ليس لديك إذن للوصول إلى لوحة الإدارة.",
+    "type": {
+      "review": "مراجعة"
+    },
+    "status": {
+      "pending": "قيد الانتظار",
+      "approved": "موافق عليه",
+      "rejected": "مرفوض"
+    },
+    "priority": {
+      "low": "أولوية منخفضة",
+      "medium": "أولوية متوسطة",
+      "high": "أولوية عالية"
+    },
+    "reasons": {
+      "spam": "رسائل غير مرغوب فيها أو إعلانات",
+      "offensive": "مسيء أو غير لائق",
+      "irrelevant": "غير ذي صلة أو خارج الموضوع",
+      "duplicate": "محتوى مكرر",
+      "fake": "مزيف أو احتيالي",
+      "other": "آخر"
+    }
+  },
+  "time": {
+    "justNow": "الآن",
+    "minutesAgo": "منذ {{count}} دقيقة",
+    "minutesAgo_plural": "منذ {{count}} دقائق",
+    "hoursAgo": "منذ {{count}} ساعة",
+    "hoursAgo_plural": "منذ {{count}} ساعات",
+    "daysAgo": "منذ {{count}} يوم",
+    "daysAgo_plural": "منذ {{count}} أيام"
+  },
+  "common": {
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "deleting": "جارٍ الحذف...",
+    "edit": "تعديل",
+    "create": "إنشاء",
+    "creating": "جارٍ الإنشاء...",
+    "loading": "جارٍ التحميل...",
+    "submitting": "جارٍ الإرسال..."
+  }
+}

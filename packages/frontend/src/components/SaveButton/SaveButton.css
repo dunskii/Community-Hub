@@ -1,0 +1,178 @@
+/**
+ * SaveButton Component Styles
+ */
+
+.save-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background-color: transparent;
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  min-height: 44px;
+}
+
+.save-button:hover:not(:disabled) {
+  background-color: var(--color-neutral-100);
+  border-color: var(--color-neutral-400);
+}
+
+.save-button:focus {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+.save-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.save-button__icon {
+  font-size: var(--font-size-lg);
+  line-height: 1;
+  transition: transform 0.2s ease;
+}
+
+.save-button:hover:not(:disabled) .save-button__icon {
+  transform: scale(1.1);
+}
+
+.save-button__text {
+  font-size: var(--font-size-sm);
+  white-space: nowrap;
+}
+
+/* Variant: Icon only */
+.save-button--icon {
+  padding: var(--spacing-xs);
+  aspect-ratio: 1;
+}
+
+.save-button--icon .save-button__icon {
+  font-size: var(--font-size-xl);
+}
+
+/* Variant: Text */
+.save-button--text {
+  border: none;
+  padding: var(--spacing-xs) var(--spacing-sm);
+}
+
+.save-button--text:hover:not(:disabled) {
+  background-color: var(--color-neutral-100);
+}
+
+/* Variant: Full */
+.save-button--full {
+  background-color: var(--color-background-primary);
+}
+
+.save-button--full.save-button--saved {
+  background-color: var(--color-error-50);
+  border-color: var(--color-error-300);
+  color: var(--color-error-700);
+}
+
+.save-button--full.save-button--saved:hover:not(:disabled) {
+  background-color: var(--color-error-100);
+  border-color: var(--color-error-400);
+}
+
+/* Size variants */
+.save-button--small {
+  padding: var(--spacing-2xs) var(--spacing-xs);
+  min-height: 36px;
+}
+
+.save-button--small .save-button__icon {
+  font-size: var(--font-size-base);
+}
+
+.save-button--small .save-button__text {
+  font-size: var(--font-size-xs);
+}
+
+.save-button--medium {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  min-height: 44px;
+}
+
+.save-button--large {
+  padding: var(--spacing-sm) var(--spacing-md);
+  min-height: 48px;
+}
+
+.save-button--large .save-button__icon {
+  font-size: var(--font-size-2xl);
+}
+
+.save-button--large .save-button__text {
+  font-size: var(--font-size-base);
+}
+
+/* Loading state */
+.save-button--loading {
+  pointer-events: none;
+}
+
+.save-button--loading .save-button__icon {
+  animation: rotate 1s linear infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Saved state animation */
+.save-button--saved .save-button__icon {
+  animation: heartbeat 0.3s ease;
+}
+
+@keyframes heartbeat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+/* Touch devices - ensure proper hit area */
+@media (hover: none) and (pointer: coarse) {
+  .save-button--icon {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .save-button,
+  .save-button__icon {
+    transition: none;
+  }
+
+  .save-button:hover:not(:disabled) .save-button__icon {
+    transform: none;
+  }
+
+  .save-button--loading .save-button__icon {
+    animation: none;
+  }
+
+  .save-button--saved .save-button__icon {
+    animation: none;
+  }
+}

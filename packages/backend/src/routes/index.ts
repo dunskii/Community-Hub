@@ -12,6 +12,10 @@ import usersRouter from './users.js';
 import businessRouter from './business.js';
 import categoryRouter from './category.js';
 import searchRouter from './search.js';
+import { reviewRouter } from './review.js';
+import { savedRouter } from './saved.js';
+import { followRouter } from './follow.js';
+import { moderationRouter } from './moderation.js';
 
 export function setupRoutes(app: Express): void {
   // API v1
@@ -25,6 +29,10 @@ export function setupRoutes(app: Express): void {
   v1.use('/', businessRouter);
   v1.use('/', categoryRouter);
   v1.use('/search', searchRouter);
+  v1.use('/', reviewRouter);
+  v1.use('/', savedRouter);
+  v1.use('/', followRouter);
+  v1.use('/', moderationRouter);
   // Future route modules: events, deals, etc.
 
   app.use('/api/v1', v1);

@@ -1,0 +1,201 @@
+/**
+ * ReviewsTab Component Styles
+ */
+
+.reviews-tab {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+.reviews-tab__summary {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--spacing-xl);
+  padding: var(--spacing-lg);
+  background-color: var(--color-background-secondary);
+  border-radius: var(--border-radius-md);
+}
+
+.reviews-tab__summary-rating {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-lg);
+}
+
+.reviews-tab__average {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  line-height: 1;
+}
+
+.reviews-tab__total {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  text-align: center;
+}
+
+.reviews-tab__distribution {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+}
+
+.reviews-tab__distribution-row {
+  display: grid;
+  grid-template-columns: 80px 1fr 40px;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.reviews-tab__distribution-label {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+.reviews-tab__distribution-bar {
+  height: 12px;
+  background-color: var(--color-neutral-200);
+  border-radius: var(--border-radius-sm);
+  overflow: hidden;
+}
+
+.reviews-tab__distribution-fill {
+  height: 100%;
+  background-color: var(--color-warning-500);
+  transition: width 0.3s ease;
+}
+
+.reviews-tab__distribution-count {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  text-align: right;
+}
+
+.reviews-tab__actions {
+  display: flex;
+  justify-content: center;
+  padding: var(--spacing-md) 0;
+}
+
+.reviews-tab__write-button {
+  padding: var(--spacing-sm) var(--spacing-xl);
+  background-color: var(--color-primary-500);
+  color: var(--color-text-inverse);
+  border: none;
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  min-height: 44px;
+}
+
+.reviews-tab__write-button:hover:not(:disabled) {
+  background-color: var(--color-primary-600);
+}
+
+.reviews-tab__write-button:focus {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+.reviews-tab__write-button:disabled {
+  background-color: var(--color-neutral-300);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.reviews-tab__delete-confirm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-lg);
+}
+
+.reviews-tab__delete-confirm p {
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.reviews-tab__delete-actions {
+  display: flex;
+  gap: var(--spacing-md);
+  justify-content: flex-end;
+}
+
+.reviews-tab__button {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 44px;
+  min-width: 120px;
+  border: 2px solid transparent;
+}
+
+.reviews-tab__button:focus {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+.reviews-tab__button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.reviews-tab__button--secondary {
+  background-color: transparent;
+  color: var(--color-text-primary);
+  border-color: var(--color-border-primary);
+}
+
+.reviews-tab__button--secondary:hover:not(:disabled) {
+  background-color: var(--color-neutral-100);
+}
+
+.reviews-tab__button--danger {
+  background-color: var(--color-error-500);
+  color: var(--color-text-inverse);
+}
+
+.reviews-tab__button--danger:hover:not(:disabled) {
+  background-color: var(--color-error-600);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 767px) {
+  .reviews-tab__summary {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+  }
+
+  .reviews-tab__distribution-row {
+    grid-template-columns: 60px 1fr 30px;
+  }
+
+  .reviews-tab__delete-actions {
+    flex-direction: column-reverse;
+  }
+
+  .reviews-tab__button {
+    width: 100%;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .reviews-tab__write-button,
+  .reviews-tab__button,
+  .reviews-tab__distribution-fill {
+    transition: none;
+  }
+}

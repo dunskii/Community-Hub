@@ -1,0 +1,141 @@
+{
+  "reviews": {
+    "rating": "Đánh giá",
+    "yourRating": "Đánh giá của bạn",
+    "outOfFive": "trên 5 sao",
+    "stars": "sao",
+    "title": "Tiêu đề",
+    "titlePlaceholder": "Tóm tắt trải nghiệm của bạn (tùy chọn)",
+    "yourReview": "Đánh giá của bạn",
+    "contentPlaceholder": "Chia sẻ suy nghĩ của bạn về doanh nghiệp này...",
+    "characterCount": "{{current}} / {{max}} ký tự (tối thiểu {{min}})",
+    "addPhotos": "Thêm ảnh",
+    "photosHelpText": "Thêm tối đa {{max}} ảnh vào đánh giá của bạn",
+    "submitReview": "Gửi đánh giá",
+    "editReview": "Chỉnh sửa đánh giá",
+    "writeReview": "Viết đánh giá",
+    "writeReviewFor": "Viết đánh giá cho {{business}}",
+    "alreadyReviewed": "Bạn đã đánh giá doanh nghiệp này. Bạn có thể chỉnh sửa hoặc xóa đánh giá của mình bên dưới.",
+    "helpful": "Hữu ích",
+    "markHelpful": "Đánh dấu là hữu ích",
+    "unmarkHelpful": "Bỏ đánh dấu hữu ích",
+    "report": "Báo cáo",
+    "edited": "Đã chỉnh sửa",
+    "reviewPhoto": "Ảnh đánh giá",
+    "showMorePhotos": "Hiển thị thêm {{count}} ảnh",
+    "businessResponse": "Phản hồi từ doanh nghiệp",
+    "totalReviews": "{{count}} đánh giá",
+    "basedOn": "Dựa trên {{count}} đánh giá",
+    "noReviews": "Chưa có đánh giá",
+    "noReviewsDescription": "Hãy là người đầu tiên đánh giá doanh nghiệp này!",
+    "reviewsComingSoon": "Đánh giá sắp ra mắt",
+    "reviewsComingSoonDescription": "Chúng tôi đang nỗ lực mang đến cho bạn các đánh giá từ cộng đồng.",
+    "deleteConfirmTitle": "Xóa đánh giá?",
+    "deleteConfirmMessage": "Bạn có chắc chắn muốn xóa đánh giá của mình không? Hành động này không thể hoàn tác.",
+    "sort": {
+      "recent": "Gần đây nhất",
+      "helpful": "Hữu ích nhất",
+      "ratingHigh": "Đánh giá cao nhất",
+      "ratingLow": "Đánh giá thấp nhất"
+    },
+    "errors": {
+      "ratingRequired": "Vui lòng chọn đánh giá",
+      "contentTooShort": "Đánh giá phải có ít nhất {{min}} ký tự",
+      "contentTooLong": "Đánh giá không được vượt quá {{max}} ký tự",
+      "tooManyPhotos": "Bạn chỉ có thể tải lên tối đa {{max}} ảnh"
+    }
+  },
+  "saved": {
+    "save": "Lưu",
+    "saved": "Đã lưu",
+    "saveForLater": "Lưu để xem sau",
+    "unsave": "Bỏ lưu",
+    "remove": "Xóa",
+    "pageTitle": "Doanh nghiệp đã lưu",
+    "pageDescription": "Xem và quản lý các doanh nghiệp đã lưu của bạn",
+    "allSaved": "Tất cả đã lưu",
+    "noBusinesses": "Không có doanh nghiệp đã lưu",
+    "noBusinessesDescription": "Bắt đầu lưu doanh nghiệp để tìm thấy chúng ở đây sau!",
+    "createList": "Tạo danh sách",
+    "createNewList": "Tạo danh sách mới",
+    "listName": "Tên danh sách",
+    "listNamePlaceholder": "Ví dụ: Yêu thích, Muốn thử, Kế hoạch cuối tuần",
+    "listNameRequired": "Vui lòng nhập tên danh sách",
+    "deleteList": "Xóa danh sách",
+    "deleteListConfirm": "Bạn có chắc chắn muốn xóa danh sách này không? Các doanh nghiệp sẽ được chuyển đến danh sách đã lưu chính của bạn.",
+    "loginRequired": "Yêu cầu đăng nhập",
+    "loginRequiredDescription": "Vui lòng đăng nhập để lưu doanh nghiệp và tạo danh sách tùy chỉnh."
+  },
+  "follow": {
+    "follow": "Theo dõi",
+    "following": "Đang theo dõi",
+    "unfollow": "Bỏ theo dõi",
+    "followerCount": "{{count}} người theo dõi",
+    "followerCount_plural": "{{count}} người theo dõi"
+  },
+  "moderation": {
+    "pageTitle": "Kiểm duyệt nội dung",
+    "pageDescription": "Xem xét và kiểm duyệt nội dung do người dùng tạo",
+    "pageSubtitle": "Xem xét nội dung bị gắn cờ và phê duyệt hoặc từ chối bài gửi",
+    "queueTitle": "{{count}} mục trong hàng đợi",
+    "noItems": "Hàng đợi trống",
+    "noItemsDescription": "Hiện không có mục nào đang chờ kiểm duyệt.",
+    "approve": "Phê duyệt",
+    "reject": "Từ chối",
+    "approveTitle": "Phê duyệt nội dung",
+    "rejectTitle": "Từ chối nội dung",
+    "confirmApprove": "Xác nhận phê duyệt",
+    "confirmReject": "Xác nhận từ chối",
+    "notes": "Ghi chú kiểm duyệt",
+    "notesPlaceholder": "Thêm ghi chú nội bộ (tùy chọn)...",
+    "rejectReason": "Lý do từ chối",
+    "selectReason": "Chọn lý do",
+    "language": "Ngôn ngữ",
+    "flags": "{{count}} cờ",
+    "filterByStatus": "Lọc theo trạng thái",
+    "loginRequired": "Yêu cầu đăng nhập",
+    "loginRequiredDescription": "Vui lòng đăng nhập để truy cập bảng kiểm duyệt.",
+    "accessDenied": "Truy cập bị từ chối",
+    "accessDeniedDescription": "Bạn không có quyền truy cập bảng kiểm duyệt.",
+    "type": {
+      "review": "Đánh giá"
+    },
+    "status": {
+      "pending": "Đang chờ",
+      "approved": "Đã phê duyệt",
+      "rejected": "Đã từ chối"
+    },
+    "priority": {
+      "low": "Ưu tiên thấp",
+      "medium": "Ưu tiên trung bình",
+      "high": "Ưu tiên cao"
+    },
+    "reasons": {
+      "spam": "Spam hoặc quảng cáo",
+      "offensive": "Xúc phạm hoặc không phù hợp",
+      "irrelevant": "Không liên quan hoặc lạc đề",
+      "duplicate": "Nội dung trùng lặp",
+      "fake": "Giả mạo hoặc gian lận",
+      "other": "Khác"
+    }
+  },
+  "time": {
+    "justNow": "Vừa xong",
+    "minutesAgo": "{{count}} phút trước",
+    "minutesAgo_plural": "{{count}} phút trước",
+    "hoursAgo": "{{count}} giờ trước",
+    "hoursAgo_plural": "{{count}} giờ trước",
+    "daysAgo": "{{count}} ngày trước",
+    "daysAgo_plural": "{{count}} ngày trước"
+  },
+  "common": {
+    "cancel": "Hủy",
+    "delete": "Xóa",
+    "deleting": "Đang xóa...",
+    "edit": "Chỉnh sửa",
+    "create": "Tạo",
+    "creating": "Đang tạo...",
+    "loading": "Đang tải...",
+    "submitting": "Đang gửi..."
+  }
+}

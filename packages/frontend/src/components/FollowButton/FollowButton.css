@@ -1,0 +1,196 @@
+/**
+ * FollowButton Component Styles
+ */
+
+.follow-button-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.follow-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-semibold);
+  min-height: 44px;
+  border: 2px solid transparent;
+}
+
+.follow-button:focus {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+.follow-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.follow-button__icon {
+  font-size: var(--font-size-lg);
+  line-height: 1;
+  font-weight: var(--font-weight-bold);
+}
+
+.follow-button__text {
+  font-size: var(--font-size-sm);
+  white-space: nowrap;
+}
+
+.follow-button__count {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Variant: Primary */
+.follow-button--primary {
+  background-color: var(--color-primary-500);
+  color: var(--color-text-inverse);
+  border-color: var(--color-primary-500);
+}
+
+.follow-button--primary:hover:not(:disabled) {
+  background-color: var(--color-primary-600);
+  border-color: var(--color-primary-600);
+}
+
+.follow-button--primary.follow-button--following {
+  background-color: var(--color-background-primary);
+  color: var(--color-primary-700);
+  border-color: var(--color-primary-500);
+}
+
+.follow-button--primary.follow-button--following:hover:not(:disabled) {
+  background-color: var(--color-error-50);
+  color: var(--color-error-700);
+  border-color: var(--color-error-500);
+}
+
+.follow-button--primary.follow-button--following:hover:not(:disabled) .follow-button__text::after {
+  content: ' ' attr(data-unfollow-text);
+}
+
+/* Variant: Secondary */
+.follow-button--secondary {
+  background-color: var(--color-background-primary);
+  color: var(--color-primary-700);
+  border-color: var(--color-primary-500);
+}
+
+.follow-button--secondary:hover:not(:disabled) {
+  background-color: var(--color-primary-50);
+  border-color: var(--color-primary-600);
+}
+
+.follow-button--secondary.follow-button--following {
+  background-color: var(--color-neutral-100);
+  color: var(--color-text-primary);
+  border-color: var(--color-neutral-400);
+}
+
+.follow-button--secondary.follow-button--following:hover:not(:disabled) {
+  background-color: var(--color-error-50);
+  color: var(--color-error-700);
+  border-color: var(--color-error-500);
+}
+
+/* Variant: Text */
+.follow-button--text {
+  background-color: transparent;
+  color: var(--color-primary-700);
+  border: none;
+  padding: var(--spacing-xs) var(--spacing-sm);
+}
+
+.follow-button--text:hover:not(:disabled) {
+  background-color: var(--color-primary-50);
+}
+
+.follow-button--text.follow-button--following {
+  color: var(--color-text-secondary);
+}
+
+.follow-button--text.follow-button--following:hover:not(:disabled) {
+  color: var(--color-error-700);
+  background-color: var(--color-error-50);
+}
+
+/* Size variants */
+.follow-button--small {
+  padding: var(--spacing-2xs) var(--spacing-sm);
+  min-height: 36px;
+}
+
+.follow-button--small .follow-button__icon {
+  font-size: var(--font-size-base);
+}
+
+.follow-button--small .follow-button__text {
+  font-size: var(--font-size-xs);
+}
+
+.follow-button--medium {
+  padding: var(--spacing-xs) var(--spacing-md);
+  min-height: 44px;
+}
+
+.follow-button--large {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  min-height: 48px;
+}
+
+.follow-button--large .follow-button__icon {
+  font-size: var(--font-size-xl);
+}
+
+.follow-button--large .follow-button__text {
+  font-size: var(--font-size-base);
+}
+
+/* Loading state */
+.follow-button--loading {
+  pointer-events: none;
+}
+
+.follow-button--loading .follow-button__icon {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Touch devices - ensure proper hit area */
+@media (hover: none) and (pointer: coarse) {
+  .follow-button {
+    min-width: 120px;
+  }
+
+  .follow-button--small {
+    min-width: 100px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .follow-button {
+    transition: none;
+  }
+
+  .follow-button--loading .follow-button__icon {
+    animation: none;
+  }
+}

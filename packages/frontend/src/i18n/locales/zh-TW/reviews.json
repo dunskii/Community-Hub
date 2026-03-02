@@ -1,0 +1,141 @@
+{
+  "reviews": {
+    "rating": "評分",
+    "yourRating": "您的評分",
+    "outOfFive": "滿分5星",
+    "stars": "星",
+    "title": "標題",
+    "titlePlaceholder": "總結您的體驗（可選）",
+    "yourReview": "您的評價",
+    "contentPlaceholder": "分享您對這家商家的看法...",
+    "characterCount": "{{current}} / {{max}} 字元（至少 {{min}} 字元）",
+    "addPhotos": "新增照片",
+    "photosHelpText": "最多可向您的評價新增 {{max}} 張照片",
+    "submitReview": "提交評價",
+    "editReview": "編輯評價",
+    "writeReview": "撰寫評價",
+    "writeReviewFor": "為 {{business}} 撰寫評價",
+    "alreadyReviewed": "您已經評價過這家商家。您可以在下方編輯或刪除您的評價。",
+    "helpful": "有幫助",
+    "markHelpful": "標記為有幫助",
+    "unmarkHelpful": "取消標記為有幫助",
+    "report": "檢舉",
+    "edited": "已編輯",
+    "reviewPhoto": "評價照片",
+    "showMorePhotos": "顯示更多 {{count}} 張照片",
+    "businessResponse": "商家回覆",
+    "totalReviews": "{{count}} 則評價",
+    "basedOn": "基於 {{count}} 則評價",
+    "noReviews": "暫無評價",
+    "noReviewsDescription": "成為第一個評價這家商家的人！",
+    "reviewsComingSoon": "評價即將推出",
+    "reviewsComingSoonDescription": "我們正在努力為您帶來社區評價。",
+    "deleteConfirmTitle": "刪除評價？",
+    "deleteConfirmMessage": "您確定要刪除您的評價嗎？此操作無法撤銷。",
+    "sort": {
+      "recent": "最新",
+      "helpful": "最有幫助",
+      "ratingHigh": "評分最高",
+      "ratingLow": "評分最低"
+    },
+    "errors": {
+      "ratingRequired": "請選擇評分",
+      "contentTooShort": "評價至少需要 {{min}} 個字元",
+      "contentTooLong": "評價不得超過 {{max}} 個字元",
+      "tooManyPhotos": "您最多只能上傳 {{max}} 張照片"
+    }
+  },
+  "saved": {
+    "save": "儲存",
+    "saved": "已儲存",
+    "saveForLater": "儲存以備後用",
+    "unsave": "取消儲存",
+    "remove": "移除",
+    "pageTitle": "已儲存的商家",
+    "pageDescription": "檢視和管理您儲存的商家",
+    "allSaved": "全部已儲存",
+    "noBusinesses": "沒有已儲存的商家",
+    "noBusinessesDescription": "開始儲存商家，以便稍後在此處找到它們！",
+    "createList": "建立清單",
+    "createNewList": "建立新清單",
+    "listName": "清單名稱",
+    "listNamePlaceholder": "例如：我的最愛、想嘗試的、週末計畫",
+    "listNameRequired": "請輸入清單名稱",
+    "deleteList": "刪除清單",
+    "deleteListConfirm": "您確定要刪除此清單嗎？商家將被移至您的主儲存清單。",
+    "loginRequired": "需要登入",
+    "loginRequiredDescription": "請登入以儲存商家並建立自訂清單。"
+  },
+  "follow": {
+    "follow": "追蹤",
+    "following": "已追蹤",
+    "unfollow": "取消追蹤",
+    "followerCount": "{{count}} 位追蹤者",
+    "followerCount_plural": "{{count}} 位追蹤者"
+  },
+  "moderation": {
+    "pageTitle": "內容審核",
+    "pageDescription": "審核和管理使用者生成的內容",
+    "pageSubtitle": "審核被標記的內容並批准或拒絕提交",
+    "queueTitle": "佇列中的 {{count}} 個項目",
+    "noItems": "佇列為空",
+    "noItemsDescription": "目前沒有待審核的項目。",
+    "approve": "批准",
+    "reject": "拒絕",
+    "approveTitle": "批准內容",
+    "rejectTitle": "拒絕內容",
+    "confirmApprove": "確認批准",
+    "confirmReject": "確認拒絕",
+    "notes": "審核備註",
+    "notesPlaceholder": "新增內部備註（可選）...",
+    "rejectReason": "拒絕原因",
+    "selectReason": "選擇原因",
+    "language": "語言",
+    "flags": "{{count}} 個標記",
+    "filterByStatus": "按狀態篩選",
+    "loginRequired": "需要登入",
+    "loginRequiredDescription": "請登入以存取審核面板。",
+    "accessDenied": "存取被拒絕",
+    "accessDeniedDescription": "您沒有存取審核面板的權限。",
+    "type": {
+      "review": "評價"
+    },
+    "status": {
+      "pending": "待處理",
+      "approved": "已批准",
+      "rejected": "已拒絕"
+    },
+    "priority": {
+      "low": "低優先順序",
+      "medium": "中優先順序",
+      "high": "高優先順序"
+    },
+    "reasons": {
+      "spam": "垃圾訊息或廣告",
+      "offensive": "冒犯性或不當內容",
+      "irrelevant": "無關或偏離主題",
+      "duplicate": "重複內容",
+      "fake": "虛假或詐騙",
+      "other": "其他"
+    }
+  },
+  "time": {
+    "justNow": "剛剛",
+    "minutesAgo": "{{count}} 分鐘前",
+    "minutesAgo_plural": "{{count}} 分鐘前",
+    "hoursAgo": "{{count}} 小時前",
+    "hoursAgo_plural": "{{count}} 小時前",
+    "daysAgo": "{{count}} 天前",
+    "daysAgo_plural": "{{count}} 天前"
+  },
+  "common": {
+    "cancel": "取消",
+    "delete": "刪除",
+    "deleting": "正在刪除...",
+    "edit": "編輯",
+    "create": "建立",
+    "creating": "正在建立...",
+    "loading": "正在載入...",
+    "submitting": "正在提交..."
+  }
+}

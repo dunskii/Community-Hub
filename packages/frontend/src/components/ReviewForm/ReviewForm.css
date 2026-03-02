@@ -1,0 +1,123 @@
+/**
+ * ReviewForm Component Styles
+ */
+
+.review-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-lg);
+  background-color: var(--color-background-primary);
+  border-radius: var(--border-radius-md);
+}
+
+.review-form__error {
+  margin-bottom: var(--spacing-md);
+}
+
+.review-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.review-form__label {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.review-form__required {
+  color: var(--color-error-500);
+}
+
+.review-form__error-text {
+  font-size: var(--font-size-sm);
+  color: var(--color-error-500);
+  margin-top: var(--spacing-2xs);
+}
+
+.review-form__actions {
+  display: flex;
+  gap: var(--spacing-md);
+  justify-content: flex-end;
+  margin-top: var(--spacing-md);
+  padding-top: var(--spacing-lg);
+  border-top: 1px solid var(--color-border-primary);
+}
+
+.review-form__button {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 120px;
+  min-height: 44px;
+}
+
+.review-form__button--primary {
+  background-color: var(--color-primary-500);
+  color: var(--color-text-inverse);
+  border: none;
+}
+
+.review-form__button--primary:hover:not(:disabled) {
+  background-color: var(--color-primary-600);
+}
+
+.review-form__button--primary:focus {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+.review-form__button--primary:disabled {
+  background-color: var(--color-neutral-300);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.review-form__button--secondary {
+  background-color: transparent;
+  color: var(--color-text-primary);
+  border: 2px solid var(--color-border-primary);
+}
+
+.review-form__button--secondary:hover:not(:disabled) {
+  background-color: var(--color-neutral-100);
+  border-color: var(--color-neutral-400);
+}
+
+.review-form__button--secondary:focus {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+.review-form__button--secondary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 767px) {
+  .review-form {
+    padding: var(--spacing-md);
+    gap: var(--spacing-md);
+  }
+
+  .review-form__actions {
+    flex-direction: column-reverse;
+  }
+
+  .review-form__button {
+    width: 100%;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .review-form__button {
+    transition: none;
+  }
+}

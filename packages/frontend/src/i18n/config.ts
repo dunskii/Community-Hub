@@ -22,26 +22,62 @@ import businessEN from './locales/en/business.json';
 import businessAR from './locales/ar/business.json';
 import categoryEN from './locales/en/category.json';
 import categoryAR from './locales/ar/category.json';
+import reviewsEN from './locales/en/reviews.json';
+import reviewsAR from './locales/ar/reviews.json';
+import reviewsZH_CN from './locales/zh-CN/reviews.json';
+import reviewsZH_TW from './locales/zh-TW/reviews.json';
+import reviewsVI from './locales/vi/reviews.json';
+import reviewsHI from './locales/hi/reviews.json';
+import reviewsUR from './locales/ur/reviews.json';
+import reviewsKO from './locales/ko/reviews.json';
+import reviewsEL from './locales/el/reviews.json';
+import reviewsIT from './locales/it/reviews.json';
 
 const resources = {
   en: {
     translation: translationEN,
     business: businessEN,
     category: categoryEN,
+    reviews: reviewsEN,
   },
   ar: {
     translation: translationAR,
     business: businessAR,
     category: categoryAR,
+    reviews: reviewsAR,
   },
-  'zh-CN': { translation: translationZH_CN },
-  'zh-TW': { translation: translationZH_TW },
-  vi: { translation: translationVI },
-  hi: { translation: translationHI },
-  ur: { translation: translationUR },
-  ko: { translation: translationKO },
-  el: { translation: translationEL },
-  it: { translation: translationIT },
+  'zh-CN': {
+    translation: translationZH_CN,
+    reviews: reviewsZH_CN,
+  },
+  'zh-TW': {
+    translation: translationZH_TW,
+    reviews: reviewsZH_TW,
+  },
+  vi: {
+    translation: translationVI,
+    reviews: reviewsVI,
+  },
+  hi: {
+    translation: translationHI,
+    reviews: reviewsHI,
+  },
+  ur: {
+    translation: translationUR,
+    reviews: reviewsUR,
+  },
+  ko: {
+    translation: translationKO,
+    reviews: reviewsKO,
+  },
+  el: {
+    translation: translationEL,
+    reviews: reviewsEL,
+  },
+  it: {
+    translation: translationIT,
+    reviews: reviewsIT,
+  },
 };
 
 // Custom language detector order
@@ -59,7 +95,7 @@ i18n
     resources,
     fallbackLng: 'en',
     defaultNS: 'translation',
-    ns: ['translation', 'business', 'category'],
+    ns: ['translation', 'business', 'category', 'reviews'],
     debug: import.meta.env.DEV,
     interpolation: {
       escapeValue: false, // React already escapes

@@ -13,20 +13,24 @@ export class ApiError extends Error {
     return new ApiError('VALIDATION_ERROR', message, 400, details);
   }
 
-  static notFound(message = 'Resource not found'): ApiError {
-    return new ApiError('NOT_FOUND', message, 404);
+  static notFound(code: string, message = 'Resource not found'): ApiError {
+    return new ApiError(code, message, 404);
+  }
+
+  static badRequest(code: string, message: string, details?: unknown): ApiError {
+    return new ApiError(code, message, 400, details);
   }
 
   static unauthorized(message = 'Authentication required'): ApiError {
     return new ApiError('UNAUTHORIZED', message, 401);
   }
 
-  static forbidden(message = 'Insufficient permissions'): ApiError {
-    return new ApiError('FORBIDDEN', message, 403);
+  static forbidden(code: string, message = 'Insufficient permissions'): ApiError {
+    return new ApiError(code, message, 403);
   }
 
-  static conflict(message: string): ApiError {
-    return new ApiError('ALREADY_EXISTS', message, 409);
+  static conflict(code: string, message: string): ApiError {
+    return new ApiError(code, message, 409);
   }
 
   static rateLimited(message = 'Too many requests'): ApiError {

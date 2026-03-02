@@ -32,8 +32,9 @@
 
 .business-detail-page__title-row {
   display: flex;
-  flex-direction: column;
-  gap: var(--spacing-300);
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--spacing-400);
 }
 
 .business-detail-page__title {
@@ -41,6 +42,14 @@
   font-weight: var(--font-weight-bold);
   color: var(--color-text-primary);
   margin: 0;
+  flex: 1;
+}
+
+.business-detail-page__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-300);
+  flex-wrap: wrap;
 }
 
 .business-detail-page__status {

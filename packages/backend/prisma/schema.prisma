@@ -54,6 +54,55 @@ enum PriceRange {
   LUXURY
 }
 
+/// Phase 6: Review status enum
+enum ReviewStatus {
+  PENDING
+  PUBLISHED
+  HIDDEN
+  DELETED
+}
+
+/// Phase 6: Content type for moderation
+enum ContentType {
+  REVIEW
+  NOTICE
+  MESSAGE
+  BUSINESS
+  EVENT
+}
+
+/// Phase 6: Moderation report reason
+enum ReportReason {
+  SPAM
+  INAPPROPRIATE
+  FAKE
+  HARASSMENT
+  OTHER
+}
+
+/// Phase 6: Moderation status
+enum ModerationStatus {
+  PENDING
+  REVIEWED
+  ACTIONED
+  DISMISSED
+}
+
+/// Phase 6: Moderation action taken
+enum ModerationAction {
+  NONE
+  WARNING
+  CONTENT_REMOVED
+  USER_SUSPENDED
+}
+
+/// Phase 6: Appeal status
+enum AppealStatus {
+  PENDING
+  UPHELD
+  REJECTED
+}
+
 // ─── Models ──────────────────────────────────────────────
 
 /// Spec A.2 - Platform user accounts
@@ -84,6 +133,17 @@ model User {
   auditLogs       AuditLog[]
   ownedBusinesses Business[]
 
+  // Phase 6: User Engagement Features
+  savedBusinesses  SavedBusiness[]
+  savedLists       SavedList[]
+  reviews          Review[]
+  reviewsHelpful   ReviewHelpful[]
+  following        BusinessFollow[]
+  reportsSubmitted ModerationReport[] @relation("ReportedBy")
+  reportsModerated ModerationReport[] @relation("ModeratedBy")
+  appealsSubmitted Appeal[]           @relation("AppealedBy")
+  appealsReviewed  Appeal[]           @relation("AppealReviewedBy")
+
   @@map("users")
 }
 
@@ -91,7 +151,7 @@ model User {
 model Category {
   id           String       @id @default(uuid())
   type         CategoryType
-  name         Json         // Multilingual: {"en": "Restaurant", "ar": "مطعم"}
+  name         Json // Multilingual: {"en": "Restaurant", "ar": "مطعم"}
   slug         String
   icon         String       @default("default")
   parentId     String?      @map("parent_id")
@@ -102,7 +162,7 @@ model Category {
   createdAt    DateTime     @default(now()) @map("created_at")
   updatedAt    DateTime     @updatedAt @map("updated_at")
 
-  businesses   Business[]   @relation("BusinessPrimaryCategory")
+  businesses Business[] @relation("BusinessPrimaryCategory")
 
   @@unique([type, slug])
   @@index([type, active])
@@ -111,62 +171,67 @@ model Category {
 
 /// Spec A.1 - Business entity for directory
 model Business {
-  id                     String         @id @default(uuid())
-  name                   String         @db.VarChar(100)
-  slug                   String         @unique
-  description            Json           // Multilingual: {"en": "...", "ar": "..."}
+  id          String @id @default(uuid())
+  name        String @db.VarChar(100)
+  slug        String @unique
+  description Json // Multilingual: {"en": "...", "ar": "..."}
 
   // Categories
-  categoryPrimaryId      String         @map("category_primary_id")
-  categoryPrimary        Category       @relation("BusinessPrimaryCategory", fields: [categoryPrimaryId], references: [id], onDelete: Restrict)
-  categoriesSecondary    String[]       @map("categories_secondary") // Array of category IDs (max 3)
+  categoryPrimaryId   String   @map("category_primary_id")
+  categoryPrimary     Category @relation("BusinessPrimaryCategory", fields: [categoryPrimaryId], references: [id], onDelete: Restrict)
+  categoriesSecondary String[] @map("categories_secondary") // Array of category IDs (max 3)
 
   // Location (embedded as JSON)
-  address                Json           // {street, suburb, state, postcode, country, latitude, longitude}
+  address Json // {street, suburb, state, postcode, country, latitude, longitude}
 
   // Contact
-  phone                  String
-  email                  String?
-  website                String?
-  secondaryPhone         String?        @map("secondary_phone")
+  phone          String
+  email          String?
+  website        String?
+  secondaryPhone String? @map("secondary_phone")
 
   // Hours (embedded as JSON)
-  operatingHours         Json?          @map("operating_hours") // {monday: {open, close, closed, byAppointment}, ...}
+  operatingHours Json? @map("operating_hours") // {monday: {open, close, closed, byAppointment}, ...}
 
   // Media
-  logo                   String?
-  coverPhoto             String?        @map("cover_photo")
-  gallery                Json?          // Array of {url, alt, category, order}
+  logo       String?
+  coverPhoto String? @map("cover_photo")
+  gallery    Json? // Array of {url, alt, category, order}
 
   // Social (embedded as JSON)
-  socialLinks            Json?          @map("social_links") // {facebook, instagram, twitter, tiktok, linkedin, youtube, googleBusiness}
+  socialLinks Json? @map("social_links") // {facebook, instagram, twitter, tiktok, linkedin, youtube, googleBusiness}
 
   // Business Info
-  languagesSpoken        String[]       @default([]) @map("languages_spoken")
-  certifications         String[]       @default([])
-  paymentMethods         String[]       @default([]) @map("payment_methods")
-  accessibilityFeatures  String[]       @default([]) @map("accessibility_features")
+  languagesSpoken       String[] @default([]) @map("languages_spoken")
+  certifications        String[] @default([])
+  paymentMethods        String[] @default([]) @map("payment_methods")
+  accessibilityFeatures String[] @default([]) @map("accessibility_features")
 
   // Optional Fields
-  priceRange             PriceRange?    @map("price_range")
-  parkingInformation     String?        @map("parking_information")
-  yearEstablished        Int?           @map("year_established")
+  priceRange         PriceRange? @map("price_range")
+  parkingInformation String?     @map("parking_information")
+  yearEstablished    Int?        @map("year_established")
 
   // Status & Ownership
-  status                 BusinessStatus @default(PENDING)
-  claimed                Boolean        @default(false)
-  claimedBy              String?        @map("claimed_by")
-  claimedByUser          User?          @relation(fields: [claimedBy], references: [id], onDelete: SetNull)
-  verifiedAt             DateTime?      @map("verified_at")
+  status        BusinessStatus @default(PENDING)
+  claimed       Boolean        @default(false)
+  claimedBy     String?        @map("claimed_by")
+  claimedByUser User?          @relation(fields: [claimedBy], references: [id], onDelete: SetNull)
+  verifiedAt    DateTime?      @map("verified_at")
 
   // Phase 5: Search & Discovery Fields
-  timezone               String         @default("Australia/Sydney") @db.VarChar(50)
-  featured               Boolean        @default(false)
-  displayOrder           Int            @default(0) @map("display_order")
+  timezone     String  @default("Australia/Sydney") @db.VarChar(50)
+  featured     Boolean @default(false)
+  displayOrder Int     @default(0) @map("display_order")
 
   // Timestamps
-  createdAt              DateTime       @default(now()) @map("created_at")
-  updatedAt              DateTime       @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Phase 6: User Engagement Features
+  savedBy   SavedBusiness[]
+  reviews   Review[]
+  followers BusinessFollow[]
 
   @@index([status, createdAt])
   @@index([categoryPrimaryId])
@@ -184,7 +249,7 @@ model UserSession {
   tokenHash    String   @unique @map("token_hash")
   deviceInfo   Json     @map("device_info") // {user_agent, device_type, os, browser}
   ipAddress    String   @map("ip_address")
-  location     String?  // city/country from IP geolocation
+  location     String? // city/country from IP geolocation
   isCurrent    Boolean  @default(false) @map("is_current")
   lastActiveAt DateTime @map("last_active_at")
   expiresAt    DateTime @map("expires_at")
@@ -201,7 +266,7 @@ model AuditLog {
   actorId       String?   @map("actor_id")
   actor         User?     @relation(fields: [actorId], references: [id], onDelete: SetNull)
   actorRole     ActorRole @map("actor_role")
-  action        String    // e.g. "review.delete", "user.suspend"
+  action        String // e.g. "review.delete", "user.suspend"
   targetType    String    @map("target_type") // e.g. "Review", "User"
   targetId      String    @map("target_id")
   previousValue Json?     @map("previous_value")
@@ -223,7 +288,7 @@ model EmailTemplate {
   templateKey String   @unique @map("template_key") // e.g. "welcome", "password_reset"
   name        String
   description String
-  subject     Json     // Multilingual: {"en": "Welcome!", "ar": "..."}
+  subject     Json // Multilingual: {"en": "Welcome!", "ar": "..."}
   bodyHtml    Json     @map("body_html") // Multilingual HTML
   bodyText    Json     @map("body_text") // Multilingual plain text
   variables   String[] // ["userName", "verificationLink"]
@@ -243,4 +308,173 @@ model SystemSetting {
   updatedAt   DateTime @updatedAt @map("updated_at")
 
   @@map("system_settings")
+}
+
+// ─── Phase 6: User Engagement Features ────────────────────
+
+/// Spec A.16 - User's saved businesses
+model SavedBusiness {
+  id         String   @id @default(uuid())
+  userId     String   @map("user_id")
+  businessId String   @map("business_id")
+  listId     String?  @map("list_id")
+  notes      String?  @db.VarChar(500)
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  user     User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  business Business   @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  list     SavedList? @relation(fields: [listId], references: [id], onDelete: SetNull)
+
+  @@unique([userId, businessId])
+  @@index([userId])
+  @@index([businessId])
+  @@index([listId])
+  @@map("saved_businesses")
+}
+
+/// Spec A.16 - User's custom lists for organizing saved businesses
+model SavedList {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  name      String   @db.VarChar(50)
+  isDefault Boolean  @default(false) @map("is_default")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  savedBusinesses SavedBusiness[]
+
+  @@index([userId])
+  @@index([userId, isDefault])
+  @@map("saved_lists")
+}
+
+/// Spec A.4 - Business reviews with ratings and photos
+model Review {
+  id                 String       @id @default(uuid())
+  businessId         String       @map("business_id")
+  userId             String       @map("user_id")
+  rating             Int          @db.SmallInt // 1-5
+  title              String?      @db.VarChar(100)
+  content            String       @db.Text // 50-1000 chars (validated in code)
+  language           String       @default("en") @db.VarChar(10) // ISO 639-1
+  helpfulCount       Int          @default(0) @map("helpful_count")
+  status             ReviewStatus @default(PENDING)
+  moderationNotes    String?      @map("moderation_notes") @db.Text
+  businessResponse   String?      @map("business_response") @db.VarChar(500)
+  businessResponseAt DateTime?    @map("business_response_at")
+  createdAt          DateTime     @default(now()) @map("created_at")
+  updatedAt          DateTime     @updatedAt @map("updated_at")
+  publishedAt        DateTime?    @map("published_at")
+
+  business Business           @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  user     User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  photos   ReviewPhoto[]
+  helpful  ReviewHelpful[]
+  reports  ModerationReport[]
+
+  @@unique([userId, businessId])
+  @@index([businessId])
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([helpfulCount])
+  @@map("reviews")
+}
+
+/// Spec A.4 - Photos attached to reviews
+model ReviewPhoto {
+  id        String   @id @default(uuid())
+  reviewId  String   @map("review_id")
+  url       String   @db.VarChar(500)
+  altText   String   @map("alt_text") @db.VarChar(200)
+  order     Int      @default(0)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  review Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+
+  @@index([reviewId])
+  @@map("review_photos")
+}
+
+/// Spec A.4 - Track helpful votes on reviews
+model ReviewHelpful {
+  id        String   @id @default(uuid())
+  reviewId  String   @map("review_id")
+  userId    String   @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  review Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([reviewId, userId])
+  @@index([reviewId])
+  @@index([userId])
+  @@map("review_helpful")
+}
+
+/// Spec A.23 - Users following businesses
+model BusinessFollow {
+  id         String   @id @default(uuid())
+  userId     String   @map("user_id")
+  businessId String   @map("business_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, businessId])
+  @@index([userId])
+  @@index([businessId])
+  @@map("business_follows")
+}
+
+/// Spec A.22 - Content moderation reports
+model ModerationReport {
+  id             String            @id @default(uuid())
+  reporterId     String            @map("reporter_id")
+  contentType    ContentType       @map("content_type")
+  contentId      String            @map("content_id")
+  reason         ReportReason
+  details        String?           @db.VarChar(500)
+  status         ModerationStatus  @default(PENDING)
+  moderatorId    String?           @map("moderator_id")
+  moderatorNotes String?           @map("moderator_notes") @db.Text
+  actionTaken    ModerationAction? @map("action_taken")
+  createdAt      DateTime          @default(now()) @map("created_at")
+  reviewedAt     DateTime?         @map("reviewed_at")
+
+  reporter  User    @relation("ReportedBy", fields: [reporterId], references: [id], onDelete: Cascade)
+  moderator User?   @relation("ModeratedBy", fields: [moderatorId], references: [id], onDelete: SetNull)
+  review    Review? @relation(fields: [contentId], references: [id], onDelete: Cascade)
+
+  @@index([status])
+  @@index([contentType, contentId])
+  @@index([reporterId])
+  @@index([moderatorId])
+  @@map("moderation_reports")
+}
+
+/// Spec A.22 - Appeals for moderation decisions
+model Appeal {
+  id                 String       @id @default(uuid())
+  userId             String       @map("user_id")
+  contentType        String       @map("content_type") @db.VarChar(50)
+  contentId          String       @map("content_id")
+  originalAction     String       @map("original_action") @db.VarChar(100)
+  reason             String       @db.Text // max 1000 chars
+  supportingEvidence String[]     @map("supporting_evidence") // Array of file URLs
+  status             AppealStatus @default(PENDING)
+  reviewerId         String?      @map("reviewer_id")
+  reviewerNotes      String?      @map("reviewer_notes") @db.Text
+  createdAt          DateTime     @default(now()) @map("created_at")
+  reviewedAt         DateTime?    @map("reviewed_at")
+
+  user     User  @relation("AppealedBy", fields: [userId], references: [id], onDelete: Cascade)
+  reviewer User? @relation("AppealReviewedBy", fields: [reviewerId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([status])
+  @@index([reviewerId])
+  @@map("appeals")
 }

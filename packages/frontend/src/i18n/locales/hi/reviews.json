@@ -1,0 +1,141 @@
+{
+  "reviews": {
+    "rating": "रेटिंग",
+    "yourRating": "आपकी रेटिंग",
+    "outOfFive": "5 सितारों में से",
+    "stars": "सितारे",
+    "title": "शीर्षक",
+    "titlePlaceholder": "अपने अनुभव को संक्षेप में बताएं (वैकल्पिक)",
+    "yourReview": "आपकी समीक्षा",
+    "contentPlaceholder": "इस व्यवसाय के बारे में अपने विचार साझा करें...",
+    "characterCount": "{{current}} / {{max}} अक्षर (न्यूनतम {{min}})",
+    "addPhotos": "फ़ोटो जोड़ें",
+    "photosHelpText": "अपनी समीक्षा में {{max}} तक फ़ोटो जोड़ें",
+    "submitReview": "समीक्षा सबमिट करें",
+    "editReview": "समीक्षा संपादित करें",
+    "writeReview": "समीक्षा लिखें",
+    "writeReviewFor": "{{business}} के लिए समीक्षा लिखें",
+    "alreadyReviewed": "आपने पहले ही इस व्यवसाय की समीक्षा कर दी है। आप नीचे अपनी समीक्षा संपादित या हटा सकते हैं।",
+    "helpful": "उपयोगी",
+    "markHelpful": "उपयोगी के रूप में चिह्नित करें",
+    "unmarkHelpful": "उपयोगी चिह्न हटाएं",
+    "report": "रिपोर्ट करें",
+    "edited": "संपादित",
+    "reviewPhoto": "समीक्षा फ़ोटो",
+    "showMorePhotos": "{{count}} और फ़ोटो दिखाएं",
+    "businessResponse": "व्यवसाय की प्रतिक्रिया",
+    "totalReviews": "{{count}} समीक्षाएं",
+    "basedOn": "{{count}} समीक्षाओं के आधार पर",
+    "noReviews": "अभी तक कोई समीक्षा नहीं",
+    "noReviewsDescription": "इस व्यवसाय की समीक्षा करने वाले पहले व्यक्ति बनें!",
+    "reviewsComingSoon": "समीक्षाएं जल्द आ रही हैं",
+    "reviewsComingSoonDescription": "हम आपके लिए समुदाय से समीक्षाएं लाने पर काम कर रहे हैं।",
+    "deleteConfirmTitle": "समीक्षा हटाएं?",
+    "deleteConfirmMessage": "क्या आप वाकई अपनी समीक्षा हटाना चाहते हैं? इस क्रिया को पूर्ववत नहीं किया जा सकता।",
+    "sort": {
+      "recent": "सबसे हाल का",
+      "helpful": "सबसे उपयोगी",
+      "ratingHigh": "उच्चतम रेटिंग",
+      "ratingLow": "न्यूनतम रेटिंग"
+    },
+    "errors": {
+      "ratingRequired": "कृपया एक रेटिंग चुनें",
+      "contentTooShort": "समीक्षा कम से कम {{min}} अक्षर की होनी चाहिए",
+      "contentTooLong": "समीक्षा {{max}} अक्षरों से अधिक नहीं होनी चाहिए",
+      "tooManyPhotos": "आप केवल {{max}} तक फ़ोटो अपलोड कर सकते हैं"
+    }
+  },
+  "saved": {
+    "save": "सहेजें",
+    "saved": "सहेजा गया",
+    "saveForLater": "बाद के लिए सहेजें",
+    "unsave": "सहेजना रद्द करें",
+    "remove": "हटाएं",
+    "pageTitle": "सहेजे गए व्यवसाय",
+    "pageDescription": "अपने सहेजे गए व्यवसायों को देखें और प्रबंधित करें",
+    "allSaved": "सभी सहेजे गए",
+    "noBusinesses": "कोई सहेजा गया व्यवसाय नहीं",
+    "noBusinessesDescription": "व्यवसायों को सहेजना शुरू करें ताकि आप उन्हें बाद में यहां पा सकें!",
+    "createList": "सूची बनाएं",
+    "createNewList": "नई सूची बनाएं",
+    "listName": "सूची का नाम",
+    "listNamePlaceholder": "उदा: पसंदीदा, आज़माने के लिए, सप्ताहांत की योजनाएं",
+    "listNameRequired": "कृपया सूची का नाम दर्ज करें",
+    "deleteList": "सूची हटाएं",
+    "deleteListConfirm": "क्या आप वाकई इस सूची को हटाना चाहते हैं? व्यवसाय आपकी मुख्य सहेजी गई सूची में स्थानांतरित कर दिए जाएंगे।",
+    "loginRequired": "साइन इन आवश्यक है",
+    "loginRequiredDescription": "व्यवसायों को सहेजने और कस्टम सूचियां बनाने के लिए कृपया साइन इन करें।"
+  },
+  "follow": {
+    "follow": "फ़ॉलो करें",
+    "following": "फ़ॉलो किया जा रहा है",
+    "unfollow": "अनफ़ॉलो करें",
+    "followerCount": "{{count}} फ़ॉलोअर",
+    "followerCount_plural": "{{count}} फ़ॉलोअर्स"
+  },
+  "moderation": {
+    "pageTitle": "सामग्री मॉडरेशन",
+    "pageDescription": "उपयोगकर्ता-जनित सामग्री की समीक्षा करें और मॉडरेट करें",
+    "pageSubtitle": "फ़्लैग की गई सामग्री की समीक्षा करें और सबमिशन को अनुमोदित या अस्वीकार करें",
+    "queueTitle": "कतार में {{count}} आइटम",
+    "noItems": "कतार खाली है",
+    "noItemsDescription": "इस समय मॉडरेशन के लिए कोई आइटम लंबित नहीं है।",
+    "approve": "अनुमोदित करें",
+    "reject": "अस्वीकार करें",
+    "approveTitle": "सामग्री अनुमोदित करें",
+    "rejectTitle": "सामग्री अस्वीकार करें",
+    "confirmApprove": "अनुमोदन की पुष्टि करें",
+    "confirmReject": "अस्वीकृति की पुष्टि करें",
+    "notes": "मॉडरेशन नोट्स",
+    "notesPlaceholder": "आंतरिक नोट्स जोड़ें (वैकल्पिक)...",
+    "rejectReason": "अस्वीकृति का कारण",
+    "selectReason": "एक कारण चुनें",
+    "language": "भाषा",
+    "flags": "{{count}} फ़्लैग",
+    "filterByStatus": "स्थिति के अनुसार फ़िल्टर करें",
+    "loginRequired": "साइन इन आवश्यक है",
+    "loginRequiredDescription": "मॉडरेशन पैनल तक पहुंचने के लिए कृपया साइन इन करें।",
+    "accessDenied": "पहुंच अस्वीकृत",
+    "accessDeniedDescription": "आपके पास मॉडरेशन पैनल तक पहुंचने की अनुमति नहीं है।",
+    "type": {
+      "review": "समीक्षा"
+    },
+    "status": {
+      "pending": "लंबित",
+      "approved": "अनुमोदित",
+      "rejected": "अस्वीकृत"
+    },
+    "priority": {
+      "low": "कम प्राथमिकता",
+      "medium": "मध्यम प्राथमिकता",
+      "high": "उच्च प्राथमिकता"
+    },
+    "reasons": {
+      "spam": "स्पैम या विज्ञापन",
+      "offensive": "आपत्तिजनक या अनुचित",
+      "irrelevant": "अप्रासंगिक या विषय से हटकर",
+      "duplicate": "डुप्लिकेट सामग्री",
+      "fake": "नकली या धोखाधड़ी",
+      "other": "अन्य"
+    }
+  },
+  "time": {
+    "justNow": "अभी-अभी",
+    "minutesAgo": "{{count}} मिनट पहले",
+    "minutesAgo_plural": "{{count}} मिनट पहले",
+    "hoursAgo": "{{count}} घंटे पहले",
+    "hoursAgo_plural": "{{count}} घंटे पहले",
+    "daysAgo": "{{count}} दिन पहले",
+    "daysAgo_plural": "{{count}} दिन पहले"
+  },
+  "common": {
+    "cancel": "रद्द करें",
+    "delete": "हटाएं",
+    "deleting": "हटाया जा रहा है...",
+    "edit": "संपादित करें",
+    "create": "बनाएं",
+    "creating": "बनाया जा रहा है...",
+    "loading": "लोड हो रहा है...",
+    "submitting": "सबमिट किया जा रहा है..."
+  }
+}

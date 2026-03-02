@@ -91,6 +91,11 @@
     "socialFeedAggregation": true,
     "surveySystem": true,
     "reviewsAndRatings": true,
+    "savedBusinesses": true,
+    "businessFollowing": true,
+    "reviewModeration": true,
+    "reviewPhotos": true,
+    "businessResponses": true,
     "multilingual": true,
     "pwaInstallation": true,
     "smsAlerts": true,
@@ -163,6 +168,14 @@
     "abn": "XX XXX XXX XXX"
   },
 
+  "moderation": {
+    "reviewsModerationRequired": true,
+    "autoRejectPatterns": [],
+    "profanityFilterEnabled": false,
+    "spamDetectionEnabled": true,
+    "moderationPriority": "manual"
+  },
+
   "limits": {
     "maxBusinessPhotos": 50,
     "maxPhotoSizeMb": 5,
@@ -173,6 +186,16 @@
     "maxNewConversationsPerDay": 10,
     "maxFlashDealsPerWeek": 2,
     "reviewEditWindowDays": 7,
+    "minReviewLength": 50,
+    "maxReviewLength": 1000,
+    "maxReviewPhotos": 3,
+    "maxReviewPhotoSizeMB": 5,
+    "maxSavedBusinessesPerUser": 1000,
+    "maxCustomLists": 10,
+    "maxListNameLength": 50,
+    "reviewsPerHour": 5,
+    "reportsPerHour": 10,
+    "businessResponseMaxLength": 500,
     "accountDeletionGracePeriodDays": 14
   },
 

@@ -1,0 +1,141 @@
+{
+  "reviews": {
+    "rating": "评分",
+    "yourRating": "您的评分",
+    "outOfFive": "满分5星",
+    "stars": "星",
+    "title": "标题",
+    "titlePlaceholder": "总结您的体验（可选）",
+    "yourReview": "您的评价",
+    "contentPlaceholder": "分享您对这家商家的看法...",
+    "characterCount": "{{current}} / {{max}} 字符（至少 {{min}} 字符）",
+    "addPhotos": "添加照片",
+    "photosHelpText": "最多可向您的评价添加 {{max}} 张照片",
+    "submitReview": "提交评价",
+    "editReview": "编辑评价",
+    "writeReview": "撰写评价",
+    "writeReviewFor": "为 {{business}} 撰写评价",
+    "alreadyReviewed": "您已经评价过这家商家。您可以在下方编辑或删除您的评价。",
+    "helpful": "有帮助",
+    "markHelpful": "标记为有帮助",
+    "unmarkHelpful": "取消标记为有帮助",
+    "report": "举报",
+    "edited": "已编辑",
+    "reviewPhoto": "评价照片",
+    "showMorePhotos": "显示更多 {{count}} 张照片",
+    "businessResponse": "商家回复",
+    "totalReviews": "{{count}} 条评价",
+    "basedOn": "基于 {{count}} 条评价",
+    "noReviews": "暂无评价",
+    "noReviewsDescription": "成为第一个评价这家商家的人！",
+    "reviewsComingSoon": "评价即将推出",
+    "reviewsComingSoonDescription": "我们正在努力为您带来社区评价。",
+    "deleteConfirmTitle": "删除评价？",
+    "deleteConfirmMessage": "您确定要删除您的评价吗？此操作无法撤消。",
+    "sort": {
+      "recent": "最新",
+      "helpful": "最有帮助",
+      "ratingHigh": "评分最高",
+      "ratingLow": "评分最低"
+    },
+    "errors": {
+      "ratingRequired": "请选择评分",
+      "contentTooShort": "评价至少需要 {{min}} 个字符",
+      "contentTooLong": "评价不得超过 {{max}} 个字符",
+      "tooManyPhotos": "您最多只能上传 {{max}} 张照片"
+    }
+  },
+  "saved": {
+    "save": "保存",
+    "saved": "已保存",
+    "saveForLater": "保存以备后用",
+    "unsave": "取消保存",
+    "remove": "移除",
+    "pageTitle": "已保存的商家",
+    "pageDescription": "查看和管理您保存的商家",
+    "allSaved": "全部已保存",
+    "noBusinesses": "没有已保存的商家",
+    "noBusinessesDescription": "开始保存商家，以便稍后在此处找到它们！",
+    "createList": "创建列表",
+    "createNewList": "创建新列表",
+    "listName": "列表名称",
+    "listNamePlaceholder": "例如：收藏夹、想尝试的、周末计划",
+    "listNameRequired": "请输入列表名称",
+    "deleteList": "删除列表",
+    "deleteListConfirm": "您确定要删除此列表吗？商家将被移至您的主保存列表。",
+    "loginRequired": "需要登录",
+    "loginRequiredDescription": "请登录以保存商家并创建自定义列表。"
+  },
+  "follow": {
+    "follow": "关注",
+    "following": "已关注",
+    "unfollow": "取消关注",
+    "followerCount": "{{count}} 位关注者",
+    "followerCount_plural": "{{count}} 位关注者"
+  },
+  "moderation": {
+    "pageTitle": "内容审核",
+    "pageDescription": "审核和管理用户生成的内容",
+    "pageSubtitle": "审核被标记的内容并批准或拒绝提交",
+    "queueTitle": "队列中的 {{count}} 个项目",
+    "noItems": "队列为空",
+    "noItemsDescription": "目前没有待审核的项目。",
+    "approve": "批准",
+    "reject": "拒绝",
+    "approveTitle": "批准内容",
+    "rejectTitle": "拒绝内容",
+    "confirmApprove": "确认批准",
+    "confirmReject": "确认拒绝",
+    "notes": "审核备注",
+    "notesPlaceholder": "添加内部备注（可选）...",
+    "rejectReason": "拒绝原因",
+    "selectReason": "选择原因",
+    "language": "语言",
+    "flags": "{{count}} 个标记",
+    "filterByStatus": "按状态筛选",
+    "loginRequired": "需要登录",
+    "loginRequiredDescription": "请登录以访问审核面板。",
+    "accessDenied": "访问被拒绝",
+    "accessDeniedDescription": "您没有访问审核面板的权限。",
+    "type": {
+      "review": "评价"
+    },
+    "status": {
+      "pending": "待处理",
+      "approved": "已批准",
+      "rejected": "已拒绝"
+    },
+    "priority": {
+      "low": "低优先级",
+      "medium": "中优先级",
+      "high": "高优先级"
+    },
+    "reasons": {
+      "spam": "垃圾信息或广告",
+      "offensive": "冒犯性或不当内容",
+      "irrelevant": "无关或偏离主题",
+      "duplicate": "重复内容",
+      "fake": "虚假或欺诈",
+      "other": "其他"
+    }
+  },
+  "time": {
+    "justNow": "刚刚",
+    "minutesAgo": "{{count}} 分钟前",
+    "minutesAgo_plural": "{{count}} 分钟前",
+    "hoursAgo": "{{count}} 小时前",
+    "hoursAgo_plural": "{{count}} 小时前",
+    "daysAgo": "{{count}} 天前",
+    "daysAgo_plural": "{{count}} 天前"
+  },
+  "common": {
+    "cancel": "取消",
+    "delete": "删除",
+    "deleting": "正在删除...",
+    "edit": "编辑",
+    "create": "创建",
+    "creating": "正在创建...",
+    "loading": "正在加载...",
+    "submitting": "正在提交..."
+  }
+}

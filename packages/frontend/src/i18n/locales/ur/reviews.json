@@ -1,0 +1,141 @@
+{
+  "reviews": {
+    "rating": "درجہ بندی",
+    "yourRating": "آپ کی درجہ بندی",
+    "outOfFive": "5 ستاروں میں سے",
+    "stars": "ستارے",
+    "title": "عنوان",
+    "titlePlaceholder": "اپنے تجربے کا خلاصہ بیان کریں (اختیاری)",
+    "yourReview": "آپ کا جائزہ",
+    "contentPlaceholder": "اس کاروبار کے بارے میں اپنے خیالات شیئر کریں...",
+    "characterCount": "{{current}} / {{max}} حروف (کم از کم {{min}})",
+    "addPhotos": "تصاویر شامل کریں",
+    "photosHelpText": "اپنے جائزے میں {{max}} تک تصاویر شامل کریں",
+    "submitReview": "جائزہ جمع کرائیں",
+    "editReview": "جائزہ میں ترمیم کریں",
+    "writeReview": "جائزہ لکھیں",
+    "writeReviewFor": "{{business}} کے لیے جائزہ لکھیں",
+    "alreadyReviewed": "آپ پہلے ہی اس کاروبار کا جائزہ لے چکے ہیں۔ آپ نیچے اپنا جائزہ میں ترمیم یا حذف کر سکتے ہیں۔",
+    "helpful": "مفید",
+    "markHelpful": "مفید کے طور پر نشان زد کریں",
+    "unmarkHelpful": "مفید نشان ہٹائیں",
+    "report": "رپورٹ کریں",
+    "edited": "ترمیم شدہ",
+    "reviewPhoto": "جائزہ کی تصویر",
+    "showMorePhotos": "مزید {{count}} تصاویر دکھائیں",
+    "businessResponse": "کاروبار کا جواب",
+    "totalReviews": "{{count}} جائزے",
+    "basedOn": "{{count}} جائزوں کی بنیاد پر",
+    "noReviews": "ابھی تک کوئی جائزہ نہیں",
+    "noReviewsDescription": "اس کاروبار کا جائزہ لینے والے پہلے شخص بنیں!",
+    "reviewsComingSoon": "جائزے جلد آ رہے ہیں",
+    "reviewsComingSoonDescription": "ہم آپ کے لیے کمیونٹی سے جائزے لانے پر کام کر رہے ہیں۔",
+    "deleteConfirmTitle": "جائزہ حذف کریں؟",
+    "deleteConfirmMessage": "کیا آپ واقعی اپنا جائزہ حذف کرنا چاہتے ہیں؟ یہ عمل کالعدم نہیں کیا جا سکتا۔",
+    "sort": {
+      "recent": "تازہ ترین",
+      "helpful": "سب سے زیادہ مفید",
+      "ratingHigh": "بلند ترین درجہ بندی",
+      "ratingLow": "کم ترین درجہ بندی"
+    },
+    "errors": {
+      "ratingRequired": "براہ کرم ایک درجہ بندی منتخب کریں",
+      "contentTooShort": "جائزہ کم از کم {{min}} حروف کا ہونا چاہیے",
+      "contentTooLong": "جائزہ {{max}} حروف سے زیادہ نہیں ہونا چاہیے",
+      "tooManyPhotos": "آپ صرف {{max}} تک تصاویر اپ لوڈ کر سکتے ہیں"
+    }
+  },
+  "saved": {
+    "save": "محفوظ کریں",
+    "saved": "محفوظ شدہ",
+    "saveForLater": "بعد کے لیے محفوظ کریں",
+    "unsave": "محفوظ کرنا منسوخ کریں",
+    "remove": "ہٹائیں",
+    "pageTitle": "محفوظ شدہ کاروبار",
+    "pageDescription": "اپنے محفوظ شدہ کاروباروں کو دیکھیں اور ان کا نظم کریں",
+    "allSaved": "تمام محفوظ شدہ",
+    "noBusinesses": "کوئی محفوظ شدہ کاروبار نہیں",
+    "noBusinessesDescription": "کاروباروں کو محفوظ کرنا شروع کریں تاکہ آپ انہیں بعد میں یہاں تلاش کر سکیں!",
+    "createList": "فہرست بنائیں",
+    "createNewList": "نئی فہرست بنائیں",
+    "listName": "فہرست کا نام",
+    "listNamePlaceholder": "مثال کے طور پر: پسندیدہ، آزمانے کے لیے، ویک اینڈ کے منصوبے",
+    "listNameRequired": "براہ کرم فہرست کا نام درج کریں",
+    "deleteList": "فہرست حذف کریں",
+    "deleteListConfirm": "کیا آپ واقعی اس فہرست کو حذف کرنا چاہتے ہیں؟ کاروباروں کو آپ کی اہم محفوظ شدہ فہرست میں منتقل کر دیا جائے گا۔",
+    "loginRequired": "سائن ان ضروری ہے",
+    "loginRequiredDescription": "کاروباروں کو محفوظ کرنے اور اپنی مرضی کی فہرستیں بنانے کے لیے براہ کرم سائن ان کریں۔"
+  },
+  "follow": {
+    "follow": "فالو کریں",
+    "following": "فالو کر رہے ہیں",
+    "unfollow": "ان فالو کریں",
+    "followerCount": "{{count}} فالوورز",
+    "followerCount_plural": "{{count}} فالوورز"
+  },
+  "moderation": {
+    "pageTitle": "مواد کی نگرانی",
+    "pageDescription": "صارف کے تیار کردہ مواد کا جائزہ لیں اور نگرانی کریں",
+    "pageSubtitle": "جھنڈی لگائے گئے مواد کا جائزہ لیں اور جمع کرائی گئی چیزوں کو منظور یا مسترد کریں",
+    "queueTitle": "قطار میں {{count}} اشیاء",
+    "noItems": "قطار خالی ہے",
+    "noItemsDescription": "اس وقت نگرانی کے لیے کوئی اشیاء زیر التواء نہیں ہیں۔",
+    "approve": "منظور کریں",
+    "reject": "مسترد کریں",
+    "approveTitle": "مواد منظور کریں",
+    "rejectTitle": "مواد مسترد کریں",
+    "confirmApprove": "منظوری کی تصدیق کریں",
+    "confirmReject": "مسترد کرنے کی تصدیق کریں",
+    "notes": "نگرانی کے نوٹس",
+    "notesPlaceholder": "اندرونی نوٹس شامل کریں (اختیاری)...",
+    "rejectReason": "مسترد کرنے کی وجہ",
+    "selectReason": "ایک وجہ منتخب کریں",
+    "language": "زبان",
+    "flags": "{{count}} جھنڈے",
+    "filterByStatus": "حیثیت کے لحاظ سے فلٹر کریں",
+    "loginRequired": "سائن ان ضروری ہے",
+    "loginRequiredDescription": "نگرانی کے پینل تک رسائی حاصل کرنے کے لیے براہ کرم سائن ان کریں۔",
+    "accessDenied": "رسائی مسترد",
+    "accessDeniedDescription": "آپ کو نگرانی کے پینل تک رسائی کی اجازت نہیں ہے۔",
+    "type": {
+      "review": "جائزہ"
+    },
+    "status": {
+      "pending": "زیر التواء",
+      "approved": "منظور شدہ",
+      "rejected": "مسترد شدہ"
+    },
+    "priority": {
+      "low": "کم ترجیح",
+      "medium": "درمیانی ترجیح",
+      "high": "اعلیٰ ترجیح"
+    },
+    "reasons": {
+      "spam": "اسپام یا اشتہار",
+      "offensive": "جارحانہ یا نامناسب",
+      "irrelevant": "غیر متعلقہ یا موضوع سے ہٹ کر",
+      "duplicate": "نقلی مواد",
+      "fake": "جعلی یا دھوکہ دہی",
+      "other": "دیگر"
+    }
+  },
+  "time": {
+    "justNow": "ابھی ابھی",
+    "minutesAgo": "{{count}} منٹ پہلے",
+    "minutesAgo_plural": "{{count}} منٹ پہلے",
+    "hoursAgo": "{{count}} گھنٹے پہلے",
+    "hoursAgo_plural": "{{count}} گھنٹے پہلے",
+    "daysAgo": "{{count}} دن پہلے",
+    "daysAgo_plural": "{{count}} دن پہلے"
+  },
+  "common": {
+    "cancel": "منسوخ کریں",
+    "delete": "حذف کریں",
+    "deleting": "حذف ہو رہا ہے...",
+    "edit": "ترمیم کریں",
+    "create": "بنائیں",
+    "creating": "بنایا جا رہا ہے...",
+    "loading": "لوڈ ہو رہا ہے...",
+    "submitting": "جمع کرایا جا رہا ہے..."
+  }
+}

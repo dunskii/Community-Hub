@@ -1,0 +1,141 @@
+{
+  "reviews": {
+    "rating": "평점",
+    "yourRating": "회원님의 평점",
+    "outOfFive": "별 5개 중",
+    "stars": "별",
+    "title": "제목",
+    "titlePlaceholder": "경험을 요약해주세요 (선택사항)",
+    "yourReview": "회원님의 리뷰",
+    "contentPlaceholder": "이 비즈니스에 대한 생각을 공유해주세요...",
+    "characterCount": "{{current}} / {{max}} 자 (최소 {{min}}자)",
+    "addPhotos": "사진 추가",
+    "photosHelpText": "리뷰에 최대 {{max}}장의 사진을 추가하세요",
+    "submitReview": "리뷰 제출",
+    "editReview": "리뷰 수정",
+    "writeReview": "리뷰 작성",
+    "writeReviewFor": "{{business}}에 대한 리뷰 작성",
+    "alreadyReviewed": "이미 이 비즈니스에 리뷰를 작성하셨습니다. 아래에서 리뷰를 수정하거나 삭제할 수 있습니다.",
+    "helpful": "도움됨",
+    "markHelpful": "도움됨으로 표시",
+    "unmarkHelpful": "도움됨 표시 취소",
+    "report": "신고",
+    "edited": "수정됨",
+    "reviewPhoto": "리뷰 사진",
+    "showMorePhotos": "{{count}}장 더 보기",
+    "businessResponse": "비즈니스 응답",
+    "totalReviews": "리뷰 {{count}}개",
+    "basedOn": "{{count}}개의 리뷰 기준",
+    "noReviews": "아직 리뷰가 없습니다",
+    "noReviewsDescription": "이 비즈니스에 처음으로 리뷰를 작성해보세요!",
+    "reviewsComingSoon": "리뷰 서비스 출시 예정",
+    "reviewsComingSoonDescription": "커뮤니티의 리뷰를 제공하기 위해 노력하고 있습니다.",
+    "deleteConfirmTitle": "리뷰를 삭제하시겠습니까?",
+    "deleteConfirmMessage": "정말로 리뷰를 삭제하시겠습니까? 이 작업은 취소할 수 없습니다.",
+    "sort": {
+      "recent": "최신순",
+      "helpful": "도움됨순",
+      "ratingHigh": "평점 높은순",
+      "ratingLow": "평점 낮은순"
+    },
+    "errors": {
+      "ratingRequired": "평점을 선택해주세요",
+      "contentTooShort": "리뷰는 최소 {{min}}자 이상이어야 합니다",
+      "contentTooLong": "리뷰는 {{max}}자를 초과할 수 없습니다",
+      "tooManyPhotos": "최대 {{max}}장까지만 업로드할 수 있습니다"
+    }
+  },
+  "saved": {
+    "save": "저장",
+    "saved": "저장됨",
+    "saveForLater": "나중을 위해 저장",
+    "unsave": "저장 취소",
+    "remove": "제거",
+    "pageTitle": "저장한 비즈니스",
+    "pageDescription": "저장한 비즈니스를 보고 관리하세요",
+    "allSaved": "전체 저장",
+    "noBusinesses": "저장한 비즈니스가 없습니다",
+    "noBusinessesDescription": "비즈니스를 저장하여 나중에 여기에서 찾아보세요!",
+    "createList": "목록 만들기",
+    "createNewList": "새 목록 만들기",
+    "listName": "목록 이름",
+    "listNamePlaceholder": "예: 즐겨찾기, 가보고 싶은 곳, 주말 계획",
+    "listNameRequired": "목록 이름을 입력해주세요",
+    "deleteList": "목록 삭제",
+    "deleteListConfirm": "정말로 이 목록을 삭제하시겠습니까? 비즈니스는 기본 저장 목록으로 이동됩니다.",
+    "loginRequired": "로그인 필요",
+    "loginRequiredDescription": "비즈니스를 저장하고 맞춤 목록을 만들려면 로그인해주세요."
+  },
+  "follow": {
+    "follow": "팔로우",
+    "following": "팔로잉",
+    "unfollow": "언팔로우",
+    "followerCount": "팔로워 {{count}}명",
+    "followerCount_plural": "팔로워 {{count}}명"
+  },
+  "moderation": {
+    "pageTitle": "콘텐츠 관리",
+    "pageDescription": "사용자 생성 콘텐츠를 검토하고 관리합니다",
+    "pageSubtitle": "신고된 콘텐츠를 검토하고 제출물을 승인 또는 거부합니다",
+    "queueTitle": "대기열에 {{count}}개 항목",
+    "noItems": "대기열이 비어있습니다",
+    "noItemsDescription": "현재 관리가 필요한 항목이 없습니다.",
+    "approve": "승인",
+    "reject": "거부",
+    "approveTitle": "콘텐츠 승인",
+    "rejectTitle": "콘텐츠 거부",
+    "confirmApprove": "승인 확인",
+    "confirmReject": "거부 확인",
+    "notes": "관리 메모",
+    "notesPlaceholder": "내부 메모 추가 (선택사항)...",
+    "rejectReason": "거부 사유",
+    "selectReason": "사유 선택",
+    "language": "언어",
+    "flags": "신고 {{count}}건",
+    "filterByStatus": "상태별 필터",
+    "loginRequired": "로그인 필요",
+    "loginRequiredDescription": "관리 패널에 액세스하려면 로그인해주세요.",
+    "accessDenied": "액세스 거부됨",
+    "accessDeniedDescription": "관리 패널에 액세스할 권한이 없습니다.",
+    "type": {
+      "review": "리뷰"
+    },
+    "status": {
+      "pending": "대기 중",
+      "approved": "승인됨",
+      "rejected": "거부됨"
+    },
+    "priority": {
+      "low": "낮은 우선순위",
+      "medium": "중간 우선순위",
+      "high": "높은 우선순위"
+    },
+    "reasons": {
+      "spam": "스팸 또는 광고",
+      "offensive": "공격적이거나 부적절한 내용",
+      "irrelevant": "관련 없거나 주제에서 벗어남",
+      "duplicate": "중복 콘텐츠",
+      "fake": "가짜 또는 사기",
+      "other": "기타"
+    }
+  },
+  "time": {
+    "justNow": "방금",
+    "minutesAgo": "{{count}}분 전",
+    "minutesAgo_plural": "{{count}}분 전",
+    "hoursAgo": "{{count}}시간 전",
+    "hoursAgo_plural": "{{count}}시간 전",
+    "daysAgo": "{{count}}일 전",
+    "daysAgo_plural": "{{count}}일 전"
+  },
+  "common": {
+    "cancel": "취소",
+    "delete": "삭제",
+    "deleting": "삭제 중...",
+    "edit": "수정",
+    "create": "만들기",
+    "creating": "만드는 중...",
+    "loading": "로딩 중...",
+    "submitting": "제출 중..."
+  }
+}

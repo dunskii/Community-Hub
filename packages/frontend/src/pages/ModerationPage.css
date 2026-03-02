@@ -1,0 +1,56 @@
+/**
+ * ModerationPage Styles
+ */
+
+.moderation-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+.moderation-page__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--spacing-lg);
+  padding-bottom: var(--spacing-lg);
+  border-bottom: 2px solid var(--color-border-primary);
+}
+
+.moderation-page__title-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  flex: 1;
+}
+
+.moderation-page__title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.moderation-page__subtitle {
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.moderation-page__filters {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: flex-end;
+  min-width: 200px;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 767px) {
+  .moderation-page__header {
+    flex-direction: column;
+  }
+
+  .moderation-page__filters {
+    width: 100%;
+  }
+}

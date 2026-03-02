@@ -1,0 +1,108 @@
+/**
+ * StarRating Component Styles
+ */
+
+.star-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.star-rating__stars {
+  display: inline-flex;
+  gap: var(--spacing-2xs);
+}
+
+.star-rating__star {
+  color: var(--color-neutral-300);
+  transition: color 0.2s ease, transform 0.2s ease;
+  user-select: none;
+}
+
+.star-rating__star--filled {
+  color: var(--color-warning-500);
+}
+
+.star-rating__star--half {
+  color: var(--color-warning-400);
+}
+
+.star-rating__star--interactive {
+  cursor: pointer;
+}
+
+.star-rating__star--interactive:hover {
+  transform: scale(1.1);
+}
+
+.star-rating__star--interactive:focus {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+  border-radius: var(--border-radius-sm);
+}
+
+/* Size variants */
+.star-rating--small .star-rating__star {
+  font-size: var(--font-size-base);
+}
+
+.star-rating--medium .star-rating__star {
+  font-size: var(--font-size-lg);
+}
+
+.star-rating--large .star-rating__star {
+  font-size: var(--font-size-2xl);
+}
+
+.star-rating__value {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.star-rating__count {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+/* Hover state for interactive ratings */
+.star-rating--interactive .star-rating__star--interactive:hover,
+.star-rating--interactive .star-rating__star--interactive:hover ~ .star-rating__star {
+  color: var(--color-warning-300);
+}
+
+/* RTL support */
+[dir='rtl'] .star-rating__stars {
+  direction: ltr;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .star-rating__star--filled {
+    color: var(--color-warning-600);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .star-rating__star {
+    transition: none;
+  }
+
+  .star-rating__star--interactive:hover {
+    transform: none;
+  }
+}
+
+/* Touch devices - larger hit area */
+@media (hover: none) and (pointer: coarse) {
+  .star-rating__star--interactive {
+    padding: var(--spacing-2xs);
+    margin: calc(var(--spacing-2xs) * -1);
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

@@ -1,0 +1,261 @@
+/**
+ * SavedBusinessesPage Styles
+ */
+
+.saved-businesses-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.saved-businesses-page__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--color-border-primary);
+}
+
+.saved-businesses-page__title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.saved-businesses-page__create-list {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  background-color: var(--color-primary-500);
+  color: var(--color-text-inverse);
+  border: none;
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  min-height: 44px;
+}
+
+.saved-businesses-page__create-list:hover {
+  background-color: var(--color-primary-600);
+}
+
+.saved-businesses-page__create-list:focus {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+.saved-businesses-page__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.saved-business-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-background-primary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--border-radius-md);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.saved-business-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.saved-business-card__link {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  flex: 1;
+}
+
+.saved-business-card__image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.saved-business-card__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+}
+
+.saved-business-card__title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.saved-business-card__category {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.saved-business-card__rating {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.saved-business-card__notes {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  font-style: italic;
+  margin: 0;
+  padding-top: var(--spacing-sm);
+  border-top: 1px solid var(--color-border-primary);
+}
+
+.saved-business-card__remove {
+  position: absolute;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
+  padding: var(--spacing-xs);
+  background-color: var(--color-background-primary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-base);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  opacity: 0.8;
+  min-width: 36px;
+  min-height: 36px;
+}
+
+.saved-business-card__remove:hover {
+  opacity: 1;
+  background-color: var(--color-error-50);
+  border-color: var(--color-error-500);
+}
+
+.saved-business-card__remove:focus {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+.saved-businesses-page__delete-list {
+  padding: var(--spacing-2xs);
+  background-color: transparent;
+  border: none;
+  font-size: var(--font-size-base);
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  opacity: 0.6;
+  min-width: 32px;
+  min-height: 32px;
+}
+
+.saved-businesses-page__delete-list:hover {
+  opacity: 1;
+}
+
+.saved-businesses-page__delete-list:focus {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+  border-radius: var(--border-radius-sm);
+}
+
+/* Create List Modal */
+.saved-businesses-page__create-list-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-lg);
+}
+
+.saved-businesses-page__create-list-actions {
+  display: flex;
+  gap: var(--spacing-md);
+  justify-content: flex-end;
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--color-border-primary);
+}
+
+.saved-businesses-page__button {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 44px;
+  min-width: 120px;
+  border: 2px solid transparent;
+}
+
+.saved-businesses-page__button:focus {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+.saved-businesses-page__button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.saved-businesses-page__button--primary {
+  background-color: var(--color-primary-500);
+  color: var(--color-text-inverse);
+}
+
+.saved-businesses-page__button--primary:hover:not(:disabled) {
+  background-color: var(--color-primary-600);
+}
+
+.saved-businesses-page__button--secondary {
+  background-color: transparent;
+  color: var(--color-text-primary);
+  border-color: var(--color-border-primary);
+}
+
+.saved-businesses-page__button--secondary:hover:not(:disabled) {
+  background-color: var(--color-neutral-100);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 767px) {
+  .saved-businesses-page__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .saved-businesses-page__create-list {
+    width: 100%;
+  }
+
+  .saved-businesses-page__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .saved-businesses-page__create-list-actions {
+    flex-direction: column-reverse;
+  }
+
+  .saved-businesses-page__button {
+    width: 100%;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .saved-business-card,
+  .saved-business-card__remove,
+  .saved-businesses-page__create-list,
+  .saved-businesses-page__button {
+    transition: none;
+  }
+
+  .saved-business-card:hover {
+    transform: none;
+  }
+}
