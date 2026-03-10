@@ -1,5 +1,5 @@
 import rateLimit from 'express-rate-limit';
-import { getPlatformConfig } from '@community-hub/shared';
+import { getPlatformConfig } from '../config/platform-loader.js';
 
 const config = getPlatformConfig();
 

@@ -7,14 +7,12 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StarRating } from '../StarRating';
-import { Input } from '../Input';
-import { Textarea } from '../Textarea';
-import { FileUpload } from '../FileUpload';
-import { Alert } from '../Alert';
-import { getPlatformConfig } from '@community-hub/shared';
+import { Input } from '../form/Input';
+import { Textarea } from '../form/Textarea';
+import { FileUpload } from '../form/FileUpload';
+import { Alert } from '../display/Alert';
+import { getPlatformConfig } from '../../config/platform-loader';
 import './ReviewForm.css';
-
-const config = getPlatformConfig();
 
 export interface ReviewFormData {
   rating: number;
@@ -59,6 +57,7 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({
   className = '',
 }) => {
   const { t } = useTranslation();
+  const config = getPlatformConfig();
 
   const [rating, setRating] = useState<number>(initialData?.rating || 0);
   const [title, setTitle] = useState<string>(initialData?.title || '');
@@ -66,9 +65,9 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({
   const [photos, setPhotos] = useState<File[]>(initialData?.photos || []);
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
-  const minLength = config.limits.minReviewLength;
-  const maxLength = config.limits.maxReviewLength;
-  const maxPhotos = config.limits.maxReviewPhotos;
+  const minLength = config.limits.minReviewLength ?? 50;
+  const maxLength = config.limits.maxReviewLength ?? 2000;
+  const maxPhotos = config.limits.maxReviewPhotos ?? 5;
 
   useEffect(() => {
     if (initialData) {

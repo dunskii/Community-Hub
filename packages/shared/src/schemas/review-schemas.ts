@@ -1,7 +1,22 @@
 import { z } from 'zod';
-import { getPlatformConfig } from '../config/platform-config.js';
 
-const config = getPlatformConfig();
+/**
+ * Review validation schemas
+ * Phase 6: User Engagement Features
+ *
+ * Note: Validation limits are hardcoded here to avoid circular dependencies.
+ * These should match the values in platform.json limits section.
+ * Runtime validation in the backend service layer can use dynamic config values.
+ */
+
+// Default limits (matching platform.json)
+const LIMITS = {
+  minReviewLength: 50,
+  maxReviewLength: 1000,
+  maxReviewPhotos: 3,
+  businessResponseMaxLength: 500,
+  maxListNameLength: 50,
+} as const;
 
 export const reviewCreateSchema = z.object({
   businessId: z.string().uuid({ message: 'Invalid business ID' }),
@@ -9,11 +24,11 @@ export const reviewCreateSchema = z.object({
   title: z.string().max(100, { message: 'Title cannot exceed 100 characters' }).optional(),
   content: z
     .string()
-    .min(config.limits.minReviewLength, {
-      message: `Review must be at least ${config.limits.minReviewLength} characters`,
+    .min(LIMITS.minReviewLength, {
+      message: `Review must be at least ${LIMITS.minReviewLength} characters`,
     })
-    .max(config.limits.maxReviewLength, {
-      message: `Review cannot exceed ${config.limits.maxReviewLength} characters`,
+    .max(LIMITS.maxReviewLength, {
+      message: `Review cannot exceed ${LIMITS.maxReviewLength} characters`,
     }),
   photos: z
     .array(
@@ -22,8 +37,8 @@ export const reviewCreateSchema = z.object({
         altText: z.string().max(200, { message: 'Alt text cannot exceed 200 characters' }),
       })
     )
-    .max(config.limits.maxReviewPhotos, {
-      message: `Cannot upload more than ${config.limits.maxReviewPhotos} photos`,
+    .max(LIMITS.maxReviewPhotos, {
+      message: `Cannot upload more than ${LIMITS.maxReviewPhotos} photos`,
     })
     .optional(),
 });
@@ -33,8 +48,8 @@ export const reviewUpdateSchema = z.object({
   title: z.string().max(100).optional(),
   content: z
     .string()
-    .min(config.limits.minReviewLength)
-    .max(config.limits.maxReviewLength)
+    .min(LIMITS.minReviewLength)
+    .max(LIMITS.maxReviewLength)
     .optional(),
 });
 
@@ -42,8 +57,8 @@ export const businessResponseSchema = z.object({
   response: z
     .string()
     .min(10, { message: 'Response must be at least 10 characters' })
-    .max(config.limits.businessResponseMaxLength, {
-      message: `Response cannot exceed ${config.limits.businessResponseMaxLength} characters`,
+    .max(LIMITS.businessResponseMaxLength, {
+      message: `Response cannot exceed ${LIMITS.businessResponseMaxLength} characters`,
     }),
 });
 
@@ -64,8 +79,8 @@ export const createListSchema = z.object({
   name: z
     .string()
     .min(1, { message: 'List name is required' })
-    .max(config.limits.maxListNameLength, {
-      message: `List name cannot exceed ${config.limits.maxListNameLength} characters`,
+    .max(LIMITS.maxListNameLength, {
+      message: `List name cannot exceed ${LIMITS.maxListNameLength} characters`,
     }),
 });
 
@@ -73,8 +88,8 @@ export const updateListSchema = z.object({
   name: z
     .string()
     .min(1, { message: 'List name is required' })
-    .max(config.limits.maxListNameLength, {
-      message: `List name cannot exceed ${config.limits.maxListNameLength} characters`,
+    .max(LIMITS.maxListNameLength, {
+      message: `List name cannot exceed ${LIMITS.maxListNameLength} characters`,
     }),
 });
 

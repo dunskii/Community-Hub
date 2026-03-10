@@ -11,7 +11,7 @@ import { ReviewForm, type ReviewFormData } from '../ReviewForm';
 import { ReviewList } from '../ReviewList';
 import { Modal } from '../display/Modal';
 import { Alert } from '../display/Alert';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../hooks/useAuth';
 import { useReviews } from '../../hooks/useReviews';
 import './ReviewsTab.css';
 

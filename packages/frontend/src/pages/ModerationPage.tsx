@@ -12,11 +12,31 @@ import { ModerationQueue, type ModerationItem } from '../components/ModerationQu
 import { EmptyState } from '../components/display/EmptyState';
 import { Alert } from '../components/display/Alert';
 import { Select } from '../components/form/Select';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../hooks/useAuth';
 import { apiClient } from '../services/api-client';
 import './ModerationPage.css';
 
 type ModerationStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
+
+interface ModerationReviewResponse {
+  id: string;
+  businessId: string;
+  userId: string;
+  rating: number;
+  title?: string;
+  content: string;
+  language: string;
+  createdAt: string;
+  priority?: 'LOW' | 'MEDIUM' | 'HIGH';
+  flagCount?: number;
+  business?: {
+    name: string;
+  };
+  user?: {
+    name: string;
+    avatarUrl?: string;
+  };
+}
 
 export function ModerationPage() {
   const { t } = useTranslation();
@@ -51,7 +71,7 @@ export function ModerationPage() {
       const response = await apiClient.get<{
         success: boolean;
         data: {
-          reviews: any[];
+          reviews: ModerationReviewResponse[];
           total: number;
           page: number;
           limit: number;
@@ -59,7 +79,7 @@ export function ModerationPage() {
       }>(`/admin/moderation/reviews?${params.toString()}`);
 
       // Transform API response to ModerationItem format
-      const transformedItems: ModerationItem[] = response.data.reviews.map((review: any) => ({
+      const transformedItems: ModerationItem[] = response.data.reviews.map((review) => ({
         id: review.id,
         type: 'review' as const,
         review: {

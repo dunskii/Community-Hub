@@ -122,3 +122,13 @@ export async function del<T>(endpoint: string): Promise<T> {
 }
 
 export { HttpError };
+
+/**
+ * API client object for object-oriented access
+ */
+export const apiClient = {
+  get,
+  post,
+  put,
+  delete: del,
+};

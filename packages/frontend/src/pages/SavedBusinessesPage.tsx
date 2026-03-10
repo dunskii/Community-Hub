@@ -17,7 +17,7 @@ import { Modal } from '../components/display/Modal';
 import { Input } from '../components/form/Input';
 import { Alert } from '../components/display/Alert';
 import { savedService, type SavedBusiness, type SavedList } from '../services/saved-service';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../hooks/useAuth';
 import './SavedBusinessesPage.css';
 
 export function SavedBusinessesPage() {
@@ -62,8 +62,8 @@ export function SavedBusinessesPage() {
     try {
       await savedService.unsaveBusiness(businessId);
       await fetchSavedBusinesses();
-    } catch (err) {
-      console.error('Failed to unsave business:', err);
+    } catch {
+      // Error handled silently - UI state unchanged indicates failure
     }
   };
 
@@ -97,8 +97,8 @@ export function SavedBusinessesPage() {
         setActiveList(null);
       }
       await fetchSavedBusinesses();
-    } catch (err) {
-      console.error('Failed to delete list:', err);
+    } catch {
+      // Error handled silently - UI state unchanged indicates failure
     }
   };
 

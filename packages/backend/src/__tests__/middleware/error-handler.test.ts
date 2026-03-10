@@ -24,7 +24,7 @@ function mockReqRes() {
 describe('errorHandler', () => {
   it('should handle ApiError with correct status and code', () => {
     const { req, res, next } = mockReqRes();
-    const err = ApiError.notFound('User not found');
+    const err = ApiError.notFound('USER_NOT_FOUND', 'User not found');
 
     errorHandler(err, req, res, next);
 
@@ -33,7 +33,7 @@ describe('errorHandler', () => {
       expect.objectContaining({
         success: false,
         error: expect.objectContaining({
-          code: 'NOT_FOUND',
+          code: 'USER_NOT_FOUND',
           message: 'User not found',
           requestId: 'test-req-id',
         }),
@@ -100,7 +100,7 @@ describe('errorHandler', () => {
     const { logger } = await import('../../utils/logger.js');
     vi.mocked(logger.error).mockClear();
     const { req, res, next } = mockReqRes();
-    const err = ApiError.notFound('Not here');
+    const err = ApiError.notFound('NOT_FOUND', 'Not here');
 
     errorHandler(err, req, res, next);
 

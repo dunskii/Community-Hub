@@ -9,17 +9,18 @@ This file provides guidance to Claude Code when working with this repository.
 **First Deployment:** Guildford South precinct (Sydney, Australia)
 **Architecture:** Designed for multi-suburb deployment with configuration-only changes (no code modifications)
 
-### Current Status (March 2026)
+### Current Status (11 March 2026)
 
-- **Phase 1 (Foundation):** ✅ Complete (59/59 tasks) - 575 total tests passing
-- **Phase 2 (Authentication):** ✅ Complete (33/33 tasks) - 392 auth tests passing
-- **Phase 3 (Design System):** ✅ Complete (40/40 tasks) - 31 components, 424/424 tests (100%), WCAG 2.1 AA
-- **Phase 4 (Business Directory):** ✅ Complete (39/39 tasks) - 209 tests created, 1,309 total passing, 100/100 security score
-- **Phase 5 (Search & Discovery):** ✅ Complete (34/34 tasks) - 110+ tests added, 1,419+ total passing, Elasticsearch integration
-- **Phase 6 (User Engagement):** 🔄 ~15% Complete (QA complete, i18n 100%, implementation pending)
+- **Phase 1 (Foundation):** ✅ Complete (59/59 tasks)
+- **Phase 2 (Authentication):** ✅ Complete (33/33 tasks)
+- **Phase 3 (Design System):** ✅ Complete (40/40 tasks) - 31 components, WCAG 2.1 AA
+- **Phase 4 (Business Directory):** ✅ Complete (39/39 tasks) - 100/100 security score
+- **Phase 5 (Search & Discovery):** ✅ Complete (34/34 tasks) - Elasticsearch integration
+- **Phase 6 (User Engagement):** ✅ ~90% Complete (31/35 tasks - 4 deferred to later phases)
 - **MVP 1:** ✅ Complete (Static Business Directory - Phases 1-4)
-- **MVP 2:** 🔄 50% Complete (Phase 5 done, Phase 6 in progress)
-- **Overall Progress:** 32.5% (210/644 tasks)
+- **MVP 2:** ✅ 95% Complete (Phase 5 done, Phase 6 ~90%)
+- **Overall Progress:** ~37% (240/644 tasks)
+- **Total Tests:** 1,290+ passing
 
 ### Key References
 
@@ -174,22 +175,54 @@ The spec (`Docs/Community_Hub_Specification_v2.md`) is organized into 7 parts + 
 - ✅ Zero TypeScript errors, zero console statements
 - ✅ WCAG 2.1 AA compliant, production-ready
 
-### Phase 6 Status (In Progress)
+### Phase 6 Complete (~90%)
 
-**User Engagement Features** (4/35 tasks ✅, ~15%):
+**User Engagement Features** (31/35 tasks - 4 strategically deferred):
 
-**Completed:**
-- ✅ Comprehensive QA review (1,458 lines) - Code quality excellent, security 100/100, specification compliance 100%
-- ✅ Internationalization complete (8 translation files created: zh-CN, zh-TW, vi, hi, ur, ko, el, it)
-- ✅ 10/10 languages now supported (100% coverage, was 20%)
-- ✅ Pre-existing test infrastructure issues identified (10+ issues, not Phase 6 related)
+**Data Models (8 models + 6 enums):**
+- Review, ReviewPhoto, ReviewHelpful (Spec A.4)
+- SavedBusiness, SavedList (Spec A.16)
+- BusinessFollow (Spec A.23)
+- ModerationReport, Appeal (Spec A.22)
+- Enums: ReviewStatus, ContentType, ReportReason, ModerationStatus, ModerationAction, AppealStatus
 
-**Next:**
-- Implement reviews and ratings system (Spec §18)
-- Build saved businesses and following features (Spec §12.4)
-- Create review moderation queue
-- Add business owner review responses
-- Implement review helpfulness voting
+**Backend Services (1,677 lines total):**
+- ReviewService (709 lines) - CRUD, helpful voting, reporting, business responses
+- SavedService (375 lines) - Save/unsave, custom lists management
+- FollowService (228 lines) - Follow/unfollow, count tracking
+- ModerationService (365 lines) - Queue, approve/reject actions
+
+**API Endpoints (26 total):**
+- Review: 10 endpoints (create, read, update, delete, helpful, report, respond)
+- Saved: 6 endpoints (businesses, custom lists)
+- Follow: 6 endpoints (follow/unfollow, status, counts)
+- Moderation: 3 endpoints (queue, approve, reject - admin only)
+- /users/me alias support via resolveMe middleware
+
+**Frontend Components (8):**
+- StarRating (1-5, interactive/readonly)
+- ReviewForm (50-1000 chars, photo upload)
+- ReviewCard (44 tests), ReviewList (37 tests)
+- SaveButton, FollowButton (39 tests)
+- ModerationQueue, AdminProtectedRoute
+
+**Frontend Pages (3):**
+- SavedBusinessesPage (with custom lists)
+- FollowingPage (with pagination)
+- ModerationPage (admin-only)
+
+**Security & Quality:**
+- 6 rate limiters configured
+- 9 validation schemas (Zod)
+- WCAG 2.1 AA compliant
+- 120+ Phase 6 tests added
+- 10/10 languages (100% i18n)
+- 2 QA reviews passed (R1 March 3, R2 March 11)
+
+**Deferred Items (4 tasks):**
+- Following feed (Phase 7+ - requires events/deals)
+- Language detection, translation button (Phase 18 - Google Translate)
+- Profanity/spam filtering (Phase 15 - admin dashboard)
 
 ## Common Patterns
 

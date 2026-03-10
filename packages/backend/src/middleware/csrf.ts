@@ -97,12 +97,12 @@ export function csrfProtection(req: Request, res: Response, next: NextFunction):
   // Validate CSRF token from header against cookie
   const headerToken = req.headers[CSRF_HEADER_NAME] as string | undefined;
   if (!headerToken) {
-    throw ApiError.forbidden('CSRF token missing');
+    throw ApiError.forbidden('CSRF_TOKEN_MISSING', 'CSRF token missing');
   }
 
   const headerVerified = verifySignedToken(headerToken);
   if (!headerVerified || headerVerified !== token) {
-    throw ApiError.forbidden('CSRF token invalid');
+    throw ApiError.forbidden('CSRF_TOKEN_INVALID', 'CSRF token invalid');
   }
 
   next();

@@ -36,6 +36,7 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,svg,woff2}'],
+        maximumFileSizeToCacheInBytes: 3 * 1024 * 1024, // 3MB to accommodate large bundles
         runtimeCaching: [
           {
             // Google Fonts stylesheets [Spec §3.7: cache-first for static assets]

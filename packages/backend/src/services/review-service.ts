@@ -3,7 +3,7 @@
  * Handles CRUD operations for reviews, helpful votes, and business responses
  */
 
-import { getPlatformConfig } from '@community-hub/shared';
+import { getPlatformConfig } from '../config/platform-loader.js';
 import { prisma } from '../db/index.js';
 import { logger } from '../utils/logger.js';
 import { ApiError } from '../utils/api-error.js';

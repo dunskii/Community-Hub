@@ -5,7 +5,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { reviewService, type Review, type ReviewSortOption } from '../services/review-service';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from './useAuth';
 import type { ReviewFormData } from '../components/ReviewForm';
 
 export interface UseReviewsOptions {

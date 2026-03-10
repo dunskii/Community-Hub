@@ -1,6 +1,10 @@
 // Backend test setup
 import { vi } from 'vitest';
 
+// Note: getPlatformConfig must be available before module-level imports.
+// The shared package is properly built and available; if tests fail due to config loading,
+// ensure the platform.json file exists in the config directory or set CONFIG_PATH env var.
+
 // Mock Mapbox before any imports
 vi.mock('../services/maps/mapbox-client.js', () => ({
   geocodingClient: {

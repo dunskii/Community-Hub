@@ -7,10 +7,10 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ReviewCard } from '../ReviewCard';
-import { Pagination } from '../Pagination';
-import { EmptyState } from '../EmptyState';
-import { Skeleton } from '../Skeleton';
-import { Select } from '../Select';
+import { Pagination } from '../display/Pagination';
+import { EmptyState } from '../display/EmptyState';
+import { Skeleton } from '../display/Skeleton';
+import { Select } from '../form/Select';
 import './ReviewList.css';
 
 export interface Review {

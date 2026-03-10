@@ -7,8 +7,8 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StarRating } from '../StarRating';
-import { Avatar } from '../Avatar';
-import { Badge } from '../Badge';
+import { Avatar } from '../display/Avatar';
+import { Badge } from '../display/Badge';
 import './ReviewCard.css';
 
 export interface ReviewCardProps {

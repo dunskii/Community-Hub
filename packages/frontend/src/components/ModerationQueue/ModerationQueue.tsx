@@ -7,12 +7,12 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StarRating } from '../StarRating';
-import { Avatar } from '../Avatar';
-import { Badge } from '../Badge';
-import { Textarea } from '../Textarea';
-import { Modal } from '../Modal';
-import { Pagination } from '../Pagination';
-import { EmptyState } from '../EmptyState';
+import { Avatar } from '../display/Avatar';
+import { Badge } from '../display/Badge';
+import { Textarea } from '../form/Textarea';
+import { Modal } from '../display/Modal';
+import { Pagination } from '../display/Pagination';
+import { EmptyState } from '../display/EmptyState';
 import './ModerationQueue.css';
 
 export interface ModerationItem {

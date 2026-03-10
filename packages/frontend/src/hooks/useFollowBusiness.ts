@@ -5,7 +5,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { followService } from '../services/follow-service';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from './useAuth';
 
 export interface UseFollowBusinessReturn {
   isFollowing: boolean;

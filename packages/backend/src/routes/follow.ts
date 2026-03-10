@@ -7,6 +7,7 @@ import { Router } from 'express';
 import { followController } from '../controllers/follow-controller.js';
 import { requireAuth } from '../middleware/auth-middleware.js';
 import { requireRole } from '../middleware/rbac-middleware.js';
+import { resolveMe } from '../middleware/resolve-me.js';
 import { followBusinessLimiter } from '../middleware/review-rate-limiter.js';
 
 const router: ReturnType<typeof Router> = Router();
@@ -49,8 +50,9 @@ router.delete('/businesses/:id/follow', requireAuth, followController.unfollowBu
  * GET /users/:id/following
  * Get businesses user is following
  * User auth required (can only view own following list)
+ * Supports /users/me/following as alias
  */
-router.get('/users/:id/following', requireAuth, followController.getFollowedBusinesses.bind(followController));
+router.get('/users/:id/following', requireAuth, resolveMe, followController.getFollowedBusinesses.bind(followController));
 
 /**
  * GET /businesses/:id/followers

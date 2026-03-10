@@ -32,15 +32,16 @@ describe('ApiError', () => {
       expect(err.details).toEqual({ field: 'name' });
     });
 
-    it('notFound() returns 404 NOT_FOUND', () => {
-      const err = ApiError.notFound();
+    it('notFound() returns 404 with provided code', () => {
+      const err = ApiError.notFound('NOT_FOUND');
       expect(err.code).toBe('NOT_FOUND');
       expect(err.statusCode).toBe(404);
       expect(err.message).toBe('Resource not found');
     });
 
-    it('notFound() accepts custom message', () => {
-      const err = ApiError.notFound('User not found');
+    it('notFound() accepts custom code and message', () => {
+      const err = ApiError.notFound('USER_NOT_FOUND', 'User not found');
+      expect(err.code).toBe('USER_NOT_FOUND');
       expect(err.message).toBe('User not found');
     });
 
@@ -50,14 +51,21 @@ describe('ApiError', () => {
       expect(err.statusCode).toBe(401);
     });
 
-    it('forbidden() returns 403 FORBIDDEN', () => {
-      const err = ApiError.forbidden();
+    it('forbidden() returns 403 with provided code', () => {
+      const err = ApiError.forbidden('FORBIDDEN');
       expect(err.code).toBe('FORBIDDEN');
       expect(err.statusCode).toBe(403);
+      expect(err.message).toBe('Insufficient permissions');
     });
 
-    it('conflict() returns 409 ALREADY_EXISTS', () => {
-      const err = ApiError.conflict('Email taken');
+    it('forbidden() accepts custom code and message', () => {
+      const err = ApiError.forbidden('ACCESS_DENIED', 'You cannot access this resource');
+      expect(err.code).toBe('ACCESS_DENIED');
+      expect(err.message).toBe('You cannot access this resource');
+    });
+
+    it('conflict() returns 409 with provided code', () => {
+      const err = ApiError.conflict('ALREADY_EXISTS', 'Email taken');
       expect(err.code).toBe('ALREADY_EXISTS');
       expect(err.statusCode).toBe(409);
       expect(err.message).toBe('Email taken');

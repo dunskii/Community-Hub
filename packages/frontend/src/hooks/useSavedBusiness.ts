@@ -5,7 +5,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { savedService } from '../services/saved-service';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from './useAuth';
 
 export interface UseSavedBusinessReturn {
   isSaved: boolean;

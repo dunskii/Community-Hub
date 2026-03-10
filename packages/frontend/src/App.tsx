@@ -8,6 +8,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
+import { AdminProtectedRoute } from './components/auth/AdminProtectedRoute';
 import { LoginPage } from './pages/auth/LoginPage';
 import { RegisterPage } from './pages/auth/RegisterPage';
 import { ForgotPasswordPage } from './pages/auth/ForgotPasswordPage';
@@ -17,6 +18,9 @@ import { SkipLink } from './components/ui/index';
 import { BusinessListPage } from './pages/BusinessListPage';
 import { BusinessDetailPage } from './pages/BusinessDetailPage';
 import { CategoriesPage } from './pages/CategoriesPage';
+import { SavedBusinessesPage } from './pages/SavedBusinessesPage';
+import { FollowingPage } from './pages/FollowingPage';
+import { ModerationPage } from './pages/ModerationPage';
 
 // Placeholder components for routes
 const HomePage: React.FC = () => {
@@ -147,6 +151,32 @@ export function App() {
                 <ProtectedRoute>
                   <DashboardPage />
                 </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/saved"
+              element={
+                <ProtectedRoute>
+                  <SavedBusinessesPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/following"
+              element={
+                <ProtectedRoute>
+                  <FollowingPage />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Admin Routes */}
+            <Route
+              path="/admin/moderation"
+              element={
+                <AdminProtectedRoute>
+                  <ModerationPage />
+                </AdminProtectedRoute>
               }
             />
 
