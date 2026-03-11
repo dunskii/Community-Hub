@@ -155,3 +155,32 @@ export type {
   TrackEventInput,
   InboxAnalyticsQueryInput,
 } from './schemas/analytics-schemas.js';
+
+// Events (Phase 8)
+export {
+  LOCATION_TYPES,
+  EVENT_STATUSES,
+  RSVP_STATUSES,
+  RECURRENCE_FREQUENCIES,
+  venueSchema,
+  recurrenceRuleSchema,
+  eventCreateSchema,
+  eventUpdateSchema,
+  eventRSVPSchema,
+  eventFilterSchema,
+  attendeeFilterSchema,
+} from './schemas/event-schemas.js';
+
+export type {
+  LocationType,
+  EventStatus,
+  RSVPStatus,
+  RecurrenceFrequency,
+  VenueInput,
+  RecurrenceRuleInput,
+  EventCreateInput,
+  EventUpdateInput,
+  EventRSVPInput,
+  EventFilterInput,
+  AttendeeFilterInput,
+} from './schemas/event-schemas.js';

@@ -145,6 +145,39 @@ enum AnalyticsEventType {
   MESSAGE_SENT
 }
 
+// ─── Phase 8 Enums ──────────────────────────────────────────
+
+/// Phase 8: Event status for lifecycle management
+enum EventStatus {
+  PENDING   // Awaiting moderation
+  ACTIVE    // Published and visible
+  CANCELLED // Cancelled by owner
+  PAST      // Automatically set after end time
+}
+
+/// Phase 8: Event location type
+enum LocationType {
+  PHYSICAL // In-person event with venue
+  ONLINE   // Virtual event with URL
+  HYBRID   // Both in-person and online
+}
+
+/// Phase 8: RSVP status options
+enum RSVPStatus {
+  GOING       // Confirmed attendance
+  INTERESTED  // Might attend
+  NOT_GOING   // Declined
+}
+
+/// Phase 8: Recurrence frequency for repeating events
+enum RecurrenceFrequency {
+  NONE     // Single occurrence
+  DAILY    // Every day
+  WEEKLY   // Same day each week
+  MONTHLY  // Same date or day each month
+  YEARLY   // Annual event
+}
+
 // ─── Models ──────────────────────────────────────────────
 
 /// Spec A.2 - Platform user accounts
@@ -193,6 +226,10 @@ model User {
   staffMemberships  BusinessOwnerStaff[]     @relation("StaffMember")
   staffAdded        BusinessOwnerStaff[]     @relation("StaffAddedBy")
 
+  // Phase 8: Events & Calendar
+  createdEvents Event[]     @relation("CreatedEvents")
+  eventRsvps    EventRSVP[] @relation("EventRSVPs")
+
   @@map("users")
 }
 
@@ -212,6 +249,7 @@ model Category {
   updatedAt    DateTime     @updatedAt @map("updated_at")
 
   businesses Business[] @relation("BusinessPrimaryCategory")
+  events     Event[]
 
   @@unique([type, slug])
   @@index([type, active])
@@ -289,6 +327,9 @@ model Business {
   analyticsEvents BusinessAnalyticsEvent[]
   analyticsDaily  BusinessAnalyticsDaily[]
   staff           BusinessOwnerStaff[]
+
+  // Phase 8: Events & Calendar
+  events Event[]
 
   @@index([status, createdAt])
   @@index([categoryPrimaryId])
@@ -665,4 +706,89 @@ model BusinessOwnerStaff {
   @@index([businessId])
   @@index([userId])
   @@map("business_owner_staff")
+}
+
+// ─── Phase 8: Events & Calendar System ────────────────────────
+
+/// Spec A.3 - Community events with calendar support
+model Event {
+  id          String      @id @default(uuid())
+  title       String      @db.VarChar(100)
+  description String      @db.Text // 50-5000 chars (validated in code)
+  categoryId  String      @map("category_id")
+  startTime   DateTime    @map("start_time")
+  endTime     DateTime    @map("end_time")
+  timezone    String      @default("Australia/Sydney") @db.VarChar(50)
+
+  // Location
+  locationType LocationType @map("location_type")
+  venue        Json?        // {street, suburb, state, postcode, latitude, longitude}
+  onlineUrl    String?      @map("online_url") @db.VarChar(500)
+
+  // Business link (optional - for business-hosted events)
+  linkedBusinessId String?   @map("linked_business_id")
+  linkedBusiness   Business? @relation(fields: [linkedBusinessId], references: [id], onDelete: SetNull)
+
+  // Media
+  imageUrl String? @map("image_url") @db.VarChar(500)
+
+  // Event details
+  ticketUrl      String?  @map("ticket_url") @db.VarChar(500)
+  cost           String?  @db.VarChar(100) // "Free", "$50", "Variable", etc.
+  capacity       Int?     // Max attendees (null = unlimited)
+  ageRestriction String?  @map("age_restriction") @db.VarChar(20) // "18+", "All ages"
+  accessibility  String[] @default([]) // ["wheelchair_access", "hearing_loop"]
+
+  // Recurrence (optional - for repeating events)
+  recurrence Json? // RecurrenceRule: {frequency, interval, daysOfWeek, endDate, exceptions}
+
+  // Ownership
+  createdById String @map("created_by_id")
+  createdBy   User   @relation("CreatedEvents", fields: [createdById], references: [id], onDelete: Cascade)
+
+  // Status
+  status EventStatus @default(PENDING)
+
+  // SEO
+  slug String? @db.VarChar(150)
+
+  // Timestamps
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  category Category    @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  rsvps    EventRSVP[]
+
+  @@index([status, startTime])
+  @@index([locationType, startTime])
+  @@index([linkedBusinessId])
+  @@index([createdById])
+  @@index([categoryId])
+  @@index([startTime])
+  @@index([slug])
+  @@map("events")
+}
+
+/// Spec §15.4 - RSVP tracking for event attendance
+model EventRSVP {
+  id         String     @id @default(uuid())
+  eventId    String     @map("event_id")
+  userId     String     @map("user_id")
+  status     RSVPStatus
+  guestCount Int        @default(1) @map("guest_count") // Including self
+  notes      String?    @db.VarChar(200) // Optional attendee notes
+  rsvpDate   DateTime   @default(now()) @map("rsvp_date")
+  createdAt  DateTime   @default(now()) @map("created_at")
+  updatedAt  DateTime   @updatedAt @map("updated_at")
+
+  // Relations
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User  @relation("EventRSVPs", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, userId])
+  @@index([eventId])
+  @@index([userId])
+  @@index([eventId, status])
+  @@map("event_rsvps")
 }

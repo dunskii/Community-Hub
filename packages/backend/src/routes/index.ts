@@ -18,6 +18,7 @@ import { followRouter } from './follow.js';
 import { moderationRouter } from './moderation.js';
 import claimRouter from './claim.js';
 import analyticsRouter from './analytics.js';
+import { eventRouter } from './events.js';
 
 export function setupRoutes(app: Express): void {
   // API v1
@@ -37,7 +38,7 @@ export function setupRoutes(app: Express): void {
   v1.use('/', moderationRouter);
   v1.use('/', claimRouter);
   v1.use('/', analyticsRouter);
-  // Future route modules: events, deals, etc.
+  v1.use('/events', eventRouter);
 
   app.use('/api/v1', v1);
 
