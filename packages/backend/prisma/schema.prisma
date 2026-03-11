@@ -103,6 +103,48 @@ enum AppealStatus {
   REJECTED
 }
 
+// ─── Phase 7 Enums ──────────────────────────────────────────
+
+/// Phase 7: Verification method for business claims
+enum VerificationMethod {
+  PHONE
+  EMAIL
+  DOCUMENT
+  GOOGLE_BUSINESS
+}
+
+/// Phase 7: Status of claim verification step
+enum ClaimVerificationStatus {
+  PENDING
+  VERIFIED
+  FAILED
+  EXPIRED
+}
+
+/// Phase 7: Overall claim status
+enum ClaimStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  APPEALED
+}
+
+/// Phase 7: Analytics event types
+enum AnalyticsEventType {
+  PROFILE_VIEW
+  SEARCH_APPEARANCE
+  WEBSITE_CLICK
+  PHONE_CLICK
+  DIRECTIONS_CLICK
+  PHOTO_VIEW
+  SAVE
+  UNSAVE
+  FOLLOW
+  UNFOLLOW
+  REVIEW_CREATED
+  MESSAGE_SENT
+}
+
 // ─── Models ──────────────────────────────────────────────
 
 /// Spec A.2 - Platform user accounts
@@ -144,6 +186,13 @@ model User {
   appealsSubmitted Appeal[]           @relation("AppealedBy")
   appealsReviewed  Appeal[]           @relation("AppealReviewedBy")
 
+  // Phase 7: Business Owner Features
+  claimRequests     BusinessClaimRequest[]   @relation("ClaimRequests")
+  claimsModeratored BusinessClaimRequest[]   @relation("ClaimModerator")
+  analyticsEvents   BusinessAnalyticsEvent[] @relation("AnalyticsEvents")
+  staffMemberships  BusinessOwnerStaff[]     @relation("StaffMember")
+  staffAdded        BusinessOwnerStaff[]     @relation("StaffAddedBy")
+
   @@map("users")
 }
 
@@ -171,10 +220,12 @@ model Category {
 
 /// Spec A.1 - Business entity for directory
 model Business {
-  id          String @id @default(uuid())
-  name        String @db.VarChar(100)
-  slug        String @unique
-  description Json // Multilingual: {"en": "...", "ar": "..."}
+  id                  String  @id @default(uuid())
+  name                String  @db.VarChar(100)
+  slug                String  @unique
+  description         Json // Multilingual: {"en": "...", "ar": "..."} (short, 500 chars)
+  detailedDescription Json?   @map("detailed_description") // Multilingual: rich text, 2000 chars
+  menuPdfUrl          String? @map("menu_pdf_url") @db.VarChar(500) // Menu/price list PDF
 
   // Categories
   categoryPrimaryId   String   @map("category_primary_id")
@@ -232,6 +283,12 @@ model Business {
   savedBy   SavedBusiness[]
   reviews   Review[]
   followers BusinessFollow[]
+
+  // Phase 7: Business Owner Features
+  claimRequests   BusinessClaimRequest[]
+  analyticsEvents BusinessAnalyticsEvent[]
+  analyticsDaily  BusinessAnalyticsDaily[]
+  staff           BusinessOwnerStaff[]
 
   @@index([status, createdAt])
   @@index([categoryPrimaryId])
@@ -477,4 +534,135 @@ model Appeal {
   @@index([status])
   @@index([reviewerId])
   @@map("appeals")
+}
+
+// ─── Phase 7: Business Owner Features ────────────────────────
+
+/// Spec §13.1 - Business claim requests and verification tracking
+model BusinessClaimRequest {
+  id                 String                  @id @default(uuid())
+  businessId         String                  @map("business_id")
+  userId             String                  @map("user_id")
+  verificationMethod VerificationMethod      @map("verification_method")
+  verificationStatus ClaimVerificationStatus @default(PENDING) @map("verification_status")
+  claimStatus        ClaimStatus             @default(PENDING) @map("claim_status")
+
+  // Phone verification
+  verificationCode      String?   @map("verification_code") // bcrypt hashed PIN
+  verificationAttempts  Int       @default(0) @map("verification_attempts")
+  verificationExpiresAt DateTime? @map("verification_expires_at")
+
+  // Email verification
+  verificationToken String?   @map("verification_token") // JWT token
+  tokenExpiresAt    DateTime? @map("token_expires_at")
+
+  // Document verification
+  documentType String?  @map("document_type") @db.VarChar(50) // 'abn' | 'utility_bill' | 'business_registration'
+  documentUrls String[] @map("document_urls")
+
+  // Google Business verification
+  googleBusinessId  String? @map("google_business_id")
+  googleAccessToken String? @map("google_access_token") // Encrypted
+
+  // Moderation
+  moderatorId     String?   @map("moderator_id")
+  moderatorNotes  String?   @map("moderator_notes") @db.Text
+  decisionAt      DateTime? @map("decision_at")
+  rejectionReason String?   @map("rejection_reason") @db.VarChar(500)
+
+  // Appeal tracking
+  appealedAt   DateTime? @map("appealed_at")
+  appealReason String?   @map("appeal_reason") @db.Text
+
+  // Audit fields
+  ipAddress String?  @map("ip_address") @db.VarChar(45)
+  userAgent String?  @map("user_agent") @db.VarChar(500)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  business  Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  user      User     @relation("ClaimRequests", fields: [userId], references: [id], onDelete: Cascade)
+  moderator User?    @relation("ClaimModerator", fields: [moderatorId], references: [id], onDelete: SetNull)
+
+  @@unique([businessId, userId])
+  @@index([businessId])
+  @@index([userId])
+  @@index([claimStatus])
+  @@index([verificationStatus])
+  @@index([createdAt])
+  @@map("business_claim_requests")
+}
+
+/// Spec §13.4 - Analytics event tracking for business performance metrics
+model BusinessAnalyticsEvent {
+  id             String             @id @default(uuid())
+  businessId     String             @map("business_id")
+  eventType      AnalyticsEventType @map("event_type")
+  userId         String?            @map("user_id") // null for anonymous
+  sessionId      String?            @map("session_id") @db.VarChar(100) // for unique view tracking
+  referralSource String?            @map("referral_source") @db.VarChar(50) // 'search' | 'homepage' | 'saved_list' | 'direct' | 'external'
+  searchTerm     String?            @map("search_term") @db.VarChar(200) // if from search
+  ipAddressHash  String?            @map("ip_address_hash") @db.VarChar(100) // bcrypt hashed, anonymized after 90 days
+  userAgent      String?            @map("user_agent") @db.VarChar(500)
+  metadata       Json? // Additional event-specific data
+  eventDate      DateTime           @default(now()) @map("event_date")
+
+  // Relations
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  user     User?    @relation("AnalyticsEvents", fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([businessId, eventDate])
+  @@index([businessId, eventType])
+  @@index([eventDate])
+  @@index([userId])
+  @@map("business_analytics_events")
+}
+
+/// Spec §13.4 - Aggregated daily analytics for faster queries
+model BusinessAnalyticsDaily {
+  id                String   @id @default(uuid())
+  businessId        String   @map("business_id")
+  date              DateTime @db.Date
+  profileViews      Int      @default(0) @map("profile_views")
+  uniqueViews       Int      @default(0) @map("unique_views")
+  searchAppearances Int      @default(0) @map("search_appearances")
+  websiteClicks     Int      @default(0) @map("website_clicks")
+  phoneClicks       Int      @default(0) @map("phone_clicks")
+  directionsClicks  Int      @default(0) @map("directions_clicks")
+  photoViews        Int      @default(0) @map("photo_views")
+  saves             Int      @default(0)
+  follows           Int      @default(0)
+  reviews           Int      @default(0)
+  messages          Int      @default(0)
+
+  // Relations
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@unique([businessId, date])
+  @@index([businessId])
+  @@index([date])
+  @@map("business_analytics_daily")
+}
+
+/// Spec §13 - Staff accounts for business owners (future feature)
+model BusinessOwnerStaff {
+  id          String   @id @default(uuid())
+  businessId  String   @map("business_id")
+  userId      String   @map("user_id")
+  role        String   @db.VarChar(50) // 'manager' | 'staff' | 'viewer'
+  permissions String[] // Array of permission flags
+  addedBy     String   @map("added_by")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  business    Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  user        User     @relation("StaffMember", fields: [userId], references: [id], onDelete: Cascade)
+  addedByUser User     @relation("StaffAddedBy", fields: [addedBy], references: [id], onDelete: Cascade)
+
+  @@unique([businessId, userId])
+  @@index([businessId])
+  @@index([userId])
+  @@map("business_owner_staff")
 }

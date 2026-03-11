@@ -1,0 +1,76 @@
+{
+  "defaultPlatformName": "सामुदायिक केंद्र",
+  "defaultLocation": "आपका क्षेत्र",
+  "hero": {
+    "welcome": "{{platformName}} में आपका स्वागत है",
+    "title": "{{platformName}} की खोज करें",
+    "subtitle": "{{location}} में स्थानीय व्यवसायों, सेवाओं और सामुदायिक संसाधनों की खोज करें",
+    "searchPlaceholder": "व्यवसाय, सेवाएं या ऑफर खोजें...",
+    "cta": "हजारों लोगों से जुड़ें जो अपने समुदाय की खोज कर रहे हैं",
+    "browseBusinesses": "व्यवसाय ब्राउज़ करें",
+    "viewCategories": "श्रेणियां देखें"
+  },
+  "quickFilters": {
+    "title": "त्वरित खोज:",
+    "openNow": "अभी खुला है",
+    "restaurants": "रेस्तरां",
+    "retail": "खरीदारी",
+    "health": "स्वास्थ्य और कल्याण",
+    "services": "सेवाएं",
+    "verified": "सत्यापित"
+  },
+  "stats": {
+    "businesses": "स्थानीय व्यवसाय",
+    "users": "सामुदायिक सदस्य",
+    "categories": "श्रेणियां",
+    "reviews": "समीक्षाएं",
+    "languages": "समर्थित भाषाएं"
+  },
+  "cta": {
+    "title": "{{location}} में व्यवसाय के मालिक हैं?",
+    "subtitle": "अपने व्यवसाय का दावा करें और समुदाय से जुड़ें",
+    "button": "शुरू करें"
+  },
+  "featured": {
+    "title": "विशेष व्यवसाय",
+    "viewAll": "सभी विशेष देखें",
+    "verified": "सत्यापित"
+  },
+  "nearYou": {
+    "title": "आपके पास",
+    "subtitle": "आपके स्थान के पास के व्यवसाय",
+    "viewAll": "और पास के देखें"
+  },
+  "highlyRated": {
+    "title": "उच्च रेटेड",
+    "subtitle": "आपके समुदाय में शीर्ष रेटेड व्यवसाय",
+    "viewAll": "सभी शीर्ष रेटेड देखें"
+  },
+  "newBusinesses": {
+    "title": "प्लेटफॉर्म पर नया",
+    "subtitle": "हाल ही में जोड़े गए व्यवसाय",
+    "viewAll": "सभी नए व्यवसाय देखें",
+    "badge": "नया"
+  },
+  "categories": {
+    "title": "लोकप्रिय श्रेणियां",
+    "subtitle": "प्रकार के अनुसार व्यवसाय खोजें",
+    "viewAll": "सभी श्रेणियां देखें",
+    "businesses": "व्यवसाय",
+    "restaurants": "रेस्तरां",
+    "cafes": "कैफे",
+    "medical": "चिकित्सा",
+    "fitness": "फिटनेस",
+    "pharmacy": "फार्मेसी",
+    "electronics": "इलेक्ट्रॉनिक्स",
+    "bakery": "बेकरी",
+    "hairBeauty": "हेयर और ब्यूटी",
+    "retail": "रिटेल और शॉपिंग",
+    "services": "सेवाएं",
+    "health": "स्वास्थ्य और कल्याण",
+    "education": "शिक्षा और सीखना",
+    "entertainment": "मनोरंजन",
+    "automotive": "ऑटोमोटिव",
+    "home": "घर और बगीचा"
+  }
+}

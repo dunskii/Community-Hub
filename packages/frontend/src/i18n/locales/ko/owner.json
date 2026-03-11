@@ -1,0 +1,186 @@
+{
+  "owner": {
+    "dashboardTitle": "비즈니스 대시보드",
+    "dashboardSubtitle": "비즈니스를 관리하고 성과를 확인하세요",
+    "selectBusiness": "비즈니스 선택",
+    "verified": "인증됨",
+    "reviews": "리뷰",
+    "followers": "팔로워",
+    "viewProfile": "프로필 보기",
+    "editProfile": "프로필 편집",
+    "quickStats": "빠른 통계",
+    "analyticsNotAvailable": "이 비즈니스의 분석 데이터가 아직 없습니다.",
+    "noBusinessesTitle": "비즈니스 없음",
+    "noBusinessesDescription": "아직 등록한 비즈니스가 없습니다. 비즈니스 소유권을 등록하여 시작하세요.",
+    "claimBusiness": "비즈니스 등록",
+    "errorTitle": "대시보드 로드 오류",
+    "status": {
+      "published": "게시됨",
+      "draft": "초안",
+      "pending_review": "검토 중",
+      "suspended": "정지됨"
+    },
+    "stats": {
+      "profileViews": "프로필 조회수",
+      "searchAppearances": "검색 노출",
+      "totalClicks": "총 클릭수",
+      "newFollowers": "새 팔로워"
+    },
+    "quickActions": "빠른 작업",
+    "actions": {
+      "analytics": "분석 보기",
+      "analyticsDesc": "상세 성과 지표 보기",
+      "reviews": "리뷰 관리",
+      "reviewsDesc": "고객 리뷰에 답변",
+      "photos": "사진 업데이트",
+      "photosDesc": "비즈니스 사진 추가 또는 관리",
+      "settings": "설정",
+      "settingsDesc": "비즈니스 정보 업데이트"
+    }
+  },
+  "analytics": {
+    "title": "비즈니스 분석",
+    "backToDashboard": "대시보드로 돌아가기",
+    "exportCSV": "CSV 내보내기",
+    "dateRange": "기간",
+    "granularity": "그룹화",
+    "summary": "요약",
+    "clickBreakdown": "클릭 분석",
+    "engagement": "참여 지표",
+    "reviewStats": "리뷰 통계",
+    "insights": "인사이트",
+    "trend": "성과 추세",
+    "profileViewsOverTime": "시간별 프로필 조회수",
+    "views": "조회수",
+    "errorTitle": "분석 로드 오류",
+    "noDataTitle": "분석 데이터 없음",
+    "noDataDescription": "비즈니스에 트래픽이 발생하면 여기에 분석 데이터가 표시됩니다.",
+    "noSearchTerms": "검색어 데이터 없음",
+    "noReferrals": "유입 데이터 없음",
+    "noPeakTimes": "활동 데이터 없음",
+    "noTimeseriesData": "이 기간의 추세 데이터 없음",
+    "range": {
+      "7d": "7일",
+      "30d": "30일",
+      "90d": "90일",
+      "1y": "1년"
+    },
+    "granularity": {
+      "day": "일",
+      "week": "주",
+      "month": "월"
+    },
+    "metrics": {
+      "profileViews": "프로필 조회수",
+      "uniqueViews": "순 방문자",
+      "searchAppearances": "검색 노출",
+      "totalClicks": "총 클릭수",
+      "websiteClicks": "웹사이트 클릭",
+      "phoneClicks": "전화 클릭",
+      "directionsClicks": "길찾기 클릭",
+      "saves": "저장",
+      "follows": "팔로우",
+      "photoViews": "사진 조회",
+      "averageRating": "평균 평점",
+      "newReviews": "새 리뷰"
+    },
+    "insights": {
+      "searchTerms": "인기 검색어",
+      "referralSources": "트래픽 소스",
+      "peakTimes": "피크 시간"
+    },
+    "referral": {
+      "search": "검색",
+      "homepage": "홈페이지",
+      "saved_list": "저장 목록",
+      "direct": "직접 방문",
+      "external": "외부"
+    }
+  },
+  "claim": {
+    "title": "이 비즈니스 등록하기",
+    "selectMethod": "인증 방법 선택",
+    "selectMethodDescription": "이 비즈니스의 소유권을 인증할 방법을 선택하세요.",
+    "changeMethod": "다른 방법 선택",
+    "businessNotFound": "비즈니스를 찾을 수 없음",
+    "businessNotFoundDescription": "찾으시는 비즈니스를 찾을 수 없습니다.",
+    "alreadyClaimed": "이미 등록된 비즈니스",
+    "alreadyClaimedDescription": "이 비즈니스는 이미 소유자가 등록했습니다. 오류라고 생각되시면 고객지원에 문의하세요.",
+    "googleNotAvailable": "Google Business 인증은 아직 제공되지 않습니다. 다른 방법을 선택해 주세요.",
+    "methods": {
+      "phone": {
+        "title": "전화 인증",
+        "description": "비즈니스 전화번호로 SMS PIN 코드 받기"
+      },
+      "email": {
+        "title": "이메일 인증",
+        "description": "비즈니스 이메일 주소로 인증 링크 받기"
+      },
+      "document": {
+        "title": "서류 인증",
+        "description": "수동 검토를 위한 사업자등록 서류 업로드"
+      },
+      "google": {
+        "title": "Google Business",
+        "description": "Google Business 프로필로 인증 (출시 예정)"
+      }
+    },
+    "phone": {
+      "enterNumber": "전화번호 입력",
+      "enterNumberDescription": "이 비즈니스와 연결된 전화번호를 입력하세요. 6자리 PIN을 보내드립니다.",
+      "label": "비즈니스 전화번호",
+      "hint": "E.164 형식 사용 (예: +61412345678)",
+      "sendPIN": "인증 PIN 전송",
+      "enterPIN": "인증 PIN 입력",
+      "pinLabel": "6자리 PIN",
+      "verify": "PIN 인증",
+      "resend": "PIN 재전송"
+    },
+    "email": {
+      "enterEmail": "비즈니스 이메일 입력",
+      "enterEmailDescription": "비즈니스 도메인의 이메일 주소를 입력하세요. 인증 링크를 보내드립니다.",
+      "label": "비즈니스 이메일 주소",
+      "hint": "빠른 인증을 위해 비즈니스 웹사이트 도메인과 일치해야 합니다",
+      "sendLink": "인증 링크 전송",
+      "sent": "이메일 확인",
+      "sentDescription": "인증 링크가 전송되었습니다. 클릭하여 인증을 완료하세요."
+    },
+    "document": {
+      "upload": "인증 서류 업로드",
+      "uploadDescription": "이 비즈니스의 소유권을 증명하는 서류를 업로드하세요.",
+      "typeLabel": "서류 유형",
+      "types": {
+        "abn": "ABN 등록",
+        "utilityBill": "공과금 청구서",
+        "registration": "사업자 등록"
+      },
+      "filesLabel": "서류 업로드",
+      "filesHint": "최대 3개 파일 업로드 (PDF, JPG, PNG)",
+      "urlPlaceholder": "서류 URL 입력",
+      "submit": "검토 제출"
+    },
+    "pending": {
+      "title": "인증 대기 중",
+      "description": "등록 신청이 검토 중입니다. 결정되면 알려드리겠습니다.",
+      "estimate": "예상 검토 시간",
+      "goToDashboard": "대시보드로 이동"
+    },
+    "success": {
+      "title": "등록 승인됨!",
+      "description": "축하합니다! 이제 {{businessName}}의 인증된 소유자입니다.",
+      "goToDashboard": "대시보드로 이동"
+    },
+    "rejected": {
+      "title": "등록 거절됨",
+      "reason": "사유",
+      "description": "등록이 승인되지 않았습니다. 오류라고 생각되시면 이의를 제기할 수 있습니다.",
+      "appealTitle": "이의 제기",
+      "appealPlaceholder": "이 결정이 재고되어야 하는 이유를 설명해 주세요...",
+      "submitAppeal": "이의 제기 제출"
+    }
+  },
+  "common": {
+    "loading": "로딩 중...",
+    "retry": "다시 시도"
+  }
+}

@@ -1,0 +1,186 @@
+{
+  "owner": {
+    "dashboardTitle": "Business Dashboard",
+    "dashboardSubtitle": "Manage your businesses and view performance",
+    "selectBusiness": "Select a business",
+    "verified": "Verified",
+    "reviews": "reviews",
+    "followers": "followers",
+    "viewProfile": "View Profile",
+    "editProfile": "Edit Profile",
+    "quickStats": "Quick Stats",
+    "analyticsNotAvailable": "Analytics data is not yet available for this business.",
+    "noBusinessesTitle": "No Businesses",
+    "noBusinessesDescription": "You don't have any claimed businesses yet. Start by claiming a business you own.",
+    "claimBusiness": "Claim a Business",
+    "errorTitle": "Error Loading Dashboard",
+    "status": {
+      "published": "Published",
+      "draft": "Draft",
+      "pending_review": "Pending Review",
+      "suspended": "Suspended"
+    },
+    "stats": {
+      "profileViews": "Profile Views",
+      "searchAppearances": "Search Appearances",
+      "totalClicks": "Total Clicks",
+      "newFollowers": "New Followers"
+    },
+    "quickActions": "Quick Actions",
+    "actions": {
+      "analytics": "View Analytics",
+      "analyticsDesc": "See detailed performance metrics",
+      "reviews": "Manage Reviews",
+      "reviewsDesc": "Respond to customer reviews",
+      "photos": "Update Photos",
+      "photosDesc": "Add or manage business photos",
+      "settings": "Settings",
+      "settingsDesc": "Update business information"
+    }
+  },
+  "analytics": {
+    "title": "Business Analytics",
+    "backToDashboard": "Back to Dashboard",
+    "exportCSV": "Export CSV",
+    "dateRange": "Date Range",
+    "granularity": "Group by",
+    "summary": "Summary",
+    "clickBreakdown": "Click Breakdown",
+    "engagement": "Engagement Metrics",
+    "reviewStats": "Review Statistics",
+    "insights": "Insights",
+    "trend": "Performance Trend",
+    "profileViewsOverTime": "Profile Views Over Time",
+    "views": "views",
+    "errorTitle": "Error Loading Analytics",
+    "noDataTitle": "No Analytics Data",
+    "noDataDescription": "Analytics data will appear here once your business starts receiving traffic.",
+    "noSearchTerms": "No search term data available",
+    "noReferrals": "No referral data available",
+    "noPeakTimes": "No activity data available",
+    "noTimeseriesData": "No trend data available for this period",
+    "range": {
+      "7d": "7 Days",
+      "30d": "30 Days",
+      "90d": "90 Days",
+      "1y": "1 Year"
+    },
+    "granularity": {
+      "day": "Day",
+      "week": "Week",
+      "month": "Month"
+    },
+    "metrics": {
+      "profileViews": "Profile Views",
+      "uniqueViews": "Unique Visitors",
+      "searchAppearances": "Search Appearances",
+      "totalClicks": "Total Clicks",
+      "websiteClicks": "Website Clicks",
+      "phoneClicks": "Phone Clicks",
+      "directionsClicks": "Direction Clicks",
+      "saves": "Saves",
+      "follows": "Follows",
+      "photoViews": "Photo Views",
+      "averageRating": "Average Rating",
+      "newReviews": "New Reviews"
+    },
+    "insights": {
+      "searchTerms": "Top Search Terms",
+      "referralSources": "Traffic Sources",
+      "peakTimes": "Peak Activity Times"
+    },
+    "referral": {
+      "search": "Search",
+      "homepage": "Homepage",
+      "saved_list": "Saved Lists",
+      "direct": "Direct",
+      "external": "External"
+    }
+  },
+  "claim": {
+    "title": "Claim This Business",
+    "selectMethod": "Choose Verification Method",
+    "selectMethodDescription": "Select how you'd like to verify your ownership of this business.",
+    "changeMethod": "Choose a different method",
+    "businessNotFound": "Business Not Found",
+    "businessNotFoundDescription": "We couldn't find the business you're looking for.",
+    "alreadyClaimed": "Business Already Claimed",
+    "alreadyClaimedDescription": "This business has already been claimed by its owner. If you believe this is an error, please contact support.",
+    "googleNotAvailable": "Google Business verification is not yet available. Please choose another method.",
+    "methods": {
+      "phone": {
+        "title": "Phone Verification",
+        "description": "Receive a PIN via SMS to the business phone number"
+      },
+      "email": {
+        "title": "Email Verification",
+        "description": "Receive a verification link at the business email address"
+      },
+      "document": {
+        "title": "Document Verification",
+        "description": "Upload business registration documents for manual review"
+      },
+      "google": {
+        "title": "Google Business",
+        "description": "Verify using your Google Business Profile (coming soon)"
+      }
+    },
+    "phone": {
+      "enterNumber": "Enter Phone Number",
+      "enterNumberDescription": "Enter the phone number associated with this business. We'll send a 6-digit PIN.",
+      "label": "Business Phone Number",
+      "hint": "Use E.164 format (e.g., +61412345678)",
+      "sendPIN": "Send Verification PIN",
+      "enterPIN": "Enter Verification PIN",
+      "pinLabel": "6-Digit PIN",
+      "verify": "Verify PIN",
+      "resend": "Resend PIN"
+    },
+    "email": {
+      "enterEmail": "Enter Business Email",
+      "enterEmailDescription": "Enter an email address at the business domain. We'll send a verification link.",
+      "label": "Business Email Address",
+      "hint": "Should match the business website domain for faster verification",
+      "sendLink": "Send Verification Link",
+      "sent": "Check Your Email",
+      "sentDescription": "A verification link has been sent. Click it to complete verification."
+    },
+    "document": {
+      "upload": "Upload Verification Documents",
+      "uploadDescription": "Upload documents that prove your ownership of this business.",
+      "typeLabel": "Document Type",
+      "types": {
+        "abn": "ABN Registration",
+        "utilityBill": "Utility Bill",
+        "registration": "Business Registration"
+      },
+      "filesLabel": "Upload Document",
+      "filesHint": "Upload up to 3 documents (PDF, JPG, PNG)",
+      "urlPlaceholder": "Enter document URL",
+      "submit": "Submit for Review"
+    },
+    "pending": {
+      "title": "Verification Pending",
+      "description": "Your claim is being reviewed. We'll notify you once a decision is made.",
+      "estimate": "Estimated review time",
+      "goToDashboard": "Go to Dashboard"
+    },
+    "success": {
+      "title": "Claim Approved!",
+      "description": "Congratulations! You are now the verified owner of {{businessName}}.",
+      "goToDashboard": "Go to Dashboard"
+    },
+    "rejected": {
+      "title": "Claim Rejected",
+      "reason": "Reason",
+      "description": "Your claim was not approved. You may submit an appeal if you believe this was an error.",
+      "appealTitle": "Submit an Appeal",
+      "appealPlaceholder": "Explain why you believe this decision should be reconsidered...",
+      "submitAppeal": "Submit Appeal"
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "retry": "Try Again"
+  }
+}

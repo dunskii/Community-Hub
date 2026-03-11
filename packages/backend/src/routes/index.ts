@@ -16,6 +16,8 @@ import { reviewRouter } from './review.js';
 import { savedRouter } from './saved.js';
 import { followRouter } from './follow.js';
 import { moderationRouter } from './moderation.js';
+import claimRouter from './claim.js';
+import analyticsRouter from './analytics.js';
 
 export function setupRoutes(app: Express): void {
   // API v1
@@ -33,6 +35,8 @@ export function setupRoutes(app: Express): void {
   v1.use('/', savedRouter);
   v1.use('/', followRouter);
   v1.use('/', moderationRouter);
+  v1.use('/', claimRouter);
+  v1.use('/', analyticsRouter);
   // Future route modules: events, deals, etc.
 
   app.use('/api/v1', v1);

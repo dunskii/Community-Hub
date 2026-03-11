@@ -4,8 +4,11 @@
  * Root component with routing and authentication provider.
  */
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { loadPlatformConfig, getPlatformConfig } from './config/platform-loader';
+import type { PlatformConfig } from '@community-hub/shared';
 import { AuthProvider } from './contexts/AuthContext';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { AdminProtectedRoute } from './components/auth/AdminProtectedRoute';
@@ -21,10 +24,27 @@ import { CategoriesPage } from './pages/CategoriesPage';
 import { SavedBusinessesPage } from './pages/SavedBusinessesPage';
 import { FollowingPage } from './pages/FollowingPage';
 import { ModerationPage } from './pages/ModerationPage';
+import { OwnerDashboardPage } from './pages/owner/OwnerDashboardPage';
+import { AnalyticsDashboardPage } from './pages/owner/AnalyticsDashboardPage';
+import { ClaimBusinessPage } from './pages/owner/ClaimBusinessPage';
 
-// Placeholder components for routes
+// HomePage component with i18n and platform config
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
+  const [config, setConfig] = useState<PlatformConfig | null>(null);
+
+  useEffect(() => {
+    // Try to get cached config, or use defaults
+    try {
+      setConfig(getPlatformConfig());
+    } catch {
+      // Config not loaded yet, use defaults
+    }
+  }, []);
+
+  const platformName = config?.platform?.name || t('home.defaultPlatformName', 'Community Hub');
+  const locationName = config?.location?.name || t('home.defaultLocation', 'your area');
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -32,23 +52,23 @@ const HomePage: React.FC = () => {
       <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            Welcome to Guilford Community Hub
+            {t('home.hero.welcome', { platformName })}
           </h1>
           <p className="text-xl mb-8 text-blue-100">
-            Discover local businesses, services, and community resources in Guilford
+            {t('home.hero.subtitle', { location: locationName })}
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <button
               onClick={() => navigate('/businesses')}
               className="bg-white text-blue-700 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition"
             >
-              Browse Businesses
+              {t('home.hero.browseBusinesses', 'Browse Businesses')}
             </button>
             <button
               onClick={() => navigate('/categories')}
               className="bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-600 transition border-2 border-white"
             >
-              View Categories
+              {t('home.hero.viewCategories', 'View Categories')}
             </button>
           </div>
         </div>
@@ -59,40 +79,40 @@ const HomePage: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bg-white p-6 rounded-lg shadow-md text-center">
             <div className="text-3xl font-bold text-blue-600 mb-2">8+</div>
-            <div className="text-gray-600">Local Businesses</div>
+            <div className="text-gray-600">{t('home.stats.businesses', 'Local Businesses')}</div>
           </div>
           <div className="bg-white p-6 rounded-lg shadow-md text-center">
             <div className="text-3xl font-bold text-blue-600 mb-2">8</div>
-            <div className="text-gray-600">Categories</div>
+            <div className="text-gray-600">{t('home.stats.categories', 'Categories')}</div>
           </div>
           <div className="bg-white p-6 rounded-lg shadow-md text-center">
             <div className="text-3xl font-bold text-blue-600 mb-2">10</div>
-            <div className="text-gray-600">Languages Supported</div>
+            <div className="text-gray-600">{t('home.stats.languages', 'Languages Supported')}</div>
           </div>
         </div>
       </div>
 
       {/* Featured Categories */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h2 className="text-3xl font-bold mb-8 text-gray-900">Popular Categories</h2>
+        <h2 className="text-3xl font-bold mb-8 text-gray-900">{t('home.categories.title', 'Popular Categories')}</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { name: 'Restaurants', emoji: '🍽️', slug: 'restaurant' },
-            { name: 'Cafes', emoji: '☕', slug: 'cafe' },
-            { name: 'Medical', emoji: '🏥', slug: 'medical' },
-            { name: 'Fitness', emoji: '💪', slug: 'fitness' },
-            { name: 'Pharmacy', emoji: '💊', slug: 'pharmacy' },
-            { name: 'Electronics', emoji: '💻', slug: 'electronics' },
-            { name: 'Bakery', emoji: '🥖', slug: 'bakery' },
-            { name: 'Hair & Beauty', emoji: '💇', slug: 'haircut-salon' },
+            { nameKey: 'restaurants', emoji: '🍽️', slug: 'restaurant' },
+            { nameKey: 'cafes', emoji: '☕', slug: 'cafe' },
+            { nameKey: 'medical', emoji: '🏥', slug: 'medical' },
+            { nameKey: 'fitness', emoji: '💪', slug: 'fitness' },
+            { nameKey: 'pharmacy', emoji: '💊', slug: 'pharmacy' },
+            { nameKey: 'electronics', emoji: '💻', slug: 'electronics' },
+            { nameKey: 'bakery', emoji: '🥖', slug: 'bakery' },
+            { nameKey: 'hairBeauty', emoji: '💇', slug: 'haircut-salon' },
           ].map((category) => (
             <button
               key={category.slug}
               onClick={() => navigate(`/businesses?category=${category.slug}`)}
               className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition text-center"
             >
-              <div className="text-4xl mb-2">{category.emoji}</div>
-              <div className="font-semibold text-gray-800">{category.name}</div>
+              <span className="text-4xl mb-2 block" aria-hidden="true">{category.emoji}</span>
+              <span className="font-semibold text-gray-800">{t(`home.categories.${category.nameKey}`, category.nameKey)}</span>
             </button>
           ))}
         </div>
@@ -101,15 +121,15 @@ const HomePage: React.FC = () => {
       {/* CTA Section */}
       <div className="bg-blue-600 text-white py-12 mt-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold mb-4">Own a Business in Guilford?</h2>
+          <h2 className="text-3xl font-bold mb-4">{t('home.cta.title', { location: locationName })}</h2>
           <p className="text-xl mb-8 text-blue-100">
-            Claim your business listing and connect with the community
+            {t('home.cta.subtitle', 'Claim your business listing and connect with the community')}
           </p>
           <button
             onClick={() => navigate('/register')}
             className="bg-white text-blue-700 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition"
           >
-            Get Started
+            {t('home.cta.button', 'Get Started')}
           </button>
         </div>
       </div>
@@ -166,6 +186,32 @@ export function App() {
               element={
                 <ProtectedRoute>
                   <FollowingPage />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Owner Dashboard Routes */}
+            <Route
+              path="/owner/dashboard"
+              element={
+                <ProtectedRoute>
+                  <OwnerDashboardPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/owner/business/:businessId/analytics"
+              element={
+                <ProtectedRoute>
+                  <AnalyticsDashboardPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/claim/:businessId"
+              element={
+                <ProtectedRoute>
+                  <ClaimBusinessPage />
                 </ProtectedRoute>
               }
             />

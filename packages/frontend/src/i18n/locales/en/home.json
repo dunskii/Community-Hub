@@ -1,9 +1,14 @@
 {
+  "defaultPlatformName": "Community Hub",
+  "defaultLocation": "your area",
   "hero": {
+    "welcome": "Welcome to {{platformName}}",
     "title": "Discover {{platformName}}",
-    "subtitle": "Find and connect with local businesses in {{location}}",
+    "subtitle": "Discover local businesses, services, and community resources in {{location}}",
     "searchPlaceholder": "Search for businesses, services, or deals...",
-    "cta": "Join thousands discovering their community"
+    "cta": "Join thousands discovering their community",
+    "browseBusinesses": "Browse Businesses",
+    "viewCategories": "View Categories"
   },
   "quickFilters": {
     "title": "Quick search:",
@@ -15,10 +20,16 @@
     "verified": "Verified"
   },
   "stats": {
-    "businesses": "Businesses",
+    "businesses": "Local Businesses",
     "users": "Community Members",
     "categories": "Categories",
-    "reviews": "Reviews"
+    "reviews": "Reviews",
+    "languages": "Languages Supported"
+  },
+  "cta": {
+    "title": "Own a Business in {{location}}?",
+    "subtitle": "Claim your business listing and connect with the community",
+    "button": "Get Started"
   },
   "featured": {
     "title": "Featured Businesses",
@@ -42,11 +53,18 @@
     "badge": "New"
   },
   "categories": {
-    "title": "Browse by Category",
+    "title": "Popular Categories",
     "subtitle": "Explore businesses by type",
     "viewAll": "View All Categories",
     "businesses": "businesses",
-    "restaurants": "Restaurants & Food",
+    "restaurants": "Restaurants",
+    "cafes": "Cafes",
+    "medical": "Medical",
+    "fitness": "Fitness",
+    "pharmacy": "Pharmacy",
+    "electronics": "Electronics",
+    "bakery": "Bakery",
+    "hairBeauty": "Hair & Beauty",
     "retail": "Retail & Shopping",
     "services": "Services",
     "health": "Health & Wellness",

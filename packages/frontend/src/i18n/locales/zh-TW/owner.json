@@ -1,0 +1,186 @@
+{
+  "owner": {
+    "dashboardTitle": "商家儀表板",
+    "dashboardSubtitle": "管理您的商家並查看業績",
+    "selectBusiness": "選擇商家",
+    "verified": "已驗證",
+    "reviews": "評價",
+    "followers": "追蹤者",
+    "viewProfile": "查看資料",
+    "editProfile": "編輯資料",
+    "quickStats": "快速統計",
+    "analyticsNotAvailable": "此商家的分析數據尚不可用。",
+    "noBusinessesTitle": "暫無商家",
+    "noBusinessesDescription": "您還沒有認領任何商家。開始認領您擁有的商家吧。",
+    "claimBusiness": "認領商家",
+    "errorTitle": "載入儀表板出錯",
+    "status": {
+      "published": "已發布",
+      "draft": "草稿",
+      "pending_review": "待審核",
+      "suspended": "已暫停"
+    },
+    "stats": {
+      "profileViews": "資料瀏覽量",
+      "searchAppearances": "搜尋出現次數",
+      "totalClicks": "總點擊量",
+      "newFollowers": "新增追蹤者"
+    },
+    "quickActions": "快速操作",
+    "actions": {
+      "analytics": "查看分析",
+      "analyticsDesc": "查看詳細業績指標",
+      "reviews": "管理評價",
+      "reviewsDesc": "回覆客戶評價",
+      "photos": "更新照片",
+      "photosDesc": "新增或管理商家照片",
+      "settings": "設定",
+      "settingsDesc": "更新商家資訊"
+    }
+  },
+  "analytics": {
+    "title": "商家分析",
+    "backToDashboard": "返回儀表板",
+    "exportCSV": "匯出CSV",
+    "dateRange": "日期範圍",
+    "granularity": "分組方式",
+    "summary": "摘要",
+    "clickBreakdown": "點擊細分",
+    "engagement": "互動指標",
+    "reviewStats": "評價統計",
+    "insights": "洞察",
+    "trend": "業績趨勢",
+    "profileViewsOverTime": "資料瀏覽量趨勢",
+    "views": "瀏覽量",
+    "errorTitle": "載入分析出錯",
+    "noDataTitle": "暫無分析數據",
+    "noDataDescription": "當您的商家開始獲得流量後，分析數據將顯示在這裡。",
+    "noSearchTerms": "暫無搜尋詞數據",
+    "noReferrals": "暫無來源數據",
+    "noPeakTimes": "暫無活動數據",
+    "noTimeseriesData": "此期間暫無趨勢數據",
+    "range": {
+      "7d": "7天",
+      "30d": "30天",
+      "90d": "90天",
+      "1y": "1年"
+    },
+    "granularity": {
+      "day": "日",
+      "week": "週",
+      "month": "月"
+    },
+    "metrics": {
+      "profileViews": "資料瀏覽量",
+      "uniqueViews": "獨立訪客",
+      "searchAppearances": "搜尋出現次數",
+      "totalClicks": "總點擊量",
+      "websiteClicks": "網站點擊",
+      "phoneClicks": "電話點擊",
+      "directionsClicks": "導航點擊",
+      "saves": "收藏",
+      "follows": "追蹤",
+      "photoViews": "照片瀏覽",
+      "averageRating": "平均評分",
+      "newReviews": "新評價"
+    },
+    "insights": {
+      "searchTerms": "熱門搜尋詞",
+      "referralSources": "流量來源",
+      "peakTimes": "高峰時段"
+    },
+    "referral": {
+      "search": "搜尋",
+      "homepage": "首頁",
+      "saved_list": "收藏列表",
+      "direct": "直接訪問",
+      "external": "外部"
+    }
+  },
+  "claim": {
+    "title": "認領此商家",
+    "selectMethod": "選擇驗證方式",
+    "selectMethodDescription": "選擇您想要驗證商家所有權的方式。",
+    "changeMethod": "選擇其他方式",
+    "businessNotFound": "未找到商家",
+    "businessNotFoundDescription": "我們找不到您要查找的商家。",
+    "alreadyClaimed": "商家已被認領",
+    "alreadyClaimedDescription": "此商家已被其所有者認領。如果您認為這是錯誤的，請聯繫支援。",
+    "googleNotAvailable": "Google Business驗證尚不可用。請選擇其他方式。",
+    "methods": {
+      "phone": {
+        "title": "手機驗證",
+        "description": "透過簡訊接收商家電話號碼的PIN碼"
+      },
+      "email": {
+        "title": "電郵驗證",
+        "description": "在商家電郵地址接收驗證連結"
+      },
+      "document": {
+        "title": "文件驗證",
+        "description": "上傳商家註冊文件進行人工審核"
+      },
+      "google": {
+        "title": "Google Business",
+        "description": "使用您的Google Business資料驗證（即將推出）"
+      }
+    },
+    "phone": {
+      "enterNumber": "輸入電話號碼",
+      "enterNumberDescription": "輸入與此商家關聯的電話號碼。我們將發送6位PIN碼。",
+      "label": "商家電話號碼",
+      "hint": "使用E.164格式（例如+61412345678）",
+      "sendPIN": "發送驗證PIN碼",
+      "enterPIN": "輸入驗證PIN碼",
+      "pinLabel": "6位PIN碼",
+      "verify": "驗證PIN碼",
+      "resend": "重新發送PIN碼"
+    },
+    "email": {
+      "enterEmail": "輸入商家電郵",
+      "enterEmailDescription": "輸入商家網域的電郵地址。我們將發送驗證連結。",
+      "label": "商家電郵地址",
+      "hint": "應與商家網站網域匹配以加快驗證",
+      "sendLink": "發送驗證連結",
+      "sent": "檢查您的電郵",
+      "sentDescription": "驗證連結已發送。點擊它完成驗證。"
+    },
+    "document": {
+      "upload": "上傳驗證文件",
+      "uploadDescription": "上傳證明您擁有此商家的文件。",
+      "typeLabel": "文件類型",
+      "types": {
+        "abn": "ABN註冊",
+        "utilityBill": "水電費帳單",
+        "registration": "商家註冊"
+      },
+      "filesLabel": "上傳文件",
+      "filesHint": "最多上傳3個文件（PDF、JPG、PNG）",
+      "urlPlaceholder": "輸入文件URL",
+      "submit": "提交審核"
+    },
+    "pending": {
+      "title": "驗證待處理",
+      "description": "您的認領正在審核中。我們將在做出決定後通知您。",
+      "estimate": "預計審核時間",
+      "goToDashboard": "前往儀表板"
+    },
+    "success": {
+      "title": "認領已批准！",
+      "description": "恭喜！您現在是{{businessName}}的驗證所有者。",
+      "goToDashboard": "前往儀表板"
+    },
+    "rejected": {
+      "title": "認領被拒絕",
+      "reason": "原因",
+      "description": "您的認領未被批准。如果您認為這是錯誤的，可以提交申訴。",
+      "appealTitle": "提交申訴",
+      "appealPlaceholder": "解釋為什麼您認為應該重新考慮此決定...",
+      "submitAppeal": "提交申訴"
+    }
+  },
+  "common": {
+    "loading": "載入中...",
+    "retry": "重試"
+  }
+}

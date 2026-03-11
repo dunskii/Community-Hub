@@ -1,0 +1,186 @@
+{
+  "owner": {
+    "dashboardTitle": "Bảng điều khiển doanh nghiệp",
+    "dashboardSubtitle": "Quản lý doanh nghiệp và xem hiệu suất",
+    "selectBusiness": "Chọn doanh nghiệp",
+    "verified": "Đã xác minh",
+    "reviews": "đánh giá",
+    "followers": "người theo dõi",
+    "viewProfile": "Xem hồ sơ",
+    "editProfile": "Chỉnh sửa hồ sơ",
+    "quickStats": "Thống kê nhanh",
+    "analyticsNotAvailable": "Dữ liệu phân tích chưa có sẵn cho doanh nghiệp này.",
+    "noBusinessesTitle": "Chưa có doanh nghiệp",
+    "noBusinessesDescription": "Bạn chưa có doanh nghiệp nào được xác nhận. Hãy bắt đầu bằng cách xác nhận quyền sở hữu doanh nghiệp của bạn.",
+    "claimBusiness": "Xác nhận quyền sở hữu",
+    "errorTitle": "Lỗi tải bảng điều khiển",
+    "status": {
+      "published": "Đã xuất bản",
+      "draft": "Bản nháp",
+      "pending_review": "Đang chờ xét duyệt",
+      "suspended": "Tạm ngưng"
+    },
+    "stats": {
+      "profileViews": "Lượt xem hồ sơ",
+      "searchAppearances": "Hiển thị trong tìm kiếm",
+      "totalClicks": "Tổng số nhấp chuột",
+      "newFollowers": "Người theo dõi mới"
+    },
+    "quickActions": "Thao tác nhanh",
+    "actions": {
+      "analytics": "Xem phân tích",
+      "analyticsDesc": "Xem số liệu hiệu suất chi tiết",
+      "reviews": "Quản lý đánh giá",
+      "reviewsDesc": "Trả lời đánh giá của khách hàng",
+      "photos": "Cập nhật ảnh",
+      "photosDesc": "Thêm hoặc quản lý ảnh doanh nghiệp",
+      "settings": "Cài đặt",
+      "settingsDesc": "Cập nhật thông tin doanh nghiệp"
+    }
+  },
+  "analytics": {
+    "title": "Phân tích doanh nghiệp",
+    "backToDashboard": "Quay lại bảng điều khiển",
+    "exportCSV": "Xuất CSV",
+    "dateRange": "Khoảng thời gian",
+    "granularity": "Nhóm theo",
+    "summary": "Tóm tắt",
+    "clickBreakdown": "Phân tích nhấp chuột",
+    "engagement": "Chỉ số tương tác",
+    "reviewStats": "Thống kê đánh giá",
+    "insights": "Thông tin chi tiết",
+    "trend": "Xu hướng hiệu suất",
+    "profileViewsOverTime": "Lượt xem hồ sơ theo thời gian",
+    "views": "lượt xem",
+    "errorTitle": "Lỗi tải phân tích",
+    "noDataTitle": "Chưa có dữ liệu phân tích",
+    "noDataDescription": "Dữ liệu phân tích sẽ xuất hiện ở đây khi doanh nghiệp của bạn bắt đầu có lượt truy cập.",
+    "noSearchTerms": "Chưa có dữ liệu từ khóa tìm kiếm",
+    "noReferrals": "Chưa có dữ liệu giới thiệu",
+    "noPeakTimes": "Chưa có dữ liệu hoạt động",
+    "noTimeseriesData": "Chưa có dữ liệu xu hướng cho khoảng thời gian này",
+    "range": {
+      "7d": "7 ngày",
+      "30d": "30 ngày",
+      "90d": "90 ngày",
+      "1y": "1 năm"
+    },
+    "granularity": {
+      "day": "Ngày",
+      "week": "Tuần",
+      "month": "Tháng"
+    },
+    "metrics": {
+      "profileViews": "Lượt xem hồ sơ",
+      "uniqueViews": "Khách truy cập độc lập",
+      "searchAppearances": "Hiển thị trong tìm kiếm",
+      "totalClicks": "Tổng số nhấp chuột",
+      "websiteClicks": "Nhấp vào website",
+      "phoneClicks": "Nhấp vào số điện thoại",
+      "directionsClicks": "Nhấp vào chỉ đường",
+      "saves": "Lượt lưu",
+      "follows": "Lượt theo dõi",
+      "photoViews": "Lượt xem ảnh",
+      "averageRating": "Đánh giá trung bình",
+      "newReviews": "Đánh giá mới"
+    },
+    "insights": {
+      "searchTerms": "Từ khóa tìm kiếm hàng đầu",
+      "referralSources": "Nguồn lưu lượng",
+      "peakTimes": "Thời gian cao điểm"
+    },
+    "referral": {
+      "search": "Tìm kiếm",
+      "homepage": "Trang chủ",
+      "saved_list": "Danh sách đã lưu",
+      "direct": "Trực tiếp",
+      "external": "Bên ngoài"
+    }
+  },
+  "claim": {
+    "title": "Xác nhận quyền sở hữu doanh nghiệp này",
+    "selectMethod": "Chọn phương thức xác minh",
+    "selectMethodDescription": "Chọn cách bạn muốn xác minh quyền sở hữu doanh nghiệp này.",
+    "changeMethod": "Chọn phương thức khác",
+    "businessNotFound": "Không tìm thấy doanh nghiệp",
+    "businessNotFoundDescription": "Chúng tôi không thể tìm thấy doanh nghiệp bạn đang tìm kiếm.",
+    "alreadyClaimed": "Doanh nghiệp đã được xác nhận",
+    "alreadyClaimedDescription": "Doanh nghiệp này đã được chủ sở hữu xác nhận. Nếu bạn cho rằng đây là lỗi, vui lòng liên hệ hỗ trợ.",
+    "googleNotAvailable": "Xác minh Google Business chưa khả dụng. Vui lòng chọn phương thức khác.",
+    "methods": {
+      "phone": {
+        "title": "Xác minh qua điện thoại",
+        "description": "Nhận mã PIN qua SMS tới số điện thoại doanh nghiệp"
+      },
+      "email": {
+        "title": "Xác minh qua email",
+        "description": "Nhận liên kết xác minh tại địa chỉ email doanh nghiệp"
+      },
+      "document": {
+        "title": "Xác minh qua tài liệu",
+        "description": "Tải lên tài liệu đăng ký doanh nghiệp để xét duyệt thủ công"
+      },
+      "google": {
+        "title": "Google Business",
+        "description": "Xác minh bằng hồ sơ Google Business của bạn (sắp ra mắt)"
+      }
+    },
+    "phone": {
+      "enterNumber": "Nhập số điện thoại",
+      "enterNumberDescription": "Nhập số điện thoại liên kết với doanh nghiệp này. Chúng tôi sẽ gửi mã PIN 6 chữ số.",
+      "label": "Số điện thoại doanh nghiệp",
+      "hint": "Sử dụng định dạng E.164 (ví dụ: +61412345678)",
+      "sendPIN": "Gửi mã PIN xác minh",
+      "enterPIN": "Nhập mã PIN xác minh",
+      "pinLabel": "Mã PIN 6 chữ số",
+      "verify": "Xác minh mã PIN",
+      "resend": "Gửi lại mã PIN"
+    },
+    "email": {
+      "enterEmail": "Nhập email doanh nghiệp",
+      "enterEmailDescription": "Nhập địa chỉ email thuộc tên miền doanh nghiệp. Chúng tôi sẽ gửi liên kết xác minh.",
+      "label": "Địa chỉ email doanh nghiệp",
+      "hint": "Nên khớp với tên miền website doanh nghiệp để xác minh nhanh hơn",
+      "sendLink": "Gửi liên kết xác minh",
+      "sent": "Kiểm tra email của bạn",
+      "sentDescription": "Liên kết xác minh đã được gửi. Nhấp vào để hoàn tất xác minh."
+    },
+    "document": {
+      "upload": "Tải lên tài liệu xác minh",
+      "uploadDescription": "Tải lên tài liệu chứng minh quyền sở hữu doanh nghiệp này.",
+      "typeLabel": "Loại tài liệu",
+      "types": {
+        "abn": "Đăng ký ABN",
+        "utilityBill": "Hóa đơn tiện ích",
+        "registration": "Đăng ký doanh nghiệp"
+      },
+      "filesLabel": "Tải lên tài liệu",
+      "filesHint": "Tải lên tối đa 3 tài liệu (PDF, JPG, PNG)",
+      "urlPlaceholder": "Nhập URL tài liệu",
+      "submit": "Gửi để xét duyệt"
+    },
+    "pending": {
+      "title": "Đang chờ xác minh",
+      "description": "Yêu cầu của bạn đang được xét duyệt. Chúng tôi sẽ thông báo khi có quyết định.",
+      "estimate": "Thời gian xét duyệt dự kiến",
+      "goToDashboard": "Đi tới bảng điều khiển"
+    },
+    "success": {
+      "title": "Đã được phê duyệt!",
+      "description": "Chúc mừng! Bạn hiện là chủ sở hữu đã xác minh của {{businessName}}.",
+      "goToDashboard": "Đi tới bảng điều khiển"
+    },
+    "rejected": {
+      "title": "Yêu cầu bị từ chối",
+      "reason": "Lý do",
+      "description": "Yêu cầu của bạn không được phê duyệt. Bạn có thể gửi kháng cáo nếu cho rằng đây là lỗi.",
+      "appealTitle": "Gửi kháng cáo",
+      "appealPlaceholder": "Giải thích lý do bạn cho rằng quyết định này cần được xem xét lại...",
+      "submitAppeal": "Gửi kháng cáo"
+    }
+  },
+  "common": {
+    "loading": "Đang tải...",
+    "retry": "Thử lại"
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "defaultPlatformName": "Community Hub",
+  "defaultLocation": "la tua zona",
+  "hero": {
+    "welcome": "Benvenuto su {{platformName}}",
+    "title": "Scopri {{platformName}}",
+    "subtitle": "Scopri attività locali, servizi e risorse della comunità in {{location}}",
+    "searchPlaceholder": "Cerca attività, servizi o offerte...",
+    "cta": "Unisciti a migliaia di persone che scoprono la loro comunità",
+    "browseBusinesses": "Sfoglia Attività",
+    "viewCategories": "Vedi Categorie"
+  },
+  "quickFilters": {
+    "title": "Ricerca rapida:",
+    "openNow": "Aperto Ora",
+    "restaurants": "Ristoranti",
+    "retail": "Shopping",
+    "health": "Salute & Benessere",
+    "services": "Servizi",
+    "verified": "Verificato"
+  },
+  "stats": {
+    "businesses": "Attività Locali",
+    "users": "Membri della Comunità",
+    "categories": "Categorie",
+    "reviews": "Recensioni",
+    "languages": "Lingue Supportate"
+  },
+  "cta": {
+    "title": "Hai un'attività in {{location}}?",
+    "subtitle": "Rivendica la tua attività e connettiti con la comunità",
+    "button": "Inizia"
+  },
+  "featured": {
+    "title": "Attività in Evidenza",
+    "viewAll": "Vedi tutte le evidenziate",
+    "verified": "Verificato"
+  },
+  "nearYou": {
+    "title": "Vicino a Te",
+    "subtitle": "Attività vicine alla tua posizione",
+    "viewAll": "Vedi altre vicine"
+  },
+  "highlyRated": {
+    "title": "Più Votate",
+    "subtitle": "Le attività con le migliori valutazioni nella tua comunità",
+    "viewAll": "Vedi tutte le più votate"
+  },
+  "newBusinesses": {
+    "title": "Nuove sulla Piattaforma",
+    "subtitle": "Attività aggiunte di recente",
+    "viewAll": "Vedi tutte le nuove attività",
+    "badge": "Nuovo"
+  },
+  "categories": {
+    "title": "Categorie Popolari",
+    "subtitle": "Esplora le attività per tipo",
+    "viewAll": "Vedi Tutte le Categorie",
+    "businesses": "attività",
+    "restaurants": "Ristoranti",
+    "cafes": "Caffetterie",
+    "medical": "Medico",
+    "fitness": "Fitness",
+    "pharmacy": "Farmacia",
+    "electronics": "Elettronica",
+    "bakery": "Panetteria",
+    "hairBeauty": "Parrucchiere & Bellezza",
+    "retail": "Negozi & Shopping",
+    "services": "Servizi",
+    "health": "Salute & Benessere",
+    "education": "Istruzione & Formazione",
+    "entertainment": "Intrattenimento",
+    "automotive": "Automotive",
+    "home": "Casa & Giardino"
+  }
+}

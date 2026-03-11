@@ -1,0 +1,76 @@
+{
+  "defaultPlatformName": "کمیونٹی ہب",
+  "defaultLocation": "آپ کا علاقہ",
+  "hero": {
+    "welcome": "{{platformName}} میں خوش آمدید",
+    "title": "{{platformName}} دریافت کریں",
+    "subtitle": "{{location}} میں مقامی کاروبار، خدمات اور کمیونٹی وسائل دریافت کریں",
+    "searchPlaceholder": "کاروبار، خدمات یا ڈیلز تلاش کریں...",
+    "cta": "ہزاروں لوگوں میں شامل ہوں جو اپنی کمیونٹی دریافت کر رہے ہیں",
+    "browseBusinesses": "کاروبار دیکھیں",
+    "viewCategories": "زمرے دیکھیں"
+  },
+  "quickFilters": {
+    "title": "فوری تلاش:",
+    "openNow": "ابھی کھلا ہے",
+    "restaurants": "ریستوران",
+    "retail": "خریداری",
+    "health": "صحت اور تندرستی",
+    "services": "خدمات",
+    "verified": "تصدیق شدہ"
+  },
+  "stats": {
+    "businesses": "مقامی کاروبار",
+    "users": "کمیونٹی ممبران",
+    "categories": "زمرے",
+    "reviews": "جائزے",
+    "languages": "معاون زبانیں"
+  },
+  "cta": {
+    "title": "{{location}} میں کاروبار کے مالک ہیں؟",
+    "subtitle": "اپنے کاروبار کا دعویٰ کریں اور کمیونٹی سے جڑیں",
+    "button": "شروع کریں"
+  },
+  "featured": {
+    "title": "نمایاں کاروبار",
+    "viewAll": "تمام نمایاں دیکھیں",
+    "verified": "تصدیق شدہ"
+  },
+  "nearYou": {
+    "title": "آپ کے قریب",
+    "subtitle": "آپ کے مقام کے قریب کاروبار",
+    "viewAll": "مزید قریبی دیکھیں"
+  },
+  "highlyRated": {
+    "title": "اعلیٰ درجہ",
+    "subtitle": "آپ کی کمیونٹی میں سب سے زیادہ ریٹیڈ کاروبار",
+    "viewAll": "تمام اعلیٰ درجہ دیکھیں"
+  },
+  "newBusinesses": {
+    "title": "پلیٹ فارم پر نیا",
+    "subtitle": "حال ہی میں شامل کاروبار",
+    "viewAll": "تمام نئے کاروبار دیکھیں",
+    "badge": "نیا"
+  },
+  "categories": {
+    "title": "مقبول زمرے",
+    "subtitle": "قسم کے لحاظ سے کاروبار دریافت کریں",
+    "viewAll": "تمام زمرے دیکھیں",
+    "businesses": "کاروبار",
+    "restaurants": "ریستوران",
+    "cafes": "کیفے",
+    "medical": "طبی",
+    "fitness": "فٹنس",
+    "pharmacy": "فارمیسی",
+    "electronics": "الیکٹرانکس",
+    "bakery": "بیکری",
+    "hairBeauty": "بال اور خوبصورتی",
+    "retail": "ریٹیل اور شاپنگ",
+    "services": "خدمات",
+    "health": "صحت اور تندرستی",
+    "education": "تعلیم اور سیکھنا",
+    "entertainment": "تفریح",
+    "automotive": "آٹوموٹیو",
+    "home": "گھر اور باغ"
+  }
+}

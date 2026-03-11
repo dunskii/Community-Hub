@@ -1,0 +1,76 @@
+{
+  "defaultPlatformName": "مركز المجتمع",
+  "defaultLocation": "منطقتك",
+  "hero": {
+    "welcome": "مرحباً بك في {{platformName}}",
+    "title": "اكتشف {{platformName}}",
+    "subtitle": "اكتشف الأنشطة التجارية المحلية والخدمات وموارد المجتمع في {{location}}",
+    "searchPlaceholder": "ابحث عن الأنشطة التجارية أو الخدمات أو العروض...",
+    "cta": "انضم إلى الآلاف الذين يكتشفون مجتمعهم",
+    "browseBusinesses": "تصفح الأنشطة التجارية",
+    "viewCategories": "عرض الفئات"
+  },
+  "quickFilters": {
+    "title": "بحث سريع:",
+    "openNow": "مفتوح الآن",
+    "restaurants": "مطاعم",
+    "retail": "تسوق",
+    "health": "الصحة والعافية",
+    "services": "خدمات",
+    "verified": "موثق"
+  },
+  "stats": {
+    "businesses": "الأنشطة التجارية المحلية",
+    "users": "أعضاء المجتمع",
+    "categories": "الفئات",
+    "reviews": "التقييمات",
+    "languages": "اللغات المدعومة"
+  },
+  "cta": {
+    "title": "هل تمتلك نشاطاً تجارياً في {{location}}؟",
+    "subtitle": "سجّل نشاطك التجاري وتواصل مع المجتمع",
+    "button": "ابدأ الآن"
+  },
+  "featured": {
+    "title": "الأنشطة التجارية المميزة",
+    "viewAll": "عرض جميع المميزة",
+    "verified": "موثق"
+  },
+  "nearYou": {
+    "title": "بالقرب منك",
+    "subtitle": "أنشطة تجارية قريبة من موقعك",
+    "viewAll": "عرض المزيد القريبة"
+  },
+  "highlyRated": {
+    "title": "الأعلى تقييماً",
+    "subtitle": "أفضل الأنشطة التجارية تقييماً في مجتمعك",
+    "viewAll": "عرض جميع الأعلى تقييماً"
+  },
+  "newBusinesses": {
+    "title": "جديد على المنصة",
+    "subtitle": "الأنشطة التجارية المضافة حديثاً",
+    "viewAll": "عرض جميع الأنشطة الجديدة",
+    "badge": "جديد"
+  },
+  "categories": {
+    "title": "الفئات الشائعة",
+    "subtitle": "استكشف الأنشطة التجارية حسب النوع",
+    "viewAll": "عرض جميع الفئات",
+    "businesses": "أنشطة تجارية",
+    "restaurants": "مطاعم",
+    "cafes": "مقاهي",
+    "medical": "طبي",
+    "fitness": "لياقة بدنية",
+    "pharmacy": "صيدلية",
+    "electronics": "إلكترونيات",
+    "bakery": "مخبز",
+    "hairBeauty": "شعر وتجميل",
+    "retail": "تجزئة وتسوق",
+    "services": "خدمات",
+    "health": "الصحة والعافية",
+    "education": "تعليم",
+    "entertainment": "ترفيه",
+    "automotive": "سيارات",
+    "home": "المنزل والحديقة"
+  }
+}

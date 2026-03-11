@@ -20,7 +20,7 @@ export function EmptyState({
   return (
     <div className="flex flex-col items-center justify-center text-center py-12 px-4">
       {icon && (
-        <div className="mb-4 text-gray-400">
+        <div className="mb-4 text-gray-400" aria-hidden="true">
           {icon}
         </div>
       )}

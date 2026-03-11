@@ -1,0 +1,76 @@
+{
+  "defaultPlatformName": "Trung tâm Cộng đồng",
+  "defaultLocation": "khu vực của bạn",
+  "hero": {
+    "welcome": "Chào mừng đến với {{platformName}}",
+    "title": "Khám phá {{platformName}}",
+    "subtitle": "Khám phá các doanh nghiệp, dịch vụ và tài nguyên cộng đồng địa phương tại {{location}}",
+    "searchPlaceholder": "Tìm kiếm doanh nghiệp, dịch vụ hoặc ưu đãi...",
+    "cta": "Tham gia cùng hàng ngàn người đang khám phá cộng đồng của họ",
+    "browseBusinesses": "Duyệt doanh nghiệp",
+    "viewCategories": "Xem danh mục"
+  },
+  "quickFilters": {
+    "title": "Tìm kiếm nhanh:",
+    "openNow": "Đang mở cửa",
+    "restaurants": "Nhà hàng",
+    "retail": "Mua sắm",
+    "health": "Sức khỏe & Làm đẹp",
+    "services": "Dịch vụ",
+    "verified": "Đã xác minh"
+  },
+  "stats": {
+    "businesses": "Doanh nghiệp địa phương",
+    "users": "Thành viên cộng đồng",
+    "categories": "Danh mục",
+    "reviews": "Đánh giá",
+    "languages": "Ngôn ngữ hỗ trợ"
+  },
+  "cta": {
+    "title": "Bạn sở hữu doanh nghiệp tại {{location}}?",
+    "subtitle": "Xác nhận quyền sở hữu doanh nghiệp và kết nối với cộng đồng",
+    "button": "Bắt đầu"
+  },
+  "featured": {
+    "title": "Doanh nghiệp nổi bật",
+    "viewAll": "Xem tất cả nổi bật",
+    "verified": "Đã xác minh"
+  },
+  "nearYou": {
+    "title": "Gần bạn",
+    "subtitle": "Doanh nghiệp gần vị trí của bạn",
+    "viewAll": "Xem thêm gần đây"
+  },
+  "highlyRated": {
+    "title": "Đánh giá cao",
+    "subtitle": "Doanh nghiệp được đánh giá cao nhất trong cộng đồng",
+    "viewAll": "Xem tất cả đánh giá cao"
+  },
+  "newBusinesses": {
+    "title": "Mới trên nền tảng",
+    "subtitle": "Doanh nghiệp được thêm gần đây",
+    "viewAll": "Xem tất cả doanh nghiệp mới",
+    "badge": "Mới"
+  },
+  "categories": {
+    "title": "Danh mục phổ biến",
+    "subtitle": "Khám phá doanh nghiệp theo loại",
+    "viewAll": "Xem tất cả danh mục",
+    "businesses": "doanh nghiệp",
+    "restaurants": "Nhà hàng",
+    "cafes": "Quán cà phê",
+    "medical": "Y tế",
+    "fitness": "Thể hình",
+    "pharmacy": "Nhà thuốc",
+    "electronics": "Điện tử",
+    "bakery": "Tiệm bánh",
+    "hairBeauty": "Tóc & Làm đẹp",
+    "retail": "Bán lẻ & Mua sắm",
+    "services": "Dịch vụ",
+    "health": "Sức khỏe & Làm đẹp",
+    "education": "Giáo dục & Đào tạo",
+    "entertainment": "Giải trí",
+    "automotive": "Ô tô",
+    "home": "Nhà & Vườn"
+  }
+}

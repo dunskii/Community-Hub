@@ -1,0 +1,76 @@
+{
+  "defaultPlatformName": "社區中心",
+  "defaultLocation": "您所在的地區",
+  "hero": {
+    "welcome": "歡迎來到 {{platformName}}",
+    "title": "探索 {{platformName}}",
+    "subtitle": "探索 {{location}} 的本地商家、服務和社區資源",
+    "searchPlaceholder": "搜尋商家、服務或優惠...",
+    "cta": "加入成千上萬正在探索社區的人們",
+    "browseBusinesses": "瀏覽商家",
+    "viewCategories": "查看分類"
+  },
+  "quickFilters": {
+    "title": "快速搜尋：",
+    "openNow": "營業中",
+    "restaurants": "餐廳",
+    "retail": "購物",
+    "health": "健康養生",
+    "services": "服務",
+    "verified": "已驗證"
+  },
+  "stats": {
+    "businesses": "本地商家",
+    "users": "社區成員",
+    "categories": "分類",
+    "reviews": "評價",
+    "languages": "支援的語言"
+  },
+  "cta": {
+    "title": "在 {{location}} 擁有商家？",
+    "subtitle": "認領您的商家並與社區建立聯繫",
+    "button": "開始使用"
+  },
+  "featured": {
+    "title": "精選商家",
+    "viewAll": "查看所有精選",
+    "verified": "已驗證"
+  },
+  "nearYou": {
+    "title": "附近商家",
+    "subtitle": "距離您位置較近的商家",
+    "viewAll": "查看更多附近商家"
+  },
+  "highlyRated": {
+    "title": "高評分商家",
+    "subtitle": "社區中評分最高的商家",
+    "viewAll": "查看所有高評分商家"
+  },
+  "newBusinesses": {
+    "title": "新入駐商家",
+    "subtitle": "最近加入的商家",
+    "viewAll": "查看所有新商家",
+    "badge": "新"
+  },
+  "categories": {
+    "title": "熱門分類",
+    "subtitle": "按類型探索商家",
+    "viewAll": "查看所有分類",
+    "businesses": "商家",
+    "restaurants": "餐廳",
+    "cafes": "咖啡廳",
+    "medical": "醫療",
+    "fitness": "健身",
+    "pharmacy": "藥局",
+    "electronics": "電子產品",
+    "bakery": "麵包店",
+    "hairBeauty": "美髮美容",
+    "retail": "零售購物",
+    "services": "服務",
+    "health": "健康養生",
+    "education": "教育學習",
+    "entertainment": "娛樂",
+    "automotive": "汽車",
+    "home": "居家園藝"
+  }
+}

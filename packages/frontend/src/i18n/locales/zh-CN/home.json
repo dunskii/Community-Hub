@@ -1,0 +1,76 @@
+{
+  "defaultPlatformName": "社区中心",
+  "defaultLocation": "您所在的地区",
+  "hero": {
+    "welcome": "欢迎来到 {{platformName}}",
+    "title": "发现 {{platformName}}",
+    "subtitle": "发现 {{location}} 的本地商家、服务和社区资源",
+    "searchPlaceholder": "搜索商家、服务或优惠...",
+    "cta": "加入成千上万正在发现社区的人们",
+    "browseBusinesses": "浏览商家",
+    "viewCategories": "查看分类"
+  },
+  "quickFilters": {
+    "title": "快速搜索：",
+    "openNow": "营业中",
+    "restaurants": "餐厅",
+    "retail": "购物",
+    "health": "健康养生",
+    "services": "服务",
+    "verified": "已验证"
+  },
+  "stats": {
+    "businesses": "本地商家",
+    "users": "社区成员",
+    "categories": "分类",
+    "reviews": "评价",
+    "languages": "支持的语言"
+  },
+  "cta": {
+    "title": "在 {{location}} 拥有商家？",
+    "subtitle": "认领您的商家并与社区建立联系",
+    "button": "开始使用"
+  },
+  "featured": {
+    "title": "精选商家",
+    "viewAll": "查看所有精选",
+    "verified": "已验证"
+  },
+  "nearYou": {
+    "title": "附近商家",
+    "subtitle": "距离您位置较近的商家",
+    "viewAll": "查看更多附近商家"
+  },
+  "highlyRated": {
+    "title": "高评分商家",
+    "subtitle": "社区中评分最高的商家",
+    "viewAll": "查看所有高评分商家"
+  },
+  "newBusinesses": {
+    "title": "新入驻商家",
+    "subtitle": "最近加入的商家",
+    "viewAll": "查看所有新商家",
+    "badge": "新"
+  },
+  "categories": {
+    "title": "热门分类",
+    "subtitle": "按类型探索商家",
+    "viewAll": "查看所有分类",
+    "businesses": "商家",
+    "restaurants": "餐厅",
+    "cafes": "咖啡厅",
+    "medical": "医疗",
+    "fitness": "健身",
+    "pharmacy": "药店",
+    "electronics": "电子产品",
+    "bakery": "面包店",
+    "hairBeauty": "美发美容",
+    "retail": "零售购物",
+    "services": "服务",
+    "health": "健康养生",
+    "education": "教育培训",
+    "entertainment": "娱乐",
+    "automotive": "汽车",
+    "home": "家居园艺"
+  }
+}

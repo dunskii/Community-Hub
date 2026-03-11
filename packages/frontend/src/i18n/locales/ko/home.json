@@ -1,0 +1,76 @@
+{
+  "defaultPlatformName": "커뮤니티 허브",
+  "defaultLocation": "귀하의 지역",
+  "hero": {
+    "welcome": "{{platformName}}에 오신 것을 환영합니다",
+    "title": "{{platformName}} 탐색하기",
+    "subtitle": "{{location}}의 지역 비즈니스, 서비스 및 커뮤니티 리소스를 발견하세요",
+    "searchPlaceholder": "비즈니스, 서비스 또는 딜 검색...",
+    "cta": "커뮤니티를 발견하는 수천 명과 함께하세요",
+    "browseBusinesses": "비즈니스 둘러보기",
+    "viewCategories": "카테고리 보기"
+  },
+  "quickFilters": {
+    "title": "빠른 검색:",
+    "openNow": "영업 중",
+    "restaurants": "레스토랑",
+    "retail": "쇼핑",
+    "health": "건강 & 웰니스",
+    "services": "서비스",
+    "verified": "인증됨"
+  },
+  "stats": {
+    "businesses": "지역 비즈니스",
+    "users": "커뮤니티 회원",
+    "categories": "카테고리",
+    "reviews": "리뷰",
+    "languages": "지원 언어"
+  },
+  "cta": {
+    "title": "{{location}}에서 비즈니스를 운영하시나요?",
+    "subtitle": "비즈니스를 등록하고 커뮤니티와 연결하세요",
+    "button": "시작하기"
+  },
+  "featured": {
+    "title": "추천 비즈니스",
+    "viewAll": "모든 추천 보기",
+    "verified": "인증됨"
+  },
+  "nearYou": {
+    "title": "내 주변",
+    "subtitle": "귀하의 위치 근처 비즈니스",
+    "viewAll": "더 많은 주변 보기"
+  },
+  "highlyRated": {
+    "title": "높은 평점",
+    "subtitle": "커뮤니티에서 최고 평점의 비즈니스",
+    "viewAll": "모든 최고 평점 보기"
+  },
+  "newBusinesses": {
+    "title": "새로운 비즈니스",
+    "subtitle": "최근 추가된 비즈니스",
+    "viewAll": "모든 새 비즈니스 보기",
+    "badge": "신규"
+  },
+  "categories": {
+    "title": "인기 카테고리",
+    "subtitle": "유형별 비즈니스 탐색",
+    "viewAll": "모든 카테고리 보기",
+    "businesses": "비즈니스",
+    "restaurants": "레스토랑",
+    "cafes": "카페",
+    "medical": "의료",
+    "fitness": "피트니스",
+    "pharmacy": "약국",
+    "electronics": "전자제품",
+    "bakery": "베이커리",
+    "hairBeauty": "헤어 & 뷰티",
+    "retail": "소매 & 쇼핑",
+    "services": "서비스",
+    "health": "건강 & 웰니스",
+    "education": "교육 & 학습",
+    "entertainment": "엔터테인먼트",
+    "automotive": "자동차",
+    "home": "홈 & 가든"
+  }
+}

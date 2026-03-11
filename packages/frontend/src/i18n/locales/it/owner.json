@@ -1,0 +1,186 @@
+{
+  "owner": {
+    "dashboardTitle": "Dashboard Attività",
+    "dashboardSubtitle": "Gestisci le tue attività e visualizza le prestazioni",
+    "selectBusiness": "Seleziona attività",
+    "verified": "Verificato",
+    "reviews": "recensioni",
+    "followers": "follower",
+    "viewProfile": "Visualizza profilo",
+    "editProfile": "Modifica profilo",
+    "quickStats": "Statistiche rapide",
+    "analyticsNotAvailable": "I dati analitici non sono ancora disponibili per questa attività.",
+    "noBusinessesTitle": "Nessuna attività",
+    "noBusinessesDescription": "Non hai ancora rivendicato alcuna attività. Inizia rivendicando un'attività che possiedi.",
+    "claimBusiness": "Rivendica attività",
+    "errorTitle": "Errore nel caricamento della dashboard",
+    "status": {
+      "published": "Pubblicato",
+      "draft": "Bozza",
+      "pending_review": "In attesa di revisione",
+      "suspended": "Sospeso"
+    },
+    "stats": {
+      "profileViews": "Visualizzazioni profilo",
+      "searchAppearances": "Apparizioni nelle ricerche",
+      "totalClicks": "Click totali",
+      "newFollowers": "Nuovi follower"
+    },
+    "quickActions": "Azioni rapide",
+    "actions": {
+      "analytics": "Visualizza analisi",
+      "analyticsDesc": "Vedi metriche dettagliate delle prestazioni",
+      "reviews": "Gestisci recensioni",
+      "reviewsDesc": "Rispondi alle recensioni dei clienti",
+      "photos": "Aggiorna foto",
+      "photosDesc": "Aggiungi o gestisci foto dell'attività",
+      "settings": "Impostazioni",
+      "settingsDesc": "Aggiorna informazioni attività"
+    }
+  },
+  "analytics": {
+    "title": "Analisi Attività",
+    "backToDashboard": "Torna alla dashboard",
+    "exportCSV": "Esporta CSV",
+    "dateRange": "Intervallo date",
+    "granularity": "Raggruppa per",
+    "summary": "Riepilogo",
+    "clickBreakdown": "Dettaglio click",
+    "engagement": "Metriche di coinvolgimento",
+    "reviewStats": "Statistiche recensioni",
+    "insights": "Approfondimenti",
+    "trend": "Trend prestazioni",
+    "profileViewsOverTime": "Visualizzazioni profilo nel tempo",
+    "views": "visualizzazioni",
+    "errorTitle": "Errore nel caricamento delle analisi",
+    "noDataTitle": "Nessun dato analitico",
+    "noDataDescription": "I dati analitici appariranno qui quando la tua attività inizierà a ricevere traffico.",
+    "noSearchTerms": "Nessun dato sui termini di ricerca",
+    "noReferrals": "Nessun dato sui referral",
+    "noPeakTimes": "Nessun dato sull'attività",
+    "noTimeseriesData": "Nessun dato di trend per questo periodo",
+    "range": {
+      "7d": "7 giorni",
+      "30d": "30 giorni",
+      "90d": "90 giorni",
+      "1y": "1 anno"
+    },
+    "granularity": {
+      "day": "Giorno",
+      "week": "Settimana",
+      "month": "Mese"
+    },
+    "metrics": {
+      "profileViews": "Visualizzazioni profilo",
+      "uniqueViews": "Visitatori unici",
+      "searchAppearances": "Apparizioni nelle ricerche",
+      "totalClicks": "Click totali",
+      "websiteClicks": "Click sito web",
+      "phoneClicks": "Click telefono",
+      "directionsClicks": "Click indicazioni",
+      "saves": "Salvataggi",
+      "follows": "Seguiti",
+      "photoViews": "Visualizzazioni foto",
+      "averageRating": "Valutazione media",
+      "newReviews": "Nuove recensioni"
+    },
+    "insights": {
+      "searchTerms": "Termini di ricerca principali",
+      "referralSources": "Fonti di traffico",
+      "peakTimes": "Orari di punta"
+    },
+    "referral": {
+      "search": "Ricerca",
+      "homepage": "Homepage",
+      "saved_list": "Lista salvati",
+      "direct": "Diretto",
+      "external": "Esterno"
+    }
+  },
+  "claim": {
+    "title": "Rivendica questa attività",
+    "selectMethod": "Seleziona metodo di verifica",
+    "selectMethodDescription": "Scegli come vuoi verificare la proprietà di questa attività.",
+    "changeMethod": "Scegli un metodo diverso",
+    "businessNotFound": "Attività non trovata",
+    "businessNotFoundDescription": "Non siamo riusciti a trovare l'attività che stai cercando.",
+    "alreadyClaimed": "Attività già rivendicata",
+    "alreadyClaimedDescription": "Questa attività è già stata rivendicata dal suo proprietario. Se ritieni che sia un errore, contatta l'assistenza.",
+    "googleNotAvailable": "La verifica Google Business non è ancora disponibile. Seleziona un altro metodo.",
+    "methods": {
+      "phone": {
+        "title": "Verifica telefonica",
+        "description": "Ricevi un codice PIN via SMS al numero di telefono dell'attività"
+      },
+      "email": {
+        "title": "Verifica email",
+        "description": "Ricevi un link di verifica all'indirizzo email dell'attività"
+      },
+      "document": {
+        "title": "Verifica documenti",
+        "description": "Carica documenti di registrazione dell'attività per revisione manuale"
+      },
+      "google": {
+        "title": "Google Business",
+        "description": "Verifica con il tuo profilo Google Business (in arrivo)"
+      }
+    },
+    "phone": {
+      "enterNumber": "Inserisci numero di telefono",
+      "enterNumberDescription": "Inserisci il numero di telefono associato a questa attività. Invieremo un PIN a 6 cifre.",
+      "label": "Numero di telefono attività",
+      "hint": "Usa il formato E.164 (es. +61412345678)",
+      "sendPIN": "Invia PIN di verifica",
+      "enterPIN": "Inserisci PIN di verifica",
+      "pinLabel": "PIN a 6 cifre",
+      "verify": "Verifica PIN",
+      "resend": "Reinvia PIN"
+    },
+    "email": {
+      "enterEmail": "Inserisci email attività",
+      "enterEmailDescription": "Inserisci un indirizzo email sul dominio dell'attività. Invieremo un link di verifica.",
+      "label": "Indirizzo email attività",
+      "hint": "Deve corrispondere al dominio del sito web dell'attività per una verifica più rapida",
+      "sendLink": "Invia link di verifica",
+      "sent": "Controlla la tua email",
+      "sentDescription": "Il link di verifica è stato inviato. Cliccalo per completare la verifica."
+    },
+    "document": {
+      "upload": "Carica documenti di verifica",
+      "uploadDescription": "Carica documenti che dimostrano la proprietà di questa attività.",
+      "typeLabel": "Tipo di documento",
+      "types": {
+        "abn": "Registrazione ABN",
+        "utilityBill": "Bolletta utenze",
+        "registration": "Registrazione attività"
+      },
+      "filesLabel": "Carica documento",
+      "filesHint": "Carica fino a 3 documenti (PDF, JPG, PNG)",
+      "urlPlaceholder": "Inserisci URL documento",
+      "submit": "Invia per revisione"
+    },
+    "pending": {
+      "title": "Verifica in attesa",
+      "description": "La tua richiesta è in fase di revisione. Ti notificheremo quando verrà presa una decisione.",
+      "estimate": "Tempo di revisione stimato",
+      "goToDashboard": "Vai alla dashboard"
+    },
+    "success": {
+      "title": "Richiesta approvata!",
+      "description": "Congratulazioni! Ora sei il proprietario verificato di {{businessName}}.",
+      "goToDashboard": "Vai alla dashboard"
+    },
+    "rejected": {
+      "title": "Richiesta rifiutata",
+      "reason": "Motivo",
+      "description": "La tua richiesta non è stata approvata. Puoi presentare un ricorso se ritieni che sia stato un errore.",
+      "appealTitle": "Presenta ricorso",
+      "appealPlaceholder": "Spiega perché ritieni che questa decisione debba essere riconsiderata...",
+      "submitAppeal": "Presenta ricorso"
+    }
+  },
+  "common": {
+    "loading": "Caricamento...",
+    "retry": "Riprova"
+  }
+}

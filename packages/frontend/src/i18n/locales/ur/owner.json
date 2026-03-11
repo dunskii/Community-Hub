@@ -1,0 +1,186 @@
+{
+  "owner": {
+    "dashboardTitle": "کاروباری ڈیش بورڈ",
+    "dashboardSubtitle": "اپنے کاروبار کا انتظام کریں اور کارکردگی دیکھیں",
+    "selectBusiness": "کاروبار منتخب کریں",
+    "verified": "تصدیق شدہ",
+    "reviews": "جائزے",
+    "followers": "فالوورز",
+    "viewProfile": "پروفائل دیکھیں",
+    "editProfile": "پروفائل میں ترمیم کریں",
+    "quickStats": "فوری اعدادوشمار",
+    "analyticsNotAvailable": "اس کاروبار کے لیے تجزیاتی ڈیٹا ابھی دستیاب نہیں ہے۔",
+    "noBusinessesTitle": "کوئی کاروبار نہیں",
+    "noBusinessesDescription": "آپ نے ابھی تک کوئی کاروبار دعویٰ نہیں کیا ہے۔ اپنے کاروبار کا دعویٰ کر کے شروع کریں۔",
+    "claimBusiness": "کاروبار کا دعویٰ کریں",
+    "errorTitle": "ڈیش بورڈ لوڈ کرنے میں خرابی",
+    "status": {
+      "published": "شائع شدہ",
+      "draft": "ڈرافٹ",
+      "pending_review": "زیر جائزہ",
+      "suspended": "معطل"
+    },
+    "stats": {
+      "profileViews": "پروفائل ویوز",
+      "searchAppearances": "تلاش میں ظاہر",
+      "totalClicks": "کل کلکس",
+      "newFollowers": "نئے فالوورز"
+    },
+    "quickActions": "فوری اقدامات",
+    "actions": {
+      "analytics": "تجزیات دیکھیں",
+      "analyticsDesc": "تفصیلی کارکردگی میٹرکس دیکھیں",
+      "reviews": "جائزوں کا انتظام کریں",
+      "reviewsDesc": "گاہکوں کے جائزوں کا جواب دیں",
+      "photos": "تصاویر اپ ڈیٹ کریں",
+      "photosDesc": "کاروباری تصاویر شامل کریں یا انتظام کریں",
+      "settings": "ترتیبات",
+      "settingsDesc": "کاروباری معلومات اپ ڈیٹ کریں"
+    }
+  },
+  "analytics": {
+    "title": "کاروباری تجزیات",
+    "backToDashboard": "ڈیش بورڈ پر واپس جائیں",
+    "exportCSV": "CSV برآمد کریں",
+    "dateRange": "تاریخ کی حد",
+    "granularity": "گروپ بندی",
+    "summary": "خلاصہ",
+    "clickBreakdown": "کلکس کی تفصیل",
+    "engagement": "مشغولیت میٹرکس",
+    "reviewStats": "جائزوں کے اعدادوشمار",
+    "insights": "بصیرت",
+    "trend": "کارکردگی کا رجحان",
+    "profileViewsOverTime": "وقت کے ساتھ پروفائل ویوز",
+    "views": "ویوز",
+    "errorTitle": "تجزیات لوڈ کرنے میں خرابی",
+    "noDataTitle": "کوئی تجزیاتی ڈیٹا نہیں",
+    "noDataDescription": "جب آپ کا کاروبار ٹریفک حاصل کرنا شروع کرے گا، تجزیاتی ڈیٹا یہاں ظاہر ہوگا۔",
+    "noSearchTerms": "تلاش کی اصطلاحات کا کوئی ڈیٹا نہیں",
+    "noReferrals": "حوالہ جات کا کوئی ڈیٹا نہیں",
+    "noPeakTimes": "سرگرمی کا کوئی ڈیٹا نہیں",
+    "noTimeseriesData": "اس مدت کے لیے رجحان کا کوئی ڈیٹا نہیں",
+    "range": {
+      "7d": "7 دن",
+      "30d": "30 دن",
+      "90d": "90 دن",
+      "1y": "1 سال"
+    },
+    "granularity": {
+      "day": "دن",
+      "week": "ہفتہ",
+      "month": "مہینہ"
+    },
+    "metrics": {
+      "profileViews": "پروفائل ویوز",
+      "uniqueViews": "منفرد زائرین",
+      "searchAppearances": "تلاش میں ظاہر",
+      "totalClicks": "کل کلکس",
+      "websiteClicks": "ویب سائٹ کلکس",
+      "phoneClicks": "فون کلکس",
+      "directionsClicks": "سمت کلکس",
+      "saves": "محفوظ",
+      "follows": "فالو",
+      "photoViews": "تصویر ویوز",
+      "averageRating": "اوسط درجہ بندی",
+      "newReviews": "نئے جائزے"
+    },
+    "insights": {
+      "searchTerms": "سرفہرست تلاش کی اصطلاحات",
+      "referralSources": "ٹریفک کے ذرائع",
+      "peakTimes": "مصروف اوقات"
+    },
+    "referral": {
+      "search": "تلاش",
+      "homepage": "ہوم پیج",
+      "saved_list": "محفوظ فہرست",
+      "direct": "براہ راست",
+      "external": "بیرونی"
+    }
+  },
+  "claim": {
+    "title": "اس کاروبار کا دعویٰ کریں",
+    "selectMethod": "تصدیق کا طریقہ منتخب کریں",
+    "selectMethodDescription": "منتخب کریں کہ آپ اس کاروبار کی ملکیت کی تصدیق کیسے کرنا چاہتے ہیں۔",
+    "changeMethod": "مختلف طریقہ منتخب کریں",
+    "businessNotFound": "کاروبار نہیں ملا",
+    "businessNotFoundDescription": "ہم وہ کاروبار نہیں ڈھونڈ سکے جو آپ تلاش کر رہے ہیں۔",
+    "alreadyClaimed": "کاروبار پہلے ہی دعویٰ شدہ",
+    "alreadyClaimedDescription": "اس کاروبار کا دعویٰ اس کے مالک نے پہلے ہی کر لیا ہے۔ اگر آپ کو لگتا ہے کہ یہ غلطی ہے، تو براہ کرم سپورٹ سے رابطہ کریں۔",
+    "googleNotAvailable": "Google Business تصدیق ابھی دستیاب نہیں ہے۔ براہ کرم دوسرا طریقہ منتخب کریں۔",
+    "methods": {
+      "phone": {
+        "title": "فون تصدیق",
+        "description": "کاروباری فون نمبر پر SMS کے ذریعے PIN کوڈ حاصل کریں"
+      },
+      "email": {
+        "title": "ای میل تصدیق",
+        "description": "کاروباری ای میل پتے پر تصدیقی لنک حاصل کریں"
+      },
+      "document": {
+        "title": "دستاویز تصدیق",
+        "description": "دستی جائزے کے لیے کاروباری رجسٹریشن دستاویزات اپ لوڈ کریں"
+      },
+      "google": {
+        "title": "Google Business",
+        "description": "اپنے Google Business پروفائل سے تصدیق کریں (جلد آ رہا ہے)"
+      }
+    },
+    "phone": {
+      "enterNumber": "فون نمبر درج کریں",
+      "enterNumberDescription": "اس کاروبار سے وابستہ فون نمبر درج کریں۔ ہم 6 ہندسوں کا PIN بھیجیں گے۔",
+      "label": "کاروباری فون نمبر",
+      "hint": "E.164 فارمیٹ استعمال کریں (مثال: +61412345678)",
+      "sendPIN": "تصدیقی PIN بھیجیں",
+      "enterPIN": "تصدیقی PIN درج کریں",
+      "pinLabel": "6 ہندسوں کا PIN",
+      "verify": "PIN کی تصدیق کریں",
+      "resend": "PIN دوبارہ بھیجیں"
+    },
+    "email": {
+      "enterEmail": "کاروباری ای میل درج کریں",
+      "enterEmailDescription": "کاروباری ڈومین پر ای میل پتہ درج کریں۔ ہم تصدیقی لنک بھیجیں گے۔",
+      "label": "کاروباری ای میل پتہ",
+      "hint": "تیز تصدیق کے لیے کاروباری ویب سائٹ ڈومین سے مماثل ہونا چاہیے",
+      "sendLink": "تصدیقی لنک بھیجیں",
+      "sent": "اپنا ای میل چیک کریں",
+      "sentDescription": "تصدیقی لنک بھیج دیا گیا ہے۔ تصدیق مکمل کرنے کے لیے اس پر کلک کریں۔"
+    },
+    "document": {
+      "upload": "تصدیقی دستاویزات اپ لوڈ کریں",
+      "uploadDescription": "ایسی دستاویزات اپ لوڈ کریں جو اس کاروبار پر آپ کی ملکیت ثابت کرتی ہیں۔",
+      "typeLabel": "دستاویز کی قسم",
+      "types": {
+        "abn": "ABN رجسٹریشن",
+        "utilityBill": "یوٹیلٹی بل",
+        "registration": "کاروباری رجسٹریشن"
+      },
+      "filesLabel": "دستاویز اپ لوڈ کریں",
+      "filesHint": "زیادہ سے زیادہ 3 دستاویزات اپ لوڈ کریں (PDF، JPG، PNG)",
+      "urlPlaceholder": "دستاویز URL درج کریں",
+      "submit": "جائزے کے لیے جمع کریں"
+    },
+    "pending": {
+      "title": "تصدیق زیر التوا",
+      "description": "آپ کا دعویٰ جائزے میں ہے۔ فیصلہ ہونے پر ہم آپ کو مطلع کریں گے۔",
+      "estimate": "تخمینی جائزہ وقت",
+      "goToDashboard": "ڈیش بورڈ پر جائیں"
+    },
+    "success": {
+      "title": "دعویٰ منظور!",
+      "description": "مبارک ہو! آپ اب {{businessName}} کے تصدیق شدہ مالک ہیں۔",
+      "goToDashboard": "ڈیش بورڈ پر جائیں"
+    },
+    "rejected": {
+      "title": "دعویٰ مسترد",
+      "reason": "وجہ",
+      "description": "آپ کا دعویٰ منظور نہیں ہوا۔ اگر آپ کو لگتا ہے کہ یہ غلطی تھی، تو آپ اپیل کر سکتے ہیں۔",
+      "appealTitle": "اپیل جمع کریں",
+      "appealPlaceholder": "بتائیں کہ آپ کو کیوں لگتا ہے کہ اس فیصلے پر دوبارہ غور کیا جانا چاہیے...",
+      "submitAppeal": "اپیل جمع کریں"
+    }
+  },
+  "common": {
+    "loading": "لوڈ ہو رہا ہے...",
+    "retry": "دوبارہ کوشش کریں"
+  }
+}

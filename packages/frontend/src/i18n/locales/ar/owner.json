@@ -1,0 +1,186 @@
+{
+  "owner": {
+    "dashboardTitle": "لوحة التحكم للأعمال",
+    "dashboardSubtitle": "إدارة أعمالك ومشاهدة الأداء",
+    "selectBusiness": "اختر نشاطًا تجاريًا",
+    "verified": "موثق",
+    "reviews": "التقييمات",
+    "followers": "المتابعون",
+    "viewProfile": "عرض الملف الشخصي",
+    "editProfile": "تعديل الملف الشخصي",
+    "quickStats": "إحصائيات سريعة",
+    "analyticsNotAvailable": "بيانات التحليلات غير متاحة بعد لهذا النشاط التجاري.",
+    "noBusinessesTitle": "لا توجد أنشطة تجارية",
+    "noBusinessesDescription": "ليس لديك أي أنشطة تجارية مسجلة بعد. ابدأ بالمطالبة بنشاط تجاري تملكه.",
+    "claimBusiness": "المطالبة بنشاط تجاري",
+    "errorTitle": "خطأ في تحميل لوحة التحكم",
+    "status": {
+      "published": "منشور",
+      "draft": "مسودة",
+      "pending_review": "قيد المراجعة",
+      "suspended": "معلق"
+    },
+    "stats": {
+      "profileViews": "مشاهدات الملف",
+      "searchAppearances": "ظهور في البحث",
+      "totalClicks": "إجمالي النقرات",
+      "newFollowers": "متابعون جدد"
+    },
+    "quickActions": "إجراءات سريعة",
+    "actions": {
+      "analytics": "عرض التحليلات",
+      "analyticsDesc": "مشاهدة مقاييس الأداء التفصيلية",
+      "reviews": "إدارة التقييمات",
+      "reviewsDesc": "الرد على تقييمات العملاء",
+      "photos": "تحديث الصور",
+      "photosDesc": "إضافة أو إدارة صور النشاط التجاري",
+      "settings": "الإعدادات",
+      "settingsDesc": "تحديث معلومات النشاط التجاري"
+    }
+  },
+  "analytics": {
+    "title": "تحليلات الأعمال",
+    "backToDashboard": "العودة إلى لوحة التحكم",
+    "exportCSV": "تصدير CSV",
+    "dateRange": "نطاق التاريخ",
+    "granularity": "تجميع حسب",
+    "summary": "ملخص",
+    "clickBreakdown": "تفصيل النقرات",
+    "engagement": "مقاييس التفاعل",
+    "reviewStats": "إحصائيات التقييمات",
+    "insights": "رؤى",
+    "trend": "اتجاه الأداء",
+    "profileViewsOverTime": "مشاهدات الملف عبر الزمن",
+    "views": "مشاهدات",
+    "errorTitle": "خطأ في تحميل التحليلات",
+    "noDataTitle": "لا توجد بيانات تحليلية",
+    "noDataDescription": "ستظهر بيانات التحليلات هنا بمجرد أن يبدأ نشاطك التجاري في استقبال الزيارات.",
+    "noSearchTerms": "لا توجد بيانات لمصطلحات البحث",
+    "noReferrals": "لا توجد بيانات للإحالات",
+    "noPeakTimes": "لا توجد بيانات للنشاط",
+    "noTimeseriesData": "لا توجد بيانات اتجاه لهذه الفترة",
+    "range": {
+      "7d": "7 أيام",
+      "30d": "30 يوم",
+      "90d": "90 يوم",
+      "1y": "سنة واحدة"
+    },
+    "granularity": {
+      "day": "يوم",
+      "week": "أسبوع",
+      "month": "شهر"
+    },
+    "metrics": {
+      "profileViews": "مشاهدات الملف",
+      "uniqueViews": "زوار فريدون",
+      "searchAppearances": "ظهور في البحث",
+      "totalClicks": "إجمالي النقرات",
+      "websiteClicks": "نقرات الموقع",
+      "phoneClicks": "نقرات الهاتف",
+      "directionsClicks": "نقرات الاتجاهات",
+      "saves": "الحفظ",
+      "follows": "المتابعات",
+      "photoViews": "مشاهدات الصور",
+      "averageRating": "متوسط التقييم",
+      "newReviews": "تقييمات جديدة"
+    },
+    "insights": {
+      "searchTerms": "أهم مصطلحات البحث",
+      "referralSources": "مصادر الزيارات",
+      "peakTimes": "أوقات الذروة"
+    },
+    "referral": {
+      "search": "بحث",
+      "homepage": "الصفحة الرئيسية",
+      "saved_list": "القوائم المحفوظة",
+      "direct": "مباشر",
+      "external": "خارجي"
+    }
+  },
+  "claim": {
+    "title": "المطالبة بهذا النشاط التجاري",
+    "selectMethod": "اختر طريقة التحقق",
+    "selectMethodDescription": "اختر كيف تريد التحقق من ملكيتك لهذا النشاط التجاري.",
+    "changeMethod": "اختر طريقة مختلفة",
+    "businessNotFound": "النشاط التجاري غير موجود",
+    "businessNotFoundDescription": "لم نتمكن من العثور على النشاط التجاري الذي تبحث عنه.",
+    "alreadyClaimed": "النشاط التجاري مُطالب به بالفعل",
+    "alreadyClaimedDescription": "تم المطالبة بهذا النشاط التجاري من قبل مالكه. إذا كنت تعتقد أن هذا خطأ، يرجى الاتصال بالدعم.",
+    "googleNotAvailable": "التحقق من Google Business غير متاح بعد. يرجى اختيار طريقة أخرى.",
+    "methods": {
+      "phone": {
+        "title": "التحقق عبر الهاتف",
+        "description": "استلم رمز PIN عبر SMS على رقم هاتف النشاط التجاري"
+      },
+      "email": {
+        "title": "التحقق عبر البريد الإلكتروني",
+        "description": "استلم رابط تحقق على عنوان البريد الإلكتروني للنشاط التجاري"
+      },
+      "document": {
+        "title": "التحقق عبر المستندات",
+        "description": "قم بتحميل مستندات تسجيل النشاط التجاري للمراجعة اليدوية"
+      },
+      "google": {
+        "title": "Google Business",
+        "description": "التحقق باستخدام ملفك في Google Business (قريبًا)"
+      }
+    },
+    "phone": {
+      "enterNumber": "أدخل رقم الهاتف",
+      "enterNumberDescription": "أدخل رقم الهاتف المرتبط بهذا النشاط التجاري. سنرسل رمز PIN مكون من 6 أرقام.",
+      "label": "رقم هاتف النشاط التجاري",
+      "hint": "استخدم تنسيق E.164 (مثل +61412345678)",
+      "sendPIN": "إرسال رمز PIN للتحقق",
+      "enterPIN": "أدخل رمز PIN للتحقق",
+      "pinLabel": "رمز PIN المكون من 6 أرقام",
+      "verify": "تحقق من الرمز",
+      "resend": "إعادة إرسال الرمز"
+    },
+    "email": {
+      "enterEmail": "أدخل البريد الإلكتروني للنشاط التجاري",
+      "enterEmailDescription": "أدخل عنوان بريد إلكتروني في نطاق النشاط التجاري. سنرسل رابط تحقق.",
+      "label": "عنوان البريد الإلكتروني للنشاط التجاري",
+      "hint": "يجب أن يتطابق مع نطاق موقع النشاط التجاري للتحقق الأسرع",
+      "sendLink": "إرسال رابط التحقق",
+      "sent": "تحقق من بريدك الإلكتروني",
+      "sentDescription": "تم إرسال رابط التحقق. انقر عليه لإكمال التحقق."
+    },
+    "document": {
+      "upload": "تحميل مستندات التحقق",
+      "uploadDescription": "قم بتحميل المستندات التي تثبت ملكيتك لهذا النشاط التجاري.",
+      "typeLabel": "نوع المستند",
+      "types": {
+        "abn": "تسجيل ABN",
+        "utilityBill": "فاتورة المرافق",
+        "registration": "تسجيل النشاط التجاري"
+      },
+      "filesLabel": "تحميل المستند",
+      "filesHint": "قم بتحميل حتى 3 مستندات (PDF، JPG، PNG)",
+      "urlPlaceholder": "أدخل رابط المستند",
+      "submit": "تقديم للمراجعة"
+    },
+    "pending": {
+      "title": "التحقق قيد الانتظار",
+      "description": "مطالبتك قيد المراجعة. سنخطرك بمجرد اتخاذ القرار.",
+      "estimate": "الوقت المقدر للمراجعة",
+      "goToDashboard": "الذهاب إلى لوحة التحكم"
+    },
+    "success": {
+      "title": "تمت الموافقة على المطالبة!",
+      "description": "تهانينا! أنت الآن المالك الموثق لـ {{businessName}}.",
+      "goToDashboard": "الذهاب إلى لوحة التحكم"
+    },
+    "rejected": {
+      "title": "تم رفض المطالبة",
+      "reason": "السبب",
+      "description": "لم تتم الموافقة على مطالبتك. يمكنك تقديم استئناف إذا كنت تعتقد أن هذا كان خطأ.",
+      "appealTitle": "تقديم استئناف",
+      "appealPlaceholder": "اشرح لماذا تعتقد أنه يجب إعادة النظر في هذا القرار...",
+      "submitAppeal": "تقديم الاستئناف"
+    }
+  },
+  "common": {
+    "loading": "جاري التحميل...",
+    "retry": "حاول مرة أخرى"
+  }
+}

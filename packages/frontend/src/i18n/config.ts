@@ -33,50 +33,94 @@ import reviewsKO from './locales/ko/reviews.json';
 import reviewsEL from './locales/el/reviews.json';
 import reviewsIT from './locales/it/reviews.json';
 
+// Import owner/analytics translations
+import ownerEN from './locales/en/owner.json';
+import ownerAR from './locales/ar/owner.json';
+import ownerZH_CN from './locales/zh-CN/owner.json';
+import ownerZH_TW from './locales/zh-TW/owner.json';
+import ownerVI from './locales/vi/owner.json';
+import ownerHI from './locales/hi/owner.json';
+import ownerUR from './locales/ur/owner.json';
+import ownerKO from './locales/ko/owner.json';
+import ownerEL from './locales/el/owner.json';
+import ownerIT from './locales/it/owner.json';
+
+// Import home page translations
+import homeEN from './locales/en/home.json';
+import homeAR from './locales/ar/home.json';
+import homeZH_CN from './locales/zh-CN/home.json';
+import homeZH_TW from './locales/zh-TW/home.json';
+import homeVI from './locales/vi/home.json';
+import homeHI from './locales/hi/home.json';
+import homeUR from './locales/ur/home.json';
+import homeKO from './locales/ko/home.json';
+import homeEL from './locales/el/home.json';
+import homeIT from './locales/it/home.json';
+
 const resources = {
   en: {
     translation: translationEN,
     business: businessEN,
     category: categoryEN,
     reviews: reviewsEN,
+    owner: ownerEN,
+    home: homeEN,
   },
   ar: {
     translation: translationAR,
     business: businessAR,
     category: categoryAR,
     reviews: reviewsAR,
+    owner: ownerAR,
+    home: homeAR,
   },
   'zh-CN': {
     translation: translationZH_CN,
     reviews: reviewsZH_CN,
+    owner: ownerZH_CN,
+    home: homeZH_CN,
   },
   'zh-TW': {
     translation: translationZH_TW,
     reviews: reviewsZH_TW,
+    owner: ownerZH_TW,
+    home: homeZH_TW,
   },
   vi: {
     translation: translationVI,
     reviews: reviewsVI,
+    owner: ownerVI,
+    home: homeVI,
   },
   hi: {
     translation: translationHI,
     reviews: reviewsHI,
+    owner: ownerHI,
+    home: homeHI,
   },
   ur: {
     translation: translationUR,
     reviews: reviewsUR,
+    owner: ownerUR,
+    home: homeUR,
   },
   ko: {
     translation: translationKO,
     reviews: reviewsKO,
+    owner: ownerKO,
+    home: homeKO,
   },
   el: {
     translation: translationEL,
     reviews: reviewsEL,
+    owner: ownerEL,
+    home: homeEL,
   },
   it: {
     translation: translationIT,
     reviews: reviewsIT,
+    owner: ownerIT,
+    home: homeIT,
   },
 };
 
@@ -95,7 +139,7 @@ i18n
     resources,
     fallbackLng: 'en',
     defaultNS: 'translation',
-    ns: ['translation', 'business', 'category', 'reviews'],
+    ns: ['translation', 'business', 'category', 'reviews', 'owner', 'home'],
     debug: import.meta.env.DEV,
     interpolation: {
       escapeValue: false, // React already escapes

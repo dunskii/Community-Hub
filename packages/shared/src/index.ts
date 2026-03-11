@@ -90,3 +90,68 @@ export type {
 } from './types/search.js';
 
 export { searchBusinessesSchema, autocompleteSuggestionsSchema } from './validators/search.js';
+
+// Reviews (Phase 6)
+export {
+  reviewCreateSchema,
+  reviewUpdateSchema,
+  businessResponseSchema,
+  reportReviewSchema,
+  savedBusinessSchema,
+  createListSchema,
+  updateListSchema,
+  moderationApproveSchema,
+  moderationRejectSchema,
+} from './schemas/review-schemas.js';
+
+export type {
+  ReviewCreateInput,
+  ReviewUpdateInput,
+  BusinessResponseInput,
+  ReportReviewInput,
+  SavedBusinessInput,
+  CreateListInput,
+  UpdateListInput,
+  ModerationApproveInput,
+  ModerationRejectInput,
+} from './schemas/review-schemas.js';
+
+// Claims (Phase 7)
+export {
+  verificationMethodSchema,
+  claimInitiateSchema,
+  verifyPhonePINSchema,
+  claimAppealSchema,
+  claimRejectSchema,
+  claimApproveSchema,
+} from './schemas/claim-schemas.js';
+
+export type {
+  VerificationMethod,
+  ClaimInitiateInput,
+  VerifyPhonePINInput,
+  ClaimAppealInput,
+  ClaimRejectInput,
+  ClaimApproveInput,
+} from './schemas/claim-schemas.js';
+
+// Analytics (Phase 7)
+export {
+  granularitySchema,
+  analyticsEventTypeSchema,
+  referralSourceSchema,
+  analyticsQuerySchema,
+  analyticsExportSchema,
+  trackEventSchema,
+  inboxAnalyticsQuerySchema,
+} from './schemas/analytics-schemas.js';
+
+export type {
+  Granularity,
+  AnalyticsEventType,
+  ReferralSource,
+  AnalyticsQueryInput,
+  AnalyticsExportInput,
+  TrackEventInput,
+  InboxAnalyticsQueryInput,
+} from './schemas/analytics-schemas.js';

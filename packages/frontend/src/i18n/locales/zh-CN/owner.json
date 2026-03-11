@@ -1,0 +1,186 @@
+{
+  "owner": {
+    "dashboardTitle": "商家仪表板",
+    "dashboardSubtitle": "管理您的商家并查看业绩",
+    "selectBusiness": "选择商家",
+    "verified": "已验证",
+    "reviews": "评价",
+    "followers": "关注者",
+    "viewProfile": "查看资料",
+    "editProfile": "编辑资料",
+    "quickStats": "快速统计",
+    "analyticsNotAvailable": "此商家的分析数据尚不可用。",
+    "noBusinessesTitle": "暂无商家",
+    "noBusinessesDescription": "您还没有认领任何商家。开始认领您拥有的商家吧。",
+    "claimBusiness": "认领商家",
+    "errorTitle": "加载仪表板出错",
+    "status": {
+      "published": "已发布",
+      "draft": "草稿",
+      "pending_review": "待审核",
+      "suspended": "已暂停"
+    },
+    "stats": {
+      "profileViews": "资料浏览量",
+      "searchAppearances": "搜索出现次数",
+      "totalClicks": "总点击量",
+      "newFollowers": "新增关注者"
+    },
+    "quickActions": "快速操作",
+    "actions": {
+      "analytics": "查看分析",
+      "analyticsDesc": "查看详细业绩指标",
+      "reviews": "管理评价",
+      "reviewsDesc": "回复客户评价",
+      "photos": "更新照片",
+      "photosDesc": "添加或管理商家照片",
+      "settings": "设置",
+      "settingsDesc": "更新商家信息"
+    }
+  },
+  "analytics": {
+    "title": "商家分析",
+    "backToDashboard": "返回仪表板",
+    "exportCSV": "导出CSV",
+    "dateRange": "日期范围",
+    "granularity": "分组方式",
+    "summary": "摘要",
+    "clickBreakdown": "点击细分",
+    "engagement": "互动指标",
+    "reviewStats": "评价统计",
+    "insights": "洞察",
+    "trend": "业绩趋势",
+    "profileViewsOverTime": "资料浏览量趋势",
+    "views": "浏览量",
+    "errorTitle": "加载分析出错",
+    "noDataTitle": "暂无分析数据",
+    "noDataDescription": "当您的商家开始获得流量后，分析数据将显示在这里。",
+    "noSearchTerms": "暂无搜索词数据",
+    "noReferrals": "暂无来源数据",
+    "noPeakTimes": "暂无活动数据",
+    "noTimeseriesData": "此期间暂无趋势数据",
+    "range": {
+      "7d": "7天",
+      "30d": "30天",
+      "90d": "90天",
+      "1y": "1年"
+    },
+    "granularity": {
+      "day": "日",
+      "week": "周",
+      "month": "月"
+    },
+    "metrics": {
+      "profileViews": "资料浏览量",
+      "uniqueViews": "独立访客",
+      "searchAppearances": "搜索出现次数",
+      "totalClicks": "总点击量",
+      "websiteClicks": "网站点击",
+      "phoneClicks": "电话点击",
+      "directionsClicks": "导航点击",
+      "saves": "收藏",
+      "follows": "关注",
+      "photoViews": "照片浏览",
+      "averageRating": "平均评分",
+      "newReviews": "新评价"
+    },
+    "insights": {
+      "searchTerms": "热门搜索词",
+      "referralSources": "流量来源",
+      "peakTimes": "高峰时段"
+    },
+    "referral": {
+      "search": "搜索",
+      "homepage": "首页",
+      "saved_list": "收藏列表",
+      "direct": "直接访问",
+      "external": "外部"
+    }
+  },
+  "claim": {
+    "title": "认领此商家",
+    "selectMethod": "选择验证方式",
+    "selectMethodDescription": "选择您想要验证商家所有权的方式。",
+    "changeMethod": "选择其他方式",
+    "businessNotFound": "未找到商家",
+    "businessNotFoundDescription": "我们找不到您要查找的商家。",
+    "alreadyClaimed": "商家已被认领",
+    "alreadyClaimedDescription": "此商家已被其所有者认领。如果您认为这是错误的，请联系支持。",
+    "googleNotAvailable": "Google Business验证尚不可用。请选择其他方式。",
+    "methods": {
+      "phone": {
+        "title": "手机验证",
+        "description": "通过短信接收商家电话号码的PIN码"
+      },
+      "email": {
+        "title": "邮箱验证",
+        "description": "在商家邮箱地址接收验证链接"
+      },
+      "document": {
+        "title": "文件验证",
+        "description": "上传商家注册文件进行人工审核"
+      },
+      "google": {
+        "title": "Google Business",
+        "description": "使用您的Google Business资料验证（即将推出）"
+      }
+    },
+    "phone": {
+      "enterNumber": "输入电话号码",
+      "enterNumberDescription": "输入与此商家关联的电话号码。我们将发送6位PIN码。",
+      "label": "商家电话号码",
+      "hint": "使用E.164格式（例如+61412345678）",
+      "sendPIN": "发送验证PIN码",
+      "enterPIN": "输入验证PIN码",
+      "pinLabel": "6位PIN码",
+      "verify": "验证PIN码",
+      "resend": "重新发送PIN码"
+    },
+    "email": {
+      "enterEmail": "输入商家邮箱",
+      "enterEmailDescription": "输入商家域名的邮箱地址。我们将发送验证链接。",
+      "label": "商家邮箱地址",
+      "hint": "应与商家网站域名匹配以加快验证",
+      "sendLink": "发送验证链接",
+      "sent": "检查您的邮箱",
+      "sentDescription": "验证链接已发送。点击它完成验证。"
+    },
+    "document": {
+      "upload": "上传验证文件",
+      "uploadDescription": "上传证明您拥有此商家的文件。",
+      "typeLabel": "文件类型",
+      "types": {
+        "abn": "ABN注册",
+        "utilityBill": "水电费账单",
+        "registration": "商家注册"
+      },
+      "filesLabel": "上传文件",
+      "filesHint": "最多上传3个文件（PDF、JPG、PNG）",
+      "urlPlaceholder": "输入文件URL",
+      "submit": "提交审核"
+    },
+    "pending": {
+      "title": "验证待处理",
+      "description": "您的认领正在审核中。我们将在做出决定后通知您。",
+      "estimate": "预计审核时间",
+      "goToDashboard": "前往仪表板"
+    },
+    "success": {
+      "title": "认领已批准！",
+      "description": "恭喜！您现在是{{businessName}}的验证所有者。",
+      "goToDashboard": "前往仪表板"
+    },
+    "rejected": {
+      "title": "认领被拒绝",
+      "reason": "原因",
+      "description": "您的认领未被批准。如果您认为这是错误的，可以提交申诉。",
+      "appealTitle": "提交申诉",
+      "appealPlaceholder": "解释为什么您认为应该重新考虑此决定...",
+      "submitAppeal": "提交申诉"
+    }
+  },
+  "common": {
+    "loading": "加载中...",
+    "retry": "重试"
+  }
+}

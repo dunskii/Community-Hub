@@ -1,0 +1,186 @@
+{
+  "owner": {
+    "dashboardTitle": "व्यवसाय डैशबोर्ड",
+    "dashboardSubtitle": "अपने व्यवसायों को प्रबंधित करें और प्रदर्शन देखें",
+    "selectBusiness": "व्यवसाय चुनें",
+    "verified": "सत्यापित",
+    "reviews": "समीक्षाएं",
+    "followers": "अनुयायी",
+    "viewProfile": "प्रोफ़ाइल देखें",
+    "editProfile": "प्रोफ़ाइल संपादित करें",
+    "quickStats": "त्वरित आंकड़े",
+    "analyticsNotAvailable": "इस व्यवसाय के लिए विश्लेषण डेटा अभी उपलब्ध नहीं है।",
+    "noBusinessesTitle": "कोई व्यवसाय नहीं",
+    "noBusinessesDescription": "आपने अभी तक कोई व्यवसाय दावा नहीं किया है। अपने व्यवसाय का दावा करके शुरू करें।",
+    "claimBusiness": "व्यवसाय का दावा करें",
+    "errorTitle": "डैशबोर्ड लोड करने में त्रुटि",
+    "status": {
+      "published": "प्रकाशित",
+      "draft": "ड्राफ्ट",
+      "pending_review": "समीक्षाधीन",
+      "suspended": "निलंबित"
+    },
+    "stats": {
+      "profileViews": "प्रोफ़ाइल व्यूज",
+      "searchAppearances": "खोज में दिखावट",
+      "totalClicks": "कुल क्लिक",
+      "newFollowers": "नए अनुयायी"
+    },
+    "quickActions": "त्वरित क्रियाएं",
+    "actions": {
+      "analytics": "विश्लेषण देखें",
+      "analyticsDesc": "विस्तृत प्रदर्शन मेट्रिक्स देखें",
+      "reviews": "समीक्षाएं प्रबंधित करें",
+      "reviewsDesc": "ग्राहक समीक्षाओं का जवाब दें",
+      "photos": "फ़ोटो अपडेट करें",
+      "photosDesc": "व्यवसाय फ़ोटो जोड़ें या प्रबंधित करें",
+      "settings": "सेटिंग्स",
+      "settingsDesc": "व्यवसाय जानकारी अपडेट करें"
+    }
+  },
+  "analytics": {
+    "title": "व्यवसाय विश्लेषण",
+    "backToDashboard": "डैशबोर्ड पर वापस जाएं",
+    "exportCSV": "CSV निर्यात करें",
+    "dateRange": "तिथि सीमा",
+    "granularity": "समूहीकरण",
+    "summary": "सारांश",
+    "clickBreakdown": "क्लिक विश्लेषण",
+    "engagement": "सहभागिता मेट्रिक्स",
+    "reviewStats": "समीक्षा आंकड़े",
+    "insights": "अंतर्दृष्टि",
+    "trend": "प्रदर्शन रुझान",
+    "profileViewsOverTime": "समय के साथ प्रोफ़ाइल व्यूज",
+    "views": "व्यूज",
+    "errorTitle": "विश्लेषण लोड करने में त्रुटि",
+    "noDataTitle": "कोई विश्लेषण डेटा नहीं",
+    "noDataDescription": "जब आपका व्यवसाय ट्रैफ़िक प्राप्त करना शुरू करेगा, तब यहां विश्लेषण डेटा दिखाई देगा।",
+    "noSearchTerms": "कोई खोज शब्द डेटा नहीं",
+    "noReferrals": "कोई रेफरल डेटा नहीं",
+    "noPeakTimes": "कोई गतिविधि डेटा नहीं",
+    "noTimeseriesData": "इस अवधि के लिए कोई रुझान डेटा नहीं",
+    "range": {
+      "7d": "7 दिन",
+      "30d": "30 दिन",
+      "90d": "90 दिन",
+      "1y": "1 वर्ष"
+    },
+    "granularity": {
+      "day": "दिन",
+      "week": "सप्ताह",
+      "month": "महीना"
+    },
+    "metrics": {
+      "profileViews": "प्रोफ़ाइल व्यूज",
+      "uniqueViews": "अद्वितीय आगंतुक",
+      "searchAppearances": "खोज में दिखावट",
+      "totalClicks": "कुल क्लिक",
+      "websiteClicks": "वेबसाइट क्लिक",
+      "phoneClicks": "फ़ोन क्लिक",
+      "directionsClicks": "दिशा-निर्देश क्लिक",
+      "saves": "सेव",
+      "follows": "फॉलो",
+      "photoViews": "फ़ोटो व्यूज",
+      "averageRating": "औसत रेटिंग",
+      "newReviews": "नई समीक्षाएं"
+    },
+    "insights": {
+      "searchTerms": "शीर्ष खोज शब्द",
+      "referralSources": "ट्रैफ़िक स्रोत",
+      "peakTimes": "व्यस्त समय"
+    },
+    "referral": {
+      "search": "खोज",
+      "homepage": "होमपेज",
+      "saved_list": "सेव की गई सूची",
+      "direct": "सीधा",
+      "external": "बाहरी"
+    }
+  },
+  "claim": {
+    "title": "इस व्यवसाय का दावा करें",
+    "selectMethod": "सत्यापन विधि चुनें",
+    "selectMethodDescription": "चुनें कि आप इस व्यवसाय के स्वामित्व को कैसे सत्यापित करना चाहते हैं।",
+    "changeMethod": "अलग विधि चुनें",
+    "businessNotFound": "व्यवसाय नहीं मिला",
+    "businessNotFoundDescription": "हम वह व्यवसाय नहीं ढूंढ पाए जिसे आप खोज रहे हैं।",
+    "alreadyClaimed": "व्यवसाय पहले से दावा किया गया",
+    "alreadyClaimedDescription": "इस व्यवसाय का दावा उसके मालिक ने पहले ही कर लिया है। अगर आपको लगता है कि यह गलती है, तो कृपया सहायता से संपर्क करें।",
+    "googleNotAvailable": "Google Business सत्यापन अभी उपलब्ध नहीं है। कृपया अन्य विधि चुनें।",
+    "methods": {
+      "phone": {
+        "title": "फ़ोन सत्यापन",
+        "description": "व्यवसाय फ़ोन नंबर पर SMS द्वारा PIN कोड प्राप्त करें"
+      },
+      "email": {
+        "title": "ईमेल सत्यापन",
+        "description": "व्यवसाय ईमेल पते पर सत्यापन लिंक प्राप्त करें"
+      },
+      "document": {
+        "title": "दस्तावेज़ सत्यापन",
+        "description": "मैन्युअल समीक्षा के लिए व्यवसाय पंजीकरण दस्तावेज़ अपलोड करें"
+      },
+      "google": {
+        "title": "Google Business",
+        "description": "अपने Google Business प्रोफ़ाइल से सत्यापित करें (जल्द आ रहा है)"
+      }
+    },
+    "phone": {
+      "enterNumber": "फ़ोन नंबर दर्ज करें",
+      "enterNumberDescription": "इस व्यवसाय से जुड़ा फ़ोन नंबर दर्ज करें। हम 6 अंकों का PIN भेजेंगे।",
+      "label": "व्यवसाय फ़ोन नंबर",
+      "hint": "E.164 प्रारूप का उपयोग करें (जैसे +61412345678)",
+      "sendPIN": "सत्यापन PIN भेजें",
+      "enterPIN": "सत्यापन PIN दर्ज करें",
+      "pinLabel": "6 अंकों का PIN",
+      "verify": "PIN सत्यापित करें",
+      "resend": "PIN पुनः भेजें"
+    },
+    "email": {
+      "enterEmail": "व्यवसाय ईमेल दर्ज करें",
+      "enterEmailDescription": "व्यवसाय डोमेन पर ईमेल पता दर्ज करें। हम सत्यापन लिंक भेजेंगे।",
+      "label": "व्यवसाय ईमेल पता",
+      "hint": "तेज़ सत्यापन के लिए व्यवसाय वेबसाइट डोमेन से मेल खाना चाहिए",
+      "sendLink": "सत्यापन लिंक भेजें",
+      "sent": "अपना ईमेल जांचें",
+      "sentDescription": "सत्यापन लिंक भेज दिया गया है। सत्यापन पूरा करने के लिए इस पर क्लिक करें।"
+    },
+    "document": {
+      "upload": "सत्यापन दस्तावेज़ अपलोड करें",
+      "uploadDescription": "ऐसे दस्तावेज़ अपलोड करें जो इस व्यवसाय पर आपके स्वामित्व को साबित करते हैं।",
+      "typeLabel": "दस्तावेज़ प्रकार",
+      "types": {
+        "abn": "ABN पंजीकरण",
+        "utilityBill": "यूटिलिटी बिल",
+        "registration": "व्यवसाय पंजीकरण"
+      },
+      "filesLabel": "दस्तावेज़ अपलोड करें",
+      "filesHint": "अधिकतम 3 दस्तावेज़ अपलोड करें (PDF, JPG, PNG)",
+      "urlPlaceholder": "दस्तावेज़ URL दर्ज करें",
+      "submit": "समीक्षा के लिए सबमिट करें"
+    },
+    "pending": {
+      "title": "सत्यापन लंबित",
+      "description": "आपका दावा समीक्षाधीन है। निर्णय होने पर हम आपको सूचित करेंगे।",
+      "estimate": "अनुमानित समीक्षा समय",
+      "goToDashboard": "डैशबोर्ड पर जाएं"
+    },
+    "success": {
+      "title": "दावा स्वीकृत!",
+      "description": "बधाई हो! आप अब {{businessName}} के सत्यापित मालिक हैं।",
+      "goToDashboard": "डैशबोर्ड पर जाएं"
+    },
+    "rejected": {
+      "title": "दावा अस्वीकृत",
+      "reason": "कारण",
+      "description": "आपका दावा स्वीकृत नहीं हुआ। अगर आपको लगता है कि यह गलती थी, तो आप अपील कर सकते हैं।",
+      "appealTitle": "अपील सबमिट करें",
+      "appealPlaceholder": "बताएं कि आपको क्यों लगता है कि इस निर्णय पर पुनर्विचार होना चाहिए...",
+      "submitAppeal": "अपील सबमिट करें"
+    }
+  },
+  "common": {
+    "loading": "लोड हो रहा है...",
+    "retry": "पुनः प्रयास करें"
+  }
+}
