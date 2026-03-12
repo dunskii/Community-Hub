@@ -92,6 +92,31 @@
     },
     "error": {
       "loadFailed": "加载活动失败。请重试。"
-    }
+    },
+    "calendar": {
+      "month": "月",
+      "week": "周",
+      "day": "日",
+      "today": "今天",
+      "previous": "上一个",
+      "next": "下一个",
+      "viewSelector": "日历视图选择器",
+      "monthView": "{{year}}年{{month}}月",
+      "event": "{{count}} 个活动",
+      "event_plural": "{{count}} 个活动",
+      "events": "活动",
+      "more": "+{{count}} 更多",
+      "noEvents": "当天没有活动",
+      "goToDate": "前往 {{date}}",
+      "dayLabel": "{{weekday}}，{{month}}{{day}}日",
+      "weekOfYear": "{{year}}年第{{week}}周",
+      "allDay": "全天",
+      "timeSlot": "{{time}} 时段"
+    },
+    "shareEvent": "分享活动",
+    "getDirections": "获取方向",
+    "cancelEvent": "取消活动",
+    "location": "位置",
+    "time": "时间"
   }
 }

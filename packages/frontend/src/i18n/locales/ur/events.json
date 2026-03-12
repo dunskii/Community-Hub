@@ -92,6 +92,31 @@
     },
     "error": {
       "loadFailed": "تقریبات لوڈ کرنے میں ناکام۔ براہ کرم دوبارہ کوشش کریں۔"
-    }
+    },
+    "calendar": {
+      "month": "مہینہ",
+      "week": "ہفتہ",
+      "day": "دن",
+      "today": "آج",
+      "previous": "پچھلا",
+      "next": "اگلا",
+      "viewSelector": "کیلنڈر ویو سلیکٹر",
+      "monthView": "{{month}} {{year}}",
+      "event": "{{count}} تقریب",
+      "event_plural": "{{count}} تقریبات",
+      "events": "تقریبات",
+      "more": "+{{count}} مزید",
+      "noEvents": "اس دن کوئی تقریب نہیں",
+      "goToDate": "{{date}} پر جائیں",
+      "dayLabel": "{{weekday}}، {{day}} {{month}}",
+      "weekOfYear": "{{year}} کا ہفتہ {{week}}",
+      "allDay": "پورا دن",
+      "timeSlot": "{{time}} وقت کا خانہ"
+    },
+    "shareEvent": "تقریب شیئر کریں",
+    "getDirections": "راستے حاصل کریں",
+    "cancelEvent": "تقریب منسوخ کریں",
+    "location": "مقام",
+    "time": "وقت"
   }
 }

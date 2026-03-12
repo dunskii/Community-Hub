@@ -92,6 +92,31 @@
     },
     "error": {
       "loadFailed": "Αποτυχία φόρτωσης εκδηλώσεων. Παρακαλώ δοκιμάστε ξανά."
-    }
+    },
+    "calendar": {
+      "month": "Μήνας",
+      "week": "Εβδομάδα",
+      "day": "Ημέρα",
+      "today": "Σήμερα",
+      "previous": "Προηγούμενο",
+      "next": "Επόμενο",
+      "viewSelector": "Επιλογέας προβολής ημερολογίου",
+      "monthView": "{{month}} {{year}}",
+      "event": "{{count}} εκδήλωση",
+      "event_plural": "{{count}} εκδηλώσεις",
+      "events": "εκδηλώσεις",
+      "more": "+{{count}} ακόμα",
+      "noEvents": "Δεν υπάρχουν εκδηλώσεις αυτή την ημέρα",
+      "goToDate": "Μετάβαση στις {{date}}",
+      "dayLabel": "{{weekday}}, {{day}} {{month}}",
+      "weekOfYear": "Εβδομάδα {{week}} του {{year}}",
+      "allDay": "Όλη την ημέρα",
+      "timeSlot": "Χρονοθυρίδα {{time}}"
+    },
+    "shareEvent": "Κοινοποίηση εκδήλωσης",
+    "getDirections": "Οδηγίες",
+    "cancelEvent": "Ακύρωση εκδήλωσης",
+    "location": "Τοποθεσία",
+    "time": "Ώρα"
   }
 }

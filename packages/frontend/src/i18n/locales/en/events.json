@@ -92,6 +92,108 @@
     },
     "error": {
       "loadFailed": "Failed to load events. Please try again."
+    },
+    "calendar": {
+      "month": "Month",
+      "week": "Week",
+      "day": "Day",
+      "today": "Today",
+      "previous": "Previous",
+      "next": "Next",
+      "viewSelector": "Calendar view selector",
+      "monthView": "{{month}} {{year}}",
+      "event": "{{count}} event",
+      "event_plural": "{{count}} events",
+      "events": "events",
+      "more": "+{{count}} more",
+      "noEvents": "No events on this day",
+      "goToDate": "Go to {{date}}",
+      "dayLabel": "{{weekday}}, {{month}} {{day}}",
+      "weekOfYear": "Week {{week}} of {{year}}",
+      "allDay": "All day",
+      "timeSlot": "{{time}} time slot"
+    },
+    "shareEvent": "Share Event",
+    "getDirections": "Get Directions",
+    "cancelEvent": "Cancel Event",
+    "location": "Location",
+    "time": "Time",
+    "form": {
+      "sections": {
+        "basicInfo": "Basic Information",
+        "dateTime": "Date & Time",
+        "location": "Location",
+        "venue": "Venue Details",
+        "additionalDetails": "Additional Details",
+        "accessibility": "Accessibility Features"
+      },
+      "fields": {
+        "title": "Event Title",
+        "description": "Description",
+        "category": "Category",
+        "startDate": "Start Date",
+        "startTime": "Start Time",
+        "endDate": "End Date",
+        "endTime": "End Time",
+        "timezone": "Timezone",
+        "locationType": "Location Type",
+        "venueName": "Venue Name",
+        "street": "Street Address",
+        "suburb": "Suburb",
+        "state": "State",
+        "postcode": "Postcode",
+        "onlineUrl": "Online Meeting URL",
+        "capacity": "Capacity",
+        "cost": "Cost",
+        "ageRestriction": "Age Restriction",
+        "ticketUrl": "Ticket URL",
+        "imageUrl": "Image URL",
+        "accessibilityFeatures": "Accessibility Features"
+      },
+      "placeholders": {
+        "title": "Enter event title",
+        "category": "Select a category",
+        "venueName": "e.g., Community Hall",
+        "capacity": "e.g., 50",
+        "cost": "e.g., Free, $10, $5-20",
+        "ageRestriction": "e.g., 18+, All ages"
+      },
+      "helpers": {
+        "description": "Minimum {{min}} characters, maximum {{max}} characters",
+        "cost": "Leave blank for free events",
+        "imageUrl": "URL to an image for the event banner"
+      },
+      "buttons": {
+        "create": "Create Event",
+        "update": "Update Event"
+      },
+      "errors": {
+        "titleRequired": "Event title is required",
+        "titleTooLong": "Title cannot exceed 100 characters",
+        "descriptionRequired": "Description is required",
+        "descriptionTooShort": "Description must be at least 50 characters",
+        "descriptionTooLong": "Description cannot exceed 5000 characters",
+        "categoryRequired": "Please select a category",
+        "startTimeInPast": "Event start time must be in the future",
+        "endBeforeStart": "End time must be after start time",
+        "streetRequired": "Street address is required",
+        "suburbRequired": "Suburb is required",
+        "stateRequired": "State is required",
+        "postcodeRequired": "Valid postcode is required",
+        "onlineUrlRequired": "Online meeting URL is required",
+        "invalidUrl": "Please enter a valid URL",
+        "invalidCapacity": "Please enter a valid capacity",
+        "submitFailed": "Failed to save event. Please try again."
+      }
+    },
+    "accessibility": {
+      "wheelchair": "Wheelchair accessible",
+      "hearingLoop": "Hearing loop available",
+      "signLanguage": "Sign language interpreter",
+      "accessibleParking": "Accessible parking",
+      "guideDogs": "Guide dogs welcome",
+      "largePrint": "Large print materials",
+      "seated": "Seated event"
     }
   }
 }

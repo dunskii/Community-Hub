@@ -52,6 +52,11 @@
     "viewAll": "See all new businesses",
     "badge": "New"
   },
+  "upcomingEvents": {
+    "title": "Upcoming Events",
+    "subtitle": "Community events happening soon",
+    "viewAll": "View All"
+  },
   "categories": {
     "title": "Popular Categories",
     "subtitle": "Explore businesses by type",

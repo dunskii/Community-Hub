@@ -92,6 +92,31 @@
     },
     "error": {
       "loadFailed": "فشل تحميل الفعاليات. يرجى المحاولة مرة أخرى."
-    }
+    },
+    "calendar": {
+      "month": "شهر",
+      "week": "أسبوع",
+      "day": "يوم",
+      "today": "اليوم",
+      "previous": "السابق",
+      "next": "التالي",
+      "viewSelector": "محدد عرض التقويم",
+      "monthView": "{{month}} {{year}}",
+      "event": "{{count}} فعالية",
+      "event_plural": "{{count}} فعاليات",
+      "events": "فعاليات",
+      "more": "+{{count}} أكثر",
+      "noEvents": "لا توجد فعاليات في هذا اليوم",
+      "goToDate": "الانتقال إلى {{date}}",
+      "dayLabel": "{{weekday}}، {{day}} {{month}}",
+      "weekOfYear": "الأسبوع {{week}} من {{year}}",
+      "allDay": "طوال اليوم",
+      "timeSlot": "فترة زمنية {{time}}"
+    },
+    "shareEvent": "مشاركة الفعالية",
+    "getDirections": "الحصول على الاتجاهات",
+    "cancelEvent": "إلغاء الفعالية",
+    "location": "الموقع",
+    "time": "الوقت"
   }
 }

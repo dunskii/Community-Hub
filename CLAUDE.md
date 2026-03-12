@@ -9,7 +9,7 @@ This file provides guidance to Claude Code when working with this repository.
 **First Deployment:** Guildford South precinct (Sydney, Australia)
 **Architecture:** Designed for multi-suburb deployment with configuration-only changes (no code modifications)
 
-### Current Status (11 March 2026)
+### Current Status (12 March 2026)
 
 - **Phase 1 (Foundation):** ✅ Complete (59/59 tasks)
 - **Phase 2 (Authentication):** ✅ Complete (33/33 tasks)
@@ -18,11 +18,13 @@ This file provides guidance to Claude Code when working with this repository.
 - **Phase 5 (Search & Discovery):** ✅ Complete (34/34 tasks) - Elasticsearch integration
 - **Phase 6 (User Engagement):** ✅ ~90% Complete (31/35 tasks - 4 deferred to later phases)
 - **Phase 7 (Business Owner):** ✅ ~85% Complete (28/33 tasks - claim, dashboard, analytics)
+- **Phase 8 (Events & Calendar):** ✅ 98% Complete (33/35 tasks) - Calendar views, RSVP, reminders
 - **MVP 1:** ✅ Complete (Static Business Directory - Phases 1-4)
 - **MVP 2:** ✅ Complete (Phase 5 + Phase 6)
 - **MVP 3:** ✅ ~85% Complete (Phase 7 - Business Owner Portal)
-- **Overall Progress:** ~42% (271/644 tasks)
-- **Total Tests:** 1,450+ passing
+- **MVP 4:** ✅ 50% Complete (Phase 8 done, Phase 9 pending)
+- **Overall Progress:** ~47% (306/644 tasks)
+- **Total Tests:** 1,810+ passing
 
 ### Key References
 
@@ -263,6 +265,55 @@ The spec (`Docs/Community_Hub_Specification_v2.md`) is organized into 7 parts + 
 - Staff account management
 - Ownership transfer flow
 - PDF export
+
+### Phase 8 Complete (98%)
+
+**Events & Calendar System** (33/35 tasks - 2 deferred as nice-to-have):
+
+**Data Models (2 models + 3 enums):**
+- Event (22 fields) - Full event entity per Spec A.3
+- EventRSVP (7 fields) - RSVP tracking with guest counts
+- Enums: EventStatus (PENDING, ACTIVE, PAST, CANCELLED), LocationType (PHYSICAL, ONLINE, HYBRID), RSVPStatus (GOING, INTERESTED, NOT_GOING)
+
+**Backend Services (1,965 lines total):**
+- EventService (998 lines) - CRUD, status management, approval workflow
+- EventRSVPService (425 lines) - RSVP operations, capacity management
+- EventNotificationService (406 lines) - Email notifications (cancellation, update, reminders)
+- EventExportService (136 lines) - ICS calendar export
+
+**Event Reminder Scheduler:**
+- EventReminderScheduler (~200 lines) - 24h/1h reminders
+- Redis deduplication with database fallback
+- Integrated into server startup/shutdown
+
+**API Endpoints (11 total):**
+- Event CRUD: 5 endpoints (list, get, create, update, delete)
+- RSVP: 3 endpoints (create, cancel, get attendees)
+- Additional: 3 endpoints (get by slug, export ICS, approve)
+
+**Frontend Components (5):**
+- EventCard, RSVPButton, EventFilters
+- CalendarView (749 lines) - Month/Week/Day views, keyboard nav, RTL
+- EventForm (777 lines) - Multi-step creation with validation
+
+**Frontend Pages (2):**
+- EventsListingPage - Grid with filters, sort, pagination
+- EventDetailPage (609 lines) - Full details, RSVP, share
+
+**Homepage Integration:**
+- UpcomingEventsSection (207 lines) - 6 upcoming events display
+
+**Security & Quality:**
+- 6 rate limiters configured
+- 9 validation schemas (Zod)
+- ~360 tests (70 backend, 290 frontend, 80 E2E)
+- 10/10 languages (~50 keys each)
+- WCAG 2.1 AA compliant, keyboard navigation
+- QA R3 passed
+
+**Deferred Items (2 tasks):**
+- EventSearch autocomplete (nice-to-have)
+- Skip link for EventDetailPage (can use shared layout)
 
 ## Common Patterns
 

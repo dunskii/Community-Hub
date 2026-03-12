@@ -18,6 +18,7 @@ import { HighlyRatedSection } from '../components/home/HighlyRatedSection.js';
 import { NewBusinessesSection } from '../components/home/NewBusinessesSection.js';
 import { CategoryShowcase } from '../components/home/CategoryShowcase.js';
 import { QuickFilters } from '../components/home/QuickFilters.js';
+import { UpcomingEventsSection } from '../components/home/UpcomingEventsSection.js';
 
 export function HomePage() {
   const { t } = useTranslation('home');
@@ -91,6 +92,9 @@ export function HomePage() {
             longitude={userLocation.lng}
           />
         )}
+
+        {/* Upcoming Events Section */}
+        <UpcomingEventsSection />
 
         {/* Highly Rated Section */}
         <HighlyRatedSection />

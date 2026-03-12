@@ -92,6 +92,31 @@
     },
     "error": {
       "loadFailed": "Impossibile caricare gli eventi. Riprova."
-    }
+    },
+    "calendar": {
+      "month": "Mese",
+      "week": "Settimana",
+      "day": "Giorno",
+      "today": "Oggi",
+      "previous": "Precedente",
+      "next": "Successivo",
+      "viewSelector": "Selettore vista calendario",
+      "monthView": "{{month}} {{year}}",
+      "event": "{{count}} evento",
+      "event_plural": "{{count}} eventi",
+      "events": "eventi",
+      "more": "+{{count}} altri",
+      "noEvents": "Nessun evento in questo giorno",
+      "goToDate": "Vai a {{date}}",
+      "dayLabel": "{{weekday}}, {{day}} {{month}}",
+      "weekOfYear": "Settimana {{week}} del {{year}}",
+      "allDay": "Tutto il giorno",
+      "timeSlot": "Fascia oraria {{time}}"
+    },
+    "shareEvent": "Condividi evento",
+    "getDirections": "Indicazioni stradali",
+    "cancelEvent": "Annulla evento",
+    "location": "Luogo",
+    "time": "Ora"
   }
 }

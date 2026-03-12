@@ -92,6 +92,31 @@
     },
     "error": {
       "loadFailed": "Không thể tải sự kiện. Vui lòng thử lại."
-    }
+    },
+    "calendar": {
+      "month": "Tháng",
+      "week": "Tuần",
+      "day": "Ngày",
+      "today": "Hôm nay",
+      "previous": "Trước",
+      "next": "Sau",
+      "viewSelector": "Bộ chọn chế độ xem lịch",
+      "monthView": "Tháng {{month}} {{year}}",
+      "event": "{{count}} sự kiện",
+      "event_plural": "{{count}} sự kiện",
+      "events": "sự kiện",
+      "more": "+{{count}} khác",
+      "noEvents": "Không có sự kiện vào ngày này",
+      "goToDate": "Đi đến {{date}}",
+      "dayLabel": "{{weekday}}, ngày {{day}} tháng {{month}}",
+      "weekOfYear": "Tuần {{week}} của {{year}}",
+      "allDay": "Cả ngày",
+      "timeSlot": "Khung giờ {{time}}"
+    },
+    "shareEvent": "Chia sẻ sự kiện",
+    "getDirections": "Chỉ đường",
+    "cancelEvent": "Hủy sự kiện",
+    "location": "Địa điểm",
+    "time": "Thời gian"
   }
 }

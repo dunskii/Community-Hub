@@ -92,6 +92,31 @@
     },
     "error": {
       "loadFailed": "이벤트를 불러오지 못했습니다. 다시 시도해 주세요."
-    }
+    },
+    "calendar": {
+      "month": "월",
+      "week": "주",
+      "day": "일",
+      "today": "오늘",
+      "previous": "이전",
+      "next": "다음",
+      "viewSelector": "캘린더 보기 선택기",
+      "monthView": "{{year}}년 {{month}}",
+      "event": "{{count}}개의 이벤트",
+      "event_plural": "{{count}}개의 이벤트",
+      "events": "이벤트",
+      "more": "+{{count}}개 더보기",
+      "noEvents": "오늘 이벤트가 없습니다",
+      "goToDate": "{{date}}(으)로 이동",
+      "dayLabel": "{{weekday}}, {{month}} {{day}}일",
+      "weekOfYear": "{{year}}년 {{week}}주차",
+      "allDay": "종일",
+      "timeSlot": "{{time}} 시간대"
+    },
+    "shareEvent": "이벤트 공유",
+    "getDirections": "길찾기",
+    "cancelEvent": "이벤트 취소",
+    "location": "장소",
+    "time": "시간"
   }
 }

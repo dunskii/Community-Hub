@@ -6,6 +6,7 @@ import { loadPlatformConfig } from './config/platform-loader.js';
 import { disconnectDb } from './db/index.js';
 import { closeEsClient } from './search/elasticsearch-client.js';
 import { setupIndices } from './search/index.js';
+import { startSchedulers, stopSchedulers } from './schedulers/index.js';
 import { logger } from './utils/logger.js';
 import { checkPrismaVersion } from './utils/prisma-version-check.js';
 import { verifyMapboxConnection } from './services/maps/mapbox-client.js';
@@ -38,6 +39,10 @@ async function main(): Promise<void> {
     logger.warn('Elasticsearch setup failed -- search will use database fallback');
   }
 
+  // Start schedulers
+  startSchedulers();
+  logger.info('Background schedulers started');
+
   // Start server
   const app = createApp();
   const server = app.listen(env.PORT, () => {
@@ -48,6 +53,7 @@ async function main(): Promise<void> {
   // Graceful shutdown
   async function shutdown(signal: string): Promise<void> {
     logger.info(`${signal} received, shutting down...`);
+    stopSchedulers();
     await new Promise<void>((resolve, reject) => {
       server.close((err) => (err ? reject(err) : resolve()));
     });
