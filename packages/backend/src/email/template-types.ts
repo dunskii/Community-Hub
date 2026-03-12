@@ -6,14 +6,17 @@ export type EmailTemplateKey =
   | 'email_verification'
   | 'password_reset'
   | 'welcome'
-  | 'password_changed';
-  // Future templates (Phase 3+):
+  | 'password_changed'
+  | 'event_cancellation'
+  | 'event_reminder_24h'
+  | 'event_reminder_1h'
+  | 'event_update';
+  // Future templates:
   // | 'business_claim_notification'
   // | 'claim_approved'
   // | 'claim_rejected'
   // | 'new_message'
   // | 'new_review'
-  // | 'event_reminder'
   // | 'deal_alert'
   // | 'emergency_alert';
 
@@ -39,6 +42,41 @@ export interface TemplateVariables {
   };
   password_changed: {
     userName: string;
+  };
+  event_cancellation: {
+    userName: string;
+    eventTitle: string;
+    eventDate: string;
+    eventTime: string;
+    eventLocation: string;
+    organizerName: string;
+    rsvpStatus: string;
+  };
+  event_reminder_24h: {
+    userName: string;
+    eventTitle: string;
+    eventDate: string;
+    eventTime: string;
+    eventLocation: string;
+    onlineUrl: string;
+    organizerName: string;
+  };
+  event_reminder_1h: {
+    userName: string;
+    eventTitle: string;
+    eventDate: string;
+    eventTime: string;
+    eventLocation: string;
+    onlineUrl: string;
+    organizerName: string;
+  };
+  event_update: {
+    userName: string;
+    eventTitle: string;
+    eventDate: string;
+    eventTime: string;
+    organizerName: string;
+    changes: string;
   };
 }
 

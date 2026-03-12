@@ -1,0 +1,97 @@
+{
+  "events": {
+    "pageTitle": "الفعاليات",
+    "pageDescription": "اكتشف الفعاليات والأنشطة المحلية في مجتمعك",
+    "createEvent": "إنشاء فعالية",
+    "createFirstEvent": "إنشاء أول فعالية",
+    "browseEvents": "تصفح الفعاليات",
+    "backToEvents": "العودة إلى الفعاليات",
+    "about": "حول هذه الفعالية",
+    "organizer": "المنظم",
+    "hostedBy": "بتنظيم",
+    "noEventsTitle": "لم يتم العثور على فعاليات",
+    "noEventsDescription": "لا توجد فعاليات قادمة في الوقت الحالي.",
+    "noEventsFiltered": "لا توجد فعاليات تطابق المرشحات. حاول تعديل البحث.",
+    "resultsCount": "تم العثور على {{count}} فعالية",
+    "resultsCount_plural": "تم العثور على {{count}} فعاليات",
+    "notFoundTitle": "لم يتم العثور على الفعالية",
+    "notFoundDescription": "الفعالية التي تبحث عنها غير موجودة أو تم حذفها.",
+    "editEvent": "تعديل الفعالية",
+    "deleteEvent": "حذف الفعالية",
+    "free": "مجاني",
+    "onlineEvent": "فعالية عبر الإنترنت",
+    "joinOnline": "الانضمام عبر الإنترنت",
+    "cost": "التكلفة",
+    "ageRestriction": "تقييد العمر",
+    "accessibility": "إمكانية الوصول",
+    "tickets": "التذاكر",
+    "buyTickets": "شراء التذاكر",
+    "addToCalendar": "إضافة إلى التقويم",
+    "downloadICS": "تحميل ملف ICS",
+    "loginToRsvp": "سجل الدخول للحضور",
+    "locationType": {
+      "physical": "حضوري",
+      "online": "عبر الإنترنت",
+      "hybrid": "مختلط"
+    },
+    "status": {
+      "pending": "في انتظار الموافقة",
+      "active": "نشط",
+      "cancelled": "ملغى",
+      "past": "فعالية سابقة"
+    },
+    "date": {
+      "today": "اليوم",
+      "tomorrow": "غداً"
+    },
+    "rsvp": {
+      "title": "تأكيد الحضور",
+      "rsvp": "تأكيد الحضور",
+      "going": "سأحضر",
+      "interested": "مهتم",
+      "notGoing": "لن أحضر",
+      "cancel": "إلغاء التأكيد",
+      "options": "خيارات الحضور",
+      "goingCount": "{{count}} سيحضر",
+      "goingCount_plural": "{{count}} سيحضرون",
+      "interestedCount": "{{count}} مهتم",
+      "interestedCount_plural": "{{count}} مهتمون",
+      "status": {
+        "going": "سأحضر",
+        "interested": "مهتم",
+        "not_going": "لن أحضر"
+      }
+    },
+    "capacity": {
+      "full": "الفعالية ممتلئة",
+      "spotsLeft": "{{count}} مكان متبقي",
+      "spotsLeft_plural": "{{count}} أماكن متبقية"
+    },
+    "filters": {
+      "title": "التصفية",
+      "sortBy": "ترتيب حسب",
+      "dateFrom": "من تاريخ",
+      "dateTo": "إلى تاريخ",
+      "category": "الفئة",
+      "locationType": "نوع الموقع",
+      "distance": "المسافة",
+      "status": "الحالة",
+      "freeOnly": "الفعاليات المجانية فقط",
+      "includePast": "تضمين الفعاليات السابقة",
+      "clear": "مسح التصفية",
+      "anyLocationType": "أي نوع موقع",
+      "anyDistance": "أي مسافة",
+      "anyStatus": "أي حالة",
+      "allCategories": "جميع الفئات"
+    },
+    "sort": {
+      "upcoming": "القادمة",
+      "popular": "الأكثر شعبية",
+      "newest": "الأحدث",
+      "distance": "المسافة"
+    },
+    "error": {
+      "loadFailed": "فشل تحميل الفعاليات. يرجى المحاولة مرة أخرى."
+    }
+  }
+}

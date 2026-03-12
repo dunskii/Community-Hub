@@ -1,0 +1,97 @@
+{
+  "events": {
+    "pageTitle": "活动",
+    "pageDescription": "发现您社区的本地活动和活动",
+    "createEvent": "创建活动",
+    "createFirstEvent": "创建第一个活动",
+    "browseEvents": "浏览活动",
+    "backToEvents": "返回活动",
+    "about": "关于此活动",
+    "organizer": "组织者",
+    "hostedBy": "由...主办",
+    "noEventsTitle": "未找到活动",
+    "noEventsDescription": "目前没有即将举行的活动。",
+    "noEventsFiltered": "没有符合您筛选条件的活动。请尝试调整搜索。",
+    "resultsCount": "找到 {{count}} 个活动",
+    "resultsCount_plural": "找到 {{count}} 个活动",
+    "notFoundTitle": "未找到活动",
+    "notFoundDescription": "您正在寻找的活动不存在或已被删除。",
+    "editEvent": "编辑活动",
+    "deleteEvent": "删除活动",
+    "free": "免费",
+    "onlineEvent": "线上活动",
+    "joinOnline": "在线参加",
+    "cost": "费用",
+    "ageRestriction": "年龄限制",
+    "accessibility": "无障碍设施",
+    "tickets": "门票",
+    "buyTickets": "购买门票",
+    "addToCalendar": "添加到日历",
+    "downloadICS": "下载ICS文件",
+    "loginToRsvp": "登录以回复",
+    "locationType": {
+      "physical": "线下",
+      "online": "线上",
+      "hybrid": "混合"
+    },
+    "status": {
+      "pending": "待批准",
+      "active": "进行中",
+      "cancelled": "已取消",
+      "past": "已结束"
+    },
+    "date": {
+      "today": "今天",
+      "tomorrow": "明天"
+    },
+    "rsvp": {
+      "title": "回复",
+      "rsvp": "回复",
+      "going": "参加",
+      "interested": "有兴趣",
+      "notGoing": "不参加",
+      "cancel": "取消回复",
+      "options": "回复选项",
+      "goingCount": "{{count}} 人参加",
+      "goingCount_plural": "{{count}} 人参加",
+      "interestedCount": "{{count}} 人有兴趣",
+      "interestedCount_plural": "{{count}} 人有兴趣",
+      "status": {
+        "going": "参加",
+        "interested": "有兴趣",
+        "not_going": "不参加"
+      }
+    },
+    "capacity": {
+      "full": "活动已满",
+      "spotsLeft": "剩余 {{count}} 个名额",
+      "spotsLeft_plural": "剩余 {{count}} 个名额"
+    },
+    "filters": {
+      "title": "筛选",
+      "sortBy": "排序方式",
+      "dateFrom": "开始日期",
+      "dateTo": "结束日期",
+      "category": "类别",
+      "locationType": "位置类型",
+      "distance": "距离",
+      "status": "状态",
+      "freeOnly": "仅免费活动",
+      "includePast": "包括过去的活动",
+      "clear": "清除筛选",
+      "anyLocationType": "任何位置类型",
+      "anyDistance": "任何距离",
+      "anyStatus": "任何状态",
+      "allCategories": "所有类别"
+    },
+    "sort": {
+      "upcoming": "即将举行",
+      "popular": "热门",
+      "newest": "最新",
+      "distance": "距离"
+    },
+    "error": {
+      "loadFailed": "加载活动失败。请重试。"
+    }
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "events": {
+    "pageTitle": "Eventi",
+    "pageDescription": "Scopri eventi e attività locali nella tua comunità",
+    "createEvent": "Crea evento",
+    "createFirstEvent": "Crea il primo evento",
+    "browseEvents": "Sfoglia eventi",
+    "backToEvents": "Torna agli eventi",
+    "about": "Informazioni su questo evento",
+    "organizer": "Organizzatore",
+    "hostedBy": "Ospitato da",
+    "noEventsTitle": "Nessun evento trovato",
+    "noEventsDescription": "Al momento non ci sono eventi in programma.",
+    "noEventsFiltered": "Nessun evento corrisponde ai tuoi filtri. Prova a modificare la ricerca.",
+    "resultsCount": "{{count}} evento trovato",
+    "resultsCount_plural": "{{count}} eventi trovati",
+    "notFoundTitle": "Evento non trovato",
+    "notFoundDescription": "L'evento che stai cercando non esiste o è stato rimosso.",
+    "editEvent": "Modifica evento",
+    "deleteEvent": "Elimina evento",
+    "free": "Gratuito",
+    "onlineEvent": "Evento online",
+    "joinOnline": "Partecipa online",
+    "cost": "Costo",
+    "ageRestriction": "Limite di età",
+    "accessibility": "Accessibilità",
+    "tickets": "Biglietti",
+    "buyTickets": "Acquista biglietti",
+    "addToCalendar": "Aggiungi al calendario",
+    "downloadICS": "Scarica file ICS",
+    "loginToRsvp": "Accedi per confermare",
+    "locationType": {
+      "physical": "Di persona",
+      "online": "Online",
+      "hybrid": "Ibrido"
+    },
+    "status": {
+      "pending": "In attesa di approvazione",
+      "active": "Attivo",
+      "cancelled": "Annullato",
+      "past": "Evento passato"
+    },
+    "date": {
+      "today": "Oggi",
+      "tomorrow": "Domani"
+    },
+    "rsvp": {
+      "title": "Conferma",
+      "rsvp": "Conferma",
+      "going": "Partecipo",
+      "interested": "Interessato",
+      "notGoing": "Non partecipo",
+      "cancel": "Annulla conferma",
+      "options": "Opzioni di conferma",
+      "goingCount": "{{count}} partecipa",
+      "goingCount_plural": "{{count}} partecipano",
+      "interestedCount": "{{count}} interessato",
+      "interestedCount_plural": "{{count}} interessati",
+      "status": {
+        "going": "Partecipo",
+        "interested": "Interessato",
+        "not_going": "Non partecipo"
+      }
+    },
+    "capacity": {
+      "full": "Evento completo",
+      "spotsLeft": "{{count}} posto disponibile",
+      "spotsLeft_plural": "{{count}} posti disponibili"
+    },
+    "filters": {
+      "title": "Filtri",
+      "sortBy": "Ordina per",
+      "dateFrom": "Da data",
+      "dateTo": "A data",
+      "category": "Categoria",
+      "locationType": "Tipo di luogo",
+      "distance": "Distanza",
+      "status": "Stato",
+      "freeOnly": "Solo eventi gratuiti",
+      "includePast": "Includi eventi passati",
+      "clear": "Cancella filtri",
+      "anyLocationType": "Qualsiasi tipo di luogo",
+      "anyDistance": "Qualsiasi distanza",
+      "anyStatus": "Qualsiasi stato",
+      "allCategories": "Tutte le categorie"
+    },
+    "sort": {
+      "upcoming": "In arrivo",
+      "popular": "Popolari",
+      "newest": "Più recenti",
+      "distance": "Distanza"
+    },
+    "error": {
+      "loadFailed": "Impossibile caricare gli eventi. Riprova."
+    }
+  }
+}

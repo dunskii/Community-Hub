@@ -29,6 +29,7 @@ import {
   revokeAllUserSessions,
   findSessionByJti,
 } from '../services/session-service';
+import { eventController } from '../controllers/event-controller';
 import { verifyRefreshToken } from '../services/token-service';
 import { ApiError } from '../utils/api-error';
 import { logger } from '../utils/logger';
@@ -521,6 +522,33 @@ router.post(
       throw error;
     }
   }
+);
+
+/**
+ * GET /users/:id/events
+ *
+ * Get events created by the user.
+ */
+router.get(
+  '/:id/events',
+  requireAuth,
+  requireOwnershipOrAdmin(),
+  validate({ params: userIdParamSchema }),
+  eventController.getUserEvents.bind(eventController)
+);
+
+/**
+ * GET /users/:id/rsvps
+ *
+ * Get events the user has RSVP'd to.
+ * Query params: ?status=GOING|INTERESTED|NOT_GOING&includePast=true&page=1&limit=20
+ */
+router.get(
+  '/:id/rsvps',
+  requireAuth,
+  requireOwnershipOrAdmin(),
+  validate({ params: userIdParamSchema }),
+  eventController.getUserRSVPs.bind(eventController)
 );
 
 export default router;

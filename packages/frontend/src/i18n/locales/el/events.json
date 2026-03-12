@@ -1,0 +1,97 @@
+{
+  "events": {
+    "pageTitle": "Εκδηλώσεις",
+    "pageDescription": "Ανακαλύψτε τοπικές εκδηλώσεις και δραστηριότητες στην κοινότητά σας",
+    "createEvent": "Δημιουργία εκδήλωσης",
+    "createFirstEvent": "Δημιουργήστε την πρώτη εκδήλωση",
+    "browseEvents": "Περιήγηση εκδηλώσεων",
+    "backToEvents": "Επιστροφή στις εκδηλώσεις",
+    "about": "Σχετικά με αυτή την εκδήλωση",
+    "organizer": "Διοργανωτής",
+    "hostedBy": "Φιλοξενείται από",
+    "noEventsTitle": "Δεν βρέθηκαν εκδηλώσεις",
+    "noEventsDescription": "Δεν υπάρχουν προσεχείς εκδηλώσεις αυτή τη στιγμή.",
+    "noEventsFiltered": "Καμία εκδήλωση δεν ταιριάζει με τα φίλτρα σας. Δοκιμάστε να προσαρμόσετε την αναζήτησή σας.",
+    "resultsCount": "Βρέθηκε {{count}} εκδήλωση",
+    "resultsCount_plural": "Βρέθηκαν {{count}} εκδηλώσεις",
+    "notFoundTitle": "Η εκδήλωση δεν βρέθηκε",
+    "notFoundDescription": "Η εκδήλωση που αναζητάτε δεν υπάρχει ή έχει αφαιρεθεί.",
+    "editEvent": "Επεξεργασία εκδήλωσης",
+    "deleteEvent": "Διαγραφή εκδήλωσης",
+    "free": "Δωρεάν",
+    "onlineEvent": "Διαδικτυακή εκδήλωση",
+    "joinOnline": "Συμμετοχή διαδικτυακά",
+    "cost": "Κόστος",
+    "ageRestriction": "Ηλικιακός περιορισμός",
+    "accessibility": "Προσβασιμότητα",
+    "tickets": "Εισιτήρια",
+    "buyTickets": "Αγορά εισιτηρίων",
+    "addToCalendar": "Προσθήκη στο ημερολόγιο",
+    "downloadICS": "Λήψη αρχείου ICS",
+    "loginToRsvp": "Συνδεθείτε για να απαντήσετε",
+    "locationType": {
+      "physical": "Δια ζώσης",
+      "online": "Διαδικτυακά",
+      "hybrid": "Υβριδική"
+    },
+    "status": {
+      "pending": "Σε αναμονή έγκρισης",
+      "active": "Ενεργή",
+      "cancelled": "Ακυρώθηκε",
+      "past": "Παλαιότερη εκδήλωση"
+    },
+    "date": {
+      "today": "Σήμερα",
+      "tomorrow": "Αύριο"
+    },
+    "rsvp": {
+      "title": "Απάντηση",
+      "rsvp": "Απάντηση",
+      "going": "Θα πάω",
+      "interested": "Ενδιαφέρομαι",
+      "notGoing": "Δεν θα πάω",
+      "cancel": "Ακύρωση απάντησης",
+      "options": "Επιλογές απάντησης",
+      "goingCount": "{{count}} θα πάει",
+      "goingCount_plural": "{{count}} θα πάνε",
+      "interestedCount": "{{count}} ενδιαφέρεται",
+      "interestedCount_plural": "{{count}} ενδιαφέρονται",
+      "status": {
+        "going": "Θα πάω",
+        "interested": "Ενδιαφέρομαι",
+        "not_going": "Δεν θα πάω"
+      }
+    },
+    "capacity": {
+      "full": "Πλήρης",
+      "spotsLeft": "{{count}} θέση απομένει",
+      "spotsLeft_plural": "{{count}} θέσεις απομένουν"
+    },
+    "filters": {
+      "title": "Φίλτρα",
+      "sortBy": "Ταξινόμηση κατά",
+      "dateFrom": "Από ημερομηνία",
+      "dateTo": "Έως ημερομηνία",
+      "category": "Κατηγορία",
+      "locationType": "Τύπος τοποθεσίας",
+      "distance": "Απόσταση",
+      "status": "Κατάσταση",
+      "freeOnly": "Μόνο δωρεάν εκδηλώσεις",
+      "includePast": "Συμπερίληψη παλαιότερων",
+      "clear": "Καθαρισμός φίλτρων",
+      "anyLocationType": "Οποιοσδήποτε τύπος",
+      "anyDistance": "Οποιαδήποτε απόσταση",
+      "anyStatus": "Οποιαδήποτε κατάσταση",
+      "allCategories": "Όλες οι κατηγορίες"
+    },
+    "sort": {
+      "upcoming": "Προσεχείς",
+      "popular": "Δημοφιλείς",
+      "newest": "Νεότερες",
+      "distance": "Απόσταση"
+    },
+    "error": {
+      "loadFailed": "Αποτυχία φόρτωσης εκδηλώσεων. Παρακαλώ δοκιμάστε ξανά."
+    }
+  }
+}

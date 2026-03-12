@@ -1,0 +1,97 @@
+{
+  "events": {
+    "pageTitle": "Events",
+    "pageDescription": "Discover local events and activities in your community",
+    "createEvent": "Create Event",
+    "createFirstEvent": "Create the First Event",
+    "browseEvents": "Browse Events",
+    "backToEvents": "Back to Events",
+    "about": "About This Event",
+    "organizer": "Organizer",
+    "hostedBy": "Hosted by",
+    "noEventsTitle": "No Events Found",
+    "noEventsDescription": "There are no upcoming events at the moment.",
+    "noEventsFiltered": "No events match your filters. Try adjusting your search.",
+    "resultsCount": "{{count}} events found",
+    "resultsCount_plural": "{{count}} events found",
+    "notFoundTitle": "Event Not Found",
+    "notFoundDescription": "The event you're looking for doesn't exist or has been removed.",
+    "editEvent": "Edit Event",
+    "deleteEvent": "Delete Event",
+    "free": "Free",
+    "onlineEvent": "Online Event",
+    "joinOnline": "Join Online",
+    "cost": "Cost",
+    "ageRestriction": "Age Restriction",
+    "accessibility": "Accessibility",
+    "tickets": "Tickets",
+    "buyTickets": "Buy Tickets",
+    "addToCalendar": "Add to Calendar",
+    "downloadICS": "Download ICS File",
+    "loginToRsvp": "Sign in to RSVP",
+    "locationType": {
+      "physical": "In Person",
+      "online": "Online",
+      "hybrid": "Hybrid"
+    },
+    "status": {
+      "pending": "Pending Approval",
+      "active": "Active",
+      "cancelled": "Cancelled",
+      "past": "Past Event"
+    },
+    "date": {
+      "today": "Today",
+      "tomorrow": "Tomorrow"
+    },
+    "rsvp": {
+      "title": "RSVP",
+      "rsvp": "RSVP",
+      "going": "Going",
+      "interested": "Interested",
+      "notGoing": "Not Going",
+      "cancel": "Cancel RSVP",
+      "options": "RSVP Options",
+      "goingCount": "{{count}} going",
+      "goingCount_plural": "{{count}} going",
+      "interestedCount": "{{count}} interested",
+      "interestedCount_plural": "{{count}} interested",
+      "status": {
+        "going": "Going",
+        "interested": "Interested",
+        "not_going": "Not Going"
+      }
+    },
+    "capacity": {
+      "full": "Event Full",
+      "spotsLeft": "{{count}} spot left",
+      "spotsLeft_plural": "{{count}} spots left"
+    },
+    "filters": {
+      "title": "Filters",
+      "sortBy": "Sort by",
+      "dateFrom": "From Date",
+      "dateTo": "To Date",
+      "category": "Category",
+      "locationType": "Location Type",
+      "distance": "Distance",
+      "status": "Status",
+      "freeOnly": "Free events only",
+      "includePast": "Include past events",
+      "clear": "Clear Filters",
+      "anyLocationType": "Any location type",
+      "anyDistance": "Any distance",
+      "anyStatus": "Any status",
+      "allCategories": "All categories"
+    },
+    "sort": {
+      "upcoming": "Upcoming",
+      "popular": "Popular",
+      "newest": "Newest",
+      "distance": "Distance"
+    },
+    "error": {
+      "loadFailed": "Failed to load events. Please try again."
+    }
+  }
+}

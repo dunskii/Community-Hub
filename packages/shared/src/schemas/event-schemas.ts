@@ -41,6 +41,7 @@ export type RecurrenceFrequency = (typeof RECURRENCE_FREQUENCIES)[number];
 
 // Venue schema for physical/hybrid events
 export const venueSchema = z.object({
+  name: z.string().max(100).optional(),
   street: z.string().min(1, { message: 'Street address is required' }),
   suburb: z.string().min(1, { message: 'Suburb is required' }),
   state: z.string().min(1, { message: 'State is required' }),

@@ -1,0 +1,97 @@
+{
+  "events": {
+    "pageTitle": "活動",
+    "pageDescription": "發現您社區的本地活動和活動",
+    "createEvent": "建立活動",
+    "createFirstEvent": "建立第一個活動",
+    "browseEvents": "瀏覽活動",
+    "backToEvents": "返回活動",
+    "about": "關於此活動",
+    "organizer": "組織者",
+    "hostedBy": "由...主辦",
+    "noEventsTitle": "未找到活動",
+    "noEventsDescription": "目前沒有即將舉行的活動。",
+    "noEventsFiltered": "沒有符合您篩選條件的活動。請嘗試調整搜尋。",
+    "resultsCount": "找到 {{count}} 個活動",
+    "resultsCount_plural": "找到 {{count}} 個活動",
+    "notFoundTitle": "未找到活動",
+    "notFoundDescription": "您正在尋找的活動不存在或已被刪除。",
+    "editEvent": "編輯活動",
+    "deleteEvent": "刪除活動",
+    "free": "免費",
+    "onlineEvent": "線上活動",
+    "joinOnline": "在線參加",
+    "cost": "費用",
+    "ageRestriction": "年齡限制",
+    "accessibility": "無障礙設施",
+    "tickets": "門票",
+    "buyTickets": "購買門票",
+    "addToCalendar": "加入日曆",
+    "downloadICS": "下載ICS檔案",
+    "loginToRsvp": "登入以回覆",
+    "locationType": {
+      "physical": "線下",
+      "online": "線上",
+      "hybrid": "混合"
+    },
+    "status": {
+      "pending": "待批准",
+      "active": "進行中",
+      "cancelled": "已取消",
+      "past": "已結束"
+    },
+    "date": {
+      "today": "今天",
+      "tomorrow": "明天"
+    },
+    "rsvp": {
+      "title": "回覆",
+      "rsvp": "回覆",
+      "going": "參加",
+      "interested": "有興趣",
+      "notGoing": "不參加",
+      "cancel": "取消回覆",
+      "options": "回覆選項",
+      "goingCount": "{{count}} 人參加",
+      "goingCount_plural": "{{count}} 人參加",
+      "interestedCount": "{{count}} 人有興趣",
+      "interestedCount_plural": "{{count}} 人有興趣",
+      "status": {
+        "going": "參加",
+        "interested": "有興趣",
+        "not_going": "不參加"
+      }
+    },
+    "capacity": {
+      "full": "活動已滿",
+      "spotsLeft": "剩餘 {{count}} 個名額",
+      "spotsLeft_plural": "剩餘 {{count}} 個名額"
+    },
+    "filters": {
+      "title": "篩選",
+      "sortBy": "排序方式",
+      "dateFrom": "開始日期",
+      "dateTo": "結束日期",
+      "category": "類別",
+      "locationType": "地點類型",
+      "distance": "距離",
+      "status": "狀態",
+      "freeOnly": "僅免費活動",
+      "includePast": "包括過去的活動",
+      "clear": "清除篩選",
+      "anyLocationType": "任何地點類型",
+      "anyDistance": "任何距離",
+      "anyStatus": "任何狀態",
+      "allCategories": "所有類別"
+    },
+    "sort": {
+      "upcoming": "即將舉行",
+      "popular": "熱門",
+      "newest": "最新",
+      "distance": "距離"
+    },
+    "error": {
+      "loadFailed": "載入活動失敗。請重試。"
+    }
+  }
+}

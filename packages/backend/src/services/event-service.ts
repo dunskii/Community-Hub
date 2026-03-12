@@ -3,7 +3,10 @@
  * Phase 8: Events & Calendar System
  * Spec §15: Events & Calendar
  *
- * Handles CRUD operations for events, RSVP management, and ICS export.
+ * Handles CRUD operations for events.
+ * RSVP operations are in event-rsvp-service.ts
+ * ICS export is in event-export-service.ts
+ * Email notifications are in event-notification-service.ts
  */
 
 import { getPlatformConfig } from '../config/platform-loader.js';
@@ -11,6 +14,9 @@ import { prisma } from '../db/index.js';
 import { logger } from '../utils/logger.js';
 import { ApiError } from '../utils/api-error.js';
 import { getRedis } from '../cache/redis-client.js';
+import { eventRSVPService } from './event-rsvp-service.js';
+import { eventExportService } from './event-export-service.js';
+import { eventNotificationService } from './event-notification-service.js';
 import type {
   EventCreateInput,
   EventUpdateInput,
@@ -139,7 +145,6 @@ export interface PaginatedAttendees {
 // ─── Cache Keys ───────────────────────────────────────────────
 
 const CACHE_PREFIX = 'events';
-// const CACHE_TTL = 300; // 5 minutes - reserved for future use
 
 function getCacheKey(type: string, ...args: string[]): string {
   return `${CACHE_PREFIX}:${type}:${args.join(':')}`;
@@ -275,6 +280,9 @@ export class EventService {
     const existingEvent = await prisma.event.findUnique({
       where: { id: eventId },
       include: {
+        createdBy: {
+          select: { displayName: true },
+        },
         _count: {
           select: {
             rsvps: {
@@ -302,16 +310,26 @@ export class EventService {
       );
     }
 
-    // If changing start time and there are RSVPs, warn/prevent
+    // Track changes for notification
+    const changes: string[] = [];
+
+    // If changing start time and there are RSVPs, track for notification
     if (data.startTime && existingEvent._count.rsvps > 0) {
       const newStartTime = new Date(data.startTime);
       if (newStartTime.getTime() !== existingEvent.startTime.getTime()) {
-        // Allow the update but we should notify RSVPs (handled by email service)
+        changes.push('date/time');
         logger.info(
           { eventId, rsvpCount: existingEvent._count.rsvps },
           'Event start time changed with existing RSVPs'
         );
       }
+    }
+
+    if (data.locationType && data.locationType !== existingEvent.locationType) {
+      changes.push('location type');
+    }
+    if (data.venue) {
+      changes.push('venue');
     }
 
     // Build update data
@@ -363,6 +381,26 @@ export class EventService {
 
     logger.info({ eventId, userId }, 'Event updated');
 
+    // Send update notifications if there were significant changes
+    if (changes.length > 0 && existingEvent._count.rsvps > 0) {
+      // Fire and forget - don't block the response
+      eventNotificationService.sendEventUpdateNotification(
+        {
+          eventId: updatedEvent.id,
+          eventTitle: updatedEvent.title,
+          eventStartTime: updatedEvent.startTime,
+          eventEndTime: updatedEvent.endTime,
+          locationType: updatedEvent.locationType,
+          venue: updatedEvent.venue as VenueInput | null,
+          onlineUrl: updatedEvent.onlineUrl,
+          organizerName: existingEvent.createdBy.displayName,
+        },
+        changes
+      ).catch((err) => {
+        logger.error({ err, eventId }, 'Failed to send update notifications');
+      });
+    }
+
     // Invalidate cache
     await this.invalidateCache(eventId);
 
@@ -380,6 +418,9 @@ export class EventService {
     const event = await prisma.event.findUnique({
       where: { id: eventId },
       include: {
+        createdBy: {
+          select: { displayName: true },
+        },
         rsvps: {
           where: { status: RSVPStatus.GOING },
           include: {
@@ -417,7 +458,21 @@ export class EventService {
       'Event cancelled'
     );
 
-    // TODO: Send cancellation emails to RSVPs
+    // Send cancellation emails to RSVPs (fire and forget)
+    if (event.rsvps.length > 0) {
+      eventNotificationService.sendCancellationNotifications({
+        eventId: event.id,
+        eventTitle: event.title,
+        eventStartTime: event.startTime,
+        eventEndTime: event.endTime,
+        locationType: event.locationType,
+        venue: event.venue as VenueInput | null,
+        onlineUrl: event.onlineUrl,
+        organizerName: event.createdBy.displayName,
+      }).catch((err) => {
+        logger.error({ err, eventId }, 'Failed to send cancellation notifications');
+      });
+    }
 
     // Invalidate cache
     await this.invalidateCache(eventId);
@@ -694,286 +749,42 @@ export class EventService {
     };
   }
 
-  // ─── RSVP Operations ────────────────────────────────────────
+  // ─── RSVP Operations (delegated) ───────────────────────────
 
-  /**
-   * Creates or updates an RSVP for an event
-   */
   async rsvpToEvent(
     eventId: string,
     userId: string,
     data: EventRSVPInput,
     auditContext: AuditContext
-  ): Promise<{ rsvp: AttendeeInfo; event: EventWithDetails }> {
-    // Get event
-    const event = await prisma.event.findUnique({
-      where: { id: eventId },
-      include: {
-        rsvps: true,
-        category: true,
-        linkedBusiness: {
-          select: { id: true, name: true, slug: true },
-        },
-        createdBy: {
-          select: { id: true, displayName: true, profilePhoto: true },
-        },
-      },
-    });
-
-    if (!event) {
-      throw ApiError.notFound('EVENT_NOT_FOUND', 'Event not found');
-    }
-
-    // Check event status
-    if (event.status !== EventStatus.ACTIVE) {
-      throw ApiError.badRequest(
-        'EVENT_NOT_ACTIVE',
-        'Cannot RSVP to an event that is not active'
-      );
-    }
-
-    // Check if event has already started
-    if (new Date() > event.startTime) {
-      throw ApiError.badRequest(
-        'EVENT_STARTED',
-        'Cannot RSVP to an event that has already started'
-      );
-    }
-
-    // Check capacity for GOING status
-    if (data.status === 'GOING' && event.capacity) {
-      const currentGoing = event.rsvps
-        .filter((r) => r.status === RSVPStatus.GOING)
-        .reduce((sum, r) => sum + r.guestCount, 0);
-
-      // Exclude current user's existing RSVP if updating
-      const existingRsvp = event.rsvps.find((r) => r.userId === userId);
-      const existingGuests = existingRsvp?.status === RSVPStatus.GOING
-        ? existingRsvp.guestCount
-        : 0;
-
-      const newTotal = currentGoing - existingGuests + data.guestCount;
-
-      if (newTotal > event.capacity) {
-        throw ApiError.badRequest(
-          'EVENT_AT_CAPACITY',
-          `This event is at full capacity. Only ${event.capacity - currentGoing + existingGuests} spots remaining.`
-        );
-      }
-    }
-
-    // Create or update RSVP
-    const rsvp = await prisma.eventRSVP.upsert({
-      where: {
-        eventId_userId: { eventId, userId },
-      },
-      update: {
-        status: data.status as RSVPStatus,
-        guestCount: data.guestCount,
-        notes: data.notes,
-        rsvpDate: new Date(),
-      },
-      create: {
-        eventId,
-        userId,
-        status: data.status as RSVPStatus,
-        guestCount: data.guestCount,
-        notes: data.notes,
-      },
-      include: {
-        user: {
-          select: {
-            id: true,
-            displayName: true,
-            profilePhoto: true,
-          },
-        },
-      },
-    });
-
-    // Log audit
-    await this.logAudit('event.rsvp', eventId, null, rsvp, auditContext);
-
-    logger.info(
-      { eventId, userId, status: data.status, guestCount: data.guestCount },
-      'Event RSVP created/updated'
+  ) {
+    return eventRSVPService.rsvpToEvent(
+      eventId,
+      userId,
+      data,
+      auditContext,
+      this.getEvent.bind(this)
     );
-
-    // Invalidate cache
-    await this.invalidateCache(eventId);
-
-    // Refresh event data
-    const updatedEvent = await this.getEvent(eventId, userId);
-
-    return {
-      rsvp: {
-        id: rsvp.id,
-        userId: rsvp.userId,
-        user: rsvp.user,
-        status: rsvp.status,
-        guestCount: rsvp.guestCount,
-        notes: rsvp.notes,
-        rsvpDate: rsvp.rsvpDate,
-      },
-      event: updatedEvent,
-    };
   }
 
-  /**
-   * Cancels a user's RSVP
-   */
-  async cancelRSVP(
-    eventId: string,
+  async cancelRSVP(eventId: string, userId: string, auditContext: AuditContext) {
+    return eventRSVPService.cancelRSVP(eventId, userId, auditContext);
+  }
+
+  async getEventAttendees(eventId: string, userId: string, filters: AttendeeFilterInput) {
+    return eventRSVPService.getEventAttendees(eventId, userId, filters);
+  }
+
+  async getUserRSVPs(
     userId: string,
-    auditContext: AuditContext
-  ): Promise<void> {
-    const rsvp = await prisma.eventRSVP.findUnique({
-      where: {
-        eventId_userId: { eventId, userId },
-      },
-    });
-
-    if (!rsvp) {
-      throw ApiError.notFound('RSVP_NOT_FOUND', 'RSVP not found');
-    }
-
-    await prisma.eventRSVP.delete({
-      where: { id: rsvp.id },
-    });
-
-    // Log audit
-    await this.logAudit('event.rsvp.cancel', eventId, rsvp, null, auditContext);
-
-    logger.info({ eventId, userId }, 'Event RSVP cancelled');
-
-    // Invalidate cache
-    await this.invalidateCache(eventId);
+    options: { page: number; limit: number; status?: RSVPStatus; includePast?: boolean }
+  ) {
+    return eventRSVPService.getUserRSVPs(userId, options);
   }
 
-  /**
-   * Gets attendee list for an event (owner only)
-   */
-  async getEventAttendees(
-    eventId: string,
-    userId: string,
-    filters: AttendeeFilterInput
-  ): Promise<PaginatedAttendees> {
-    // Verify event ownership
-    const event = await prisma.event.findUnique({
-      where: { id: eventId },
-    });
+  // ─── ICS Export (delegated) ────────────────────────────────
 
-    if (!event) {
-      throw ApiError.notFound('EVENT_NOT_FOUND', 'Event not found');
-    }
-
-    if (event.createdById !== userId) {
-      throw ApiError.forbidden(
-        'NOT_EVENT_OWNER',
-        'Only the event owner can view attendees'
-      );
-    }
-
-    const { page, limit, status } = filters;
-    const skip = (page - 1) * limit;
-
-    // Build where clause
-    const where: Record<string, unknown> = { eventId };
-    if (status) {
-      where.status = status;
-    }
-
-    // Get attendees
-    const [attendees, total, summary] = await Promise.all([
-      prisma.eventRSVP.findMany({
-        where,
-        skip,
-        take: limit,
-        orderBy: { rsvpDate: 'desc' },
-        include: {
-          user: {
-            select: {
-              id: true,
-              displayName: true,
-              profilePhoto: true,
-              email: true, // Visible to owner
-            },
-          },
-        },
-      }),
-      prisma.eventRSVP.count({ where }),
-      prisma.eventRSVP.groupBy({
-        by: ['status'],
-        where: { eventId },
-        _count: true,
-        _sum: { guestCount: true },
-      }),
-    ]);
-
-    // Calculate summary
-    const summaryMap = new Map(summary.map((s) => [s.status, s]));
-    const goingData = summaryMap.get(RSVPStatus.GOING);
-    const interestedData = summaryMap.get(RSVPStatus.INTERESTED);
-    const notGoingData = summaryMap.get(RSVPStatus.NOT_GOING);
-
-    return {
-      attendees: attendees.map((a) => ({
-        id: a.id,
-        userId: a.userId,
-        user: a.user,
-        status: a.status,
-        guestCount: a.guestCount,
-        notes: a.notes,
-        rsvpDate: a.rsvpDate,
-      })),
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit),
-        hasMore: skip + attendees.length < total,
-      },
-      summary: {
-        going: goingData?._count || 0,
-        interested: interestedData?._count || 0,
-        notGoing: notGoingData?._count || 0,
-        totalGuests: (goingData?._sum.guestCount || 0) +
-          (interestedData?._sum.guestCount || 0),
-      },
-    };
-  }
-
-  // ─── ICS Export ─────────────────────────────────────────────
-
-  /**
-   * Exports an event to ICS format
-   */
-  async exportEventICS(eventId: string): Promise<string> {
-    const event = await prisma.event.findUnique({
-      where: { id: eventId },
-      include: {
-        category: true,
-        linkedBusiness: {
-          select: { name: true },
-        },
-        createdBy: {
-          select: { displayName: true },
-        },
-      },
-    });
-
-    if (!event) {
-      throw ApiError.notFound('EVENT_NOT_FOUND', 'Event not found');
-    }
-
-    if (event.status !== EventStatus.ACTIVE) {
-      throw ApiError.badRequest(
-        'EVENT_NOT_ACTIVE',
-        'Cannot export an event that is not active'
-      );
-    }
-
-    return this.generateICS(event);
+  async exportEventICS(eventId: string) {
+    return eventExportService.exportEventICS(eventId);
   }
 
   // ─── Status Management ──────────────────────────────────────
@@ -1130,92 +941,6 @@ export class EventService {
       userRSVP,
       spotsRemaining,
     };
-  }
-
-  /**
-   * Generates ICS content for an event
-   */
-  private generateICS(event: Record<string, unknown>): string {
-    const formatDate = (date: Date): string => {
-      return date
-        .toISOString()
-        .replace(/[-:]/g, '')
-        .replace(/\.\d{3}/, '');
-    };
-
-    const escapeText = (text: string): string => {
-      return text
-        .replace(/\\/g, '\\\\')
-        .replace(/;/g, '\\;')
-        .replace(/,/g, '\\,')
-        .replace(/\n/g, '\\n');
-    };
-
-    const lines: string[] = [
-      'BEGIN:VCALENDAR',
-      'VERSION:2.0',
-      'PRODID:-//Community Hub//Events//EN',
-      'CALSCALE:GREGORIAN',
-      'METHOD:PUBLISH',
-      'BEGIN:VEVENT',
-      `UID:${event.id}@communityhub.local`,
-      `DTSTAMP:${formatDate(new Date())}`,
-      `DTSTART:${formatDate(event.startTime as Date)}`,
-      `DTEND:${formatDate(event.endTime as Date)}`,
-      `SUMMARY:${escapeText(event.title as string)}`,
-      `DESCRIPTION:${escapeText(event.description as string)}`,
-    ];
-
-    // Add location
-    const locationType = event.locationType as string;
-    const venue = event.venue as VenueInput | null;
-    const onlineUrl = event.onlineUrl as string | null;
-
-    if (locationType === 'PHYSICAL' && venue) {
-      const location = `${venue.street}, ${venue.suburb}, ${venue.state} ${venue.postcode}`;
-      lines.push(`LOCATION:${escapeText(location)}`);
-      if (venue.latitude && venue.longitude) {
-        lines.push(`GEO:${venue.latitude};${venue.longitude}`);
-      }
-    } else if (locationType === 'ONLINE' && onlineUrl) {
-      lines.push(`URL:${onlineUrl}`);
-      lines.push(`LOCATION:Online Event`);
-    } else if (locationType === 'HYBRID') {
-      if (venue) {
-        const location = `${venue.street}, ${venue.suburb}, ${venue.state} ${venue.postcode}`;
-        lines.push(`LOCATION:${escapeText(location)} (Hybrid - also online)`);
-      }
-      if (onlineUrl) {
-        lines.push(`URL:${onlineUrl}`);
-      }
-    }
-
-    // Add organizer
-    const createdBy = event.createdBy as { displayName: string };
-    lines.push(`ORGANIZER;CN=${escapeText(createdBy.displayName)}:MAILTO:noreply@communityhub.local`);
-
-    // Add recurrence rule if present
-    const recurrence = event.recurrence as RecurrenceRuleInput | null;
-    if (recurrence && recurrence.frequency !== 'NONE') {
-      let rrule = `RRULE:FREQ=${recurrence.frequency}`;
-      if (recurrence.interval && recurrence.interval > 1) {
-        rrule += `;INTERVAL=${recurrence.interval}`;
-      }
-      if (recurrence.daysOfWeek && recurrence.daysOfWeek.length > 0) {
-        const days = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
-        const byDay = recurrence.daysOfWeek.map((d: number) => days[d]).join(',');
-        rrule += `;BYDAY=${byDay}`;
-      }
-      if (recurrence.endDate) {
-        rrule += `;UNTIL=${formatDate(new Date(recurrence.endDate))}`;
-      }
-      lines.push(rrule);
-    }
-
-    lines.push('END:VEVENT');
-    lines.push('END:VCALENDAR');
-
-    return lines.join('\r\n');
   }
 
   /**

@@ -1,0 +1,97 @@
+{
+  "events": {
+    "pageTitle": "कार्यक्रम",
+    "pageDescription": "अपने समुदाय में स्थानीय कार्यक्रमों और गतिविधियों की खोज करें",
+    "createEvent": "कार्यक्रम बनाएं",
+    "createFirstEvent": "पहला कार्यक्रम बनाएं",
+    "browseEvents": "कार्यक्रम ब्राउज़ करें",
+    "backToEvents": "कार्यक्रमों पर वापस जाएं",
+    "about": "इस कार्यक्रम के बारे में",
+    "organizer": "आयोजक",
+    "hostedBy": "द्वारा आयोजित",
+    "noEventsTitle": "कोई कार्यक्रम नहीं मिला",
+    "noEventsDescription": "इस समय कोई आगामी कार्यक्रम नहीं हैं।",
+    "noEventsFiltered": "आपके फ़िल्टर से कोई कार्यक्रम मेल नहीं खाता। खोज को समायोजित करने का प्रयास करें।",
+    "resultsCount": "{{count}} कार्यक्रम मिले",
+    "resultsCount_plural": "{{count}} कार्यक्रम मिले",
+    "notFoundTitle": "कार्यक्रम नहीं मिला",
+    "notFoundDescription": "आप जिस कार्यक्रम की तलाश कर रहे हैं वह मौजूद नहीं है या हटा दिया गया है।",
+    "editEvent": "कार्यक्रम संपादित करें",
+    "deleteEvent": "कार्यक्रम हटाएं",
+    "free": "मुफ़्त",
+    "onlineEvent": "ऑनलाइन कार्यक्रम",
+    "joinOnline": "ऑनलाइन जुड़ें",
+    "cost": "लागत",
+    "ageRestriction": "आयु प्रतिबंध",
+    "accessibility": "पहुंच सुविधाएं",
+    "tickets": "टिकट",
+    "buyTickets": "टिकट खरीदें",
+    "addToCalendar": "कैलेंडर में जोड़ें",
+    "downloadICS": "ICS फ़ाइल डाउनलोड करें",
+    "loginToRsvp": "जवाब देने के लिए साइन इन करें",
+    "locationType": {
+      "physical": "व्यक्तिगत रूप से",
+      "online": "ऑनलाइन",
+      "hybrid": "संकर"
+    },
+    "status": {
+      "pending": "अनुमोदन के लिए लंबित",
+      "active": "सक्रिय",
+      "cancelled": "रद्द",
+      "past": "बीता हुआ कार्यक्रम"
+    },
+    "date": {
+      "today": "आज",
+      "tomorrow": "कल"
+    },
+    "rsvp": {
+      "title": "जवाब दें",
+      "rsvp": "जवाब दें",
+      "going": "जा रहे हैं",
+      "interested": "रुचि है",
+      "notGoing": "नहीं जा रहे",
+      "cancel": "जवाब रद्द करें",
+      "options": "जवाब विकल्प",
+      "goingCount": "{{count}} जा रहे हैं",
+      "goingCount_plural": "{{count}} जा रहे हैं",
+      "interestedCount": "{{count}} रुचि रखते हैं",
+      "interestedCount_plural": "{{count}} रुचि रखते हैं",
+      "status": {
+        "going": "जा रहे हैं",
+        "interested": "रुचि है",
+        "not_going": "नहीं जा रहे"
+      }
+    },
+    "capacity": {
+      "full": "कार्यक्रम भर गया",
+      "spotsLeft": "{{count}} स्थान शेष",
+      "spotsLeft_plural": "{{count}} स्थान शेष"
+    },
+    "filters": {
+      "title": "फ़िल्टर",
+      "sortBy": "क्रमबद्ध करें",
+      "dateFrom": "तिथि से",
+      "dateTo": "तिथि तक",
+      "category": "श्रेणी",
+      "locationType": "स्थान प्रकार",
+      "distance": "दूरी",
+      "status": "स्थिति",
+      "freeOnly": "केवल मुफ़्त कार्यक्रम",
+      "includePast": "पिछले कार्यक्रम शामिल करें",
+      "clear": "फ़िल्टर साफ़ करें",
+      "anyLocationType": "कोई भी स्थान प्रकार",
+      "anyDistance": "कोई भी दूरी",
+      "anyStatus": "कोई भी स्थिति",
+      "allCategories": "सभी श्रेणियां"
+    },
+    "sort": {
+      "upcoming": "आगामी",
+      "popular": "लोकप्रिय",
+      "newest": "नवीनतम",
+      "distance": "दूरी"
+    },
+    "error": {
+      "loadFailed": "कार्यक्रम लोड करने में विफल। कृपया पुनः प्रयास करें।"
+    }
+  }
+}

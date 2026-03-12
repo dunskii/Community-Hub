@@ -1,0 +1,97 @@
+{
+  "events": {
+    "pageTitle": "تقریبات",
+    "pageDescription": "اپنی کمیونٹی میں مقامی تقریبات اور سرگرمیاں دریافت کریں",
+    "createEvent": "تقریب بنائیں",
+    "createFirstEvent": "پہلی تقریب بنائیں",
+    "browseEvents": "تقریبات براؤز کریں",
+    "backToEvents": "تقریبات پر واپس جائیں",
+    "about": "اس تقریب کے بارے میں",
+    "organizer": "منتظم",
+    "hostedBy": "میزبان",
+    "noEventsTitle": "کوئی تقریب نہیں ملی",
+    "noEventsDescription": "اس وقت کوئی آنے والی تقریب نہیں ہے۔",
+    "noEventsFiltered": "آپ کے فلٹرز سے کوئی تقریب میل نہیں کھاتی۔ تلاش کو ایڈجسٹ کرنے کی کوشش کریں۔",
+    "resultsCount": "{{count}} تقریب ملی",
+    "resultsCount_plural": "{{count}} تقریبات ملیں",
+    "notFoundTitle": "تقریب نہیں ملی",
+    "notFoundDescription": "آپ جس تقریب کی تلاش کر رہے ہیں وہ موجود نہیں ہے یا ہٹا دی گئی ہے۔",
+    "editEvent": "تقریب میں ترمیم کریں",
+    "deleteEvent": "تقریب حذف کریں",
+    "free": "مفت",
+    "onlineEvent": "آن لائن تقریب",
+    "joinOnline": "آن لائن شامل ہوں",
+    "cost": "لاگت",
+    "ageRestriction": "عمر کی پابندی",
+    "accessibility": "رسائی",
+    "tickets": "ٹکٹ",
+    "buyTickets": "ٹکٹ خریدیں",
+    "addToCalendar": "کیلنڈر میں شامل کریں",
+    "downloadICS": "ICS فائل ڈاؤن لوڈ کریں",
+    "loginToRsvp": "جواب دینے کے لیے سائن ان کریں",
+    "locationType": {
+      "physical": "ذاتی طور پر",
+      "online": "آن لائن",
+      "hybrid": "مخلوط"
+    },
+    "status": {
+      "pending": "منظوری کے انتظار میں",
+      "active": "فعال",
+      "cancelled": "منسوخ",
+      "past": "گزشتہ تقریب"
+    },
+    "date": {
+      "today": "آج",
+      "tomorrow": "کل"
+    },
+    "rsvp": {
+      "title": "جواب دیں",
+      "rsvp": "جواب دیں",
+      "going": "جا رہے ہیں",
+      "interested": "دلچسپی ہے",
+      "notGoing": "نہیں جا رہے",
+      "cancel": "جواب منسوخ کریں",
+      "options": "جواب کے اختیارات",
+      "goingCount": "{{count}} جا رہے ہیں",
+      "goingCount_plural": "{{count}} جا رہے ہیں",
+      "interestedCount": "{{count}} دلچسپی رکھتے ہیں",
+      "interestedCount_plural": "{{count}} دلچسپی رکھتے ہیں",
+      "status": {
+        "going": "جا رہے ہیں",
+        "interested": "دلچسپی ہے",
+        "not_going": "نہیں جا رہے"
+      }
+    },
+    "capacity": {
+      "full": "تقریب بھر گئی",
+      "spotsLeft": "{{count}} جگہ باقی",
+      "spotsLeft_plural": "{{count}} جگہیں باقی"
+    },
+    "filters": {
+      "title": "فلٹرز",
+      "sortBy": "ترتیب دیں",
+      "dateFrom": "تاریخ سے",
+      "dateTo": "تاریخ تک",
+      "category": "زمرہ",
+      "locationType": "مقام کی قسم",
+      "distance": "فاصلہ",
+      "status": "حیثیت",
+      "freeOnly": "صرف مفت تقریبات",
+      "includePast": "گزشتہ تقریبات شامل کریں",
+      "clear": "فلٹرز صاف کریں",
+      "anyLocationType": "کوئی بھی مقام کی قسم",
+      "anyDistance": "کوئی بھی فاصلہ",
+      "anyStatus": "کوئی بھی حیثیت",
+      "allCategories": "تمام زمرے"
+    },
+    "sort": {
+      "upcoming": "آنے والی",
+      "popular": "مقبول",
+      "newest": "تازہ ترین",
+      "distance": "فاصلہ"
+    },
+    "error": {
+      "loadFailed": "تقریبات لوڈ کرنے میں ناکام۔ براہ کرم دوبارہ کوشش کریں۔"
+    }
+  }
+}

@@ -57,6 +57,18 @@ import homeKO from './locales/ko/home.json';
 import homeEL from './locales/el/home.json';
 import homeIT from './locales/it/home.json';
 
+// Import events translations (Phase 8)
+import eventsEN from './locales/en/events.json';
+import eventsAR from './locales/ar/events.json';
+import eventsZH_CN from './locales/zh-CN/events.json';
+import eventsZH_TW from './locales/zh-TW/events.json';
+import eventsVI from './locales/vi/events.json';
+import eventsHI from './locales/hi/events.json';
+import eventsUR from './locales/ur/events.json';
+import eventsKO from './locales/ko/events.json';
+import eventsEL from './locales/el/events.json';
+import eventsIT from './locales/it/events.json';
+
 const resources = {
   en: {
     translation: translationEN,
@@ -65,6 +77,7 @@ const resources = {
     reviews: reviewsEN,
     owner: ownerEN,
     home: homeEN,
+    events: eventsEN,
   },
   ar: {
     translation: translationAR,
@@ -73,54 +86,63 @@ const resources = {
     reviews: reviewsAR,
     owner: ownerAR,
     home: homeAR,
+    events: eventsAR,
   },
   'zh-CN': {
     translation: translationZH_CN,
     reviews: reviewsZH_CN,
     owner: ownerZH_CN,
     home: homeZH_CN,
+    events: eventsZH_CN,
   },
   'zh-TW': {
     translation: translationZH_TW,
     reviews: reviewsZH_TW,
     owner: ownerZH_TW,
     home: homeZH_TW,
+    events: eventsZH_TW,
   },
   vi: {
     translation: translationVI,
     reviews: reviewsVI,
     owner: ownerVI,
     home: homeVI,
+    events: eventsVI,
   },
   hi: {
     translation: translationHI,
     reviews: reviewsHI,
     owner: ownerHI,
     home: homeHI,
+    events: eventsHI,
   },
   ur: {
     translation: translationUR,
     reviews: reviewsUR,
     owner: ownerUR,
     home: homeUR,
+    events: eventsUR,
   },
   ko: {
     translation: translationKO,
     reviews: reviewsKO,
     owner: ownerKO,
     home: homeKO,
+    events: eventsKO,
   },
   el: {
     translation: translationEL,
     reviews: reviewsEL,
     owner: ownerEL,
     home: homeEL,
+    events: eventsEL,
   },
   it: {
     translation: translationIT,
     reviews: reviewsIT,
     owner: ownerIT,
     home: homeIT,
+    events: eventsIT,
   },
 };
 
@@ -139,7 +161,7 @@ i18n
     resources,
     fallbackLng: 'en',
     defaultNS: 'translation',
-    ns: ['translation', 'business', 'category', 'reviews', 'owner', 'home'],
+    ns: ['translation', 'business', 'category', 'reviews', 'owner', 'home', 'events'],
     debug: import.meta.env.DEV,
     interpolation: {
       escapeValue: false, // React already escapes

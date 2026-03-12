@@ -1,0 +1,97 @@
+{
+  "events": {
+    "pageTitle": "Sự kiện",
+    "pageDescription": "Khám phá các sự kiện và hoạt động địa phương trong cộng đồng của bạn",
+    "createEvent": "Tạo sự kiện",
+    "createFirstEvent": "Tạo sự kiện đầu tiên",
+    "browseEvents": "Duyệt sự kiện",
+    "backToEvents": "Quay lại sự kiện",
+    "about": "Về sự kiện này",
+    "organizer": "Người tổ chức",
+    "hostedBy": "Được tổ chức bởi",
+    "noEventsTitle": "Không tìm thấy sự kiện",
+    "noEventsDescription": "Hiện tại không có sự kiện sắp tới nào.",
+    "noEventsFiltered": "Không có sự kiện nào phù hợp với bộ lọc của bạn. Hãy thử điều chỉnh tìm kiếm.",
+    "resultsCount": "Tìm thấy {{count}} sự kiện",
+    "resultsCount_plural": "Tìm thấy {{count}} sự kiện",
+    "notFoundTitle": "Không tìm thấy sự kiện",
+    "notFoundDescription": "Sự kiện bạn đang tìm không tồn tại hoặc đã bị xóa.",
+    "editEvent": "Chỉnh sửa sự kiện",
+    "deleteEvent": "Xóa sự kiện",
+    "free": "Miễn phí",
+    "onlineEvent": "Sự kiện trực tuyến",
+    "joinOnline": "Tham gia trực tuyến",
+    "cost": "Chi phí",
+    "ageRestriction": "Giới hạn độ tuổi",
+    "accessibility": "Khả năng tiếp cận",
+    "tickets": "Vé",
+    "buyTickets": "Mua vé",
+    "addToCalendar": "Thêm vào lịch",
+    "downloadICS": "Tải tệp ICS",
+    "loginToRsvp": "Đăng nhập để phản hồi",
+    "locationType": {
+      "physical": "Trực tiếp",
+      "online": "Trực tuyến",
+      "hybrid": "Kết hợp"
+    },
+    "status": {
+      "pending": "Chờ phê duyệt",
+      "active": "Đang diễn ra",
+      "cancelled": "Đã hủy",
+      "past": "Đã kết thúc"
+    },
+    "date": {
+      "today": "Hôm nay",
+      "tomorrow": "Ngày mai"
+    },
+    "rsvp": {
+      "title": "Phản hồi",
+      "rsvp": "Phản hồi",
+      "going": "Sẽ tham gia",
+      "interested": "Quan tâm",
+      "notGoing": "Không tham gia",
+      "cancel": "Hủy phản hồi",
+      "options": "Tùy chọn phản hồi",
+      "goingCount": "{{count}} người tham gia",
+      "goingCount_plural": "{{count}} người tham gia",
+      "interestedCount": "{{count}} người quan tâm",
+      "interestedCount_plural": "{{count}} người quan tâm",
+      "status": {
+        "going": "Sẽ tham gia",
+        "interested": "Quan tâm",
+        "not_going": "Không tham gia"
+      }
+    },
+    "capacity": {
+      "full": "Sự kiện đã đầy",
+      "spotsLeft": "Còn {{count}} chỗ",
+      "spotsLeft_plural": "Còn {{count}} chỗ"
+    },
+    "filters": {
+      "title": "Bộ lọc",
+      "sortBy": "Sắp xếp theo",
+      "dateFrom": "Từ ngày",
+      "dateTo": "Đến ngày",
+      "category": "Danh mục",
+      "locationType": "Loại địa điểm",
+      "distance": "Khoảng cách",
+      "status": "Trạng thái",
+      "freeOnly": "Chỉ sự kiện miễn phí",
+      "includePast": "Bao gồm sự kiện đã qua",
+      "clear": "Xóa bộ lọc",
+      "anyLocationType": "Bất kỳ loại địa điểm nào",
+      "anyDistance": "Bất kỳ khoảng cách nào",
+      "anyStatus": "Bất kỳ trạng thái nào",
+      "allCategories": "Tất cả danh mục"
+    },
+    "sort": {
+      "upcoming": "Sắp tới",
+      "popular": "Phổ biến",
+      "newest": "Mới nhất",
+      "distance": "Khoảng cách"
+    },
+    "error": {
+      "loadFailed": "Không thể tải sự kiện. Vui lòng thử lại."
+    }
+  }
+}

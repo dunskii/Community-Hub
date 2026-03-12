@@ -1,0 +1,97 @@
+{
+  "events": {
+    "pageTitle": "이벤트",
+    "pageDescription": "지역 사회의 이벤트와 활동을 발견하세요",
+    "createEvent": "이벤트 만들기",
+    "createFirstEvent": "첫 번째 이벤트 만들기",
+    "browseEvents": "이벤트 둘러보기",
+    "backToEvents": "이벤트로 돌아가기",
+    "about": "이 이벤트 소개",
+    "organizer": "주최자",
+    "hostedBy": "주최",
+    "noEventsTitle": "이벤트를 찾을 수 없습니다",
+    "noEventsDescription": "현재 예정된 이벤트가 없습니다.",
+    "noEventsFiltered": "필터와 일치하는 이벤트가 없습니다. 검색을 조정해 보세요.",
+    "resultsCount": "{{count}}개의 이벤트를 찾았습니다",
+    "resultsCount_plural": "{{count}}개의 이벤트를 찾았습니다",
+    "notFoundTitle": "이벤트를 찾을 수 없습니다",
+    "notFoundDescription": "찾고 계신 이벤트가 존재하지 않거나 삭제되었습니다.",
+    "editEvent": "이벤트 수정",
+    "deleteEvent": "이벤트 삭제",
+    "free": "무료",
+    "onlineEvent": "온라인 이벤트",
+    "joinOnline": "온라인 참여",
+    "cost": "비용",
+    "ageRestriction": "연령 제한",
+    "accessibility": "접근성",
+    "tickets": "티켓",
+    "buyTickets": "티켓 구매",
+    "addToCalendar": "캘린더에 추가",
+    "downloadICS": "ICS 파일 다운로드",
+    "loginToRsvp": "참석 여부를 알리려면 로그인하세요",
+    "locationType": {
+      "physical": "오프라인",
+      "online": "온라인",
+      "hybrid": "하이브리드"
+    },
+    "status": {
+      "pending": "승인 대기 중",
+      "active": "진행 중",
+      "cancelled": "취소됨",
+      "past": "종료된 이벤트"
+    },
+    "date": {
+      "today": "오늘",
+      "tomorrow": "내일"
+    },
+    "rsvp": {
+      "title": "참석 여부",
+      "rsvp": "참석 여부",
+      "going": "참석",
+      "interested": "관심 있음",
+      "notGoing": "불참",
+      "cancel": "참석 취소",
+      "options": "참석 옵션",
+      "goingCount": "{{count}}명 참석",
+      "goingCount_plural": "{{count}}명 참석",
+      "interestedCount": "{{count}}명 관심",
+      "interestedCount_plural": "{{count}}명 관심",
+      "status": {
+        "going": "참석",
+        "interested": "관심 있음",
+        "not_going": "불참"
+      }
+    },
+    "capacity": {
+      "full": "마감",
+      "spotsLeft": "{{count}}자리 남음",
+      "spotsLeft_plural": "{{count}}자리 남음"
+    },
+    "filters": {
+      "title": "필터",
+      "sortBy": "정렬",
+      "dateFrom": "시작 날짜",
+      "dateTo": "종료 날짜",
+      "category": "카테고리",
+      "locationType": "장소 유형",
+      "distance": "거리",
+      "status": "상태",
+      "freeOnly": "무료 이벤트만",
+      "includePast": "지난 이벤트 포함",
+      "clear": "필터 지우기",
+      "anyLocationType": "모든 장소 유형",
+      "anyDistance": "모든 거리",
+      "anyStatus": "모든 상태",
+      "allCategories": "모든 카테고리"
+    },
+    "sort": {
+      "upcoming": "예정",
+      "popular": "인기",
+      "newest": "최신",
+      "distance": "거리"
+    },
+    "error": {
+      "loadFailed": "이벤트를 불러오지 못했습니다. 다시 시도해 주세요."
+    }
+  }
+}

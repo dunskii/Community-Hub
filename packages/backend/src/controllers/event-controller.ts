@@ -331,12 +331,12 @@ export class EventController {
   // ─── User's Events ──────────────────────────────────────────
 
   /**
-   * GET /users/:userId/events
+   * GET /users/:id/events
    * Get events created by user
    */
   async getUserEvents(req: Request, res: Response): Promise<void> {
     try {
-      const { userId } = req.params;
+      const userId = req.params.id as string;
       const currentUserId = req.user?.id;
       const page = req.query.page ? Number(req.query.page) : 1;
       const limit = req.query.limit ? Math.min(Number(req.query.limit), 50) : 20;
@@ -345,6 +345,7 @@ export class EventController {
         {
           createdById: userId,
           includePast: true,
+          freeOnly: false,
           page,
           limit,
           sort: 'newest',
@@ -354,18 +355,18 @@ export class EventController {
 
       sendSuccess(res, result);
     } catch (error) {
-      logger.error({ error, userId: req.params.userId }, 'Failed to get user events');
+      logger.error({ error, userId: req.params.id }, 'Failed to get user events');
       handleError(res, error, 'GET_USER_EVENTS_FAILED');
     }
   }
 
   /**
-   * GET /users/:userId/rsvps
+   * GET /users/:id/rsvps
    * Get events user has RSVP'd to
    */
   async getUserRSVPs(req: Request, res: Response): Promise<void> {
     try {
-      const { userId } = req.params;
+      const userId = req.params.id as string;
       const currentUserId = req.user?.id;
 
       // Only allow users to view their own RSVPs
@@ -374,11 +375,17 @@ export class EventController {
         return;
       }
 
-      // This would need a separate method in the service
-      // For now, return an error indicating it's not implemented
-      sendError(res, 'NOT_IMPLEMENTED', 'User RSVP list not yet implemented', 501);
+      const options = {
+        page: req.query.page ? Number(req.query.page) : 1,
+        limit: req.query.limit ? Math.min(Number(req.query.limit), 50) : 20,
+        status: req.query.status as 'GOING' | 'INTERESTED' | 'NOT_GOING' | undefined,
+        includePast: req.query.includePast === 'true',
+      };
+
+      const result = await eventService.getUserRSVPs(userId, options);
+      sendSuccess(res, result);
     } catch (error) {
-      logger.error({ error, userId: req.params.userId }, 'Failed to get user RSVPs');
+      logger.error({ error, userId: req.params.id }, 'Failed to get user RSVPs');
       handleError(res, error, 'GET_USER_RSVPS_FAILED');
     }
   }
