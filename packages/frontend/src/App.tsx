@@ -27,6 +27,10 @@ import { ModerationPage } from './pages/ModerationPage';
 import { OwnerDashboardPage } from './pages/owner/OwnerDashboardPage';
 import { AnalyticsDashboardPage } from './pages/owner/AnalyticsDashboardPage';
 import { ClaimBusinessPage } from './pages/owner/ClaimBusinessPage';
+import { EventsListingPage } from './pages/events/EventsListingPage';
+import { EventDetailPage } from './pages/events/EventDetailPage';
+import { MessagesPage } from './pages/messages/MessagesPage';
+import { BusinessInboxPage } from './pages/owner/BusinessInboxPage';
 
 // HomePage component with i18n and platform config
 const HomePage: React.FC = () => {
@@ -208,10 +212,48 @@ export function App() {
               }
             />
             <Route
+              path="/owner/business/:businessId/inbox"
+              element={
+                <ProtectedRoute>
+                  <BusinessInboxPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/owner/business/:businessId/inbox/:conversationId"
+              element={
+                <ProtectedRoute>
+                  <BusinessInboxPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/claim/:businessId"
               element={
                 <ProtectedRoute>
                   <ClaimBusinessPage />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Events Routes */}
+            <Route path="/events" element={<EventsListingPage />} />
+            <Route path="/events/:id" element={<EventDetailPage />} />
+
+            {/* Messaging Routes */}
+            <Route
+              path="/messages"
+              element={
+                <ProtectedRoute>
+                  <MessagesPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/messages/:conversationId"
+              element={
+                <ProtectedRoute>
+                  <MessagesPage />
                 </ProtectedRoute>
               }
             />

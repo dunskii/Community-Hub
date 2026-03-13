@@ -121,6 +121,16 @@ export async function del<T>(endpoint: string): Promise<T> {
   return request<T>(endpoint, { method: 'DELETE' });
 }
 
+/**
+ * PATCH request
+ */
+export async function patch<T>(endpoint: string, data?: unknown): Promise<T> {
+  return request<T>(endpoint, {
+    method: 'PATCH',
+    body: data ? JSON.stringify(data) : undefined,
+  });
+}
+
 export { HttpError };
 
 /**
@@ -130,5 +140,6 @@ export const apiClient = {
   get,
   post,
   put,
+  patch,
   delete: del,
 };

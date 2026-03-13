@@ -19,6 +19,7 @@ import { moderationRouter } from './moderation.js';
 import claimRouter from './claim.js';
 import analyticsRouter from './analytics.js';
 import { eventRouter } from './events.js';
+import { conversationsRouter } from './conversations.js';
 
 export function setupRoutes(app: Express): void {
   // API v1
@@ -39,6 +40,7 @@ export function setupRoutes(app: Express): void {
   v1.use('/', claimRouter);
   v1.use('/', analyticsRouter);
   v1.use('/events', eventRouter);
+  v1.use('/', conversationsRouter);
 
   app.use('/api/v1', v1);
 

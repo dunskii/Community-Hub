@@ -184,3 +184,42 @@ export type {
   EventFilterInput,
   AttendeeFilterInput,
 } from './schemas/event-schemas.js';
+
+// Messaging (Phase 9)
+export {
+  SUBJECT_CATEGORIES,
+  CONVERSATION_STATUSES,
+  SENDER_TYPES,
+  PREFERRED_CONTACTS,
+  MESSAGE_REPORT_REASONS,
+  ALLOWED_MIME_TYPES,
+  messageAttachmentSchema,
+  createConversationSchema,
+  sendMessageSchema,
+  conversationFilterSchema,
+  messagePaginationSchema,
+  reportConversationSchema,
+  quickReplyTemplateSchema,
+  reorderTemplatesSchema,
+  businessInboxFilterSchema,
+  messagingStatsQuerySchema,
+} from './schemas/messaging-schemas.js';
+
+export type {
+  SubjectCategory,
+  ConversationStatus,
+  SenderType,
+  PreferredContact,
+  MessageReportReason,
+  AllowedMimeType,
+  MessageAttachmentInput,
+  CreateConversationInput,
+  SendMessageInput,
+  ConversationFilterInput,
+  MessagePaginationInput,
+  ReportConversationInput,
+  QuickReplyTemplateInput,
+  ReorderTemplatesInput,
+  BusinessInboxFilterInput,
+  MessagingStatsQueryInput,
+} from './schemas/messaging-schemas.js';

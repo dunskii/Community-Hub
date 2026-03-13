@@ -149,33 +149,57 @@ enum AnalyticsEventType {
 
 /// Phase 8: Event status for lifecycle management
 enum EventStatus {
-  PENDING   // Awaiting moderation
-  ACTIVE    // Published and visible
+  PENDING // Awaiting moderation
+  ACTIVE // Published and visible
   CANCELLED // Cancelled by owner
-  PAST      // Automatically set after end time
+  PAST // Automatically set after end time
 }
 
 /// Phase 8: Event location type
 enum LocationType {
   PHYSICAL // In-person event with venue
-  ONLINE   // Virtual event with URL
-  HYBRID   // Both in-person and online
+  ONLINE // Virtual event with URL
+  HYBRID // Both in-person and online
 }
 
 /// Phase 8: RSVP status options
 enum RSVPStatus {
-  GOING       // Confirmed attendance
-  INTERESTED  // Might attend
-  NOT_GOING   // Declined
+  GOING // Confirmed attendance
+  INTERESTED // Might attend
+  NOT_GOING // Declined
 }
 
 /// Phase 8: Recurrence frequency for repeating events
 enum RecurrenceFrequency {
-  NONE     // Single occurrence
-  DAILY    // Every day
-  WEEKLY   // Same day each week
-  MONTHLY  // Same date or day each month
-  YEARLY   // Annual event
+  NONE // Single occurrence
+  DAILY // Every day
+  WEEKLY // Same day each week
+  MONTHLY // Same date or day each month
+  YEARLY // Annual event
+}
+
+// ─── Phase 9 Enums ──────────────────────────────────────────
+
+/// Phase 9: Subject category for enquiries (Spec §16.1)
+enum SubjectCategory {
+  GENERAL // General Enquiry
+  PRODUCT_QUESTION // Product/Service Question
+  BOOKING // Booking/Reservation
+  FEEDBACK // Feedback
+  OTHER // Other
+}
+
+/// Phase 9: Conversation status (Spec §16.2)
+enum ConversationStatus {
+  ACTIVE // Active conversation
+  ARCHIVED // Archived by user
+  BLOCKED // Blocked by business owner
+}
+
+/// Phase 9: Message sender type (Spec A.5)
+enum SenderType {
+  USER // Community user sending message
+  BUSINESS // Business owner responding
 }
 
 // ─── Models ──────────────────────────────────────────────
@@ -229,6 +253,9 @@ model User {
   // Phase 8: Events & Calendar
   createdEvents Event[]     @relation("CreatedEvents")
   eventRsvps    EventRSVP[] @relation("EventRSVPs")
+
+  // Phase 9: Messaging System
+  conversations Conversation[] @relation("UserConversations")
 
   @@map("users")
 }
@@ -330,6 +357,10 @@ model Business {
 
   // Phase 8: Events & Calendar
   events Event[]
+
+  // Phase 9: Messaging System
+  conversations       Conversation[]
+  quickReplyTemplates QuickReplyTemplate[]
 
   @@index([status, createdAt])
   @@index([categoryPrimaryId])
@@ -712,17 +743,17 @@ model BusinessOwnerStaff {
 
 /// Spec A.3 - Community events with calendar support
 model Event {
-  id          String      @id @default(uuid())
-  title       String      @db.VarChar(100)
-  description String      @db.Text // 50-5000 chars (validated in code)
-  categoryId  String      @map("category_id")
-  startTime   DateTime    @map("start_time")
-  endTime     DateTime    @map("end_time")
-  timezone    String      @default("Australia/Sydney") @db.VarChar(50)
+  id          String   @id @default(uuid())
+  title       String   @db.VarChar(100)
+  description String   @db.Text // 50-5000 chars (validated in code)
+  categoryId  String   @map("category_id")
+  startTime   DateTime @map("start_time")
+  endTime     DateTime @map("end_time")
+  timezone    String   @default("Australia/Sydney") @db.VarChar(50)
 
   // Location
   locationType LocationType @map("location_type")
-  venue        Json?        // {street, suburb, state, postcode, latitude, longitude}
+  venue        Json? // {street, suburb, state, postcode, latitude, longitude}
   onlineUrl    String?      @map("online_url") @db.VarChar(500)
 
   // Business link (optional - for business-hosted events)
@@ -735,7 +766,7 @@ model Event {
   // Event details
   ticketUrl      String?  @map("ticket_url") @db.VarChar(500)
   cost           String?  @db.VarChar(100) // "Free", "$50", "Variable", etc.
-  capacity       Int?     // Max attendees (null = unlimited)
+  capacity       Int? // Max attendees (null = unlimited)
   ageRestriction String?  @map("age_restriction") @db.VarChar(20) // "18+", "All ages"
   accessibility  String[] @default([]) // ["wheelchair_access", "hearing_loop"]
 
@@ -791,4 +822,88 @@ model EventRSVP {
   @@index([userId])
   @@index([eventId, status])
   @@map("event_rsvps")
+}
+
+// ─── Phase 9: Messaging System ────────────────────────────────
+
+/// Spec A.5 - User-to-business conversations
+model Conversation {
+  id                  String             @id @default(uuid())
+  businessId          String             @map("business_id")
+  userId              String             @map("user_id")
+  subject             String             @db.VarChar(200)
+  subjectCategory     SubjectCategory    @map("subject_category")
+  status              ConversationStatus @default(ACTIVE)
+  lastMessageAt       DateTime?          @map("last_message_at")
+  unreadCountBusiness Int                @default(0) @map("unread_count_business")
+  unreadCountUser     Int                @default(0) @map("unread_count_user")
+  createdAt           DateTime           @default(now()) @map("created_at")
+  updatedAt           DateTime           @updatedAt @map("updated_at")
+
+  // Relations
+  business Business  @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  user     User      @relation("UserConversations", fields: [userId], references: [id], onDelete: Cascade)
+  messages Message[]
+
+  @@unique([businessId, userId])
+  @@index([businessId])
+  @@index([userId])
+  @@index([status])
+  @@index([lastMessageAt])
+  @@map("conversations")
+}
+
+/// Spec A.5 - Individual messages within conversations
+model Message {
+  id             String     @id @default(uuid())
+  conversationId String     @map("conversation_id")
+  senderType     SenderType @map("sender_type")
+  senderId       String     @map("sender_id")
+  content        String     @db.Text // max 1000 chars (validated in code)
+  readAt         DateTime?  @map("read_at")
+  deletedAt      DateTime?  @map("deleted_at") // Soft delete
+  createdAt      DateTime   @default(now()) @map("created_at")
+
+  // Relations
+  conversation Conversation        @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  attachments  MessageAttachment[]
+
+  @@index([conversationId])
+  @@index([senderId])
+  @@index([createdAt])
+  @@map("messages")
+}
+
+/// Spec A.5 - Attachments for messages (images only)
+model MessageAttachment {
+  id        String   @id @default(uuid())
+  messageId String   @map("message_id")
+  url       String   @db.VarChar(500)
+  altText   String?  @map("alt_text") @db.VarChar(200)
+  sizeBytes Int      @map("size_bytes")
+  mimeType  String   @map("mime_type") @db.VarChar(50)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relations
+  message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@index([messageId])
+  @@map("message_attachments")
+}
+
+/// Spec §16.2 - Business quick reply templates
+model QuickReplyTemplate {
+  id         String   @id @default(uuid())
+  businessId String   @map("business_id")
+  name       String   @db.VarChar(50)
+  content    String   @db.Text // max 1000 chars (validated in code)
+  order      Int      @default(0)
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@index([businessId])
+  @@map("quick_reply_templates")
 }

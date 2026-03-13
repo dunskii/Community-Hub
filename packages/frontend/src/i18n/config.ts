@@ -69,6 +69,10 @@ import eventsKO from './locales/ko/events.json';
 import eventsEL from './locales/el/events.json';
 import eventsIT from './locales/it/events.json';
 
+// Import messaging translations (Phase 9)
+import messagingEN from './locales/en/messaging.json';
+import messagingAR from './locales/ar/messaging.json';
+
 const resources = {
   en: {
     translation: translationEN,
@@ -78,6 +82,7 @@ const resources = {
     owner: ownerEN,
     home: homeEN,
     events: eventsEN,
+    messaging: messagingEN,
   },
   ar: {
     translation: translationAR,
@@ -87,6 +92,7 @@ const resources = {
     owner: ownerAR,
     home: homeAR,
     events: eventsAR,
+    messaging: messagingAR,
   },
   'zh-CN': {
     translation: translationZH_CN,
@@ -161,7 +167,7 @@ i18n
     resources,
     fallbackLng: 'en',
     defaultNS: 'translation',
-    ns: ['translation', 'business', 'category', 'reviews', 'owner', 'home', 'events'],
+    ns: ['translation', 'business', 'category', 'reviews', 'owner', 'home', 'events', 'messaging'],
     debug: import.meta.env.DEV,
     interpolation: {
       escapeValue: false, // React already escapes

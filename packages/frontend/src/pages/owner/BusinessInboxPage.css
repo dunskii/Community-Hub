@@ -1,0 +1,364 @@
+/**
+ * BusinessInboxPage Styles
+ * Phase 9: Messaging System
+ * Mobile-first responsive design with RTL support
+ */
+
+.business-inbox {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - var(--header-height, 64px) - var(--footer-height, 48px));
+  min-height: 500px;
+}
+
+/* Header */
+.business-inbox__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--spacing-md, 16px);
+  padding: var(--spacing-md, 16px) var(--spacing-lg, 24px);
+  border-bottom: 1px solid var(--color-border, #e0e0e0);
+  flex-shrink: 0;
+}
+
+.business-inbox__title {
+  font-family: var(--font-family-heading, 'Montserrat', sans-serif);
+  font-size: var(--font-size-xl, 1.5rem);
+  font-weight: 600;
+  margin: 0;
+  color: var(--color-text-primary, #1a1a1a);
+}
+
+.business-inbox__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md, 16px);
+}
+
+.business-inbox__quick-replies-btn {
+  padding: var(--spacing-sm, 12px) var(--spacing-md, 16px);
+  background-color: var(--color-secondary, #e67e22);
+  color: var(--color-white, #ffffff);
+  border: none;
+  border-radius: var(--border-radius-md, 8px);
+  font-size: var(--font-size-sm, 0.875rem);
+  font-weight: 500;
+  cursor: pointer;
+  min-height: 44px;
+  transition: background-color 0.2s ease;
+}
+
+.business-inbox__quick-replies-btn:hover {
+  background-color: var(--color-secondary-dark, #d46a12);
+}
+
+.business-inbox__quick-replies-btn:focus-visible {
+  outline: 2px solid var(--color-focus, #2c5f7c);
+  outline-offset: 2px;
+}
+
+.business-inbox__unread-filter {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs, 8px);
+  font-size: var(--font-size-sm, 0.875rem);
+  cursor: pointer;
+}
+
+.business-inbox__unread-filter input {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+/* Content layout */
+.business-inbox__content {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Sidebar (conversation list) */
+.business-inbox__sidebar {
+  width: 100%;
+  max-width: 100%;
+  border-inline-end: 1px solid var(--color-border, #e0e0e0);
+  overflow-y: auto;
+  background-color: var(--color-background, #ffffff);
+  display: none;
+}
+
+.business-inbox__sidebar--visible {
+  display: block;
+}
+
+/* Main (conversation detail) */
+.business-inbox__main {
+  flex: 1;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: var(--color-background-secondary, #f5f5f5);
+}
+
+.business-inbox__main--visible {
+  display: flex;
+}
+
+/* Loading states */
+.business-inbox__loading {
+  padding: var(--spacing-md, 16px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm, 12px);
+}
+
+.business-inbox__loading-conversation {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: var(--spacing-md, 16px);
+  gap: var(--spacing-md, 16px);
+}
+
+.business-inbox__loading-messages {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm, 12px);
+  padding: var(--spacing-md, 16px);
+}
+
+/* Quick replies */
+.business-inbox__quick-replies {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg, 24px);
+  padding: var(--spacing-md, 16px);
+}
+
+.business-inbox__quick-reply-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm, 12px);
+}
+
+.business-inbox__quick-reply-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: var(--spacing-sm, 12px);
+  background-color: var(--color-gray-100, #f5f5f5);
+  border-radius: var(--border-radius-md, 8px);
+  gap: var(--spacing-md, 16px);
+}
+
+.business-inbox__quick-reply-info {
+  flex: 1;
+}
+
+.business-inbox__quick-reply-info strong {
+  display: block;
+  margin-bottom: var(--spacing-xs, 8px);
+  color: var(--color-text-primary, #1a1a1a);
+}
+
+.business-inbox__quick-reply-info p {
+  margin: 0;
+  font-size: var(--font-size-sm, 0.875rem);
+  color: var(--color-text-secondary, #666666);
+  white-space: pre-wrap;
+}
+
+.business-inbox__quick-reply-actions {
+  display: flex;
+  gap: var(--spacing-xs, 8px);
+}
+
+.business-inbox__quick-reply-actions button {
+  padding: var(--spacing-xs, 8px);
+  background: none;
+  border: 1px solid var(--color-border, #e0e0e0);
+  border-radius: var(--border-radius-sm, 4px);
+  font-size: var(--font-size-sm, 0.875rem);
+  cursor: pointer;
+  min-height: 36px;
+  transition: background-color 0.2s ease;
+}
+
+.business-inbox__quick-reply-actions button:hover {
+  background-color: var(--color-gray-200, #e0e0e0);
+}
+
+.business-inbox__no-quick-replies {
+  text-align: center;
+  color: var(--color-text-secondary, #666666);
+  padding: var(--spacing-lg, 24px);
+}
+
+.business-inbox__quick-reply-form {
+  border-top: 1px solid var(--color-border, #e0e0e0);
+  padding-top: var(--spacing-lg, 24px);
+}
+
+.business-inbox__quick-reply-form h3 {
+  margin: 0 0 var(--spacing-md, 16px);
+  font-size: var(--font-size-lg, 1.125rem);
+  font-weight: 600;
+}
+
+.business-inbox__form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs, 8px);
+  margin-bottom: var(--spacing-md, 16px);
+}
+
+.business-inbox__form-field label {
+  font-weight: 500;
+  color: var(--color-text-primary, #1a1a1a);
+  font-size: var(--font-size-sm, 0.875rem);
+}
+
+.business-inbox__form-field input,
+.business-inbox__form-field textarea {
+  padding: var(--spacing-sm, 12px);
+  border: 1px solid var(--color-border, #e0e0e0);
+  border-radius: var(--border-radius-sm, 4px);
+  font-size: var(--font-size-base, 1rem);
+  font-family: inherit;
+  min-height: 44px;
+}
+
+.business-inbox__form-field input:focus,
+.business-inbox__form-field textarea:focus {
+  outline: none;
+  border-color: var(--color-primary, #2c5f7c);
+  box-shadow: 0 0 0 2px rgba(44, 95, 124, 0.2);
+}
+
+.business-inbox__form-field textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.business-inbox__form-actions {
+  display: flex;
+  gap: var(--spacing-sm, 12px);
+  justify-content: flex-end;
+}
+
+/* Buttons */
+.business-inbox__btn {
+  padding: var(--spacing-sm, 12px) var(--spacing-md, 16px);
+  border: none;
+  border-radius: var(--border-radius-md, 8px);
+  font-size: var(--font-size-sm, 0.875rem);
+  font-weight: 500;
+  cursor: pointer;
+  min-height: 44px;
+  transition: all 0.2s ease;
+}
+
+.business-inbox__btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.business-inbox__btn--primary {
+  background-color: var(--color-primary, #2c5f7c);
+  color: var(--color-white, #ffffff);
+}
+
+.business-inbox__btn--primary:hover:not(:disabled) {
+  background-color: var(--color-primary-dark, #234d64);
+}
+
+.business-inbox__btn--secondary {
+  background-color: var(--color-gray-100, #f5f5f5);
+  color: var(--color-text-primary, #1a1a1a);
+}
+
+.business-inbox__btn--secondary:hover:not(:disabled) {
+  background-color: var(--color-gray-200, #e0e0e0);
+}
+
+.business-inbox__btn:focus-visible {
+  outline: 2px solid var(--color-focus, #2c5f7c);
+  outline-offset: 2px;
+}
+
+/* Login link */
+.business-inbox__login-link {
+  display: inline-block;
+  padding: var(--spacing-sm, 12px) var(--spacing-md, 16px);
+  background-color: var(--color-primary, #2c5f7c);
+  color: var(--color-white, #ffffff);
+  text-decoration: none;
+  border-radius: var(--border-radius-md, 8px);
+  font-weight: 500;
+}
+
+.business-inbox__login-link:hover {
+  background-color: var(--color-primary-dark, #234d64);
+}
+
+/* Tablet and up */
+@media (min-width: 768px) {
+  .business-inbox__sidebar {
+    display: block;
+    width: 320px;
+    min-width: 320px;
+    max-width: 320px;
+  }
+
+  .business-inbox__main {
+    display: flex;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1200px) {
+  .business-inbox__sidebar {
+    width: 380px;
+    min-width: 380px;
+    max-width: 380px;
+  }
+}
+
+/* RTL support */
+[dir='rtl'] .business-inbox__sidebar {
+  border-inline-start: 1px solid var(--color-border, #e0e0e0);
+  border-inline-end: none;
+}
+
+[dir='rtl'] .business-inbox__form-actions {
+  flex-direction: row-reverse;
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .business-inbox__quick-replies-btn,
+  .business-inbox__btn {
+    border: 2px solid currentColor;
+  }
+
+  .business-inbox__form-field input,
+  .business-inbox__form-field textarea {
+    border-width: 2px;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .business-inbox__quick-replies-btn,
+  .business-inbox__btn,
+  .business-inbox__quick-reply-actions button {
+    transition: none;
+  }
+}

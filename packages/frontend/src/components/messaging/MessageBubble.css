@@ -1,0 +1,238 @@
+/**
+ * MessageBubble Styles
+ * Phase 9: Messaging System
+ * Mobile-first responsive design
+ */
+
+.message-bubble-container {
+  display: flex;
+  gap: 0.5rem;
+  max-width: 85%;
+  margin-bottom: 0.25rem;
+}
+
+.message-bubble-container--own {
+  margin-left: auto;
+  flex-direction: row-reverse;
+}
+
+/* RTL support */
+[dir='rtl'] .message-bubble-container--own {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.message-bubble__avatar {
+  flex-shrink: 0;
+  align-self: flex-end;
+}
+
+.message-bubble__content-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.message-bubble__sender-name {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary, #6b7280);
+  margin-bottom: 0.25rem;
+  padding-left: 0.75rem;
+}
+
+[dir='rtl'] .message-bubble__sender-name {
+  padding-left: 0;
+  padding-right: 0.75rem;
+}
+
+.message-bubble {
+  position: relative;
+  padding: 0.75rem 1rem;
+  border-radius: 1rem;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+.message-bubble:focus {
+  outline: 2px solid var(--color-primary, #2c5f7c);
+  outline-offset: 2px;
+}
+
+.message-bubble--own {
+  background-color: var(--color-primary, #2c5f7c);
+  color: white;
+  border-bottom-right-radius: 0.25rem;
+}
+
+[dir='rtl'] .message-bubble--own {
+  border-bottom-right-radius: 1rem;
+  border-bottom-left-radius: 0.25rem;
+}
+
+.message-bubble--other {
+  background-color: var(--color-bg-secondary, #f3f4f6);
+  color: var(--color-text-primary, #1f2937);
+  border-bottom-left-radius: 0.25rem;
+}
+
+[dir='rtl'] .message-bubble--other {
+  border-bottom-left-radius: 1rem;
+  border-bottom-right-radius: 0.25rem;
+}
+
+.message-bubble--deleted {
+  opacity: 0.7;
+  font-style: italic;
+}
+
+.message-bubble__text {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.message-bubble__deleted-text {
+  font-style: italic;
+  opacity: 0.8;
+}
+
+/* Attachments */
+.message-bubble__attachments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.message-bubble__attachment {
+  display: block;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  text-decoration: none;
+}
+
+.message-bubble__attachment:focus {
+  outline: 2px solid var(--color-accent, #e67e22);
+  outline-offset: 2px;
+}
+
+.message-bubble__attachment-image {
+  max-width: 200px;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: 0.5rem;
+}
+
+.message-bubble__attachment-file {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 0.5rem;
+}
+
+.message-bubble--other .message-bubble__attachment-file {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.message-bubble__attachment-icon {
+  font-size: 1.25rem;
+}
+
+.message-bubble__attachment-size {
+  font-size: 0.75rem;
+}
+
+/* Actions */
+.message-bubble__actions {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+}
+
+[dir='rtl'] .message-bubble__actions {
+  right: auto;
+  left: 0.25rem;
+}
+
+.message-bubble__action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: none;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.2);
+  color: white;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  transition: background-color 0.15s ease;
+}
+
+.message-bubble__action-btn:hover,
+.message-bubble__action-btn:focus {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.message-bubble__action-btn:focus {
+  outline: 2px solid white;
+  outline-offset: 2px;
+}
+
+/* Meta (timestamp, read status) */
+.message-bubble__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 0.25rem;
+  padding: 0 0.5rem;
+}
+
+.message-bubble-container--own .message-bubble__meta {
+  justify-content: flex-end;
+}
+
+.message-bubble__time {
+  font-size: 0.6875rem;
+  color: var(--color-text-secondary, #6b7280);
+}
+
+.message-bubble__read-indicator {
+  font-size: 0.6875rem;
+  color: var(--color-primary, #2c5f7c);
+}
+
+/* Responsive */
+@media (min-width: 768px) {
+  .message-bubble-container {
+    max-width: 70%;
+  }
+
+  .message-bubble__attachment-image {
+    max-width: 300px;
+    max-height: 300px;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .message-bubble--own {
+    border: 2px solid white;
+  }
+
+  .message-bubble--other {
+    border: 2px solid var(--color-text-primary, #1f2937);
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .message-bubble__action-btn {
+    transition: none;
+  }
+}
