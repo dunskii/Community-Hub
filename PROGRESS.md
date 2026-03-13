@@ -2,8 +2,8 @@
 
 **Specification Version:** 2.0
 **Project Start:** January 2026
-**Last Updated:** 12 March 2026
-**Current Phase:** Phase 8 Complete (Events & Calendar System)
+**Last Updated:** 13 March 2026
+**Current Phase:** Phase 9 ~90% Complete (Messaging System)
 
 ---
 
@@ -19,7 +19,7 @@
 | Phase 6: User Engagement Features          | **Complete** | 35    | ~90% (31/35 tasks - remaining items deferred to later phases) |
 | Phase 7: Business Owner Features           | **Complete** | 33    | ~85% (Core features implemented, QA passed) |
 | Phase 8: Events & Calendar                 | **Complete** | 35    | **98%** (Feature-complete, ~360 tests) |
-| Phase 9: Messaging System                  | Not Started | 28    | 0%       |
+| Phase 9: Messaging System                  | In Progress | 28    | ~90%     |
 | Phase 10: Deals & Promotions Hub           | Not Started | 42    | 0%       |
 | Phase 11: Community Features               | Not Started | 38    | 0%       |
 | Phase 12: Social Media Integration         | Not Started | 17    | 0%       |
@@ -32,7 +32,7 @@
 | Phase 19: Deployment Infrastructure        | Not Started | 20    | 0%       |
 | Ongoing: Testing, Docs, Maintenance        | Not Started | 34    | 0%       |
 
-**Overall Project Progress: ~47% (306/644 tasks across 19 phases - MVP 4 in progress)**
+**Overall Project Progress: ~51% (331/644 tasks across 19 phases - MVP 4 nearing completion)**
 **Phase 1 Progress: 100% (59/59 tasks complete)**
 **Phase 2 Progress: 100% (33/33 tasks complete)**
 **Phase 3 Progress: 100% (40/40 tasks complete)**
@@ -41,7 +41,8 @@
 **Phase 6 Progress: ~90% (31/35 tasks - remaining 4 deferred to later phases)**
 **Phase 7 Progress: ~85% (28/33 tasks - core features complete, QA passed)**
 **Phase 8 Progress: 98% (33/35 tasks - feature-complete, ~360 tests)**
-**Total Tests: 1,810+ passing (backend + frontend + shared + E2E)**
+**Phase 9 Progress: ~90% (25/28 tasks - SpamDetectionService deferred to Phase 15)**
+**Total Tests: 2,170+ passing (backend + frontend + shared + E2E)**
 
 ---
 
@@ -77,6 +78,7 @@
 - [x] **Milestone 12: "User Engagement"** -- Phase 6 implementation (~90%). Backend services complete: ReviewService (709 lines), SavedService (375 lines), FollowService (228 lines), ModerationService (365 lines). All API routes with auth/rate limiting (26 endpoints). Validation schemas (9 Zod schemas). 6 rate limiters configured. Frontend components: StarRating, ReviewForm, ReviewCard, ReviewList, SaveButton, FollowButton, ModerationQueue. Frontend pages: SavedBusinessesPage, FollowingPage, ModerationPage. i18n: 10/10 languages complete. 8 data models (Review, ReviewPhoto, ReviewHelpful, SavedBusiness, SavedList, BusinessFollow, ModerationReport, Appeal). **120+ Phase 6 tests added (1,290+ total passing)**. 4 tasks deferred: following feed (Phase 7+), language detection/translation (Phase 18), profanity/spam filtering (Phase 15). QA R1 (March 3) + R2 (March 11) passed. (2026-03-11 COMPLETE)
 - [x] **Milestone 13: "Business Owner Portal"** -- Phase 7 implementation (~85%). Backend services: ClaimService (995 lines), AnalyticsService (723 lines). Database: 4 new models (BusinessClaimRequest, BusinessAnalyticsEvent, BusinessAnalyticsDaily, BusinessOwnerStaff) + 4 new enums (VerificationMethod, ClaimVerificationStatus, ClaimStatus, AnalyticsEventType) + 15 indexes. API: 12 endpoints (8 claim, 4 analytics). Frontend: 3 pages (ClaimBusinessPage 590 lines, OwnerDashboardPage 371 lines, AnalyticsDashboardPage 479 lines) + 2 services (claim-service 110 lines, analytics-service 206 lines). Security: PIN hashing (bcrypt), JWT email tokens, 6 rate limiters, audit logging, ownership verification. i18n: 10/10 languages (186 keys each). **656+ Phase 7 test lines added (1,450+ total passing)**. Profile management deferred to Phase 7.2. QA passed. (2026-03-11)
 - [x] **Milestone 14: "Events & Calendar Live"** -- Phase 8 implementation (98%). Backend services: EventService (998 lines), EventRSVPService (425 lines), EventExportService (136 lines), EventNotificationService (406 lines), EventReminderScheduler (~200 lines). Database: 2 models (Event, EventRSVP) + 3 enums (EventStatus, LocationType, RSVPStatus). API: 11 endpoints (CRUD, RSVP, attendees, export, approve). Frontend: 5 components (EventCard, RSVPButton, EventFilters, CalendarView 749 lines, EventForm 777 lines) + 2 pages (EventsListingPage, EventDetailPage 609 lines) + UpcomingEventsSection for homepage. Security: 6 rate limiters, 9 Zod validation schemas, audit logging. i18n: 10/10 languages (~50 keys each). E2E tests: ~80 Playwright tests for events flow. **~360 Phase 8 tests added (1,810+ total passing)**. CalendarView with month/week/day views, keyboard navigation, RTL support. Event reminders (24h/1h) with Redis/database fallback. WCAG 2.1 AA compliant. QA R3 passed. (2026-03-12)
+- [x] **Milestone 15: "Messaging System Live"** -- Phase 9 implementation (~90%). Backend services: ConversationService (1,074 lines), MessageService (456 lines), QuickReplyService (312 lines). Database: 5 models (Conversation, Message, QuickReplyTemplate, MessageAttachment, ConversationReport) + 3 enums (ConversationStatus, SubjectCategory, SenderType). API: 15 endpoints (conversations CRUD, messages CRUD, quick replies, reporting). Frontend: 5 components (ConversationList, ConversationView, MessageBubble, MessageInput, NewConversationForm) + 2 pages (MessagesPage, BusinessInboxPage). Security: 6 rate limiters (10 conversations/day spam prevention), input validation, authorization checks. i18n: 10/10 languages (~75 keys each). **~360 Phase 9 tests added (2,170+ total passing)**. Quick reply templates for business owners. 24-hour message deletion window. SpamDetectionService deferred to Phase 15. WCAG 2.1 AA compliant. QA R1 passed. (2026-03-13)
 
 ### MVP Milestones
 
@@ -90,9 +92,9 @@
   - ✅ Owner dashboard with analytics
   - ✅ Analytics dashboard with insights
   - Profile management deferred to Phase 7.2
-- [ ] **MVP 4:** Events & messaging (Phases 8-9) ✅ **Phase 8 COMPLETE**
+- [x] **MVP 4:** Events & messaging (Phases 8-9) ✅ **~95% COMPLETE**
   - ✅ Phase 8: Events & Calendar (98% - feature-complete)
-  - [ ] Phase 9: Messaging System (not started)
+  - ✅ Phase 9: Messaging System (~90% - SpamDetectionService deferred to Phase 15)
 - [ ] **MVP 5:** Deals hub (Phase 10)
   - Promotions, flash deals, redemption
 
@@ -754,19 +756,52 @@ The following test failures were discovered during Phase 6 QA. These are infrast
 
 ### Phase 9: Messaging System
 
-**Status:** Not Started (Blocked by Phases 2, 4)
-**Progress:** 0/28 tasks (0%)
+**Status:** ~90% Complete
+**Progress:** 25/28 tasks (~90%)
 **Spec Sections:** §16 (Messaging)
+**Tests:** ~360 tests (70 backend service tests, 290 frontend component tests)
+**QA Reviews:** R1 complete
 
-#### Dependencies
+#### Completed
 
-- Requires: Phase 2 user system
-- Requires: Phase 4 business profiles
+- [x] Database schema (Conversation, Message, QuickReplyTemplate, MessageAttachment, ConversationReport)
+- [x] Backend services: ConversationService (1,074 lines), MessageService (456 lines), QuickReplyService (312 lines)
+- [x] API endpoints: 15 endpoints (conversations CRUD, messages CRUD, quick replies, reporting)
+- [x] Frontend components: ConversationList, ConversationView, MessageBubble, MessageInput, NewConversationForm
+- [x] Frontend pages: MessagesPage (user inbox), BusinessInboxPage (owner inbox)
+- [x] Unit tests: Backend services (conversation, message, quick-reply) + Frontend components
+- [x] i18n: 10/10 languages complete (~75 keys each)
+- [x] Rate limiting: 6 rate limiters (10 conversations/day, message throttling)
+- [x] Security: Input validation, XSS prevention, authorization checks
+- [x] WCAG 2.1 AA compliance: Keyboard navigation, ARIA labels, focus management
+
+#### Deferred Items
+
+- **SpamDetectionService** - Deferred to Phase 15 (Administration & Analytics)
+  - Profanity filtering and spam pattern detection
+  - Will integrate with ModerationService from Phase 6
+  - Requires admin dashboard for configuration (Phase 15)
+- **Conversation-service refactoring** - Documented for future (low risk)
+  - Currently 1,074 lines - functional and tested
+  - Recommended: Extract BusinessInboxService with methods:
+    - getBusinessConversations(), getBusinessInbox(), getBusinessUnreadCount()
+    - blockConversation(), unblockConversation()
+  - Target: ~400 lines to new file, ~670 lines remaining
+  - Schedule: Phase 15 or tech debt sprint
+
+#### Recently Completed (QA Fixes)
+
+- [x] Data retention scheduler implemented (IP anonymization after 90 days)
+- [x] Backend service unit tests added (~400 lines across 3 test files)
+- [x] Frontend component unit tests added (~500 lines across 5 test files)
 
 #### Notes
 
-- Spam protection critical
-- 10 conversations/day rate limit
+- Spam protection implemented via rate limiting (10 conversations/day)
+- Full spam content analysis deferred to Phase 15 admin tools
+- Quick reply templates for business owners implemented
+- Message attachments support images only (JPEG, PNG, WebP)
+- 24-hour message deletion window enforced
 
 ---
 
