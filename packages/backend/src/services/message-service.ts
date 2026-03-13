@@ -329,39 +329,31 @@ class MessageService {
       },
     });
 
-    // Get sender info for each message
-    const messagesWithSenders = await Promise.all(
-      messages.map(async (msg) => {
-        let sender: { id: string; displayName: string; profilePhoto: string | null } | null = null;
+    // Batch load all senders in a single query to avoid N+1
+    const senderIds = [...new Set(messages.map((msg) => msg.senderId))];
+    const senders = senderIds.length > 0
+      ? await prisma.user.findMany({
+          where: { id: { in: senderIds } },
+          select: { id: true, displayName: true, profilePhoto: true },
+        })
+      : [];
 
-        if (msg.senderType === SenderType.USER) {
-          const user = await prisma.user.findUnique({
-            where: { id: msg.senderId },
-            select: { id: true, displayName: true, profilePhoto: true },
-          });
-          sender = user;
-        } else {
-          const owner = await prisma.user.findUnique({
-            where: { id: msg.senderId },
-            select: { id: true, displayName: true, profilePhoto: true },
-          });
-          sender = owner;
-        }
+    // Create a map for O(1) sender lookup
+    const senderMap = new Map(senders.map((s) => [s.id, s]));
 
-        return {
-          id: msg.id,
-          conversationId: msg.conversationId,
-          senderType: msg.senderType,
-          senderId: msg.senderId,
-          content: msg.content,
-          readAt: msg.readAt,
-          deletedAt: msg.deletedAt,
-          createdAt: msg.createdAt,
-          attachments: msg.attachments,
-          sender,
-        };
-      })
-    );
+    // Map messages with their senders
+    const messagesWithSenders = messages.map((msg) => ({
+      id: msg.id,
+      conversationId: msg.conversationId,
+      senderType: msg.senderType,
+      senderId: msg.senderId,
+      content: msg.content,
+      readAt: msg.readAt,
+      deletedAt: msg.deletedAt,
+      createdAt: msg.createdAt,
+      attachments: msg.attachments,
+      sender: senderMap.get(msg.senderId) || null,
+    }));
 
     const totalPages = Math.ceil(total / limit);
 

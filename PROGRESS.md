@@ -789,11 +789,13 @@ The following test failures were discovered during Phase 6 QA. These are infrast
   - Target: ~400 lines to new file, ~670 lines remaining
   - Schedule: Phase 15 or tech debt sprint
 
-#### Recently Completed (QA Fixes)
+#### Recently Completed (QA R1 + R2 Fixes)
 
 - [x] Data retention scheduler implemented (IP anonymization after 90 days)
 - [x] Backend service unit tests added (~400 lines across 3 test files)
 - [x] Frontend component unit tests added (~500 lines across 5 test files)
+- [x] N+1 query fix in getMessages() - batch loads senders in single query
+- [x] Proper unit tests with mocking (message-service.unit.test.ts, conversation-service.unit.test.ts, quick-reply-service.unit.test.ts)
 
 #### Notes
 
