@@ -27,6 +27,16 @@ vi.mock('../../middleware/review-rate-limiter.js', () => ({
   saveBusinessLimiter: (_req: Request, _res: Response, next: NextFunction) => next(),
 }));
 
+// Mock validate middleware to skip Zod validation in unit tests
+vi.mock('../../middleware/validate.js', () => ({
+  validate: () => (_req: Request, _res: Response, next: NextFunction) => next(),
+}));
+
+// Mock resolveMe middleware
+vi.mock('../../middleware/resolve-me.js', () => ({
+  resolveMe: (req: Request, _res: Response, next: NextFunction) => next(),
+}));
+
 // Mock auth middleware
 vi.mock('../../middleware/auth-middleware.js', () => ({
   requireAuth: (req: Request, _res: Response, next: NextFunction) => {

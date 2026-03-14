@@ -44,6 +44,12 @@ vi.mock('../../cache/redis-client', () => ({
   })),
 }));
 
+vi.mock('../../services/token-service', () => ({
+  generateEmailToken: vi.fn(() => 'mock-token-123'),
+  storeEmailVerificationToken: vi.fn().mockResolvedValue(undefined),
+  verifyEmailVerificationToken: vi.fn().mockResolvedValue('new@example.com'),
+}));
+
 vi.mock('../../utils/image-processor', () => ({
   processProfilePhoto: vi.fn((buffer) => Promise.resolve(buffer)),
   validateImageDimensions: vi.fn(() => Promise.resolve(true)),
