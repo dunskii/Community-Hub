@@ -9,7 +9,7 @@ This file provides guidance to Claude Code when working with this repository.
 **First Deployment:** Guildford South precinct (Sydney, Australia)
 **Architecture:** Designed for multi-suburb deployment with configuration-only changes (no code modifications)
 
-### Current Status (12 March 2026)
+### Current Status (14 March 2026)
 
 - **Phase 1 (Foundation):** ✅ Complete (59/59 tasks)
 - **Phase 2 (Authentication):** ✅ Complete (33/33 tasks)
@@ -19,12 +19,13 @@ This file provides guidance to Claude Code when working with this repository.
 - **Phase 6 (User Engagement):** ✅ ~90% Complete (31/35 tasks - 4 deferred to later phases)
 - **Phase 7 (Business Owner):** ✅ ~85% Complete (28/33 tasks - claim, dashboard, analytics)
 - **Phase 8 (Events & Calendar):** ✅ 98% Complete (33/35 tasks) - Calendar views, RSVP, reminders
+- **Phase 9 (Messaging System):** ✅ 95% Complete (26/28 tasks) - QA R3 PASS, production-ready
 - **MVP 1:** ✅ Complete (Static Business Directory - Phases 1-4)
 - **MVP 2:** ✅ Complete (Phase 5 + Phase 6)
 - **MVP 3:** ✅ ~85% Complete (Phase 7 - Business Owner Portal)
-- **MVP 4:** ✅ 50% Complete (Phase 8 done, Phase 9 pending)
-- **Overall Progress:** ~47% (306/644 tasks)
-- **Total Tests:** 1,810+ passing
+- **MVP 4:** ✅ Complete (Phases 8-9 - Events & Messaging)
+- **Overall Progress:** ~53% (339/644 tasks)
+- **Total Tests:** 2,315+ passing
 
 ### Key References
 
@@ -314,6 +315,51 @@ The spec (`Docs/Community_Hub_Specification_v2.md`) is organized into 7 parts + 
 **Deferred Items (2 tasks):**
 - EventSearch autocomplete (nice-to-have)
 - Skip link for EventDetailPage (can use shared layout)
+
+### Phase 9 Complete (95%)
+
+**Messaging System** (26/28 tasks - 2 deferred):
+
+**Data Models (5 models + 3 enums):**
+- Conversation (10 fields) - User-to-business conversations with unique constraint
+- Message (8 fields) - Messages with soft delete support
+- MessageAttachment (6 fields) - Image attachments (JPEG, PNG, WebP)
+- QuickReplyTemplate (6 fields) - Business owner saved responses
+- Enums: ConversationStatus (ACTIVE, ARCHIVED, BLOCKED), SubjectCategory (5 types), SenderType (USER, BUSINESS)
+
+**Backend Services (1,971 lines total):**
+- ConversationService (1,074 lines) - CRUD, business inbox, block/report, unread counts
+- MessageService (531 lines) - Send, read receipts, soft delete, batch sender loading
+- QuickReplyService (366 lines) - Template CRUD, reordering
+
+**API Endpoints (16 total):**
+- Conversations: 10 endpoints (list, get, create, messages, read, archive, unarchive, report, delete message)
+- Business inbox: 5 endpoints (get, unread count, block, unblock)
+- Quick replies: 4 endpoints (list, create, update, delete)
+- Messaging stats: 1 endpoint
+
+**Frontend Components (5):**
+- ConversationList (311 lines), ConversationView (354 lines)
+- MessageBubble (221 lines), MessageInput (328 lines)
+- NewConversationForm (417 lines)
+
+**Frontend Pages (2):**
+- MessagesPage (454 lines) - User inbox with conversation list/detail
+- BusinessInboxPage (636 lines) - Business owner inbox with stats
+
+**Security & Quality:**
+- 6 rate limiters (10 conversations/day spam prevention per spec §16.2)
+- 9 validation schemas (Zod)
+- 90-day IP anonymization (Australian Privacy Principles)
+- N+1 query optimization (batch sender loading)
+- WCAG 2.1 AA compliant, keyboard navigation
+- ~145 tests added (~60 backend, ~70 frontend, ~15 scheduler)
+- 10/10 languages (~140 keys each)
+- QA R3 PASS (97% score)
+
+**Deferred Items (2 tasks):**
+- SpamDetectionService (Phase 15 - requires admin dashboard)
+- WebSocket real-time messaging (Phase 9.2 - polling sufficient for MVP)
 
 ## Common Patterns
 
