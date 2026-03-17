@@ -8,6 +8,7 @@ expect.extend(toHaveNoViolations);
 describe('Skeleton', () => {
   it('renders text variant by default', () => {
     const { container } = render(<Skeleton />);
+    // Text variant uses 'rounded h-4' classes
     const skeleton = container.querySelector('.rounded.h-4');
     expect(skeleton).toBeInTheDocument();
   });
@@ -20,13 +21,15 @@ describe('Skeleton', () => {
 
   it('renders rectangular variant', () => {
     const { container } = render(<Skeleton variant="rectangular" width={200} height={100} />);
-    const skeleton = container.querySelector('.rounded');
+    // Rectangular variant uses 'rounded-none' class
+    const skeleton = container.querySelector('.rounded-none');
     expect(skeleton).toBeInTheDocument();
   });
 
   it('renders multiple text lines', () => {
-    const { container } = render(<Skeleton variant="text" lines={3} />);
-    const skeletons = container.querySelectorAll('.bg-gray-200');
+    const { container } = render(<Skeleton variant="text" lines={3} animation="pulse" />);
+    // Multi-line renders container with children, use animate-pulse class to find skeletons
+    const skeletons = container.querySelectorAll('.animate-pulse');
     expect(skeletons).toHaveLength(3);
   });
 

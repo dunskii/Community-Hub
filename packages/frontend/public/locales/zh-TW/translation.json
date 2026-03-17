@@ -63,5 +63,60 @@
     "closeMenu": "[UNTRANSLATED] Close menu",
     "openDialog": "[UNTRANSLATED] Open dialog",
     "closeDialog": "[UNTRANSLATED] Close dialog"
+  },
+  "theme": {
+    "light": "淺色",
+    "dark": "深色",
+    "system": "系統",
+    "toggle": "主題",
+    "toggleLabel": "切換主題（目前{{theme}}）",
+    "current": "目前主題：{{theme}}",
+    "switchTo": "切換至{{theme}}模式"
+  },
+  "shortcuts": {
+    "title": "鍵盤快捷鍵",
+    "groups": {
+      "navigation": "導航",
+      "actions": "操作"
+    },
+    "search": "聚焦搜尋欄",
+    "close": "關閉模態框",
+    "help": "顯示鍵盤快捷鍵",
+    "goHome": "前往首頁",
+    "goBusinesses": "前往商家",
+    "goEvents": "前往活動",
+    "hint": "在任意位置按 ? 顯示此說明"
+  },
+  "offline": {
+    "banner": "您已離線。部分功能可能受限。",
+    "dismiss": "關閉",
+    "status": "離線",
+    "backOnline": "已恢復連線",
+    "syncingChanges": "正在同步您的變更..."
+  },
+  "sync": {
+    "syncing": "同步中...",
+    "synced": "所有變更已同步",
+    "failed": "{{count}} 項同步失敗",
+    "retry": "重試",
+    "pending": "恢復連線後同步"
+  },
+  "errorBoundary": {
+    "title": "發生錯誤",
+    "message": "抱歉，發生了意外錯誤。請重試。",
+    "details": "錯誤詳情",
+    "tryAgain": "重試",
+    "goHome": "返回首頁",
+    "networkError": "無法載入。請檢查網路連線。",
+    "retrying": "正在重試..."
+  },
+  "session": {
+    "expired": "您的工作階段已過期",
+    "expiredMessage": "為了您的安全，由於長時間未操作，您已被登出。",
+    "loginAgain": "重新登入",
+    "continueAsGuest": "以訪客身份繼續"
+  },
+  "toast": {
+    "close": "關閉通知"
   }
 }

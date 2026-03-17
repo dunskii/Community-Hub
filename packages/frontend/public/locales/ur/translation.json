@@ -63,5 +63,60 @@
     "closeMenu": "[UNTRANSLATED] Close menu",
     "openDialog": "[UNTRANSLATED] Open dialog",
     "closeDialog": "[UNTRANSLATED] Close dialog"
+  },
+  "theme": {
+    "light": "ہلکا",
+    "dark": "گہرا",
+    "system": "سسٹم",
+    "toggle": "تھیم",
+    "toggleLabel": "تھیم تبدیل کریں (موجودہ {{theme}})",
+    "current": "موجودہ تھیم: {{theme}}",
+    "switchTo": "{{theme}} موڈ پر سوئچ کریں"
+  },
+  "shortcuts": {
+    "title": "کی بورڈ شارٹ کٹس",
+    "groups": {
+      "navigation": "نیویگیشن",
+      "actions": "ایکشنز"
+    },
+    "search": "سرچ بار پر فوکس",
+    "close": "موڈل بند کریں",
+    "help": "کی بورڈ شارٹ کٹس دکھائیں",
+    "goHome": "ہوم پر جائیں",
+    "goBusinesses": "کاروبار پر جائیں",
+    "goEvents": "ایونٹس پر جائیں",
+    "hint": "یہ مدد دکھانے کے لیے کہیں بھی ? دبائیں"
+  },
+  "offline": {
+    "banner": "آپ آف لائن ہیں۔ کچھ خصوصیات محدود ہو سکتی ہیں۔",
+    "dismiss": "برخاست کریں",
+    "status": "آف لائن",
+    "backOnline": "واپس آن لائن",
+    "syncingChanges": "آپ کی تبدیلیاں مطابقت پذیر ہو رہی ہیں..."
+  },
+  "sync": {
+    "syncing": "مطابقت پذیر ہو رہا ہے...",
+    "synced": "تمام تبدیلیاں مطابقت پذیر ہو گئیں",
+    "failed": "{{count}} آئٹمز مطابقت پذیر کرنے میں ناکام",
+    "retry": "دوبارہ کوشش کریں",
+    "pending": "آن لائن ہونے پر مطابقت پذیر ہو گا"
+  },
+  "errorBoundary": {
+    "title": "کچھ غلط ہو گیا",
+    "message": "معذرت، کچھ غیر متوقع ہوا۔ براہ کرم دوبارہ کوشش کریں۔",
+    "details": "خرابی کی تفصیلات",
+    "tryAgain": "دوبارہ کوشش کریں",
+    "goHome": "ہوم پر جائیں",
+    "networkError": "لوڈ کرنے سے قاصر۔ اپنا کنکشن چیک کریں۔",
+    "retrying": "دوبارہ کوشش ہو رہی ہے..."
+  },
+  "session": {
+    "expired": "آپ کا سیشن ختم ہو گیا ہے",
+    "expiredMessage": "آپ کی حفاظت کے لیے، غیر فعالیت کی وجہ سے آپ کو لاگ آؤٹ کر دیا گیا ہے۔",
+    "loginAgain": "دوبارہ لاگ ان کریں",
+    "continueAsGuest": "مہمان کے طور پر جاری رکھیں"
+  },
+  "toast": {
+    "close": "اطلاع بند کریں"
   }
 }

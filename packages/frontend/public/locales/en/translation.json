@@ -64,6 +64,61 @@
     "openDialog": "Open dialog",
     "closeDialog": "Close dialog"
   },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
+    "toggle": "Theme",
+    "toggleLabel": "Toggle theme (currently {{theme}})",
+    "current": "Current theme: {{theme}}",
+    "switchTo": "Switch to {{theme}} mode"
+  },
+  "shortcuts": {
+    "title": "Keyboard Shortcuts",
+    "groups": {
+      "navigation": "Navigation",
+      "actions": "Actions"
+    },
+    "search": "Focus search bar",
+    "close": "Close modal or overlay",
+    "help": "Show keyboard shortcuts",
+    "goHome": "Go to Home",
+    "goBusinesses": "Go to Businesses",
+    "goEvents": "Go to Events",
+    "hint": "Press ? anywhere to show this help"
+  },
+  "offline": {
+    "banner": "You're offline. Some features may be limited.",
+    "dismiss": "Dismiss",
+    "status": "Offline",
+    "backOnline": "Back online",
+    "syncingChanges": "Syncing your changes..."
+  },
+  "sync": {
+    "syncing": "Syncing...",
+    "synced": "All changes synced",
+    "failed": "{{count}} items failed to sync",
+    "retry": "Retry",
+    "pending": "Will sync when online"
+  },
+  "errorBoundary": {
+    "title": "Something went wrong",
+    "message": "We're sorry, but something unexpected happened. Please try again.",
+    "details": "Error details",
+    "tryAgain": "Try again",
+    "goHome": "Go to home",
+    "networkError": "Unable to load. Check your connection.",
+    "retrying": "Retrying..."
+  },
+  "session": {
+    "expired": "Your session has expired",
+    "expiredMessage": "For your security, you have been logged out due to inactivity.",
+    "loginAgain": "Log in again",
+    "continueAsGuest": "Continue as guest"
+  },
+  "toast": {
+    "close": "Close notification"
+  },
   "auth": {
     "login": "Log In",
     "register": "Sign Up",

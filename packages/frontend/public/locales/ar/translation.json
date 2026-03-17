@@ -63,5 +63,60 @@
     "closeMenu": "[UNTRANSLATED] Close menu",
     "openDialog": "[UNTRANSLATED] Open dialog",
     "closeDialog": "[UNTRANSLATED] Close dialog"
+  },
+  "theme": {
+    "light": "فاتح",
+    "dark": "داكن",
+    "system": "النظام",
+    "toggle": "المظهر",
+    "toggleLabel": "تبديل المظهر (حالياً {{theme}})",
+    "current": "المظهر الحالي: {{theme}}",
+    "switchTo": "التبديل إلى الوضع {{theme}}"
+  },
+  "shortcuts": {
+    "title": "اختصارات لوحة المفاتيح",
+    "groups": {
+      "navigation": "التنقل",
+      "actions": "الإجراءات"
+    },
+    "search": "التركيز على شريط البحث",
+    "close": "إغلاق النافذة المنبثقة",
+    "help": "عرض اختصارات لوحة المفاتيح",
+    "goHome": "الذهاب إلى الصفحة الرئيسية",
+    "goBusinesses": "الذهاب إلى الأعمال التجارية",
+    "goEvents": "الذهاب إلى الفعاليات",
+    "hint": "اضغط ؟ في أي مكان لعرض هذه المساعدة"
+  },
+  "offline": {
+    "banner": "أنت غير متصل. قد تكون بعض الميزات محدودة.",
+    "dismiss": "إغلاق",
+    "status": "غير متصل",
+    "backOnline": "متصل مجدداً",
+    "syncingChanges": "جارٍ مزامنة تغييراتك..."
+  },
+  "sync": {
+    "syncing": "جارٍ المزامنة...",
+    "synced": "تمت مزامنة جميع التغييرات",
+    "failed": "فشلت مزامنة {{count}} عناصر",
+    "retry": "إعادة المحاولة",
+    "pending": "ستتم المزامنة عند الاتصال"
+  },
+  "errorBoundary": {
+    "title": "حدث خطأ ما",
+    "message": "نعتذر، حدث شيء غير متوقع. يرجى المحاولة مرة أخرى.",
+    "details": "تفاصيل الخطأ",
+    "tryAgain": "حاول مرة أخرى",
+    "goHome": "الذهاب إلى الرئيسية",
+    "networkError": "تعذر التحميل. تحقق من اتصالك.",
+    "retrying": "جارٍ إعادة المحاولة..."
+  },
+  "session": {
+    "expired": "انتهت صلاحية جلستك",
+    "expiredMessage": "لأمانك، تم تسجيل خروجك بسبب عدم النشاط.",
+    "loginAgain": "تسجيل الدخول مرة أخرى",
+    "continueAsGuest": "المتابعة كضيف"
+  },
+  "toast": {
+    "close": "إغلاق الإشعار"
   }
 }

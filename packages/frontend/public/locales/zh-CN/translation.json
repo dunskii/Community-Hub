@@ -63,5 +63,60 @@
     "closeMenu": "[UNTRANSLATED] Close menu",
     "openDialog": "[UNTRANSLATED] Open dialog",
     "closeDialog": "[UNTRANSLATED] Close dialog"
+  },
+  "theme": {
+    "light": "浅色",
+    "dark": "深色",
+    "system": "系统",
+    "toggle": "主题",
+    "toggleLabel": "切换主题（当前{{theme}}）",
+    "current": "当前主题：{{theme}}",
+    "switchTo": "切换到{{theme}}模式"
+  },
+  "shortcuts": {
+    "title": "键盘快捷键",
+    "groups": {
+      "navigation": "导航",
+      "actions": "操作"
+    },
+    "search": "聚焦搜索栏",
+    "close": "关闭模态框",
+    "help": "显示键盘快捷键",
+    "goHome": "转到首页",
+    "goBusinesses": "转到商家",
+    "goEvents": "转到活动",
+    "hint": "在任意位置按 ? 显示此帮助"
+  },
+  "offline": {
+    "banner": "您已离线。部分功能可能受限。",
+    "dismiss": "关闭",
+    "status": "离线",
+    "backOnline": "已恢复在线",
+    "syncingChanges": "正在同步您的更改..."
+  },
+  "sync": {
+    "syncing": "同步中...",
+    "synced": "所有更改已同步",
+    "failed": "{{count}} 项同步失败",
+    "retry": "重试",
+    "pending": "恢复在线后同步"
+  },
+  "errorBoundary": {
+    "title": "出现问题",
+    "message": "抱歉，发生了意外错误。请重试。",
+    "details": "错误详情",
+    "tryAgain": "重试",
+    "goHome": "返回首页",
+    "networkError": "无法加载。请检查网络连接。",
+    "retrying": "正在重试..."
+  },
+  "session": {
+    "expired": "您的会话已过期",
+    "expiredMessage": "为了您的安全，由于长时间未操作，您已被登出。",
+    "loginAgain": "重新登录",
+    "continueAsGuest": "以访客身份继续"
+  },
+  "toast": {
+    "close": "关闭通知"
   }
 }

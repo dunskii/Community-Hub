@@ -63,5 +63,60 @@
     "closeMenu": "[UNTRANSLATED] Close menu",
     "openDialog": "[UNTRANSLATED] Open dialog",
     "closeDialog": "[UNTRANSLATED] Close dialog"
+  },
+  "theme": {
+    "light": "Chiaro",
+    "dark": "Scuro",
+    "system": "Sistema",
+    "toggle": "Tema",
+    "toggleLabel": "Cambia tema (attuale {{theme}})",
+    "current": "Tema attuale: {{theme}}",
+    "switchTo": "Passa alla modalità {{theme}}"
+  },
+  "shortcuts": {
+    "title": "Scorciatoie da Tastiera",
+    "groups": {
+      "navigation": "Navigazione",
+      "actions": "Azioni"
+    },
+    "search": "Vai alla barra di ricerca",
+    "close": "Chiudi finestra modale",
+    "help": "Mostra scorciatoie da tastiera",
+    "goHome": "Vai alla Home",
+    "goBusinesses": "Vai alle Attività",
+    "goEvents": "Vai agli Eventi",
+    "hint": "Premi ? ovunque per mostrare questa guida"
+  },
+  "offline": {
+    "banner": "Sei offline. Alcune funzionalità potrebbero essere limitate.",
+    "dismiss": "Ignora",
+    "status": "Offline",
+    "backOnline": "Di nuovo online",
+    "syncingChanges": "Sincronizzazione delle modifiche in corso..."
+  },
+  "sync": {
+    "syncing": "Sincronizzazione...",
+    "synced": "Tutte le modifiche sincronizzate",
+    "failed": "{{count}} elementi non sincronizzati",
+    "retry": "Riprova",
+    "pending": "Verrà sincronizzato quando online"
+  },
+  "errorBoundary": {
+    "title": "Qualcosa è andato storto",
+    "message": "Ci scusiamo, si è verificato un errore imprevisto. Riprova.",
+    "details": "Dettagli errore",
+    "tryAgain": "Riprova",
+    "goHome": "Vai alla home",
+    "networkError": "Impossibile caricare. Controlla la connessione.",
+    "retrying": "Nuovo tentativo..."
+  },
+  "session": {
+    "expired": "La sessione è scaduta",
+    "expiredMessage": "Per la tua sicurezza, sei stato disconnesso per inattività.",
+    "loginAgain": "Accedi di nuovo",
+    "continueAsGuest": "Continua come ospite"
+  },
+  "toast": {
+    "close": "Chiudi notifica"
   }
 }

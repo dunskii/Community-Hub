@@ -63,5 +63,60 @@
     "closeMenu": "[UNTRANSLATED] Close menu",
     "openDialog": "[UNTRANSLATED] Open dialog",
     "closeDialog": "[UNTRANSLATED] Close dialog"
+  },
+  "theme": {
+    "light": "Sáng",
+    "dark": "Tối",
+    "system": "Hệ thống",
+    "toggle": "Giao diện",
+    "toggleLabel": "Chuyển đổi giao diện (hiện tại {{theme}})",
+    "current": "Giao diện hiện tại: {{theme}}",
+    "switchTo": "Chuyển sang chế độ {{theme}}"
+  },
+  "shortcuts": {
+    "title": "Phím Tắt",
+    "groups": {
+      "navigation": "Điều hướng",
+      "actions": "Hành động"
+    },
+    "search": "Chuyển đến thanh tìm kiếm",
+    "close": "Đóng cửa sổ",
+    "help": "Hiển thị phím tắt",
+    "goHome": "Về Trang chủ",
+    "goBusinesses": "Đến Doanh nghiệp",
+    "goEvents": "Đến Sự kiện",
+    "hint": "Nhấn ? ở bất kỳ đâu để hiển thị trợ giúp này"
+  },
+  "offline": {
+    "banner": "Bạn đang ngoại tuyến. Một số tính năng có thể bị hạn chế.",
+    "dismiss": "Bỏ qua",
+    "status": "Ngoại tuyến",
+    "backOnline": "Đã kết nối lại",
+    "syncingChanges": "Đang đồng bộ thay đổi của bạn..."
+  },
+  "sync": {
+    "syncing": "Đang đồng bộ...",
+    "synced": "Đã đồng bộ tất cả thay đổi",
+    "failed": "{{count}} mục đồng bộ thất bại",
+    "retry": "Thử lại",
+    "pending": "Sẽ đồng bộ khi có kết nối"
+  },
+  "errorBoundary": {
+    "title": "Đã xảy ra lỗi",
+    "message": "Xin lỗi, đã xảy ra sự cố không mong muốn. Vui lòng thử lại.",
+    "details": "Chi tiết lỗi",
+    "tryAgain": "Thử lại",
+    "goHome": "Về trang chủ",
+    "networkError": "Không thể tải. Kiểm tra kết nối của bạn.",
+    "retrying": "Đang thử lại..."
+  },
+  "session": {
+    "expired": "Phiên của bạn đã hết hạn",
+    "expiredMessage": "Vì lý do bảo mật, bạn đã được đăng xuất do không hoạt động.",
+    "loginAgain": "Đăng nhập lại",
+    "continueAsGuest": "Tiếp tục với tư cách khách"
+  },
+  "toast": {
+    "close": "Đóng thông báo"
   }
 }

@@ -63,5 +63,60 @@
     "closeMenu": "[UNTRANSLATED] Close menu",
     "openDialog": "[UNTRANSLATED] Open dialog",
     "closeDialog": "[UNTRANSLATED] Close dialog"
+  },
+  "theme": {
+    "light": "라이트",
+    "dark": "다크",
+    "system": "시스템",
+    "toggle": "테마",
+    "toggleLabel": "테마 전환 (현재 {{theme}})",
+    "current": "현재 테마: {{theme}}",
+    "switchTo": "{{theme}} 모드로 전환"
+  },
+  "shortcuts": {
+    "title": "키보드 단축키",
+    "groups": {
+      "navigation": "탐색",
+      "actions": "동작"
+    },
+    "search": "검색창으로 이동",
+    "close": "모달 닫기",
+    "help": "키보드 단축키 표시",
+    "goHome": "홈으로 이동",
+    "goBusinesses": "업체로 이동",
+    "goEvents": "이벤트로 이동",
+    "hint": "이 도움말을 보려면 아무 곳에서나 ?를 누르세요"
+  },
+  "offline": {
+    "banner": "오프라인 상태입니다. 일부 기능이 제한될 수 있습니다.",
+    "dismiss": "닫기",
+    "status": "오프라인",
+    "backOnline": "다시 온라인",
+    "syncingChanges": "변경사항 동기화 중..."
+  },
+  "sync": {
+    "syncing": "동기화 중...",
+    "synced": "모든 변경사항 동기화됨",
+    "failed": "{{count}}개 항목 동기화 실패",
+    "retry": "재시도",
+    "pending": "온라인 시 동기화됨"
+  },
+  "errorBoundary": {
+    "title": "문제가 발생했습니다",
+    "message": "죄송합니다, 예기치 않은 오류가 발생했습니다. 다시 시도해 주세요.",
+    "details": "오류 세부정보",
+    "tryAgain": "다시 시도",
+    "goHome": "홈으로 이동",
+    "networkError": "로드할 수 없습니다. 연결을 확인하세요.",
+    "retrying": "재시도 중..."
+  },
+  "session": {
+    "expired": "세션이 만료되었습니다",
+    "expiredMessage": "보안을 위해 비활성 상태로 인해 로그아웃되었습니다.",
+    "loginAgain": "다시 로그인",
+    "continueAsGuest": "게스트로 계속"
+  },
+  "toast": {
+    "close": "알림 닫기"
   }
 }

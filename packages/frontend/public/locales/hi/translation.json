@@ -63,5 +63,60 @@
     "closeMenu": "[UNTRANSLATED] Close menu",
     "openDialog": "[UNTRANSLATED] Open dialog",
     "closeDialog": "[UNTRANSLATED] Close dialog"
+  },
+  "theme": {
+    "light": "हल्का",
+    "dark": "गहरा",
+    "system": "सिस्टम",
+    "toggle": "थीम",
+    "toggleLabel": "थीम बदलें (वर्तमान {{theme}})",
+    "current": "वर्तमान थीम: {{theme}}",
+    "switchTo": "{{theme}} मोड पर स्विच करें"
+  },
+  "shortcuts": {
+    "title": "कीबोर्ड शॉर्टकट",
+    "groups": {
+      "navigation": "नेविगेशन",
+      "actions": "क्रियाएं"
+    },
+    "search": "खोज बार पर फोकस",
+    "close": "मोडल बंद करें",
+    "help": "कीबोर्ड शॉर्टकट दिखाएं",
+    "goHome": "होम पर जाएं",
+    "goBusinesses": "व्यवसायों पर जाएं",
+    "goEvents": "इवेंट्स पर जाएं",
+    "hint": "यह मदद दिखाने के लिए कहीं भी ? दबाएं"
+  },
+  "offline": {
+    "banner": "आप ऑफलाइन हैं। कुछ सुविधाएं सीमित हो सकती हैं।",
+    "dismiss": "खारिज करें",
+    "status": "ऑफलाइन",
+    "backOnline": "वापस ऑनलाइन",
+    "syncingChanges": "आपके बदलाव सिंक हो रहे हैं..."
+  },
+  "sync": {
+    "syncing": "सिंक हो रहा है...",
+    "synced": "सभी बदलाव सिंक हो गए",
+    "failed": "{{count}} आइटम सिंक करने में विफल",
+    "retry": "पुनः प्रयास करें",
+    "pending": "ऑनलाइन होने पर सिंक होगा"
+  },
+  "errorBoundary": {
+    "title": "कुछ गलत हो गया",
+    "message": "क्षमा करें, कुछ अप्रत्याशित हुआ। कृपया पुनः प्रयास करें।",
+    "details": "त्रुटि विवरण",
+    "tryAgain": "पुनः प्रयास करें",
+    "goHome": "होम पर जाएं",
+    "networkError": "लोड करने में असमर्थ। अपना कनेक्शन जांचें।",
+    "retrying": "पुनः प्रयास हो रहा है..."
+  },
+  "session": {
+    "expired": "आपका सत्र समाप्त हो गया है",
+    "expiredMessage": "आपकी सुरक्षा के लिए, निष्क्रियता के कारण आपको लॉग आउट कर दिया गया है।",
+    "loginAgain": "फिर से लॉग इन करें",
+    "continueAsGuest": "अतिथि के रूप में जारी रखें"
+  },
+  "toast": {
+    "close": "सूचना बंद करें"
   }
 }
