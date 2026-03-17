@@ -8,6 +8,7 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Badge } from '../display/Badge';
+import { ResponsiveImage } from '../ui/ResponsiveImage';
 import type { Event, LocationType } from '../../services/event-service';
 import {
   formatEventDate,
@@ -92,11 +93,14 @@ export function EventCard({ event, onClick, compact = false }: EventCardProps) {
         }`}
       >
         {event.imageUrl ? (
-          <img
+          <ResponsiveImage
             src={event.imageUrl}
             alt=""
-            className="w-full h-full object-cover"
-            loading="lazy"
+            decorative
+            aspectRatio={compact ? '1:1' : '16:9'}
+            objectFit="cover"
+            className="w-full h-full"
+            sizes={compact ? '96px' : '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw'}
           />
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">

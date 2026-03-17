@@ -45,6 +45,81 @@
 
   /* RGB values (for rgba() usage) */
   /* --color-primary-rgb: 44, 95, 124 */
+
+  /* ============================================
+   * Semantic Theme Tokens [UI/UX Spec v2.2 §1]
+   * These tokens switch between light and dark mode
+   * ============================================ */
+
+  /* Light mode defaults (also used as fallbacks) */
+  --color-background: #ffffff;
+  --color-surface: #f8f9fa;
+  --color-surface-elevated: #ffffff;
+  --color-text-primary: #1a1a2e;
+  --color-text-secondary: #6c757d;
+  --color-text-muted: #9ca3af;
+  --color-border: #dee2e6;
+  --color-border-light: #e9ecef;
+  --color-divider: #e5e7eb;
+
+  /* Interactive states - light mode */
+  --color-hover: rgba(0, 0, 0, 0.04);
+  --color-active: rgba(0, 0, 0, 0.08);
+  --color-focus-ring: var(--color-primary);
+
+  /* Overlay - light mode */
+  --color-overlay: rgba(0, 0, 0, 0.5);
+  --color-backdrop: rgba(255, 255, 255, 0.8);
+}
+
+/**
+ * Dark Mode [UI/UX Spec v2.2 §1]
+ *
+ * Applied via .dark class on <html> element.
+ * Respects prefers-color-scheme when theme is set to 'system'.
+ */
+.dark {
+  --color-background: #1a1a2e;
+  --color-surface: #252538;
+  --color-surface-elevated: #2d2d44;
+  --color-text-primary: #f8f9fa;
+  --color-text-secondary: #a0a0b0;
+  --color-text-muted: #6b7280;
+  --color-border: #3a3a4e;
+  --color-border-light: #4a4a5e;
+  --color-divider: #3f3f5a;
+
+  /* Interactive states - dark mode */
+  --color-hover: rgba(255, 255, 255, 0.06);
+  --color-active: rgba(255, 255, 255, 0.1);
+
+  /* Overlay - dark mode */
+  --color-overlay: rgba(0, 0, 0, 0.7);
+  --color-backdrop: rgba(26, 26, 46, 0.9);
+
+  /* Adjust neutral colors for dark mode */
+  --color-neutral-light: #2d2d44;
+  --color-neutral-medium: #4a4a5e;
+
+  /* Adjust text colors for dark mode */
+  --color-text-dark: #f8f9fa;
+  --color-text-light: #a0a0b0;
+}
+
+/**
+ * Theme transition for smooth switching
+ * Respects prefers-reduced-motion
+ */
+html {
+  transition:
+    background-color var(--duration-normal, 200ms) var(--ease-default, ease),
+    color var(--duration-normal, 200ms) var(--ease-default, ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    transition: none;
+  }
 }
 
 /* Utility classes for text colours */
@@ -126,4 +201,45 @@
 
 .disabled-opacity {
   opacity: 0.5;
+}
+
+/* ============================================
+ * Semantic Theme Utility Classes
+ * Use these for theme-aware styling
+ * ============================================ */
+
+/* Background utilities - theme aware */
+.bg-background {
+  background-color: var(--color-background);
+}
+.bg-surface {
+  background-color: var(--color-surface);
+}
+.bg-surface-elevated {
+  background-color: var(--color-surface-elevated);
+}
+.bg-hover {
+  background-color: var(--color-hover);
+}
+
+/* Text utilities - theme aware */
+.text-primary-content {
+  color: var(--color-text-primary);
+}
+.text-secondary-content {
+  color: var(--color-text-secondary);
+}
+.text-muted {
+  color: var(--color-text-muted);
+}
+
+/* Border utilities - theme aware */
+.border-default {
+  border-color: var(--color-border);
+}
+.border-light {
+  border-color: var(--color-border-light);
+}
+.divide-default > * + * {
+  border-color: var(--color-divider);
 }

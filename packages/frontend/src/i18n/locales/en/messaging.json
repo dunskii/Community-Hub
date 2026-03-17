@@ -54,6 +54,15 @@
       "attachment": "Attachment",
       "attachments": "{{count}} attachments"
     },
+    "status": {
+      "sending": "Sending...",
+      "sent": "Sent",
+      "read": "Read",
+      "failed": "Failed to send",
+      "failedToSend": "Message failed to send",
+      "retry": "Retry",
+      "tapToRetry": "Tap to retry"
+    },
     "conversationList": {
       "search": "Search conversations",
       "filter": "Filter",

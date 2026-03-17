@@ -9,6 +9,7 @@ import type { Business } from '@community-hub/shared';
 import { useIsOpenNow } from '../../hooks/useIsOpenNow';
 import { Badge } from '../display/Badge';
 import { Avatar } from '../display/Avatar';
+import { ResponsiveImage } from '../ui/ResponsiveImage';
 import { useTranslation } from 'react-i18next';
 
 interface BusinessCardProps {
@@ -37,11 +38,14 @@ export function BusinessCard({ business, distance, onClick }: BusinessCardProps)
       {/* Business Photo */}
       <div className="business-card__image">
         {business.photos && business.photos.length > 0 ? (
-          <img
+          <ResponsiveImage
             src={business.photos[0]}
             alt=""
+            decorative
+            aspectRatio="16:9"
+            objectFit="cover"
             className="business-card__photo"
-            loading="lazy"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
         ) : (
           <Avatar

@@ -44,8 +44,25 @@
   --breakpoint-md: 768px;
   --breakpoint-lg: 1200px;
 
-  /* Spacing */
-  --spacing-touch: 2.75rem;
+  /* Spacing Scale [UI/UX Spec v2.2 §1] - 4px base unit */
+  --space-1: 0.25rem; /* 4px - tight spacing, icon gaps */
+  --space-2: 0.5rem; /* 8px - default element spacing */
+  --space-3: 0.75rem; /* 12px - related element groups */
+  --space-4: 1rem; /* 16px - card padding, section gaps */
+  --space-5: 1.5rem; /* 24px - component separation */
+  --space-6: 2rem; /* 32px - section padding */
+  --space-8: 3rem; /* 48px - major section breaks */
+  --space-10: 4rem; /* 64px - page section separation */
+
+  /* Touch target spacing [Spec §3.4] */
+  --spacing-touch: 2.75rem; /* 44px minimum touch target */
+
+  /* Grid System [UI/UX Spec v2.2 §1] */
+  --grid-columns-mobile: 4;
+  --grid-columns-tablet: 8;
+  --grid-columns-desktop: 12;
+  --grid-gutter-mobile: 1rem; /* 16px */
+  --grid-gutter-desktop: 1.5rem; /* 24px */
 
   /* Border radius */
   --radius-sm: 0.25rem;
@@ -57,6 +74,18 @@
   --shadow-card: 0 2px 4px rgba(0, 0, 0, 0.1);
   --shadow-card-hover: 0 4px 8px rgba(0, 0, 0, 0.15);
   --shadow-dropdown: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+  /* Animation Timing Functions [UI/UX Spec v2.2 §11.8] */
+  --ease-default: cubic-bezier(0.4, 0, 0.2, 1); /* General transitions */
+  --ease-in: cubic-bezier(0.4, 0, 1, 1); /* Elements entering view */
+  --ease-out: cubic-bezier(0, 0, 0.2, 1); /* Elements exiting view */
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Playful interactions */
+
+  /* Duration Scale [UI/UX Spec v2.2 §11.8] */
+  --duration-fast: 100ms; /* Micro-interactions (hover, focus) */
+  --duration-normal: 200ms; /* Standard transitions */
+  --duration-slow: 300ms; /* Modal/overlay transitions */
+  --duration-slower: 500ms; /* Page transitions, complex animations */
 }
 
 /* Base styles */

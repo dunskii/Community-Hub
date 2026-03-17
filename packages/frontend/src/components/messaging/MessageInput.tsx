@@ -1,6 +1,7 @@
 /**
  * MessageInput Component
  * Phase 9: Messaging System
+ * [UI/UX Spec v2.2 §9.3 - Failed State with Retry]
  * Text input for composing and sending messages
  * WCAG 2.1 AA compliant
  */
@@ -8,6 +9,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import './MessageInput.css';
+
+/** Failed message info for retry */
+export interface FailedMessage {
+  id: string;
+  content: string;
+  attachments?: File[];
+  error?: string;
+}
 
 export interface MessageInputProps {
   /** Placeholder text */
@@ -34,6 +43,12 @@ export interface MessageInputProps {
   maxAttachments?: number;
   /** Maximum file size in bytes */
   maxFileSize?: number;
+  /** Failed message to show with retry option */
+  failedMessage?: FailedMessage;
+  /** Callback when retry is clicked */
+  onRetry?: (message: FailedMessage) => void;
+  /** Callback when failed message is dismissed */
+  onDismissFailure?: (id: string) => void;
 }
 
 const DEFAULT_MAX_LENGTH = 1000;
@@ -51,6 +66,9 @@ export const MessageInput: React.FC<MessageInputProps> = ({
   allowAttachments = true,
   maxAttachments = DEFAULT_MAX_ATTACHMENTS,
   maxFileSize = DEFAULT_MAX_FILE_SIZE,
+  failedMessage,
+  onRetry,
+  onDismissFailure,
 }) => {
   const { t } = useTranslation();
   const [content, setContent] = useState('');
@@ -182,8 +200,85 @@ export const MessageInput: React.FC<MessageInputProps> = ({
     isSending ||
     (content.trim().length === 0 && attachments.length === 0);
 
+  const handleRetry = () => {
+    if (failedMessage && onRetry) {
+      onRetry(failedMessage);
+    }
+  };
+
+  const handleDismissFailure = () => {
+    if (failedMessage && onDismissFailure) {
+      onDismissFailure(failedMessage.id);
+    }
+  };
+
+  const handleCopyFailedMessage = async () => {
+    if (failedMessage) {
+      try {
+        await navigator.clipboard.writeText(failedMessage.content);
+        // Could show a toast here
+      } catch {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = failedMessage.content;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+      }
+    }
+  };
+
   return (
     <div className="message-input" role="form" aria-label={t('messaging.composeMessage')}>
+      {/* Failed message banner */}
+      {failedMessage && (
+        <div className="message-input__failed-banner" role="alert">
+          <div className="message-input__failed-icon" aria-hidden="true">
+            <svg viewBox="0 0 16 16" fill="currentColor">
+              <circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" strokeWidth="1.5" />
+              <text x="8" y="11" textAnchor="middle" fontSize="10" fontWeight="bold">!</text>
+            </svg>
+          </div>
+          <div className="message-input__failed-content">
+            <span className="message-input__failed-title">
+              {t('messaging.status.failedToSend', 'Message failed to send')}
+            </span>
+            <span className="message-input__failed-text">
+              {failedMessage.content.length > 50
+                ? `${failedMessage.content.substring(0, 50)}...`
+                : failedMessage.content}
+            </span>
+          </div>
+          <div className="message-input__failed-actions">
+            <button
+              type="button"
+              className="message-input__failed-retry"
+              onClick={handleRetry}
+              aria-label={t('messaging.status.tapToRetry', 'Tap to retry')}
+            >
+              {t('messaging.status.retry', 'Retry')}
+            </button>
+            <button
+              type="button"
+              className="message-input__failed-copy"
+              onClick={handleCopyFailedMessage}
+              aria-label={t('messaging.copyMessage', 'Copy message')}
+            >
+              {t('common.copy', 'Copy')}
+            </button>
+            <button
+              type="button"
+              className="message-input__failed-dismiss"
+              onClick={handleDismissFailure}
+              aria-label={t('common.dismiss', 'Dismiss')}
+            >
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Error message */}
       {error && (
         <div className="message-input__error" role="alert">

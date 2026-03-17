@@ -1,6 +1,7 @@
 /**
  * MessageBubble Component
  * Phase 9: Messaging System
+ * [UI/UX Spec v2.2 §9 - Message States]
  * Displays a single message in a conversation
  * WCAG 2.1 AA compliant
  */
@@ -9,6 +10,9 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Avatar } from '../display/Avatar';
 import './MessageBubble.css';
+
+/** Message status types per UI/UX Spec v2.2 */
+export type MessageStatus = 'sending' | 'sent' | 'read' | 'failed';
 
 export interface MessageAttachment {
   id: string;
@@ -33,7 +37,12 @@ export interface MessageBubbleProps {
   };
   /** Message attachments */
   attachments?: MessageAttachment[];
-  /** Whether message has been read */
+  /**
+   * Message status (sending, sent, read, failed)
+   * Per UI/UX Spec v2.2 §9 - no "delivered" state
+   */
+  status?: MessageStatus;
+  /** @deprecated Use status prop instead */
   isRead?: boolean;
   /** Whether message is deleted */
   isDeleted?: boolean;
@@ -47,6 +56,8 @@ export interface MessageBubbleProps {
   onDelete?: () => void;
   /** Whether delete is allowed */
   canDelete?: boolean;
+  /** Callback when retry is clicked (for failed messages) */
+  onRetry?: () => void;
 }
 
 /**
@@ -74,6 +85,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
   isOwn,
   sender,
   attachments = [],
+  status,
   isRead = false,
   isDeleted = false,
   createdAt,
@@ -81,14 +93,19 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
   showTimestamp = true,
   onDelete,
   canDelete = false,
+  onRetry,
 }) => {
   const { t } = useTranslation();
   const [showActions, setShowActions] = React.useState(false);
+
+  // Derive status from isRead for backwards compatibility
+  const effectiveStatus: MessageStatus | undefined = status ?? (isRead ? 'read' : undefined);
 
   const bubbleClasses = [
     'message-bubble',
     isOwn ? 'message-bubble--own' : 'message-bubble--other',
     isDeleted ? 'message-bubble--deleted' : '',
+    effectiveStatus === 'failed' ? 'message-bubble--failed' : '',
   ]
     .filter(Boolean)
     .join(' ');
@@ -194,7 +211,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
           )}
         </div>
 
-        {/* Timestamp and read status */}
+        {/* Timestamp and status indicator */}
         {showTimestamp && (
           <div className="message-bubble__meta">
             <time
@@ -203,19 +220,138 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
             >
               {formatTime(createdAt)}
             </time>
-            {isOwn && isRead && (
-              <span
-                className="message-bubble__read-indicator"
-                aria-label={t('messaging.read')}
-              >
-                ✓✓
-              </span>
-            )}
+            {isOwn && <MessageStatusIndicator status={effectiveStatus} onRetry={onRetry} />}
           </div>
         )}
       </div>
     </div>
   );
 };
+
+/**
+ * Message status indicator component
+ * Shows sending spinner, sent checkmark, read double checkmark, or failed icon
+ */
+interface MessageStatusIndicatorProps {
+  status?: MessageStatus;
+  onRetry?: () => void;
+}
+
+function MessageStatusIndicator({ status, onRetry }: MessageStatusIndicatorProps) {
+  const { t } = useTranslation();
+
+  if (!status) {
+    return null;
+  }
+
+  switch (status) {
+    case 'sending':
+      return (
+        <span
+          className="message-bubble__status message-bubble__status--sending"
+          aria-label={t('messaging.status.sending', 'Sending...')}
+        >
+          <svg
+            className="message-bubble__spinner"
+            viewBox="0 0 16 16"
+            fill="none"
+            aria-hidden="true"
+          >
+            <circle
+              cx="8"
+              cy="8"
+              r="6"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeDasharray="28"
+              strokeDashoffset="10"
+            />
+          </svg>
+        </span>
+      );
+
+    case 'sent':
+      return (
+        <span
+          className="message-bubble__status message-bubble__status--sent"
+          aria-label={t('messaging.status.sent', 'Sent')}
+        >
+          <svg
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <polyline points="3,8 7,12 13,4" />
+          </svg>
+        </span>
+      );
+
+    case 'read':
+      return (
+        <span
+          className="message-bubble__status message-bubble__status--read"
+          aria-label={t('messaging.status.read', 'Read')}
+        >
+          <svg
+            viewBox="0 0 20 16"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <polyline points="1,8 5,12 11,4" />
+            <polyline points="7,8 11,12 17,4" />
+          </svg>
+        </span>
+      );
+
+    case 'failed':
+      return (
+        <span className="message-bubble__status message-bubble__status--failed">
+          {onRetry ? (
+            <button
+              type="button"
+              className="message-bubble__retry-btn"
+              onClick={onRetry}
+              aria-label={t('messaging.status.tapToRetry', 'Tap to retry')}
+            >
+              <svg
+                viewBox="0 0 16 16"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                <text x="8" y="11" textAnchor="middle" fontSize="10" fontWeight="bold">!</text>
+              </svg>
+              <span className="message-bubble__retry-text">
+                {t('messaging.status.retry', 'Retry')}
+              </span>
+            </button>
+          ) : (
+            <span aria-label={t('messaging.status.failed', 'Failed to send')}>
+              <svg
+                viewBox="0 0 16 16"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                <text x="8" y="11" textAnchor="middle" fontSize="10" fontWeight="bold">!</text>
+              </svg>
+            </span>
+          )}
+        </span>
+      );
+
+    default:
+      return null;
+  }
+}
 
 export default MessageBubble;

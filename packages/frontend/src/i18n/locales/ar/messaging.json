@@ -54,6 +54,15 @@
       "attachment": "مرفق",
       "attachments": "{{count}} مرفقات"
     },
+    "status": {
+      "sending": "جاري الإرسال...",
+      "sent": "مرسلة",
+      "read": "مقروءة",
+      "failed": "فشل الإرسال",
+      "failedToSend": "فشل إرسال الرسالة",
+      "retry": "إعادة المحاولة",
+      "tapToRetry": "اضغط لإعادة المحاولة"
+    },
     "conversationList": {
       "search": "البحث في المحادثات",
       "filter": "تصفية",

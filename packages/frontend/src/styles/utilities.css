@@ -4,49 +4,61 @@
  * Reusable CSS classes for common styling patterns.
  */
 
-/* Spacing utilities */
+/* Spacing utilities - using design tokens [UI/UX Spec v2.2 §1] */
 .p-0 {
   padding: 0;
 }
 .p-1 {
-  padding: 4px;
+  padding: var(--space-1);
 }
 .p-2 {
-  padding: 8px;
+  padding: var(--space-2);
 }
 .p-3 {
-  padding: 12px;
+  padding: var(--space-3);
 }
 .p-4 {
-  padding: 16px;
+  padding: var(--space-4);
 }
 .p-5 {
-  padding: 20px;
+  padding: var(--space-5);
 }
 .p-6 {
-  padding: 24px;
+  padding: var(--space-6);
+}
+.p-8 {
+  padding: var(--space-8);
+}
+.p-10 {
+  padding: var(--space-10);
 }
 
 .m-0 {
   margin: 0;
 }
 .m-1 {
-  margin: 4px;
+  margin: var(--space-1);
 }
 .m-2 {
-  margin: 8px;
+  margin: var(--space-2);
 }
 .m-3 {
-  margin: 12px;
+  margin: var(--space-3);
 }
 .m-4 {
-  margin: 16px;
+  margin: var(--space-4);
 }
 .m-5 {
-  margin: 20px;
+  margin: var(--space-5);
 }
 .m-6 {
-  margin: 24px;
+  margin: var(--space-6);
+}
+.m-8 {
+  margin: var(--space-8);
+}
+.m-10 {
+  margin: var(--space-10);
 }
 
 /* Border radius */
@@ -86,18 +98,52 @@
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-/* Transitions */
+/* Transitions - using design tokens [UI/UX Spec v2.2 §11.8] */
 .transition-all {
-  transition: all 200ms ease;
+  transition: all var(--duration-normal) var(--ease-default);
 }
 .transition-colors {
-  transition: color 200ms ease, background-color 200ms ease, border-color 200ms ease;
+  transition:
+    color var(--duration-normal) var(--ease-default),
+    background-color var(--duration-normal) var(--ease-default),
+    border-color var(--duration-normal) var(--ease-default);
 }
 .transition-transform {
-  transition: transform 200ms ease;
+  transition: transform var(--duration-normal) var(--ease-default);
 }
 .transition-shadow {
-  transition: box-shadow 200ms ease;
+  transition: box-shadow var(--duration-normal) var(--ease-default);
+}
+.transition-opacity {
+  transition: opacity var(--duration-normal) var(--ease-default);
+}
+
+/* Duration modifiers */
+.duration-fast {
+  transition-duration: var(--duration-fast);
+}
+.duration-normal {
+  transition-duration: var(--duration-normal);
+}
+.duration-slow {
+  transition-duration: var(--duration-slow);
+}
+.duration-slower {
+  transition-duration: var(--duration-slower);
+}
+
+/* Easing modifiers */
+.ease-default {
+  transition-timing-function: var(--ease-default);
+}
+.ease-in {
+  transition-timing-function: var(--ease-in);
+}
+.ease-out {
+  transition-timing-function: var(--ease-out);
+}
+.ease-bounce {
+  transition-timing-function: var(--ease-bounce);
 }
 
 /* Display */
@@ -152,16 +198,25 @@
   justify-content: space-between;
 }
 .gap-1 {
-  gap: 4px;
+  gap: var(--space-1);
 }
 .gap-2 {
-  gap: 8px;
+  gap: var(--space-2);
 }
 .gap-3 {
-  gap: 12px;
+  gap: var(--space-3);
 }
 .gap-4 {
-  gap: 16px;
+  gap: var(--space-4);
+}
+.gap-5 {
+  gap: var(--space-5);
+}
+.gap-6 {
+  gap: var(--space-6);
+}
+.gap-8 {
+  gap: var(--space-8);
 }
 
 /* Width/Height */
@@ -252,4 +307,44 @@
 .focus-visible:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
+}
+
+/* Aspect ratios [UI/UX Spec v2.2 §13.5] */
+.aspect-square {
+  aspect-ratio: 1 / 1;
+}
+.aspect-video {
+  aspect-ratio: 16 / 9;
+}
+.aspect-4-3 {
+  aspect-ratio: 4 / 3;
+}
+
+/* Shimmer animation for skeleton loading [UI/UX Spec v2.2 §11.7] */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--color-neutral-light, #f5f5f5) 0%,
+    var(--color-neutral-medium, #e0e0e0) 50%,
+    var(--color-neutral-light, #f5f5f5) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .animate-shimmer {
+    animation: none;
+    background: var(--color-neutral-light, #f5f5f5);
+  }
 }

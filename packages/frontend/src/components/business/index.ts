@@ -4,6 +4,7 @@
  */
 
 export { BusinessCard } from './BusinessCard';
+export { BusinessCardSkeleton, BusinessCardSkeletonGrid } from './BusinessCardSkeleton';
 export { BusinessList } from './BusinessList';
 export { BusinessFilters } from './BusinessFilters';
 export { CategoryGrid } from './CategoryGrid';

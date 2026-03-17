@@ -10,6 +10,8 @@ import { useTranslation } from 'react-i18next';
 import { loadPlatformConfig, getPlatformConfig } from './config/platform-loader';
 import type { PlatformConfig } from '@community-hub/shared';
 import { AuthProvider } from './contexts/AuthContext';
+import { ThemeProvider } from './contexts/ThemeContext';
+import { ToastProvider } from './contexts/ToastContext';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { AdminProtectedRoute } from './components/auth/AdminProtectedRoute';
 import { LoginPage } from './pages/auth/LoginPage';
@@ -18,6 +20,8 @@ import { ForgotPasswordPage } from './pages/auth/ForgotPasswordPage';
 import { ResetPasswordPage } from './pages/auth/ResetPasswordPage';
 import { VerifyEmailPage } from './components/auth/VerifyEmailPage';
 import { SkipLink } from './components/ui/index';
+import { GlobalShortcuts, OfflineHandler } from './components/app/index';
+import { ErrorBoundary } from './components/error/index';
 import { BusinessListPage } from './pages/BusinessListPage';
 import { BusinessDetailPage } from './pages/BusinessDetailPage';
 import { CategoriesPage } from './pages/CategoriesPage';
@@ -151,10 +155,15 @@ const DashboardPage: React.FC = () => (
 export function App() {
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <SkipLink />
-        <main id="main-content">
-          <Routes>
+      <ThemeProvider>
+        <ToastProvider position="top-right" maxVisible={3}>
+          <AuthProvider>
+            <GlobalShortcuts>
+            <OfflineHandler>
+            <ErrorBoundary>
+            <SkipLink />
+            <main id="main-content" className="bg-background text-primary-content min-h-screen">
+              <Routes>
             {/* Public Routes */}
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
@@ -268,11 +277,16 @@ export function App() {
               }
             />
 
-            {/* Catch all - redirect to home */}
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </main>
-      </AuthProvider>
+                {/* Catch all - redirect to home */}
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </main>
+            </ErrorBoundary>
+            </OfflineHandler>
+            </GlobalShortcuts>
+          </AuthProvider>
+        </ToastProvider>
+      </ThemeProvider>
     </BrowserRouter>
   );
 }

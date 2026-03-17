@@ -5,10 +5,10 @@
  */
 
 export { MessageBubble } from './MessageBubble';
-export type { MessageBubbleProps, MessageAttachment } from './MessageBubble';
+export type { MessageBubbleProps, MessageAttachment, MessageStatus } from './MessageBubble';
 
 export { MessageInput } from './MessageInput';
-export type { MessageInputProps } from './MessageInput';
+export type { MessageInputProps, FailedMessage } from './MessageInput';
 
 export { ConversationList } from './ConversationList';
 export type { ConversationListProps, ConversationSummary } from './ConversationList';

@@ -1,5 +1,12 @@
 export { Button } from './Button.js';
 export { Card } from './Card.js';
 export { FormField } from './FormField.js';
+export { KeyboardShortcutsHelp } from './KeyboardShortcutsHelp.js';
+export { OfflineBanner, OfflineIndicator } from './OfflineBanner.js';
+export { ResponsiveImage, SimpleImage } from './ResponsiveImage.js';
+export type { ResponsiveImageProps, AspectRatio, PlaceholderType } from './ResponsiveImage.js';
 export { SkipLink } from './SkipLink.js';
 export { Spinner } from './Spinner.js';
+export { SyncStatus, useSyncStatus } from './SyncStatus.js';
+export type { SyncStatusType } from './SyncStatus.js';
+export { ThemeToggle } from './ThemeToggle.js';

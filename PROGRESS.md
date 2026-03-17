@@ -2,8 +2,8 @@
 
 **Specification Version:** 2.0
 **Project Start:** January 2026
-**Last Updated:** 14 March 2026
-**Current Phase:** Phase 9 Complete - MVP 4 Complete
+**Last Updated:** 17 March 2026
+**Current Phase:** Phase 9 Complete - MVP 4 Complete - v2.2 UI/UX Complete
 
 ---
 
@@ -2187,6 +2187,27 @@ Phase 19 (Deployment Infrastructure) ◄── All development phases complete
    - Tests: "should return null for revoked access token", "should return null for revoked refresh token"
    - Core functionality verified, only mock implementation issue
    - Does not affect production code
+
+### From v2.2 UI/UX Implementation Review (2026-03-17)
+
+**Pre-existing Translation Issues**:
+
+1. **Arabic Translation Incomplete** (Medium Priority)
+   - File: `packages/frontend/public/locales/ar/translation.json`
+   - Issue: Many common keys have `[UNTRANSLATED]` prefix (e.g., common.*, navigation.*, validation.*, errors.*)
+   - Note: UX-specific keys (theme.*, shortcuts.*, offline.*, sync.*) are properly translated
+   - Impact: Arabic users see placeholder text for non-UX strings
+   - Deferred to: Phase 18 (Multilingual Expansion) or dedicated i18n phase
+
+**Testing Gaps to Address**:
+
+1. **Missing Unit Tests for New Hooks** (High Priority)
+   - `useTheme` - system detection, persistence
+   - `useKeyboardShortcuts` - key matching, sequences
+   - `useOnlineStatus` - event handling, states
+   - `ErrorBoundary` - error catching, recovery
+   - Location: `packages/frontend/src/hooks/__tests__/`
+   - Deferred to: Next testing sprint
 
 ---
 
