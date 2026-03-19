@@ -117,12 +117,10 @@ describe('DataRetentionScheduler', () => {
       expect(mockPrisma.auditLog.update).toHaveBeenCalledTimes(2);
     });
 
-    it('should skip already anonymized IPs', async () => {
-      const logs = [
-        { id: 'log-1', ipAddress: 'ANON:abc123' },
-      ];
-
-      mockPrisma.auditLog.findMany.mockResolvedValue(logs);
+    it('should skip already anonymized IPs (filtered at query level)', async () => {
+      // With the NOT { startsWith: 'ANON:' } filter, findMany won't return
+      // already anonymized entries, so we mock an empty result
+      mockPrisma.auditLog.findMany.mockResolvedValue([]);
       mockPrisma.auditLog.count.mockResolvedValue(0);
       mockPrisma.auditLog.deleteMany.mockResolvedValue({ count: 0 });
       mockPrisma.message.deleteMany.mockResolvedValue({ count: 0 });

@@ -68,7 +68,9 @@ export async function verifyMapboxConnection(): Promise<boolean> {
     logger.warn('Mapbox API returned empty results');
     return false;
   } catch (error) {
-    logger.error({ error }, 'Mapbox API connection failed');
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    const errorStack = error instanceof Error ? error.stack : undefined;
+    logger.error({ err: { message: errorMessage, stack: errorStack } }, 'Mapbox API connection failed');
     return false;
   }
 }

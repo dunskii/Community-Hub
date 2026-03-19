@@ -117,13 +117,12 @@ export class DataRetentionScheduler {
 
     try {
       // Process AuditLog entries with old IP addresses
+      // Note: ipAddress is required (non-nullable) in schema, so we only filter
+      // for entries not already anonymized
       const auditLogs = await prisma.auditLog.findMany({
         where: {
           createdAt: {
             lt: cutoffDate,
-          },
-          ipAddress: {
-            not: null,
           },
           NOT: {
             ipAddress: {
@@ -141,14 +140,13 @@ export class DataRetentionScheduler {
       if (auditLogs.length > 0) {
         // Batch update with anonymized IPs
         for (const log of auditLogs) {
-          if (log.ipAddress && !log.ipAddress.startsWith('ANON:')) {
-            const anonymizedIp = this.anonymizeIp(log.ipAddress);
-            await prisma.auditLog.update({
-              where: { id: log.id },
-              data: { ipAddress: anonymizedIp },
-            });
-            totalProcessed++;
-          }
+          // The WHERE clause already filters out ANON: prefixed IPs
+          const anonymizedIp = this.anonymizeIp(log.ipAddress);
+          await prisma.auditLog.update({
+            where: { id: log.id },
+            data: { ipAddress: anonymizedIp },
+          });
+          totalProcessed++;
         }
 
         logger.debug(

@@ -6,16 +6,16 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import './types.js';
 
 // Import all translation files
-import translationEN from '../../public/locales/en/translation.json';
-import translationAR from '../../public/locales/ar/translation.json';
-import translationZH_CN from '../../public/locales/zh-CN/translation.json';
-import translationZH_TW from '../../public/locales/zh-TW/translation.json';
-import translationVI from '../../public/locales/vi/translation.json';
-import translationHI from '../../public/locales/hi/translation.json';
-import translationUR from '../../public/locales/ur/translation.json';
-import translationKO from '../../public/locales/ko/translation.json';
-import translationEL from '../../public/locales/el/translation.json';
-import translationIT from '../../public/locales/it/translation.json';
+import translationEN from './locales/en/translation.json';
+import translationAR from './locales/ar/translation.json';
+import translationZH_CN from './locales/zh-CN/translation.json';
+import translationZH_TW from './locales/zh-TW/translation.json';
+import translationVI from './locales/vi/translation.json';
+import translationHI from './locales/hi/translation.json';
+import translationUR from './locales/ur/translation.json';
+import translationKO from './locales/ko/translation.json';
+import translationEL from './locales/el/translation.json';
+import translationIT from './locales/it/translation.json';
 
 // Import business-specific translations
 import businessEN from './locales/en/business.json';
@@ -168,6 +168,7 @@ i18n
     fallbackLng: 'en',
     defaultNS: 'translation',
     ns: ['translation', 'business', 'category', 'reviews', 'owner', 'home', 'events', 'messaging'],
+    fallbackNS: ['owner', 'events', 'home', 'messaging', 'reviews', 'business', 'category'],
     debug: import.meta.env.DEV,
     interpolation: {
       escapeValue: false, // React already escapes

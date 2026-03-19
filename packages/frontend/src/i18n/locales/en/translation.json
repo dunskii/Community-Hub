@@ -18,7 +18,10 @@
     "yes": "Yes",
     "no": "No",
     "viewDetails": "View Details",
-    "learnMore": "Learn More"
+    "learnMore": "Learn More",
+    "viewToggle": "Toggle view mode",
+    "gridView": "Grid view",
+    "listView": "List view"
   },
   "navigation": {
     "home": "Home",

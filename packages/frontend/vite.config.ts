@@ -83,8 +83,18 @@ export default defineConfig({
     port: 4002,
     proxy: {
       '/api': {
-        target: 'http://localhost:3000',
+        target: 'http://localhost:4005',
         changeOrigin: true,
+        // Suppress connection errors during backend startup
+        configure: (proxy) => {
+          proxy.on('error', (err, _req, res) => {
+            // Only log if response hasn't been sent yet
+            if (res && 'writeHead' in res && !res.headersSent) {
+              res.writeHead(503, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ error: 'Backend starting up, please retry' }));
+            }
+          });
+        },
       },
     },
   },
