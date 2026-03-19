@@ -63,8 +63,6 @@ export function ComponentShowcase() {
     <>
       <Header
         platformName="Community Hub"
-        showListBusinessCTA={true}
-        isAuthenticated={false}
       />
 
       <PageContainer>

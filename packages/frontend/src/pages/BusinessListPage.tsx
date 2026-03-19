@@ -12,13 +12,29 @@ import { PageContainer } from '../components/layout/PageContainer';
 import { BusinessList } from '../components/business/BusinessList';
 import { BusinessFilters } from '../components/business/BusinessFilters';
 import { Pagination } from '../components/display/Pagination';
+import { ViewToggle, type ViewMode } from '../components/ui/ViewToggle';
 import { useBusinesses } from '../hooks/useBusinesses';
 import { useCategories } from '../hooks/useCategories';
 import type { BusinessListParams } from '../services/business-api';
 
+// Local storage key for persisting view preference
+const VIEW_STORAGE_KEY = 'community-hub-business-view';
+
 export function BusinessListPage() {
   const { t } = useTranslation('business');
   const [searchParams, setSearchParams] = useSearchParams();
+
+  // View mode state with localStorage persistence
+  const [viewMode, setViewMode] = useState<ViewMode>(() => {
+    const saved = localStorage.getItem(VIEW_STORAGE_KEY);
+    return (saved === 'list' || saved === 'grid') ? saved : 'grid';
+  });
+
+  // Update localStorage when view changes
+  const handleViewChange = (newView: ViewMode) => {
+    setViewMode(newView);
+    localStorage.setItem(VIEW_STORAGE_KEY, newView);
+  };
 
   // Parse filters from URL
   const [filters, setFilters] = useState<BusinessListParams>({
@@ -33,7 +49,7 @@ export function BusinessListPage() {
 
   // Fetch businesses and categories
   const { businesses, pagination, loading, error, setPage, setFilters: updateFilters } = useBusinesses(filters);
-  const { categories, loading: categoriesLoading } = useCategories({ active: true });
+  const { categories, loading: categoriesLoading } = useCategories({ active: true, withBusinesses: true });
 
   // Sync filters to URL
   useEffect(() => {
@@ -94,13 +110,22 @@ export function BusinessListPage() {
         />
 
         <div className="business-list-page__results">
-          {!loading && !error && (
-            <p className="business-list-page__count">
-              {t('resultsCount', { count: pagination.total })}
-            </p>
-          )}
+          <div className="flex items-center justify-between mb-4">
+            {!loading && !error && (
+              <p className="business-list-page__count text-gray-600 dark:text-gray-400">
+                {t('resultsCount', { count: pagination.total })}
+              </p>
+            )}
+            {loading && <div />}
+            <ViewToggle
+              view={viewMode}
+              onChange={handleViewChange}
+              size="sm"
+            />
+          </div>
 
           <BusinessList
+            viewMode={viewMode}
             businesses={businesses}
             loading={loading}
             error={error}

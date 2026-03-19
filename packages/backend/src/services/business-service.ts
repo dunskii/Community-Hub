@@ -202,7 +202,24 @@ export class BusinessService {
     const where: Record<string, unknown> = {};
 
     if (filters.category) {
-      where.categoryPrimaryId = filters.category;
+      // Check if this is a parent category with children
+      const category = await prisma.category.findUnique({
+        where: { id: filters.category },
+        include: {
+          children: {
+            select: { id: true },
+          },
+        },
+      });
+
+      if (category && category.children && category.children.length > 0) {
+        // Parent category - include all child category IDs
+        const categoryIds = [filters.category, ...category.children.map(c => c.id)];
+        where.categoryPrimaryId = { in: categoryIds };
+      } else {
+        // Leaf category or not found - filter by exact ID
+        where.categoryPrimaryId = filters.category;
+      }
     }
 
     if (filters.status) {

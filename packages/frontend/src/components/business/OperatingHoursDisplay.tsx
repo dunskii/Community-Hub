@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import type { OperatingHours } from '@community-hub/shared';
 import { useIsOpenNow } from '../../hooks/useIsOpenNow';
 import { Badge } from '../display/Badge';
+import './OperatingHoursDisplay.css';
 
 interface OperatingHoursDisplayProps {
   operatingHours: OperatingHours | null | undefined;
@@ -19,18 +20,37 @@ interface OperatingHoursDisplayProps {
 
 const DAYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'] as const;
 
+/**
+ * Format time string to remove leading zeros
+ * "05:00" -> "5:00", "09:30" -> "9:30", "12:00" -> "12:00"
+ */
+function formatTime(time: string): string {
+  return time.replace(/^0/, '');
+}
+
+// Day name labels with fallbacks
+const DAY_LABELS: Record<string, string> = {
+  monday: 'Monday',
+  tuesday: 'Tuesday',
+  wednesday: 'Wednesday',
+  thursday: 'Thursday',
+  friday: 'Friday',
+  saturday: 'Saturday',
+  sunday: 'Sunday',
+};
+
 export function OperatingHoursDisplay({
   operatingHours,
   showStatus = true,
   compact = false,
 }: OperatingHoursDisplayProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslation('business');
   const { isOpen } = useIsOpenNow(operatingHours);
 
   if (!operatingHours) {
     return (
       <div className="operating-hours">
-        <p className="operating-hours__no-data">{t('business.noHoursAvailable')}</p>
+        <p className="operating-hours__no-data">{t('noHoursAvailable', 'Hours not available')}</p>
       </div>
     );
   }
@@ -41,10 +61,10 @@ export function OperatingHoursDisplay({
       <div className="operating-hours">
         {showStatus && (
           <Badge variant="neutral" size="sm">
-            {t('business.byAppointment')}
+            {t('byAppointment', 'By Appointment')}
           </Badge>
         )}
-        <p className="operating-hours__appointment">{t('business.callForAppointment')}</p>
+        <p className="operating-hours__appointment">{t('callForAppointment', 'Call to make an appointment')}</p>
       </div>
     );
   }
@@ -60,17 +80,17 @@ export function OperatingHoursDisplay({
       <div className="operating-hours operating-hours--compact">
         {showStatus && (
           <Badge variant={isOpen ? 'success' : 'neutral'} size="sm">
-            {isOpen ? t('business.openNow') : t('business.closed')}
+            {isOpen ? t('openNow', 'Open Now') : t('closed', 'Closed')}
           </Badge>
         )}
         <div className="operating-hours__row">
           <span className="operating-hours__day operating-hours__day--current">
-            {t(`common.days.${currentDay}`)}
+            {DAY_LABELS[currentDay]}
           </span>
           <span className="operating-hours__time">
             {todayHours?.open && todayHours?.close
-              ? `${todayHours.open} - ${todayHours.close}`
-              : t('business.closed')}
+              ? `${formatTime(todayHours.open)} - ${formatTime(todayHours.close)}`
+              : t('closed', 'Closed')}
           </span>
         </div>
       </div>
@@ -83,7 +103,7 @@ export function OperatingHoursDisplay({
       {showStatus && (
         <div className="operating-hours__status">
           <Badge variant={isOpen ? 'success' : 'neutral'} size="sm">
-            {isOpen ? t('business.openNow') : t('business.closed')}
+            {isOpen ? t('openNow', 'Open Now') : t('closed', 'Closed')}
           </Badge>
         </div>
       )}
@@ -99,12 +119,12 @@ export function OperatingHoursDisplay({
               className={`operating-hours__row ${isCurrent ? 'operating-hours__row--current' : ''}`}
             >
               <span className={`operating-hours__day ${isCurrent ? 'operating-hours__day--current' : ''}`}>
-                {t(`common.days.${day}`)}
+                {DAY_LABELS[day]}
               </span>
               <span className="operating-hours__time">
                 {hours?.open && hours?.close
-                  ? `${hours.open} - ${hours.close}`
-                  : t('business.closed')}
+                  ? `${formatTime(hours.open)} - ${formatTime(hours.close)}`
+                  : t('closed', 'Closed')}
               </span>
             </div>
           );

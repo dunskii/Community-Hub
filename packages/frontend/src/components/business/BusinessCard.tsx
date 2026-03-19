@@ -11,6 +11,8 @@ import { Badge } from '../display/Badge';
 import { Avatar } from '../display/Avatar';
 import { ResponsiveImage } from '../ui/ResponsiveImage';
 import { useTranslation } from 'react-i18next';
+import { StarIcon } from '@heroicons/react/24/solid';
+import type { ViewMode } from '../ui/ViewToggle';
 
 interface BusinessCardProps {
   business: Business;
@@ -18,10 +20,12 @@ interface BusinessCardProps {
   distance?: number;
   /** Custom click handler (overrides default link) */
   onClick?: () => void;
+  /** View mode - grid or list */
+  viewMode?: ViewMode;
 }
 
-export function BusinessCard({ business, distance, onClick }: BusinessCardProps) {
-  const { t, i18n } = useTranslation();
+export function BusinessCard({ business, distance, onClick, viewMode = 'grid' }: BusinessCardProps) {
+  const { t, i18n } = useTranslation('business');
   const { isOpen } = useIsOpenNow(business.operatingHours);
   const isRtl = i18n.dir() === 'rtl';
 
@@ -33,47 +37,55 @@ export function BusinessCard({ business, distance, onClick }: BusinessCardProps)
     ? business.description
     : business.description[i18n.language] || business.description.en;
 
+  // View-specific styling
+  const isListView = viewMode === 'list';
+  const cardClasses = isListView
+    ? 'flex flex-row bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden hover:shadow-md transition-shadow'
+    : 'flex flex-col bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden hover:shadow-md transition-shadow';
+
+  const imageClasses = isListView
+    ? 'w-32 h-32 sm:w-40 sm:h-40 flex-shrink-0'
+    : 'w-full h-40';
+
   const content = (
-    <div className="business-card">
+    <div className={cardClasses}>
       {/* Business Photo */}
-      <div className="business-card__image">
+      <div className={imageClasses}>
         {business.photos && business.photos.length > 0 ? (
           <ResponsiveImage
             src={business.photos[0]}
             alt=""
             decorative
-            aspectRatio="16:9"
+            aspectRatio={isListView ? '1:1' : '16:9'}
             objectFit="cover"
-            className="business-card__photo"
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="w-full h-full"
+            sizes={isListView ? '160px' : '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw'}
           />
         ) : (
-          <Avatar
-            name={name}
-            size="xl"
-            className="business-card__avatar"
-          />
+          <div className="w-full h-full bg-gradient-to-br from-primary/10 to-primary/20 flex items-center justify-center">
+            <Avatar name={name} size={isListView ? 'lg' : 'xl'} />
+          </div>
         )}
       </div>
 
       {/* Business Info */}
-      <div className="business-card__content">
-        <div className="business-card__header">
-          <h3 className="business-card__name">{name}</h3>
+      <div className={`p-4 flex-1 ${isListView ? 'flex flex-col justify-center' : ''}`}>
+        <div className="flex items-start justify-between gap-2 mb-2">
+          <h3 className="text-lg font-semibold text-slate-900 dark:text-white line-clamp-1">{name}</h3>
 
           {/* Status Badge */}
-          <div className="business-card__status">
+          <div className="flex-shrink-0">
             {isOpen === null ? (
-              <Badge variant="neutral" size="sm">
-                {t('business.byAppointment')}
+              <Badge variant="default" size="sm">
+                {t('byAppointment', 'By Appointment')}
               </Badge>
             ) : isOpen ? (
               <Badge variant="success" size="sm">
-                {t('business.openNow')}
+                {t('openNow', 'Open Now')}
               </Badge>
             ) : (
-              <Badge variant="neutral" size="sm">
-                {t('business.closed')}
+              <Badge variant="default" size="sm">
+                {t('closed', 'Closed')}
               </Badge>
             )}
           </div>
@@ -81,16 +93,16 @@ export function BusinessCard({ business, distance, onClick }: BusinessCardProps)
 
         {/* Description */}
         {description && (
-          <p className="business-card__description">
+          <p className={`text-sm text-slate-600 dark:text-slate-400 ${isListView ? 'line-clamp-2' : 'line-clamp-2'} mb-2`}>
             {description}
           </p>
         )}
 
         {/* Metadata */}
-        <div className="business-card__meta">
+        <div className="flex flex-wrap items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
           {/* Category */}
           {business.categoryPrimary && (
-            <span className="business-card__category">
+            <span className="text-primary">
               {typeof business.categoryPrimary.name === 'string'
                 ? business.categoryPrimary.name
                 : business.categoryPrimary.name[i18n.language] || business.categoryPrimary.name.en}
@@ -99,26 +111,27 @@ export function BusinessCard({ business, distance, onClick }: BusinessCardProps)
 
           {/* Price Range */}
           {business.priceRange && (
-            <span className="business-card__price" aria-label={t('business.priceRange')}>
+            <span aria-label={t('priceRange', 'Price Range')}>
               {business.priceRange}
             </span>
           )}
 
           {/* Distance */}
           {distance !== undefined && (
-            <span className="business-card__distance">
+            <span>
               {distance < 1
-                ? `${Math.round(distance * 1000)}${t('common.meters')}`
-                : `${distance.toFixed(1)}${t('common.kilometers')}`}
+                ? `${Math.round(distance * 1000)}m`
+                : `${distance.toFixed(1)}km`}
             </span>
           )}
 
           {/* Rating */}
           {business.rating && (
-            <span className="business-card__rating" aria-label={t('business.rating')}>
-              ⭐ {business.rating.toFixed(1)}
+            <span className="flex items-center gap-1" aria-label={t('rating', 'Rating')}>
+              <StarIcon className="w-4 h-4 text-yellow-500" aria-hidden="true" />
+              {business.rating.toFixed(1)}
               {business.reviewCount && (
-                <span className="business-card__review-count">
+                <span className="text-slate-400 dark:text-slate-500">
                   ({business.reviewCount})
                 </span>
               )}
@@ -128,7 +141,7 @@ export function BusinessCard({ business, distance, onClick }: BusinessCardProps)
 
         {/* Address */}
         {business.address && (
-          <address className="business-card__address">
+          <address className="text-sm text-slate-500 dark:text-slate-400 mt-2 not-italic">
             {business.address.streetAddress}, {business.address.suburb}
           </address>
         )}
@@ -136,11 +149,13 @@ export function BusinessCard({ business, distance, onClick }: BusinessCardProps)
     </div>
   );
 
+  const wrapperClasses = 'block focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-lg';
+
   if (onClick) {
     return (
       <button
         onClick={onClick}
-        className="business-card-button"
+        className={wrapperClasses}
         type="button"
       >
         {content}
@@ -151,7 +166,7 @@ export function BusinessCard({ business, distance, onClick }: BusinessCardProps)
   return (
     <Link
       to={`/businesses/${business.slug}`}
-      className="business-card-link"
+      className={wrapperClasses}
     >
       {content}
     </Link>

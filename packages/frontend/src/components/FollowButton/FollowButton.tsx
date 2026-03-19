@@ -6,6 +6,7 @@
 
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { PlusIcon, CheckIcon } from '@heroicons/react/24/outline';
 import './FollowButton.css';
 
 export interface FollowButtonProps {
@@ -63,8 +64,8 @@ export const FollowButton: React.FC<FollowButtonProps> = ({
   };
 
   const getLabel = () => {
-    if (isLoading) return t('common.loading');
-    return isFollowing ? t('follow.following') : t('follow.follow');
+    if (isLoading) return t('common.loading', 'Loading...');
+    return isFollowing ? t('follow.following', 'Following') : t('follow.follow', 'Follow');
   };
 
   const formatFollowerCount = (count: number): string => {
@@ -90,12 +91,16 @@ export const FollowButton: React.FC<FollowButtonProps> = ({
         aria-pressed={isFollowing}
       >
         <span className="follow-button__icon" aria-hidden="true">
-          {isFollowing ? '✓' : '+'}
+          {isFollowing ? (
+            <CheckIcon className="follow-button__check" />
+          ) : (
+            <PlusIcon className="follow-button__plus" />
+          )}
         </span>
         <span className="follow-button__text">{getLabel()}</span>
       </button>
       {followerCount !== undefined && followerCount > 0 && (
-        <span className="follow-button__count" aria-label={t('follow.followerCount', { count: followerCount })}>
+        <span className="follow-button__count" aria-label={t('follow.followerCount', { count: followerCount, defaultValue: `${followerCount} followers` })}>
           {formatFollowerCount(followerCount)}
         </span>
       )}

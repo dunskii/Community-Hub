@@ -29,11 +29,11 @@ export function BusinessFilters({
   categories = [],
   loading = false,
 }: BusinessFiltersProps) {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation('business');
   const [searchInput, setSearchInput] = useState(filters.search || '');
 
-  const handleSearchChange = (value: string) => {
-    setSearchInput(value);
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchInput(e.target.value);
   };
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -41,37 +41,37 @@ export function BusinessFilters({
     onChange({ ...filters, search: searchInput || undefined });
   };
 
-  const handleCategoryChange = (value: string) => {
-    onChange({ ...filters, category: value || undefined });
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    onChange({ ...filters, category: e.target.value || undefined });
   };
 
-  const handleOpenNowChange = (checked: boolean) => {
-    onChange({ ...filters, openNow: checked || undefined });
+  const handleOpenNowChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onChange({ ...filters, openNow: e.target.checked || undefined });
   };
 
-  const handleSortChange = (value: string) => {
-    onChange({ ...filters, sort: value || undefined });
+  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    onChange({ ...filters, sort: e.target.value || undefined });
   };
 
   // Convert categories to select options
   const categoryOptions = [
-    { value: '', label: t('business.allCategories') },
+    { value: '', label: t('allCategories', 'All Categories') },
     ...categories.map(cat => ({
       value: cat.id,
-      label: typeof cat.name === 'string'
+      label: (typeof cat.name === 'string'
         ? cat.name
-        : cat.name[i18n.language] || cat.name.en,
+        : cat.name[i18n.language] || cat.name.en) || cat.id,
     })),
   ];
 
   const sortOptions = [
-    { value: '', label: t('business.sort.default') },
-    { value: 'name', label: t('business.sort.nameAsc') },
-    { value: '-name', label: t('business.sort.nameDesc') },
-    { value: 'rating', label: t('business.sort.ratingAsc') },
-    { value: '-rating', label: t('business.sort.ratingDesc') },
-    { value: 'createdAt', label: t('business.sort.newestFirst') },
-    { value: '-createdAt', label: t('business.sort.oldestFirst') },
+    { value: '', label: t('sort.default', 'Default') },
+    { value: 'name', label: t('sort.nameAsc', 'Name (A-Z)') },
+    { value: '-name', label: t('sort.nameDesc', 'Name (Z-A)') },
+    { value: 'rating', label: t('sort.ratingAsc', 'Rating (Low to High)') },
+    { value: '-rating', label: t('sort.ratingDesc', 'Rating (High to Low)') },
+    { value: 'createdAt', label: t('sort.newestFirst', 'Newest First') },
+    { value: '-createdAt', label: t('sort.oldestFirst', 'Oldest First') },
   ];
 
   return (
@@ -81,11 +81,11 @@ export function BusinessFilters({
           id="business-search"
           name="search"
           type="search"
-          placeholder={t('business.searchPlaceholder')}
+          placeholder={t('searchPlaceholder', 'Search businesses...')}
           value={searchInput}
           onChange={handleSearchChange}
           disabled={loading}
-          aria-label={t('business.searchLabel')}
+          aria-label={t('searchLabel', 'Search for businesses')}
         />
       </form>
 
@@ -93,7 +93,7 @@ export function BusinessFilters({
         <Select
           id="category-filter"
           name="category"
-          label={t('business.categoryLabel')}
+          label={t('categoryLabel', 'Category')}
           options={categoryOptions}
           value={filters.category || ''}
           onChange={handleCategoryChange}
@@ -103,7 +103,7 @@ export function BusinessFilters({
         <Select
           id="sort-filter"
           name="sort"
-          label={t('business.sortLabel')}
+          label={t('sortLabel', 'Sort by')}
           options={sortOptions}
           value={filters.sort || ''}
           onChange={handleSortChange}
@@ -114,7 +114,7 @@ export function BusinessFilters({
           <Toggle
             id="open-now-filter"
             name="openNow"
-            label={t('business.openNowOnly')}
+            label={t('openNowOnly', 'Open Now')}
             checked={filters.openNow || false}
             onChange={handleOpenNowChange}
             disabled={loading}

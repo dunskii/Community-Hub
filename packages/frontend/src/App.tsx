@@ -7,9 +7,10 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { loadPlatformConfig, getPlatformConfig } from './config/platform-loader';
+import { getPlatformConfig } from './config/platform-loader';
 import type { PlatformConfig } from '@community-hub/shared';
 import { AuthProvider } from './contexts/AuthContext';
+import { useAuth } from './hooks/useAuth';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { ToastProvider } from './contexts/ToastContext';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
@@ -31,15 +32,40 @@ import { ModerationPage } from './pages/ModerationPage';
 import { OwnerDashboardPage } from './pages/owner/OwnerDashboardPage';
 import { AnalyticsDashboardPage } from './pages/owner/AnalyticsDashboardPage';
 import { ClaimBusinessPage } from './pages/owner/ClaimBusinessPage';
+import { EditBusinessPage } from './pages/owner/EditBusinessPage';
+import { PhotosManagementPage } from './pages/owner/PhotosManagementPage';
 import { EventsListingPage } from './pages/events/EventsListingPage';
 import { EventDetailPage } from './pages/events/EventDetailPage';
 import { MessagesPage } from './pages/messages/MessagesPage';
 import { BusinessInboxPage } from './pages/owner/BusinessInboxPage';
+import { Layout } from './components/layout/Layout';
+import {
+  BuildingStorefrontIcon,
+  CakeIcon,
+  BuildingOffice2Icon,
+  HeartIcon,
+  BeakerIcon,
+  ComputerDesktopIcon,
+  ShoppingBagIcon,
+  ScissorsIcon,
+} from '@heroicons/react/24/outline';
+
+// Category icon mapping
+const CategoryIcons: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
+  restaurants: BuildingStorefrontIcon,
+  cafes: CakeIcon,
+  medical: BuildingOffice2Icon,
+  fitness: HeartIcon,
+  pharmacy: BeakerIcon,
+  electronics: ComputerDesktopIcon,
+  bakery: ShoppingBagIcon,
+  hairBeauty: ScissorsIcon,
+};
 
 // HomePage component with i18n and platform config
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t } = useTranslation('home');
   const [config, setConfig] = useState<PlatformConfig | null>(null);
 
   useEffect(() => {
@@ -51,32 +77,45 @@ const HomePage: React.FC = () => {
     }
   }, []);
 
-  const platformName = config?.platform?.name || t('home.defaultPlatformName', 'Community Hub');
-  const locationName = config?.location?.name || t('home.defaultLocation', 'your area');
+  const platformName = config?.platform?.id === 'guildford-south'
+    ? 'Guildford South Community Hub'
+    : (config?.platform?.id || t('defaultPlatformName', 'Community Hub'));
+  const locationName = config?.location?.suburbName || t('defaultLocation', 'your area');
+
+  const categories = [
+    { nameKey: 'restaurants', slug: 'restaurant' },
+    { nameKey: 'cafes', slug: 'cafe' },
+    { nameKey: 'medical', slug: 'medical' },
+    { nameKey: 'fitness', slug: 'fitness' },
+    { nameKey: 'pharmacy', slug: 'pharmacy' },
+    { nameKey: 'electronics', slug: 'electronics' },
+    { nameKey: 'bakery', slug: 'bakery' },
+    { nameKey: 'hairBeauty', slug: 'haircut-salon' },
+  ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <>
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16">
+      <div className="bg-gradient-to-r from-primary to-primary-shade-20 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            {t('home.hero.welcome', { platformName })}
+            {t('hero.welcome', `Welcome to ${platformName}`, { platformName })}
           </h1>
-          <p className="text-xl mb-8 text-blue-100">
-            {t('home.hero.subtitle', { location: locationName })}
+          <p className="text-xl mb-8 opacity-90">
+            {t('hero.subtitle', `Discover local businesses, events, and deals in ${locationName}`, { location: locationName })}
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <button
               onClick={() => navigate('/businesses')}
-              className="bg-white text-blue-700 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition"
+              className="bg-white text-primary px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition"
             >
-              {t('home.hero.browseBusinesses', 'Browse Businesses')}
+              {t('hero.browseBusinesses', 'Browse Businesses')}
             </button>
             <button
               onClick={() => navigate('/categories')}
-              className="bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-600 transition border-2 border-white"
+              className="bg-primary-shade-10 text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary-shade-20 transition border-2 border-white/30"
             >
-              {t('home.hero.viewCategories', 'View Categories')}
+              {t('hero.viewCategories', 'View Categories')}
             </button>
           </div>
         </div>
@@ -85,72 +124,158 @@ const HomePage: React.FC = () => {
       {/* Quick Stats */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white p-6 rounded-lg shadow-md text-center">
-            <div className="text-3xl font-bold text-blue-600 mb-2">8+</div>
-            <div className="text-gray-600">{t('home.stats.businesses', 'Local Businesses')}</div>
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md text-center">
+            <div className="text-3xl font-bold text-primary mb-2">8+</div>
+            <div className="text-gray-600 dark:text-gray-400">{t('stats.businesses', 'Local Businesses')}</div>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow-md text-center">
-            <div className="text-3xl font-bold text-blue-600 mb-2">8</div>
-            <div className="text-gray-600">{t('home.stats.categories', 'Categories')}</div>
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md text-center">
+            <div className="text-3xl font-bold text-primary mb-2">8</div>
+            <div className="text-gray-600 dark:text-gray-400">{t('stats.categories', 'Categories')}</div>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow-md text-center">
-            <div className="text-3xl font-bold text-blue-600 mb-2">10</div>
-            <div className="text-gray-600">{t('home.stats.languages', 'Languages Supported')}</div>
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md text-center">
+            <div className="text-3xl font-bold text-primary mb-2">10</div>
+            <div className="text-gray-600 dark:text-gray-400">{t('stats.languages', 'Languages Supported')}</div>
           </div>
         </div>
       </div>
 
       {/* Featured Categories */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h2 className="text-3xl font-bold mb-8 text-gray-900">{t('home.categories.title', 'Popular Categories')}</h2>
+        <h2 className="text-3xl font-bold mb-8 text-gray-900 dark:text-white">{t('categories.title', 'Popular Categories')}</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {[
-            { nameKey: 'restaurants', emoji: '🍽️', slug: 'restaurant' },
-            { nameKey: 'cafes', emoji: '☕', slug: 'cafe' },
-            { nameKey: 'medical', emoji: '🏥', slug: 'medical' },
-            { nameKey: 'fitness', emoji: '💪', slug: 'fitness' },
-            { nameKey: 'pharmacy', emoji: '💊', slug: 'pharmacy' },
-            { nameKey: 'electronics', emoji: '💻', slug: 'electronics' },
-            { nameKey: 'bakery', emoji: '🥖', slug: 'bakery' },
-            { nameKey: 'hairBeauty', emoji: '💇', slug: 'haircut-salon' },
-          ].map((category) => (
-            <button
-              key={category.slug}
-              onClick={() => navigate(`/businesses?category=${category.slug}`)}
-              className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition text-center"
-            >
-              <span className="text-4xl mb-2 block" aria-hidden="true">{category.emoji}</span>
-              <span className="font-semibold text-gray-800">{t(`home.categories.${category.nameKey}`, category.nameKey)}</span>
-            </button>
-          ))}
+          {categories.map((category) => {
+            const Icon = CategoryIcons[category.nameKey] || BuildingStorefrontIcon;
+            return (
+              <button
+                key={category.slug}
+                onClick={() => navigate(`/businesses?category=${category.slug}`)}
+                className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition text-center group border border-gray-100 dark:border-gray-700"
+              >
+                <Icon className="w-10 h-10 mx-auto mb-3 text-primary group-hover:scale-110 transition-transform" aria-hidden="true" />
+                <span className="font-semibold text-gray-800 dark:text-gray-200 group-hover:text-primary transition-colors">
+                  {t(`categories.${category.nameKey}`, category.nameKey)}
+                </span>
+              </button>
+            );
+          })}
         </div>
       </div>
 
       {/* CTA Section */}
-      <div className="bg-blue-600 text-white py-12 mt-12">
+      <div className="bg-secondary text-white py-12 mt-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold mb-4">{t('home.cta.title', { location: locationName })}</h2>
-          <p className="text-xl mb-8 text-blue-100">
-            {t('home.cta.subtitle', 'Claim your business listing and connect with the community')}
+          <h2 className="text-3xl font-bold mb-4">{t('cta.title', `Own a business in ${locationName}?`, { location: locationName })}</h2>
+          <p className="text-xl mb-8 opacity-90">
+            {t('cta.subtitle', 'Claim your business listing and connect with the community')}
           </p>
           <button
             onClick={() => navigate('/register')}
-            className="bg-white text-blue-700 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition"
+            className="bg-white text-secondary px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition"
           >
-            {t('home.cta.button', 'Get Started')}
+            {t('cta.button', 'Get Started')}
           </button>
         </div>
+      </div>
+    </>
+  );
+};
+
+const DashboardPage: React.FC = () => {
+  const { t } = useTranslation();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/');
+  };
+
+  // Quick links for dashboard
+  const quickLinks = [
+    { href: '/saved', label: t('navigation.saved', 'Saved Businesses'), icon: '❤️' },
+    { href: '/following', label: t('navigation.following', 'Following'), icon: '👥' },
+    { href: '/messages', label: t('navigation.messages', 'Messages'), icon: '💬' },
+  ];
+
+  // Business owner links
+  const ownerLinks = [
+    { href: '/owner/dashboard', label: t('navigation.businessDashboard', 'Business Dashboard'), icon: '📊' },
+    { href: '/claim-business', label: t('navigation.claimBusiness', 'Claim a Business'), icon: '🏪' },
+  ];
+
+  const isBusinessOwner = user?.role === 'BUSINESS_OWNER' || user?.role === 'ADMIN';
+
+  return (
+    <div className="max-w-4xl mx-auto p-8">
+      <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
+        {t('dashboard.welcome', 'Welcome back')}, {user?.displayName || 'User'}!
+      </h1>
+      <p className="text-slate-600 dark:text-slate-400 mb-8">
+        {t('dashboard.subtitle', 'Manage your account and explore the community.')}
+      </p>
+
+      {/* Quick Links */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        {quickLinks.map((link) => (
+          <button
+            key={link.href}
+            onClick={() => navigate(link.href)}
+            className="flex items-center gap-3 p-4 bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 hover:border-primary hover:shadow-md transition-all text-left"
+          >
+            <span className="text-2xl">{link.icon}</span>
+            <span className="font-medium text-slate-900 dark:text-white">{link.label}</span>
+          </button>
+        ))}
+      </div>
+
+      {/* Business Owner Section */}
+      {isBusinessOwner && (
+        <div className="mb-8">
+          <h2 className="text-xl font-semibold text-slate-900 dark:text-white mb-4">
+            {t('dashboard.businessTools', 'Business Tools')}
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {ownerLinks.map((link) => (
+              <button
+                key={link.href}
+                onClick={() => navigate(link.href)}
+                className="flex items-center gap-3 p-4 bg-primary/5 dark:bg-primary/10 rounded-xl border border-primary/20 hover:border-primary hover:shadow-md transition-all text-left"
+              >
+                <span className="text-2xl">{link.icon}</span>
+                <span className="font-medium text-slate-900 dark:text-white">{link.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Account Info */}
+      <div className="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-6">
+        <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
+          {t('dashboard.accountInfo', 'Account Information')}
+        </h2>
+        <dl className="space-y-2 text-sm">
+          <div className="flex justify-between">
+            <dt className="text-slate-500 dark:text-slate-400">{t('dashboard.email', 'Email')}</dt>
+            <dd className="text-slate-900 dark:text-white">{user?.email}</dd>
+          </div>
+          <div className="flex justify-between">
+            <dt className="text-slate-500 dark:text-slate-400">{t('dashboard.role', 'Account Type')}</dt>
+            <dd className="text-slate-900 dark:text-white capitalize">{user?.role?.toLowerCase().replace('_', ' ')}</dd>
+          </div>
+        </dl>
+
+        {/* Logout Button */}
+        <button
+          onClick={handleLogout}
+          className="mt-4 w-full px-4 py-2 text-sm font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors"
+        >
+          {t('navigation.logout', 'Log Out')}
+        </button>
       </div>
     </div>
   );
 };
-
-const DashboardPage: React.FC = () => (
-  <div className="p-8">
-    <h1 className="text-3xl font-bold">Dashboard</h1>
-    <p className="mt-4">This is a protected page that requires authentication.</p>
-  </div>
-);
 
 export function App() {
   return (
@@ -162,7 +287,7 @@ export function App() {
             <OfflineHandler>
             <ErrorBoundary>
             <SkipLink />
-            <main id="main-content" className="bg-background text-primary-content min-h-screen">
+            <Layout>
               <Routes>
             {/* Public Routes */}
             <Route path="/" element={<HomePage />} />
@@ -217,6 +342,22 @@ export function App() {
               element={
                 <ProtectedRoute>
                   <AnalyticsDashboardPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/owner/business/:businessId/edit"
+              element={
+                <ProtectedRoute>
+                  <EditBusinessPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/owner/business/:businessId/photos"
+              element={
+                <ProtectedRoute>
+                  <PhotosManagementPage />
                 </ProtectedRoute>
               }
             />
@@ -280,7 +421,7 @@ export function App() {
                 {/* Catch all - redirect to home */}
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
-            </main>
+            </Layout>
             </ErrorBoundary>
             </OfflineHandler>
             </GlobalShortcuts>

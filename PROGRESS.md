@@ -3,7 +3,7 @@
 **Specification Version:** 2.0
 **Project Start:** January 2026
 **Last Updated:** 17 March 2026
-**Current Phase:** Phase 9 Complete - MVP 4 Complete - v2.2 UI/UX Complete
+**Current Phase:** Phase 9 Complete - MVP 4 Complete - v2.2 UI/UX Specification Complete
 
 ---
 
@@ -42,7 +42,7 @@
 **Phase 7 Progress: ~85% (28/33 tasks - core features complete, QA passed)**
 **Phase 8 Progress: 98% (33/35 tasks - feature-complete, ~360 tests)**
 **Phase 9 Progress: 95% (26/28 tasks - SpamDetectionService deferred to Phase 15, QA R3 PASS)**
-**Total Tests: 2,315+ passing (backend + frontend + shared + E2E + Phase 9 ~145 tests)**
+**Total Tests: 2,387+ passing (backend + frontend + shared + E2E + Phase 9 ~145 tests + v2.2 72 tests)**
 
 ---
 
@@ -79,6 +79,7 @@
 - [x] **Milestone 13: "Business Owner Portal"** -- Phase 7 implementation (~85%). Backend services: ClaimService (995 lines), AnalyticsService (723 lines). Database: 4 new models (BusinessClaimRequest, BusinessAnalyticsEvent, BusinessAnalyticsDaily, BusinessOwnerStaff) + 4 new enums (VerificationMethod, ClaimVerificationStatus, ClaimStatus, AnalyticsEventType) + 15 indexes. API: 12 endpoints (8 claim, 4 analytics). Frontend: 3 pages (ClaimBusinessPage 590 lines, OwnerDashboardPage 371 lines, AnalyticsDashboardPage 479 lines) + 2 services (claim-service 110 lines, analytics-service 206 lines). Security: PIN hashing (bcrypt), JWT email tokens, 6 rate limiters, audit logging, ownership verification. i18n: 10/10 languages (186 keys each). **656+ Phase 7 test lines added (1,450+ total passing)**. Profile management deferred to Phase 7.2. QA passed. (2026-03-11)
 - [x] **Milestone 14: "Events & Calendar Live"** -- Phase 8 implementation (98%). Backend services: EventService (998 lines), EventRSVPService (425 lines), EventExportService (136 lines), EventNotificationService (406 lines), EventReminderScheduler (~200 lines). Database: 2 models (Event, EventRSVP) + 3 enums (EventStatus, LocationType, RSVPStatus). API: 11 endpoints (CRUD, RSVP, attendees, export, approve). Frontend: 5 components (EventCard, RSVPButton, EventFilters, CalendarView 749 lines, EventForm 777 lines) + 2 pages (EventsListingPage, EventDetailPage 609 lines) + UpcomingEventsSection for homepage. Security: 6 rate limiters, 9 Zod validation schemas, audit logging. i18n: 10/10 languages (~50 keys each). E2E tests: ~80 Playwright tests for events flow. **~360 Phase 8 tests added (1,810+ total passing)**. CalendarView with month/week/day views, keyboard navigation, RTL support. Event reminders (24h/1h) with Redis/database fallback. WCAG 2.1 AA compliant. QA R3 passed. (2026-03-12)
 - [x] **Milestone 15: "Messaging System Live"** -- Phase 9 implementation (95% - Production Ready). Backend services: ConversationService (1,074 lines), MessageService (531 lines), QuickReplyService (366 lines). Database: 5 models (Conversation, Message, QuickReplyTemplate, MessageAttachment) + 3 enums (ConversationStatus, SubjectCategory, SenderType) + 8 indexes. API: 16 endpoints (conversations CRUD, messages CRUD, quick replies, block/report, business inbox). Frontend: 5 components (ConversationList, ConversationView, MessageBubble, MessageInput, NewConversationForm) + 2 pages (MessagesPage 454 lines, BusinessInboxPage 636 lines). Security: 6 rate limiters (10 conversations/day spam prevention), 9 Zod validation schemas, authorization checks, IP anonymization (90-day). i18n: 10/10 languages (~140 keys each). **~145 Phase 9 tests added (2,315+ total passing)**. Quick reply templates for business owners. 24-hour message deletion window. N+1 query fix with batch sender loading. SpamDetectionService deferred to Phase 15. WCAG 2.1 AA compliant. QA R3 PASS (97% score). (2026-03-14 COMPLETE)
+- [x] **Milestone 16: "v2.2 UI/UX Specification"** -- v2.2 UI/UX implementation complete (9 phases). Phases UX-1 through UX-9: Foundation tokens (spacing, animations, touch targets), Dark mode (ThemeContext, useTheme, persistence), Shimmer loading (animations, prefers-reduced-motion), Keyboard shortcuts (useKeyboardShortcuts, GlobalShortcuts, KeyboardShortcutsHelp), Enhanced toast (ToastContext, useToast, ToastContainer), Responsive images (ResponsiveImage with srcset, WebP, lazy loading), Offline behaviour (useOnlineStatus, OfflineBanner, SyncStatus, OfflineHandler), Error recovery (ErrorBoundary, SessionTimeoutModal, RetryBanner, api-error-handler), Message states (MessageStatus indicators, retry for failed). **72 new tests added (2,387+ total passing)**. 22 new files, 20+ modified. WCAG 2.1 AA compliant. 10/10 languages updated. QA R2 PASS (97% score). (2026-03-17 COMPLETE)
 
 ### MVP Milestones
 
@@ -1018,11 +1019,11 @@ The following test failures were discovered during Phase 6 QA. These are infrast
 
 | Metric                  | Target  | Current                     |
 | ----------------------- | ------- | --------------------------- |
-| Test Coverage           | > 80%   | 60% thresholds (1,290+ tests)  |
-| Backend Tests           | -       | 700+ across 59+ files       |
-| Frontend Tests          | -       | 440+ across 65+ files       |
-| Shared Tests            | -       | 150 across 10 files         |
-| QA Reviews              | Clean   | 18 reviews, 180+ findings resolved |
+| Test Coverage           | > 80%   | 60% thresholds (2,387+ tests)  |
+| Backend Tests           | -       | 750+ across 62+ files       |
+| Frontend Tests          | -       | 520+ across 70+ files       |
+| Shared Tests            | -       | 160 across 12 files         |
+| QA Reviews              | Clean   | 19 reviews, 185+ findings resolved |
 | Lighthouse Performance  | > 80    | N/A (not benchmarked yet)   |
 | Accessibility Score     | 100%    | WCAG 2.1 AA (all components)|
 | API Response Time (p95) | < 200ms | <200ms (search endpoints)   |
@@ -1108,6 +1109,12 @@ The following test failures were discovered during Phase 6 QA. These are infrast
 | Mar 2026 | N+1 query optimization                | Batch sender loading in getMessages() for performance | Project Team |
 | Mar 2026 | SpamDetectionService deferred         | Full spam/profanity filtering moved to Phase 15 admin tools | Project Team |
 | Mar 2026 | MVP 4 complete                        | Events & Messaging complete - production ready | Project Team |
+| Mar 2026 | v2.2 UI/UX complete (2026-03-17)      | 9 UX phases: dark mode, offline, error recovery, 72 tests, QA R2 PASS | Project Team |
+| Mar 2026 | Dark mode with system detection       | prefers-color-scheme, localStorage persistence, ThemeContext | Project Team |
+| Mar 2026 | Keyboard shortcuts system             | useKeyboardShortcuts hook, modifier key support, help modal | Project Team |
+| Mar 2026 | Offline-first UI patterns             | useOnlineStatus, OfflineBanner, SyncStatus, OfflineHandler | Project Team |
+| Mar 2026 | Error boundary implementation         | React error boundary, session timeout modal, retry banners | Project Team |
+| Mar 2026 | Foundation tokens standardized        | 4px spacing scale, animation timing (150/300/500ms), 44px touch targets | Project Team |
 
 ---
 
@@ -1175,6 +1182,33 @@ Phase 19 (Deployment Infrastructure) ◄── All development phases complete
 ---
 
 ## Weekly Status
+
+### Week of 17 March 2026
+
+**v2.2 UI/UX Specification Implementation declared COMPLETE (97% QA Score).**
+**9 UX phases implemented (UX-1 through UX-9) with 72 new tests.**
+
+- **v2.2 UI/UX Implementation (100% Complete - QA R2 PASS):** 9 phases complete
+  - **UX-1: Foundation Tokens** - Spacing scale (4px base), animation timing (150/300/500ms), 44px touch targets
+  - **UX-2: Dark Mode** - ThemeContext, useTheme hook, ThemeToggle component, system preference detection, localStorage persistence
+  - **UX-3: Shimmer Loading** - Shimmer keyframes, enhanced Skeleton component, prefers-reduced-motion support, BusinessCardSkeleton, EventCardSkeleton
+  - **UX-4: Keyboard Shortcuts** - useKeyboardShortcuts hook, GlobalShortcuts component, KeyboardShortcutsHelp modal, modifier key support
+  - **UX-5: Enhanced Toast** - ToastContext, useToast hook, ToastContainer, auto-dismiss, close button support
+  - **UX-6: Responsive Images** - ResponsiveImage component with srcset, WebP format, native lazy loading
+  - **UX-7: Offline Behaviour** - useOnlineStatus hook, OfflineBanner, SyncStatus, OfflineHandler, real-time connectivity detection
+  - **UX-8: Error Recovery** - ErrorBoundary component, SessionTimeoutModal, RetryBanner, api-error-handler utility
+  - **UX-9: Message States** - MessageStatus type, visual status indicators, retry for failed messages
+  - **Files Created (22):** 4 hooks, 2 contexts, 11 components, 2 indexes, 3 utilities
+  - **Files Modified (20+):** Styles (3), components (4), i18n (10), app files (3+)
+  - **Tests Added (72):** useTheme (20), useKeyboardShortcuts (24), useOnlineStatus (14), ErrorBoundary (14)
+  - **Internationalization:** All 10 languages updated with new translation keys
+  - **WCAG 2.1 AA Compliant:** prefers-reduced-motion, keyboard navigation, ARIA labels, focus management
+  - **QA Review Score:** 97% PASS
+  - **Commits:** `e30767d` (feat), `c060414` (fix)
+- **Documentation:** `md/report/v2.2-ui-ux-specification-implementation.md`
+- **Overall Test Count:** 2,387+ passing
+
+---
 
 ### Week of 14 March 2026
 
@@ -1591,6 +1625,85 @@ Phase 19 (Deployment Infrastructure) ◄── All development phases complete
 ---
 
 ## Changelog
+
+### 17 March 2026 (v2.2 UI/UX Specification Implementation Complete)
+
+- **v2.2 UI/UX Specification declared COMPLETE** -- 9 phases (UX-1 through UX-9)
+- **Foundation Tokens (UX-1):**
+  - Spacing scale: 4px base unit (4, 8, 12, 16, 24, 32, 48, 64, 96, 128px)
+  - Animation timing: fast (150ms), normal (300ms), slow (500ms)
+  - Touch targets: 44px minimum per WCAG 2.1 AA
+- **Dark Mode (UX-2):**
+  - ThemeContext and useTheme hook
+  - ThemeToggle component
+  - System preference detection via prefers-color-scheme
+  - LocalStorage persistence
+- **Shimmer Loading (UX-3):**
+  - Shimmer keyframes for loading animations
+  - Enhanced Skeleton component
+  - prefers-reduced-motion support
+  - BusinessCardSkeleton and EventCardSkeleton components
+- **Keyboard Shortcuts (UX-4):**
+  - useKeyboardShortcuts hook with modifier support
+  - GlobalShortcuts component for app-wide shortcuts
+  - KeyboardShortcutsHelp modal
+  - Shortcuts: ?, Ctrl+K, Ctrl+,, Escape
+- **Enhanced Toast (UX-5):**
+  - ToastContext and useToast hook
+  - ToastContainer component
+  - Auto-dismiss with configurable duration
+  - Close button support
+- **Responsive Images (UX-6):**
+  - ResponsiveImage component with srcset
+  - WebP format support
+  - Native lazy loading
+- **Offline Behaviour (UX-7):**
+  - useOnlineStatus hook
+  - OfflineBanner, SyncStatus components
+  - OfflineHandler wrapper component
+- **Error Recovery (UX-8):**
+  - ErrorBoundary component
+  - SessionTimeoutModal
+  - RetryBanner component
+  - api-error-handler utility
+- **Message States (UX-9):**
+  - MessageStatus type (pending, sent, delivered, read, failed)
+  - Visual status indicators
+  - Retry for failed messages
+- **Files created:** 22 new files
+  - 4 hooks: useTheme, useKeyboardShortcuts, useOnlineStatus, useToast
+  - 2 contexts: ThemeContext, ToastContext
+  - 11 components: ThemeToggle, KeyboardShortcutsHelp, OfflineBanner, SyncStatus, ResponsiveImage, GlobalShortcuts, OfflineHandler, ErrorBoundary, RetryBanner, SessionTimeoutModal, ToastContainer
+  - 2 skeleton components: BusinessCardSkeleton, EventCardSkeleton
+  - 1 utility: api-error-handler
+  - 2 index files: error/index.ts, app/index.ts
+- **Files modified:** 20+ files
+  - Styles: app.css, colours.css, utilities.css
+  - Components: Toast, Skeleton, MessageBubble, MessageInput
+  - App: App.tsx, main.tsx
+  - i18n: All 10 translation files
+- **Tests added:** 72 new tests
+  - useTheme.test.ts: 20 tests
+  - useKeyboardShortcuts.test.ts: 24 tests
+  - useOnlineStatus.test.ts: 14 tests
+  - ErrorBoundary.test.tsx: 14 tests
+- **Test results:**
+  - Total: 2,387+ tests passing (72 new)
+- **Internationalization:**
+  - All 10 languages updated
+  - New keys: toast.close, errorBoundary.*, session.*, offline.*, shortcuts.*
+  - RTL support maintained
+- **WCAG 2.1 AA Compliance:**
+  - prefers-reduced-motion support
+  - Keyboard navigation throughout
+  - ARIA labels on all components
+  - 44px touch targets
+- **QA Review:** R2 PASS (97% score)
+- **Commits:** `e30767d` (feat), `c060414` (fix)
+- **Accomplishment Report:** `md/report/v2.2-ui-ux-specification-implementation.md`
+- **Overall project progress:** ~53% (339/644 tasks + v2.2 complete)
+
+---
 
 ### 11 March 2026 (Phase 7 Business Owner Features - Core Complete)
 

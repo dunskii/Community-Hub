@@ -10,3 +10,5 @@ export { Spinner } from './Spinner.js';
 export { SyncStatus, useSyncStatus } from './SyncStatus.js';
 export type { SyncStatusType } from './SyncStatus.js';
 export { ThemeToggle } from './ThemeToggle.js';
+export { ViewToggle } from './ViewToggle.js';
+export type { ViewMode } from './ViewToggle.js';

@@ -21,7 +21,7 @@ export interface ReviewsTabProps {
 }
 
 export const ReviewsTab: React.FC<ReviewsTabProps> = ({ businessId, businessName }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('reviews');
   const { user, isAuthenticated } = useAuth();
 
   const {
@@ -158,7 +158,7 @@ export const ReviewsTab: React.FC<ReviewsTabProps> = ({ businessId, businessName
           <div className="reviews-tab__average">{averageRating.toFixed(1)}</div>
           <StarRating value={averageRating} readOnly size="large" />
           <div className="reviews-tab__total">
-            {t('reviews.basedOn', { count: total })}
+            {t('reviews.basedOn', { count: total, defaultValue: `Based on ${total} reviews` })}
           </div>
         </div>
 
@@ -170,7 +170,7 @@ export const ReviewsTab: React.FC<ReviewsTabProps> = ({ businessId, businessName
             return (
               <div key={stars} className="reviews-tab__distribution-row">
                 <span className="reviews-tab__distribution-label">
-                  {stars} {t('reviews.stars')}
+                  {stars} {t('reviews.stars', 'stars')}
                 </span>
                 <div className="reviews-tab__distribution-bar">
                   <div
@@ -194,11 +194,11 @@ export const ReviewsTab: React.FC<ReviewsTabProps> = ({ businessId, businessName
             onClick={handleWriteReview}
             disabled={!isAuthenticated}
           >
-            {t('reviews.writeReview')}
+            {t('reviews.writeReview', 'Write a Review')}
           </button>
         )}
         {hasUserReviewed && userReview && (
-          <Alert variant="info" message={t('reviews.alreadyReviewed')} />
+          <Alert variant="info" message={t('reviews.alreadyReviewed', 'You have already reviewed this business.')} />
         )}
       </div>
 
@@ -227,8 +227,8 @@ export const ReviewsTab: React.FC<ReviewsTabProps> = ({ businessId, businessName
         onClose={handleCancelReview}
         title={
           editingReviewId
-            ? t('reviews.editReview')
-            : t('reviews.writeReviewFor', { business: businessName })
+            ? t('reviews.editReview', 'Edit Review')
+            : t('reviews.writeReviewFor', { business: businessName, defaultValue: `Write a Review for ${businessName}` })
         }
         size="large"
       >
@@ -253,10 +253,10 @@ export const ReviewsTab: React.FC<ReviewsTabProps> = ({ businessId, businessName
       <Modal
         isOpen={showDeleteConfirm}
         onClose={() => setShowDeleteConfirm(false)}
-        title={t('reviews.deleteConfirmTitle')}
+        title={t('reviews.deleteConfirmTitle', 'Delete Review?')}
       >
         <div className="reviews-tab__delete-confirm">
-          <p>{t('reviews.deleteConfirmMessage')}</p>
+          <p>{t('reviews.deleteConfirmMessage', 'Are you sure you want to delete your review? This action cannot be undone.')}</p>
           <div className="reviews-tab__delete-actions">
             <button
               type="button"
@@ -264,7 +264,7 @@ export const ReviewsTab: React.FC<ReviewsTabProps> = ({ businessId, businessName
               onClick={() => setShowDeleteConfirm(false)}
               disabled={isSubmitting}
             >
-              {t('common.cancel')}
+              {t('common.cancel', 'Cancel')}
             </button>
             <button
               type="button"
@@ -272,7 +272,7 @@ export const ReviewsTab: React.FC<ReviewsTabProps> = ({ businessId, businessName
               onClick={confirmDelete}
               disabled={isSubmitting}
             >
-              {isSubmitting ? t('common.deleting') : t('common.delete')}
+              {isSubmitting ? t('common.deleting', 'Deleting...') : t('common.delete', 'Delete')}
             </button>
           </div>
         </div>

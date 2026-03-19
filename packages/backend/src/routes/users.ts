@@ -30,6 +30,8 @@ import {
   findSessionByJti,
 } from '../services/session-service';
 import { eventController } from '../controllers/event-controller';
+import { getOwnedBusinesses } from '../services/claim-service';
+import { resolveMe } from '../middleware/resolve-me.js';
 import { verifyRefreshToken } from '../services/token-service';
 import { ApiError } from '../utils/api-error';
 import { logger } from '../utils/logger';
@@ -549,6 +551,34 @@ router.get(
   requireOwnershipOrAdmin(),
   validate({ params: userIdParamSchema }),
   eventController.getUserRSVPs.bind(eventController)
+);
+
+/**
+ * GET /users/:id/businesses
+ *
+ * Get businesses owned by the user (via approved claims).
+ * Supports /users/me/businesses as alias.
+ */
+router.get(
+  '/:id/businesses',
+  requireAuth,
+  resolveMe,
+  requireOwnershipOrAdmin(),
+  validate({ params: userIdParamSchema }),
+  async (req: Request, res: Response) => {
+    try {
+      const userId = req.params.id as string;
+      const businesses = await getOwnedBusinesses(userId);
+
+      res.json({
+        success: true,
+        data: { businesses },
+      });
+    } catch (error) {
+      logger.error({ error }, 'Get owned businesses error');
+      throw error;
+    }
+  }
 );
 
 export default router;

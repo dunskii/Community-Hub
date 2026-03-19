@@ -44,7 +44,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
       {label && (
         <label
           htmlFor={selectId}
-          className="block text-sm font-medium text-gray-700 mb-1"
+          className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1"
         >
           {label}
         </label>
@@ -58,14 +58,14 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
           aria-describedby={[errorId, helperId].filter(Boolean).join(' ') || undefined}
           className={`
             w-full px-4 py-2 pr-10 rounded-md border appearance-none transition-colors
-            bg-white
+            bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100
             ${
               error
                 ? 'border-error text-error focus:border-error focus:ring-error'
-                : 'border-gray-300 focus:border-primary focus:ring-primary'
+                : 'border-slate-300 dark:border-slate-600 focus:border-primary focus:ring-primary'
             }
-            focus:outline-none focus:ring-2 focus:ring-offset-0
-            disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed
+            focus:outline-none focus:ring-2 focus:ring-offset-0 dark:focus:ring-offset-slate-900
+            disabled:bg-slate-100 dark:disabled:bg-slate-700 disabled:text-slate-500 dark:disabled:text-slate-400 disabled:cursor-not-allowed
           `}
           {...props}
         >
@@ -86,7 +86,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
         </select>
 
         {/* Dropdown arrow */}
-        <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+        <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 dark:text-slate-500">
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
           </svg>
@@ -100,7 +100,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
       )}
 
       {helperText && !error && (
-        <p id={helperId} className="mt-1 text-sm text-gray-500">
+        <p id={helperId} className="mt-1 text-sm text-slate-500 dark:text-slate-400">
           {helperText}
         </p>
       )}

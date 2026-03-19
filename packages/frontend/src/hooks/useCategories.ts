@@ -65,7 +65,7 @@ export function useCategories(params: CategoryListParams = {}): UseCategoriesRet
         error: err instanceof Error ? err.message : 'Failed to fetch categories',
       });
     }
-  }, [params.type, params.parent, params.active]);
+  }, [params.type, params.parent, params.active, params.withBusinesses]);
 
   useEffect(() => {
     fetchCategories();

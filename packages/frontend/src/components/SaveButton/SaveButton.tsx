@@ -6,6 +6,8 @@
 
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { HeartIcon as HeartOutline } from '@heroicons/react/24/outline';
+import { HeartIcon as HeartSolid } from '@heroicons/react/24/solid';
 import './SaveButton.css';
 
 export interface SaveButtonProps {
@@ -57,16 +59,11 @@ export const SaveButton: React.FC<SaveButtonProps> = ({
     }
   };
 
-  const getIcon = () => {
-    if (isLoading) return '⏳';
-    return isSaved ? '❤️' : '🤍';
-  };
-
   const getLabel = () => {
     if (variant === 'icon') {
-      return isSaved ? t('saved.unsave') : t('saved.save');
+      return isSaved ? t('saved.unsave', 'Unsave') : t('saved.save', 'Save');
     }
-    return isSaved ? t('saved.saved') : t('saved.saveForLater');
+    return isSaved ? t('saved.saved', 'Saved') : t('saved.saveForLater', 'Save');
   };
 
   return (
@@ -81,7 +78,16 @@ export const SaveButton: React.FC<SaveButtonProps> = ({
       aria-pressed={isSaved}
     >
       <span className="save-button__icon" aria-hidden="true">
-        {getIcon()}
+        {isLoading ? (
+          <svg className="save-button__spinner" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" opacity="0.25" />
+            <path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          </svg>
+        ) : isSaved ? (
+          <HeartSolid className="save-button__heart" />
+        ) : (
+          <HeartOutline className="save-button__heart" />
+        )}
       </span>
       {variant !== 'icon' && (
         <span className="save-button__text">{getLabel()}</span>

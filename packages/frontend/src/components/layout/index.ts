@@ -1,5 +1,6 @@
 export { Header } from './Header';
 export { Footer } from './Footer';
+export { Layout } from './Layout';
 export { PageContainer } from './PageContainer';
 export { BottomNavigation } from './BottomNavigation';
 export { Sidebar } from './Sidebar';

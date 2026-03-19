@@ -6,6 +6,14 @@
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || '/api/v1';
 
+/**
+ * Get CSRF token from cookie
+ */
+function getCsrfToken(): string | null {
+  const match = document.cookie.match(/XSRF-TOKEN=([^;]+)/);
+  return match ? match[1] : null;
+}
+
 export interface ApiError {
   error: string;
   message: string;
@@ -40,12 +48,24 @@ async function request<T>(
 ): Promise<T> {
   const url = `${API_BASE_URL}${endpoint}`;
 
+  // Build headers with CSRF token for non-GET requests
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    ...(options.headers as Record<string, string>),
+  };
+
+  // Add CSRF token for state-changing requests
+  const method = options.method?.toUpperCase() || 'GET';
+  if (method !== 'GET' && method !== 'HEAD' && method !== 'OPTIONS') {
+    const csrfToken = getCsrfToken();
+    if (csrfToken) {
+      headers['X-CSRF-Token'] = csrfToken;
+    }
+  }
+
   const config: RequestInit = {
     ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
+    headers,
     credentials: 'include', // Send cookies (access_token and refresh_token)
   };
 

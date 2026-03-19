@@ -10,16 +10,18 @@ import { CategoryGrid } from '../components/business/CategoryGrid';
 import { useCategories } from '../hooks/useCategories';
 
 export function CategoriesPage() {
-  const { t } = useTranslation();
-  const { categories, loading, error } = useCategories({ active: true, parent: 'null' });
+  const { t } = useTranslation('category');
+  const { categories, loading, error } = useCategories({ active: true, parent: 'null', withBusinesses: true });
 
   return (
     <PageContainer>
-      <div className="categories-page">
-        <header className="categories-page__header">
-          <h1>{t('category.browseTitle')}</h1>
-          <p className="categories-page__description">
-            {t('category.browseDescription')}
+      <div className="py-8">
+        <header className="mb-8">
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
+            {t('browseTitle', 'Browse Categories')}
+          </h1>
+          <p className="text-slate-600 dark:text-slate-400">
+            {t('browseDescription', 'Explore businesses by category')}
           </p>
         </header>
 

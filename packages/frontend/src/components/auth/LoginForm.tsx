@@ -74,9 +74,14 @@ export const LoginForm: React.FC = () => {
     try {
       await login(formData);
 
-      // Redirect to intended page or home
-      const from = (location.state as any)?.from?.pathname || '/';
-      navigate(from, { replace: true });
+      // Redirect to intended page, dashboard, or home
+      const from = (location.state as any)?.from?.pathname;
+      if (from) {
+        navigate(from, { replace: true });
+      } else {
+        // Default redirect to dashboard for logged in users
+        navigate('/dashboard', { replace: true });
+      }
     } catch (err) {
       // Error is handled by AuthContext (silent error handling)
     }

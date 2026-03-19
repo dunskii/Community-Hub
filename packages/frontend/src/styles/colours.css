@@ -8,102 +8,111 @@
  */
 
 :root {
-  /* Base colours (injected by design-tokens.ts) */
-  /* --color-primary: #2C5F7C (Guildford South default) */
-  /* --color-secondary: #E67E22 */
-  /* --color-accent: #F39C12 */
+  /* ============================================
+   * Brand Colours (from platform.json)
+   * ============================================ */
+  --color-primary: #2C5F7C; /* Teal - Guildford South default */
+  --color-secondary: #E67E22; /* Orange */
+  --color-accent: #F39C12; /* Gold */
 
-  /* Primary tints (lighter) */
-  /* --color-primary-tint-10: calculated */
-  /* --color-primary-tint-20: calculated */
-  /* --color-primary-tint-30: calculated */
-  /* --color-primary-tint-50: calculated */
-  /* --color-primary-tint-70: calculated */
-  /* --color-primary-tint-90: calculated */
+  /* Primary tints (lighter) for light mode */
+  --color-primary-tint-10: #3d7a9a;
+  --color-primary-tint-20: #4e8fb2;
+  --color-primary-tint-30: #6ba3c4;
+  --color-primary-tint-50: #96bfd6;
+  --color-primary-tint-70: #c0dbe8;
+  --color-primary-tint-90: #e5f0f5;
 
-  /* Primary shades (darker) */
-  /* --color-primary-shade-10: calculated */
-  /* --color-primary-shade-20: calculated */
-  /* --color-primary-shade-30: calculated */
-  /* --color-primary-shade-50: calculated */
-  /* --color-primary-shade-70: calculated */
-  /* --color-primary-shade-90: calculated */
+  /* Primary shades (darker) for emphasis */
+  --color-primary-shade-10: #265570;
+  --color-primary-shade-20: #204b63;
+  --color-primary-shade-30: #1a4156;
+  --color-primary-shade-50: #163749;
 
   /* Semantic colours */
-  /* --color-success: #27AE60 */
-  /* --color-error: #E74C3C */
-  /* --color-warning: #E67E22 */
-  /* --color-info: #3498DB */
+  --color-success: #16a34a; /* Green */
+  --color-error: #dc2626; /* Red */
+  --color-warning: #d97706; /* Amber */
+  --color-info: #0284c7; /* Sky blue */
 
-  /* Neutral colours */
-  /* --color-neutral-light: #F5F5F5 */
-  /* --color-neutral-medium: #CCCCCC */
+  /* Neutral colours - Light mode */
+  --color-neutral-light: #f1f5f9;
+  --color-neutral-medium: #cbd5e1;
 
-  /* Text colours */
-  /* --color-text-dark: #2C3E50 */
-  /* --color-text-light: #7F8C8D */
+  /* Text colours - Light mode */
+  --color-text-dark: #1e293b;
+  --color-text-light: #64748b;
 
   /* RGB values (for rgba() usage) */
-  /* --color-primary-rgb: 44, 95, 124 */
+  --color-primary-rgb: 44, 95, 124;
 
   /* ============================================
-   * Semantic Theme Tokens [UI/UX Spec v2.2 §1]
-   * These tokens switch between light and dark mode
+   * LIGHT MODE Theme Tokens
+   * Clean, bright appearance with good contrast
    * ============================================ */
 
-  /* Light mode defaults (also used as fallbacks) */
-  --color-background: #ffffff;
-  --color-surface: #f8f9fa;
+  /* Backgrounds */
+  --color-background: #f8fafc; /* Very light gray */
+  --color-surface: #ffffff; /* White cards */
   --color-surface-elevated: #ffffff;
-  --color-text-primary: #1a1a2e;
-  --color-text-secondary: #6c757d;
-  --color-text-muted: #9ca3af;
-  --color-border: #dee2e6;
-  --color-border-light: #e9ecef;
-  --color-divider: #e5e7eb;
 
-  /* Interactive states - light mode */
+  /* Text */
+  --color-text-primary: #0f172a; /* Near black */
+  --color-text-secondary: #475569; /* Dark gray */
+  --color-text-muted: #94a3b8; /* Light gray */
+
+  /* Borders */
+  --color-border: #e2e8f0;
+  --color-border-light: #f1f5f9;
+  --color-divider: #e2e8f0;
+
+  /* Interactive states */
   --color-hover: rgba(0, 0, 0, 0.04);
   --color-active: rgba(0, 0, 0, 0.08);
   --color-focus-ring: var(--color-primary);
 
-  /* Overlay - light mode */
+  /* Overlays */
   --color-overlay: rgba(0, 0, 0, 0.5);
   --color-backdrop: rgba(255, 255, 255, 0.8);
 }
 
 /**
- * Dark Mode [UI/UX Spec v2.2 §1]
+ * DARK MODE Theme Tokens
  *
  * Applied via .dark class on <html> element.
- * Respects prefers-color-scheme when theme is set to 'system'.
+ * Deep navy/slate palette for comfortable viewing
  */
 .dark {
-  --color-background: #1a1a2e;
-  --color-surface: #252538;
-  --color-surface-elevated: #2d2d44;
-  --color-text-primary: #f8f9fa;
-  --color-text-secondary: #a0a0b0;
-  --color-text-muted: #6b7280;
-  --color-border: #3a3a4e;
-  --color-border-light: #4a4a5e;
-  --color-divider: #3f3f5a;
+  /* Backgrounds - Deep navy tones */
+  --color-background: #0f172a; /* Slate 900 */
+  --color-surface: #1e293b; /* Slate 800 */
+  --color-surface-elevated: #334155; /* Slate 700 */
 
-  /* Interactive states - dark mode */
+  /* Text - Light colors for contrast */
+  --color-text-primary: #f1f5f9; /* Slate 100 */
+  --color-text-secondary: #cbd5e1; /* Slate 300 */
+  --color-text-muted: #64748b; /* Slate 500 */
+
+  /* Borders */
+  --color-border: #334155; /* Slate 700 */
+  --color-border-light: #475569; /* Slate 600 */
+  --color-divider: #334155;
+
+  /* Interactive states */
   --color-hover: rgba(255, 255, 255, 0.06);
   --color-active: rgba(255, 255, 255, 0.1);
 
-  /* Overlay - dark mode */
+  /* Overlays */
   --color-overlay: rgba(0, 0, 0, 0.7);
-  --color-backdrop: rgba(26, 26, 46, 0.9);
+  --color-backdrop: rgba(15, 23, 42, 0.9);
 
-  /* Adjust neutral colors for dark mode */
-  --color-neutral-light: #2d2d44;
-  --color-neutral-medium: #4a4a5e;
+  /* Neutral colors for dark mode */
+  --color-neutral-light: #1e293b;
+  --color-neutral-medium: #475569;
 
-  /* Adjust text colors for dark mode */
-  --color-text-dark: #f8f9fa;
-  --color-text-light: #a0a0b0;
+  /* Text colors for dark mode */
+  --color-text-dark: #f1f5f9;
+  --color-text-light: #94a3b8;
 }
 
 /**

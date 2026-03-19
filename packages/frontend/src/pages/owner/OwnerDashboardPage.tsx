@@ -21,12 +21,24 @@ import {
   formatMetricWithTrend,
   type AnalyticsResponse,
 } from '../../services/analytics-service';
+import {
+  ChartBarIcon,
+  StarIcon,
+  PhotoIcon,
+  Cog6ToothIcon,
+  ArrowRightOnRectangleIcon,
+  BuildingStorefrontIcon,
+  EyeIcon,
+  MagnifyingGlassIcon,
+  CursorArrowRaysIcon,
+  HeartIcon,
+} from '@heroicons/react/24/outline';
 
 interface OwnedBusiness {
   id: string;
   name: string;
   slug: string;
-  status: 'PUBLISHED' | 'DRAFT' | 'PENDING_REVIEW' | 'SUSPENDED';
+  status: 'PUBLISHED' | 'DRAFT' | 'PENDING_REVIEW' | 'SUSPENDED' | 'ACTIVE';
   claimed: boolean;
   verifiedAt: string | null;
   rating: number | null;
@@ -37,7 +49,7 @@ interface OwnedBusiness {
 
 export function OwnerDashboardPage() {
   const { t } = useTranslation();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
 
   const [businesses, setBusinesses] = useState<OwnedBusiness[]>([]);
@@ -101,16 +113,23 @@ export function OwnerDashboardPage() {
     fetchAnalytics();
   }, [selectedBusiness]);
 
+  const handleLogout = async () => {
+    await logout();
+    navigate('/');
+  };
+
   // Loading state
   if (loading) {
     return (
       <PageContainer>
-        <div className="owner-dashboard">
-          <Skeleton variant="text" width="200px" height="32px" />
-          <div className="owner-dashboard__grid">
-            <Skeleton variant="rectangular" width="100%" height="200px" />
-            <Skeleton variant="rectangular" width="100%" height="200px" />
-            <Skeleton variant="rectangular" width="100%" height="200px" />
+        <div className="max-w-6xl mx-auto space-y-6">
+          <Skeleton variant="text" width="300px" height="40px" />
+          <Skeleton variant="text" width="400px" height="24px" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <Skeleton variant="rectangular" width="100%" height="120px" />
+            <Skeleton variant="rectangular" width="100%" height="120px" />
+            <Skeleton variant="rectangular" width="100%" height="120px" />
+            <Skeleton variant="rectangular" width="100%" height="120px" />
           </div>
         </div>
       </PageContainer>
@@ -122,7 +141,7 @@ export function OwnerDashboardPage() {
     return (
       <PageContainer>
         <EmptyState
-          title={t('owner.errorTitle')}
+          title={t('owner.errorTitle', 'Error Loading Dashboard')}
           description={error}
           icon="⚠️"
         />
@@ -135,18 +154,23 @@ export function OwnerDashboardPage() {
     return (
       <PageContainer>
         <Helmet>
-          <title>{t('owner.dashboardTitle')} | Community Hub</title>
+          <title>{t('owner.dashboardTitle', 'Business Dashboard')} | Community Hub</title>
         </Helmet>
-        <EmptyState
-          title={t('owner.noBusinessesTitle')}
-          description={t('owner.noBusinessesDescription')}
-          icon="🏪"
-          action={
-            <button onClick={() => navigate('/businesses')} className="btn btn--primary">
-              {t('owner.claimBusiness')}
-            </button>
-          }
-        />
+        <div className="max-w-2xl mx-auto text-center py-12">
+          <BuildingStorefrontIcon className="w-16 h-16 mx-auto text-slate-400 mb-4" />
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
+            {t('owner.noBusinessesTitle', 'No Businesses')}
+          </h1>
+          <p className="text-slate-600 dark:text-slate-400 mb-6">
+            {t('owner.noBusinessesDescription', "You don't have any claimed businesses yet. Start by claiming a business you own.")}
+          </p>
+          <Link
+            to="/businesses"
+            className="inline-flex items-center px-6 py-3 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors"
+          >
+            {t('owner.claimBusiness', 'Claim a Business')}
+          </Link>
+        </div>
       </PageContainer>
     );
   }
@@ -154,6 +178,7 @@ export function OwnerDashboardPage() {
   const statusVariant = (status: OwnedBusiness['status']): 'success' | 'default' | 'warning' | 'error' => {
     switch (status) {
       case 'PUBLISHED':
+      case 'ACTIVE':
         return 'success';
       case 'DRAFT':
         return 'default';
@@ -169,21 +194,35 @@ export function OwnerDashboardPage() {
   return (
     <>
       <Helmet>
-        <title>{t('owner.dashboardTitle')} | Community Hub</title>
+        <title>{t('owner.dashboardTitle', 'Business Dashboard')} | Community Hub</title>
       </Helmet>
 
       <PageContainer>
-        <div className="owner-dashboard">
-          <header className="owner-dashboard__header">
-            <h1>{t('owner.dashboardTitle')}</h1>
-            <p className="owner-dashboard__subtitle">{t('owner.dashboardSubtitle')}</p>
-          </header>
+        <div className="max-w-6xl mx-auto space-y-8">
+          {/* Header */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <h1 className="text-3xl font-bold text-slate-900 dark:text-white">
+                {t('owner.dashboardTitle', 'Business Dashboard')}
+              </h1>
+              <p className="text-slate-600 dark:text-slate-400 mt-1">
+                {t('owner.dashboardSubtitle', 'Manage your businesses and view performance')}
+              </p>
+            </div>
+            <button
+              onClick={handleLogout}
+              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors"
+            >
+              <ArrowRightOnRectangleIcon className="w-5 h-5" />
+              {t('navigation.logout', 'Log Out')}
+            </button>
+          </div>
 
-          {/* Business Selector */}
+          {/* Business Selector (if multiple businesses) */}
           {businesses.length > 1 && (
-            <div className="owner-dashboard__selector">
-              <label htmlFor="business-select" className="sr-only">
-                {t('owner.selectBusiness')}
+            <div className="bg-white dark:bg-slate-800 rounded-xl p-4 shadow-sm border border-slate-200 dark:border-slate-700">
+              <label htmlFor="business-select" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                {t('owner.selectBusiness', 'Select a business')}
               </label>
               <select
                 id="business-select"
@@ -192,7 +231,7 @@ export function OwnerDashboardPage() {
                   const business = businesses.find((b) => b.id === e.target.value);
                   setSelectedBusiness(business || null);
                 }}
-                className="owner-dashboard__select"
+                className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent"
               >
                 {businesses.map((business) => (
                   <option key={business.id} value={business.id}>
@@ -206,117 +245,137 @@ export function OwnerDashboardPage() {
           {selectedBusiness && (
             <>
               {/* Business Card */}
-              <section className="owner-dashboard__business-card">
-                <div className="owner-dashboard__business-info">
-                  <div className="owner-dashboard__business-image">
-                    {selectedBusiness.photos[0] ? (
-                      <img src={selectedBusiness.photos[0]} alt={selectedBusiness.name} />
-                    ) : (
-                      <div className="owner-dashboard__business-placeholder">🏪</div>
-                    )}
-                  </div>
-                  <div className="owner-dashboard__business-details">
-                    <h2>{selectedBusiness.name}</h2>
-                    <div className="owner-dashboard__business-meta">
-                      <Badge variant={statusVariant(selectedBusiness.status)}>
-                        {t(`owner.status.${selectedBusiness.status.toLowerCase()}`)}
-                      </Badge>
-                      {selectedBusiness.verifiedAt && (
-                        <Badge variant="success">{t('owner.verified')}</Badge>
+              <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+                <div className="p-6">
+                  <div className="flex flex-col sm:flex-row gap-6">
+                    {/* Business Image */}
+                    <div className="flex-shrink-0">
+                      {selectedBusiness.photos[0] ? (
+                        <img
+                          src={selectedBusiness.photos[0]}
+                          alt={selectedBusiness.name}
+                          className="w-24 h-24 rounded-xl object-cover"
+                        />
+                      ) : (
+                        <div className="w-24 h-24 rounded-xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center">
+                          <BuildingStorefrontIcon className="w-12 h-12 text-slate-400" />
+                        </div>
                       )}
                     </div>
-                    <div className="owner-dashboard__business-stats">
-                      {selectedBusiness.rating && (
-                        <span>⭐ {selectedBusiness.rating.toFixed(1)}</span>
-                      )}
-                      <span>{selectedBusiness.reviewCount} {t('owner.reviews')}</span>
-                      <span>{selectedBusiness.followerCount} {t('owner.followers')}</span>
-                    </div>
-                  </div>
-                </div>
 
-                <div className="owner-dashboard__business-actions">
-                  <Link
-                    to={`/business/${selectedBusiness.slug}`}
-                    className="btn btn--secondary"
-                  >
-                    {t('owner.viewProfile')}
-                  </Link>
-                  <Link
-                    to={`/owner/business/${selectedBusiness.id}/edit`}
-                    className="btn btn--primary"
-                  >
-                    {t('owner.editProfile')}
-                  </Link>
+                    {/* Business Details */}
+                    <div className="flex-1 min-w-0">
+                      <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
+                        {selectedBusiness.name}
+                      </h2>
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        <Badge variant={statusVariant(selectedBusiness.status)}>
+                          {t(`owner.status.${selectedBusiness.status.toLowerCase()}`, selectedBusiness.status)}
+                        </Badge>
+                        {selectedBusiness.verifiedAt && (
+                          <Badge variant="success">{t('owner.verified', 'Verified')}</Badge>
+                        )}
+                      </div>
+                      <div className="flex flex-wrap gap-4 mt-3 text-sm text-slate-600 dark:text-slate-400">
+                        {selectedBusiness.rating && (
+                          <span className="flex items-center gap-1">
+                            <StarIcon className="w-4 h-4 text-yellow-500" />
+                            {selectedBusiness.rating.toFixed(1)}
+                          </span>
+                        )}
+                        <span>{selectedBusiness.reviewCount} {t('owner.reviews', 'reviews')}</span>
+                        <span>{selectedBusiness.followerCount} {t('owner.followers', 'followers')}</span>
+                      </div>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <Link
+                        to={`/businesses/${selectedBusiness.slug}`}
+                        className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors"
+                      >
+                        {t('owner.viewProfile', 'View Profile')}
+                      </Link>
+                      <Link
+                        to={`/owner/business/${selectedBusiness.id}/edit`}
+                        className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:bg-primary/90 transition-colors"
+                      >
+                        {t('owner.editProfile', 'Edit Profile')}
+                      </Link>
+                    </div>
+                  </div>
                 </div>
-              </section>
+              </div>
 
               {/* Quick Stats */}
-              <section className="owner-dashboard__stats">
-                <h2 className="sr-only">{t('owner.quickStats')}</h2>
+              <section>
+                <h2 className="text-xl font-semibold text-slate-900 dark:text-white mb-4">
+                  {t('owner.quickStats', 'Quick Stats')}
+                </h2>
                 {analyticsLoading ? (
-                  <div className="owner-dashboard__stats-grid">
-                    <Skeleton variant="rectangular" width="100%" height="100px" />
-                    <Skeleton variant="rectangular" width="100%" height="100px" />
-                    <Skeleton variant="rectangular" width="100%" height="100px" />
-                    <Skeleton variant="rectangular" width="100%" height="100px" />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    {[...Array(4)].map((_, i) => (
+                      <Skeleton key={i} variant="rectangular" width="100%" height="100px" />
+                    ))}
                   </div>
                 ) : analytics ? (
-                  <div className="owner-dashboard__stats-grid">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <StatCard
-                      label={t('owner.stats.profileViews')}
+                      label={t('owner.stats.profileViews', 'Profile Views')}
                       metric={analytics.summary.profileViews}
-                      icon="👁️"
+                      icon={<EyeIcon className="w-6 h-6" />}
                     />
                     <StatCard
-                      label={t('owner.stats.searchAppearances')}
+                      label={t('owner.stats.searchAppearances', 'Search Appearances')}
                       metric={analytics.summary.searchAppearances}
-                      icon="🔍"
+                      icon={<MagnifyingGlassIcon className="w-6 h-6" />}
                     />
                     <StatCard
-                      label={t('owner.stats.totalClicks')}
+                      label={t('owner.stats.totalClicks', 'Total Clicks')}
                       metric={analytics.summary.clicks.total}
-                      icon="👆"
+                      icon={<CursorArrowRaysIcon className="w-6 h-6" />}
                     />
                     <StatCard
-                      label={t('owner.stats.newFollowers')}
+                      label={t('owner.stats.newFollowers', 'New Followers')}
                       metric={analytics.summary.follows}
-                      icon="❤️"
+                      icon={<HeartIcon className="w-6 h-6" />}
                     />
                   </div>
                 ) : (
-                  <p className="owner-dashboard__no-analytics">
-                    {t('owner.analyticsNotAvailable')}
-                  </p>
+                  <div className="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-6 text-center text-slate-600 dark:text-slate-400">
+                    {t('owner.analyticsNotAvailable', 'Analytics data is not yet available for this business.')}
+                  </div>
                 )}
               </section>
 
               {/* Quick Actions */}
-              <section className="owner-dashboard__actions">
-                <h2>{t('owner.quickActions')}</h2>
-                <div className="owner-dashboard__actions-grid">
+              <section>
+                <h2 className="text-xl font-semibold text-slate-900 dark:text-white mb-4">
+                  {t('owner.quickActions', 'Quick Actions')}
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                   <ActionCard
-                    title={t('owner.actions.analytics')}
-                    description={t('owner.actions.analyticsDesc')}
-                    icon="📊"
+                    title={t('owner.actions.analytics', 'View Analytics')}
+                    description={t('owner.actions.analyticsDesc', 'See detailed performance metrics')}
+                    icon={<ChartBarIcon className="w-8 h-8" />}
                     to={`/owner/business/${selectedBusiness.id}/analytics`}
                   />
                   <ActionCard
-                    title={t('owner.actions.reviews')}
-                    description={t('owner.actions.reviewsDesc')}
-                    icon="⭐"
+                    title={t('owner.actions.reviews', 'Manage Reviews')}
+                    description={t('owner.actions.reviewsDesc', 'Respond to customer reviews')}
+                    icon={<StarIcon className="w-8 h-8" />}
                     to={`/owner/business/${selectedBusiness.id}/reviews`}
                   />
                   <ActionCard
-                    title={t('owner.actions.photos')}
-                    description={t('owner.actions.photosDesc')}
-                    icon="📷"
+                    title={t('owner.actions.photos', 'Update Photos')}
+                    description={t('owner.actions.photosDesc', 'Add or manage business photos')}
+                    icon={<PhotoIcon className="w-8 h-8" />}
                     to={`/owner/business/${selectedBusiness.id}/photos`}
                   />
                   <ActionCard
-                    title={t('owner.actions.settings')}
-                    description={t('owner.actions.settingsDesc')}
-                    icon="⚙️"
+                    title={t('owner.actions.settings', 'Settings')}
+                    description={t('owner.actions.settingsDesc', 'Update business information')}
+                    icon={<Cog6ToothIcon className="w-8 h-8" />}
                     to={`/owner/business/${selectedBusiness.id}/settings`}
                   />
                 </div>
@@ -334,19 +393,21 @@ export function OwnerDashboardPage() {
 interface StatCardProps {
   label: string;
   metric: { current: number; previous: number; changePercent: number; trend: 'up' | 'down' | 'flat' };
-  icon: string;
+  icon: React.ReactNode;
 }
 
 function StatCard({ label, metric, icon }: StatCardProps) {
   const { value, trend, trendClass } = formatMetricWithTrend(metric);
 
   return (
-    <div className="stat-card">
-      <div className="stat-card__icon">{icon}</div>
-      <div className="stat-card__content">
-        <span className="stat-card__value">{value}</span>
-        <span className="stat-card__label">{label}</span>
-        <span className={`stat-card__trend ${trendClass}`}>{trend}</span>
+    <div className="bg-white dark:bg-slate-800 rounded-xl p-5 shadow-sm border border-slate-200 dark:border-slate-700">
+      <div className="flex items-start justify-between">
+        <div className="text-primary">{icon}</div>
+        <span className={`text-sm font-medium ${trendClass}`}>{trend}</span>
+      </div>
+      <div className="mt-3">
+        <p className="text-2xl font-bold text-slate-900 dark:text-white">{value}</p>
+        <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">{label}</p>
       </div>
     </div>
   );
@@ -355,16 +416,19 @@ function StatCard({ label, metric, icon }: StatCardProps) {
 interface ActionCardProps {
   title: string;
   description: string;
-  icon: string;
+  icon: React.ReactNode;
   to: string;
 }
 
 function ActionCard({ title, description, icon, to }: ActionCardProps) {
   return (
-    <Link to={to} className="action-card">
-      <span className="action-card__icon">{icon}</span>
-      <span className="action-card__title">{title}</span>
-      <span className="action-card__description">{description}</span>
+    <Link
+      to={to}
+      className="bg-white dark:bg-slate-800 rounded-xl p-5 shadow-sm border border-slate-200 dark:border-slate-700 hover:border-primary hover:shadow-md transition-all group"
+    >
+      <div className="text-primary group-hover:scale-110 transition-transform">{icon}</div>
+      <h3 className="text-lg font-semibold text-slate-900 dark:text-white mt-3">{title}</h3>
+      <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">{description}</p>
     </Link>
   );
 }

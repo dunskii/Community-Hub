@@ -67,9 +67,19 @@ export function useReviews({
         sortBy,
       });
 
-      setReviews(response.data.reviews);
-      setTotal(response.data.total);
-      setAverageRating(response.data.averageRating);
+      const reviewsData = response.data.reviews || [];
+      setReviews(reviewsData);
+      setTotal(response.data.total || 0);
+
+      // Calculate average rating from reviews if not provided by API
+      if (response.data.averageRating !== undefined) {
+        setAverageRating(response.data.averageRating);
+      } else if (reviewsData.length > 0) {
+        const sum = reviewsData.reduce((acc, r) => acc + r.rating, 0);
+        setAverageRating(sum / reviewsData.length);
+      } else {
+        setAverageRating(0);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch reviews');
     } finally {

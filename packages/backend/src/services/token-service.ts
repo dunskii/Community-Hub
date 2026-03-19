@@ -21,7 +21,12 @@ import { logger } from '../utils/logger';
 // Lazy-load Redis client to avoid startup errors when Redis is not configured
 function getRedisClient() {
   try {
-    return getRedis();
+    const redis = getRedis();
+    // Check if connection is actually open
+    if (redis.status !== 'ready' && redis.status !== 'connect') {
+      return null;
+    }
+    return redis;
   } catch (error) {
     logger.warn('Redis not available - token revocation and session management disabled');
     return null;

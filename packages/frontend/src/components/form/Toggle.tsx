@@ -49,10 +49,10 @@ export const Toggle = forwardRef<HTMLInputElement, ToggleProps>(function Toggle(
               ${
                 error
                   ? 'bg-error'
-                  : 'bg-gray-300 peer-checked:bg-primary'
+                  : 'bg-slate-300 dark:bg-slate-600 peer-checked:bg-primary'
               }
-              peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary peer-focus:ring-offset-2
-              peer-disabled:bg-gray-200 peer-disabled:cursor-not-allowed
+              peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary peer-focus:ring-offset-2 dark:peer-focus:ring-offset-slate-900
+              peer-disabled:bg-slate-200 dark:peer-disabled:bg-slate-700 peer-disabled:cursor-not-allowed
             `}
             style={{ minWidth: '44px', minHeight: '24px' }}
           >
@@ -65,7 +65,7 @@ export const Toggle = forwardRef<HTMLInputElement, ToggleProps>(function Toggle(
           </label>
         </div>
         {label && (
-          <span className={`text-sm font-medium text-gray-700 ${labelPosition === 'left' ? 'mr-3' : 'ml-3'}`}>
+          <span className={`text-sm font-medium text-slate-700 dark:text-slate-300 ${labelPosition === 'left' ? 'mr-3' : 'ml-3'}`}>
             {label}
           </span>
         )}

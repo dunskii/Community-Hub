@@ -18,7 +18,8 @@
       "published": "Published",
       "draft": "Draft",
       "pending_review": "Pending Review",
-      "suspended": "Suspended"
+      "suspended": "Suspended",
+      "active": "Active"
     },
     "stats": {
       "profileViews": "Profile Views",
@@ -65,7 +66,7 @@
       "90d": "90 Days",
       "1y": "1 Year"
     },
-    "granularity": {
+    "granularityOptions": {
       "day": "Day",
       "week": "Week",
       "month": "Month"
@@ -84,7 +85,7 @@
       "averageRating": "Average Rating",
       "newReviews": "New Reviews"
     },
-    "insights": {
+    "insightsLabels": {
       "searchTerms": "Top Search Terms",
       "referralSources": "Traffic Sources",
       "peakTimes": "Peak Activity Times"

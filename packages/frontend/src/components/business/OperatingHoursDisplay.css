@@ -27,50 +27,72 @@
 .operating-hours__list {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-200);
+  gap: 4px;
 }
 
 .operating-hours__row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--spacing-200) 0;
-  font-size: var(--font-size-sm);
+  padding: 8px 0;
+  gap: 24px;
 }
 
 .operating-hours__row--current {
-  background: var(--color-background-alt);
-  padding: var(--spacing-200) var(--spacing-300);
-  border-radius: var(--radius-sm);
-  margin: 0 calc(-1 * var(--spacing-300));
+  background: rgba(0, 0, 0, 0.05);
+  padding: 8px 12px;
+  margin: 0 -12px;
+  border-radius: 8px;
 }
 
 .operating-hours__day {
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-primary);
-  text-transform: capitalize;
-  min-width: 100px;
+  font-weight: 500;
+  font-size: 14px;
+  flex-shrink: 0;
 }
 
 .operating-hours__day--current {
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-primary);
+  font-weight: 600;
+  color: var(--color-primary, #2563eb);
 }
 
 .operating-hours__time {
-  color: var(--color-text-secondary);
+  color: #64748b;
   font-variant-numeric: tabular-nums;
+  font-size: 14px;
+  text-align: right;
+  flex-shrink: 0;
 }
 
 /* Tablet and up */
 @media (min-width: 768px) {
   .operating-hours__row {
-    font-size: var(--font-size-base);
+    gap: 32px;
   }
 
-  .operating-hours__day {
-    min-width: 120px;
+  .operating-hours__day,
+  .operating-hours__time {
+    font-size: 16px;
   }
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  .operating-hours__row--current {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .operating-hours__time {
+    color: #94a3b8;
+  }
+}
+
+.dark .operating-hours__row--current {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.dark .operating-hours__time {
+  color: #94a3b8;
 }
 
 /* RTL support */

@@ -993,3 +993,52 @@ export class ClaimService {
 
 // Export singleton instance
 export const claimService = new ClaimService();
+
+/**
+ * Get businesses owned by a user (via approved claims)
+ *
+ * @param userId - User ID
+ * @returns Array of owned businesses
+ */
+export async function getOwnedBusinesses(userId: string) {
+  const approvedClaims = await prisma.businessClaimRequest.findMany({
+    where: {
+      userId,
+      claimStatus: ClaimStatus.APPROVED,
+    },
+    include: {
+      business: {
+        include: {
+          categoryPrimary: true,
+          _count: {
+            select: {
+              reviews: true,
+              followers: true,
+            },
+          },
+        },
+      },
+    },
+    orderBy: {
+      updatedAt: 'desc',
+    },
+  });
+
+  return approvedClaims.map((claim) => {
+    const business = claim.business;
+    const gallery = business.gallery as Array<{ url: string }> | null;
+
+    return {
+      id: business.id,
+      name: business.name,
+      slug: business.slug,
+      status: business.status,
+      claimed: business.claimed,
+      verifiedAt: claim.decisionAt?.toISOString() || null,
+      rating: business.rating,
+      reviewCount: business._count.reviews,
+      followerCount: business._count.followers,
+      photos: gallery?.map((p) => p.url).slice(0, 3) || [],
+    };
+  });
+}

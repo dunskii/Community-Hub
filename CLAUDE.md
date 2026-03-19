@@ -9,7 +9,7 @@ This file provides guidance to Claude Code when working with this repository.
 **First Deployment:** Guildford South precinct (Sydney, Australia)
 **Architecture:** Designed for multi-suburb deployment with configuration-only changes (no code modifications)
 
-### Current Status (14 March 2026)
+### Current Status (17 March 2026)
 
 - **Phase 1 (Foundation):** ✅ Complete (59/59 tasks)
 - **Phase 2 (Authentication):** ✅ Complete (33/33 tasks)
@@ -20,12 +20,13 @@ This file provides guidance to Claude Code when working with this repository.
 - **Phase 7 (Business Owner):** ✅ ~85% Complete (28/33 tasks - claim, dashboard, analytics)
 - **Phase 8 (Events & Calendar):** ✅ 98% Complete (33/35 tasks) - Calendar views, RSVP, reminders
 - **Phase 9 (Messaging System):** ✅ 95% Complete (26/28 tasks) - QA R3 PASS, production-ready
+- **v2.2 UI/UX Specification:** ✅ Complete (9 phases UX-1 through UX-9) - 72 tests, QA R2 PASS
 - **MVP 1:** ✅ Complete (Static Business Directory - Phases 1-4)
 - **MVP 2:** ✅ Complete (Phase 5 + Phase 6)
 - **MVP 3:** ✅ ~85% Complete (Phase 7 - Business Owner Portal)
 - **MVP 4:** ✅ Complete (Phases 8-9 - Events & Messaging)
-- **Overall Progress:** ~53% (339/644 tasks)
-- **Total Tests:** 2,315+ passing
+- **Overall Progress:** ~53% (339/644 tasks) + v2.2 UI/UX
+- **Total Tests:** 2,387+ passing
 
 ### Key References
 
@@ -360,6 +361,37 @@ The spec (`Docs/Community_Hub_Specification_v2.md`) is organized into 7 parts + 
 **Deferred Items (2 tasks):**
 - SpamDetectionService (Phase 15 - requires admin dashboard)
 - WebSocket real-time messaging (Phase 9.2 - polling sufficient for MVP)
+
+### v2.2 UI/UX Specification Complete
+
+**UI/UX Implementation** (9 phases UX-1 through UX-9):
+
+**Foundation & Theming:**
+- UX-1: Foundation tokens (4px spacing scale, animation timing, 44px touch targets)
+- UX-2: Dark mode (ThemeContext, useTheme hook, ThemeToggle, system preference detection)
+- UX-3: Shimmer loading (animations, prefers-reduced-motion, BusinessCardSkeleton, EventCardSkeleton)
+
+**Interaction & Feedback:**
+- UX-4: Keyboard shortcuts (useKeyboardShortcuts hook, GlobalShortcuts, KeyboardShortcutsHelp)
+- UX-5: Enhanced toast (ToastContext, useToast hook, ToastContainer, close button)
+- UX-6: Responsive images (ResponsiveImage with srcset, WebP, lazy loading)
+
+**Resilience & Recovery:**
+- UX-7: Offline behaviour (useOnlineStatus hook, OfflineBanner, SyncStatus, OfflineHandler)
+- UX-8: Error recovery (ErrorBoundary, SessionTimeoutModal, RetryBanner, api-error-handler)
+- UX-9: Message states (MessageStatus type, status indicators, retry for failed)
+
+**Files Created (22):**
+- Hooks: useTheme, useKeyboardShortcuts, useOnlineStatus, useToast
+- Contexts: ThemeContext, ToastContext
+- Components: ThemeToggle, KeyboardShortcutsHelp, OfflineBanner, SyncStatus, ResponsiveImage, GlobalShortcuts, OfflineHandler, ErrorBoundary, RetryBanner, SessionTimeoutModal, ToastContainer, BusinessCardSkeleton, EventCardSkeleton
+- Utils: api-error-handler
+
+**Quality:**
+- 72 tests added (useTheme 20, useKeyboardShortcuts 24, useOnlineStatus 14, ErrorBoundary 14)
+- WCAG 2.1 AA compliant
+- 10/10 languages updated
+- QA R2 PASS (97% score)
 
 ## Common Patterns
 

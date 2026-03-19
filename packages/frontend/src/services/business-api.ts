@@ -35,6 +35,7 @@ export interface CategoryListParams {
   type?: string;
   parent?: string | 'null';
   active?: boolean;
+  withBusinesses?: boolean;
 }
 
 export interface Category {
@@ -46,6 +47,7 @@ export interface Category {
   displayOrder: number;
   active: boolean;
   parentId: string | null;
+  businessCount?: number;
   parent?: {
     id: string;
     name: Record<string, string>;
@@ -208,6 +210,7 @@ class BusinessApiClient {
     if (params.type) queryParams.set('type', params.type);
     if (params.parent !== undefined) queryParams.set('parent', params.parent);
     if (params.active !== undefined) queryParams.set('active', String(params.active));
+    if (params.withBusinesses !== undefined) queryParams.set('withBusinesses', String(params.withBusinesses));
 
     const url = `${API_BASE}/categories${queryParams.toString() ? `?${queryParams}` : ''}`;
     const response = await fetch(url);

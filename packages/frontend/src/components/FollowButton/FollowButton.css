@@ -20,7 +20,7 @@
   font-family: var(--font-family-base);
   font-weight: var(--font-weight-semibold);
   min-height: 44px;
-  border: 2px solid transparent;
+  border: none;
 }
 
 .follow-button:focus {
@@ -34,9 +34,17 @@
 }
 
 .follow-button__icon {
-  font-size: var(--font-size-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   line-height: 1;
-  font-weight: var(--font-weight-bold);
+}
+
+.follow-button__plus,
+.follow-button__check {
+  width: 18px;
+  height: 18px;
+  stroke-width: 2.5;
 }
 
 .follow-button__text {
@@ -54,24 +62,20 @@
 .follow-button--primary {
   background-color: var(--color-primary-500);
   color: var(--color-text-inverse);
-  border-color: var(--color-primary-500);
 }
 
 .follow-button--primary:hover:not(:disabled) {
   background-color: var(--color-primary-600);
-  border-color: var(--color-primary-600);
 }
 
 .follow-button--primary.follow-button--following {
-  background-color: var(--color-background-primary);
+  background-color: var(--color-neutral-200);
   color: var(--color-primary-700);
-  border-color: var(--color-primary-500);
 }
 
 .follow-button--primary.follow-button--following:hover:not(:disabled) {
   background-color: var(--color-error-50);
   color: var(--color-error-700);
-  border-color: var(--color-error-500);
 }
 
 .follow-button--primary.follow-button--following:hover:not(:disabled) .follow-button__text::after {
@@ -80,26 +84,22 @@
 
 /* Variant: Secondary */
 .follow-button--secondary {
-  background-color: var(--color-background-primary);
+  background-color: var(--color-neutral-100);
   color: var(--color-primary-700);
-  border-color: var(--color-primary-500);
 }
 
 .follow-button--secondary:hover:not(:disabled) {
   background-color: var(--color-primary-50);
-  border-color: var(--color-primary-600);
 }
 
 .follow-button--secondary.follow-button--following {
   background-color: var(--color-neutral-100);
   color: var(--color-text-primary);
-  border-color: var(--color-neutral-400);
 }
 
 .follow-button--secondary.follow-button--following:hover:not(:disabled) {
   background-color: var(--color-error-50);
   color: var(--color-error-700);
-  border-color: var(--color-error-500);
 }
 
 /* Variant: Text */
@@ -129,8 +129,10 @@
   min-height: 36px;
 }
 
-.follow-button--small .follow-button__icon {
-  font-size: var(--font-size-base);
+.follow-button--small .follow-button__plus,
+.follow-button--small .follow-button__check {
+  width: 16px;
+  height: 16px;
 }
 
 .follow-button--small .follow-button__text {
@@ -147,8 +149,10 @@
   min-height: 48px;
 }
 
-.follow-button--large .follow-button__icon {
-  font-size: var(--font-size-xl);
+.follow-button--large .follow-button__plus,
+.follow-button--large .follow-button__check {
+  width: 22px;
+  height: 22px;
 }
 
 .follow-button--large .follow-button__text {

@@ -2,7 +2,7 @@
 
 **Specification Version:** 2.0
 **Last Updated:** 14 March 2026
-**Current Phase:** Phase 9 Complete (95%) - MVP 4 Complete - Phase 10 Ready to Start
+**Current Phase:** Phase 9 Complete (95%) - MVP 4 Complete - v2.2 UI/UX Complete - Phase 10 Ready to Start
 
 ---
 
@@ -203,7 +203,7 @@
 - [x] Accent colour (#F39C12) implementation with tints/shades
 - [x] Semantic colours (success, error, warning, info)
 - [x] Neutral colours (backgrounds, borders, text)
-- [ ] Dark mode support (optional future - deferred)
+- [x] Dark mode support (completed in v2.2 UI/UX - ThemeContext, useTheme hook, ThemeToggle)
 
 #### Typography System
 
@@ -1715,8 +1715,8 @@ _Add any additional notes, decisions, or blockers here._
 ---
 
 **Total Estimated Tasks:** ~644 items across 19 phases
-**Completed:** 339 tasks (Phases 1-9 complete, MVP 4 complete) -- ~53% overall
-**Current:** Phase 9 COMPLETE (95% - 26/28 tasks, QA R3 PASS, production-ready)
+**Completed:** 339 tasks (Phases 1-9 complete, MVP 4 complete) + v2.2 UI/UX -- ~53% overall
+**Current:** v2.2 UI/UX Specification COMPLETE (9 phases, 72 tests, QA R2 PASS)
 **Next:** Phase 10 (Deals & Promotions Hub)
 
 **Milestones Achieved:**
@@ -1724,5 +1724,6 @@ _Add any additional notes, decisions, or blockers here._
 - MVP 2: Search & User Engagement (Phases 5-6) ✅
 - MVP 3: Business Owner Portal (Phase 7) ✅ ~85%
 - MVP 4: Events & Messaging (Phases 8-9) ✅ COMPLETE
+- v2.2 UI/UX Specification (UX-1 through UX-9) ✅ COMPLETE
 
 ---

@@ -35,9 +35,26 @@
 }
 
 .save-button__icon {
-  font-size: var(--font-size-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   line-height: 1;
   transition: transform 0.2s ease;
+}
+
+.save-button__heart {
+  width: 20px;
+  height: 20px;
+}
+
+.save-button__spinner {
+  width: 20px;
+  height: 20px;
+  animation: rotate 1s linear infinite;
+}
+
+.save-button--saved .save-button__heart {
+  color: #ef4444;
 }
 
 .save-button:hover:not(:disabled) .save-button__icon {
@@ -55,8 +72,10 @@
   aspect-ratio: 1;
 }
 
-.save-button--icon .save-button__icon {
-  font-size: var(--font-size-xl);
+.save-button--icon .save-button__heart,
+.save-button--icon .save-button__spinner {
+  width: 24px;
+  height: 24px;
 }
 
 /* Variant: Text */
@@ -91,8 +110,10 @@
   min-height: 36px;
 }
 
-.save-button--small .save-button__icon {
-  font-size: var(--font-size-base);
+.save-button--small .save-button__heart,
+.save-button--small .save-button__spinner {
+  width: 16px;
+  height: 16px;
 }
 
 .save-button--small .save-button__text {
@@ -109,8 +130,10 @@
   min-height: 48px;
 }
 
-.save-button--large .save-button__icon {
-  font-size: var(--font-size-2xl);
+.save-button--large .save-button__heart,
+.save-button--large .save-button__spinner {
+  width: 28px;
+  height: 28px;
 }
 
 .save-button--large .save-button__text {
@@ -120,10 +143,6 @@
 /* Loading state */
 .save-button--loading {
   pointer-events: none;
-}
-
-.save-button--loading .save-button__icon {
-  animation: rotate 1s linear infinite;
 }
 
 @keyframes rotate {

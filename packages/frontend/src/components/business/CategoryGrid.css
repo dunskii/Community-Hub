@@ -15,16 +15,23 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: var(--spacing-200);
-  padding: var(--spacing-500);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  gap: var(--spacing-200, 0.5rem);
+  padding: var(--spacing-500, 1.25rem);
+  background: var(--color-surface, #ffffff);
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-md, 0.5rem);
   text-decoration: none;
-  color: var(--color-text-primary);
+  color: var(--color-text-primary, #0f172a);
   transition: box-shadow 0.2s ease, transform 0.2s ease;
   min-height: 120px;
   position: relative;
+}
+
+/* Dark mode for category card */
+.dark .category-card {
+  background: var(--color-surface, #1e293b);
+  border-color: var(--color-border, #334155);
+  color: var(--color-text-primary, #f1f5f9);
 }
 
 .category-card:hover,
@@ -38,9 +45,14 @@
   outline-offset: 2px;
 }
 
+.category-card__icon-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
 .category-card__icon {
-  font-size: 48px;
-  line-height: 1;
+  width: 48px;
+  height: 48px;
 }
 
 .category-card__name {
@@ -52,16 +64,17 @@
 
 .category-card__count {
   position: absolute;
-  top: var(--spacing-200);
-  right: var(--spacing-200);
-  background: var(--color-primary);
-  color: var(--color-primary-contrast);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-semibold);
-  padding: var(--spacing-100) var(--spacing-200);
-  border-radius: var(--radius-full);
-  min-width: 24px;
+  top: -6px;
+  right: -6px;
+  background: #f97316;
+  color: #ffffff;
+  font-size: var(--font-size-xs, 0.75rem);
+  font-weight: var(--font-weight-semibold, 600);
+  padding: 2px 6px;
+  border-radius: var(--radius-full, 9999px);
+  min-width: 20px;
   text-align: center;
+  line-height: 1.2;
 }
 
 /* Skeleton state */
@@ -82,7 +95,8 @@
   }
 
   .category-card__icon {
-    font-size: 56px;
+    width: 56px;
+    height: 56px;
   }
 
   .category-card__name {
@@ -101,14 +115,15 @@
   }
 
   .category-card__icon {
-    font-size: 64px;
+    width: 64px;
+    height: 64px;
   }
 }
 
 /* RTL support */
 [dir="rtl"] .category-card__count {
   right: auto;
-  left: var(--spacing-200);
+  left: -6px;
 }
 
 /* Reduced motion */

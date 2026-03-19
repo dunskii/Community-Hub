@@ -5,8 +5,15 @@
  * Quick filter chips for common searches
  */
 
-import React from 'react';
 import { useTranslation } from 'react-i18next';
+import {
+  ClockIcon,
+  BuildingStorefrontIcon,
+  ShoppingBagIcon,
+  PlusCircleIcon,
+  WrenchScrewdriverIcon,
+  CheckBadgeIcon,
+} from '@heroicons/react/24/outline';
 
 export interface QuickFiltersProps {
   /** Callback when filter is clicked */
@@ -17,12 +24,12 @@ export function QuickFilters({ onFilterClick }: QuickFiltersProps) {
   const { t } = useTranslation('home');
 
   const quickFilters = [
-    { label: t('quickFilters.openNow'), filter: { openNow: true }, icon: '🕐' },
-    { label: t('quickFilters.restaurants'), filter: { category: 'restaurants' }, icon: '🍽️' },
-    { label: t('quickFilters.retail'), filter: { category: 'retail' }, icon: '🛍️' },
-    { label: t('quickFilters.health'), filter: { category: 'health' }, icon: '🏥' },
-    { label: t('quickFilters.services'), filter: { category: 'services' }, icon: '🔧' },
-    { label: t('quickFilters.verified'), filter: { verifiedOnly: true }, icon: '✓' },
+    { label: t('quickFilters.openNow'), filter: { openNow: true }, Icon: ClockIcon },
+    { label: t('quickFilters.restaurants'), filter: { category: 'restaurants' }, Icon: BuildingStorefrontIcon },
+    { label: t('quickFilters.retail'), filter: { category: 'retail' }, Icon: ShoppingBagIcon },
+    { label: t('quickFilters.health'), filter: { category: 'health' }, Icon: PlusCircleIcon },
+    { label: t('quickFilters.services'), filter: { category: 'services' }, Icon: WrenchScrewdriverIcon },
+    { label: t('quickFilters.verified'), filter: { verifiedOnly: true }, Icon: CheckBadgeIcon },
   ];
 
   return (
@@ -38,7 +45,7 @@ export function QuickFilters({ onFilterClick }: QuickFiltersProps) {
               onClick={() => onFilterClick(item.filter)}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-neutral-medium text-dark hover:bg-primary-tint-95 hover:border-primary transition-colors whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
             >
-              <span className="text-lg" aria-hidden="true">{item.icon}</span>
+              <item.Icon className="w-5 h-5" aria-hidden="true" />
               <span className="text-sm font-medium">{item.label}</span>
             </button>
           ))}

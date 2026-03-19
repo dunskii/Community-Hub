@@ -101,7 +101,12 @@ const IP_HASH_RETENTION_DAYS = 90;
  */
 function getRedisClient() {
   try {
-    return getRedis();
+    const redis = getRedis();
+    // Check if connection is actually open
+    if (redis.status !== 'ready' && redis.status !== 'connect') {
+      return null;
+    }
+    return redis;
   } catch {
     logger.warn('Redis not available for analytics caching');
     return null;

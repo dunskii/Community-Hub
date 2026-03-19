@@ -1,7 +1,8 @@
 import 'dotenv/config';
 import { PrismaPg } from '@prisma/adapter-pg';
+import bcrypt from 'bcrypt';
 
-import { PrismaClient } from '../generated/prisma/client.js';
+import { PrismaClient, UserRole, UserStatus, VerificationMethod, ClaimVerificationStatus, ClaimStatus } from '../generated/prisma/client.js';
 import { logger } from '../utils/logger.js';
 import { seedEmailTemplates } from './seeds/email-templates.js';
 
@@ -606,6 +607,47 @@ async function main(): Promise<void> {
 
   await seedEmailTemplates();
 
+  // ── Test Users ──────────────────────────────────────
+
+  const testPassword = await bcrypt.hash('Password123!', 12);
+
+  const testUsers = [
+    {
+      email: 'user@test.com',
+      passwordHash: testPassword,
+      displayName: 'Test User',
+      role: UserRole.COMMUNITY,
+      status: UserStatus.ACTIVE,
+      emailVerified: true,
+    },
+    {
+      email: 'owner@test.com',
+      passwordHash: testPassword,
+      displayName: 'Business Owner',
+      role: UserRole.BUSINESS_OWNER,
+      status: UserStatus.ACTIVE,
+      emailVerified: true,
+    },
+    {
+      email: 'admin@test.com',
+      passwordHash: testPassword,
+      displayName: 'Admin User',
+      role: UserRole.ADMIN,
+      status: UserStatus.ACTIVE,
+      emailVerified: true,
+    },
+  ];
+
+  for (const user of testUsers) {
+    await prisma.user.upsert({
+      where: { email: user.email },
+      update: {},
+      create: user,
+    });
+  }
+
+  logger.info('Test users seeded');
+
   // ── Sample Businesses ────────────────────────────────
 
   const sampleBusinesses = [
@@ -906,6 +948,48 @@ async function main(): Promise<void> {
   }
 
   logger.info('Sample businesses seeded');
+
+  // ── Link Business Owner to a Business ────────────────────
+
+  // Get the business owner user
+  const businessOwner = await prisma.user.findUnique({
+    where: { email: 'owner@test.com' },
+  });
+
+  // Get the first business (Guildford Grill House)
+  const firstBusiness = await prisma.business.findUnique({
+    where: { slug: 'guildford-grill-house' },
+  });
+
+  if (businessOwner && firstBusiness) {
+    // Create an approved claim request
+    await prisma.businessClaimRequest.upsert({
+      where: {
+        businessId_userId: {
+          businessId: firstBusiness.id,
+          userId: businessOwner.id,
+        },
+      },
+      update: {},
+      create: {
+        businessId: firstBusiness.id,
+        userId: businessOwner.id,
+        verificationMethod: VerificationMethod.EMAIL,
+        verificationStatus: ClaimVerificationStatus.VERIFIED,
+        claimStatus: ClaimStatus.APPROVED,
+        decisionAt: new Date(),
+      },
+    });
+
+    // Mark the business as claimed
+    await prisma.business.update({
+      where: { id: firstBusiness.id },
+      data: { claimed: true },
+    });
+
+    logger.info('Business owner linked to Guildford Grill House');
+  }
+
   logger.info('Database seeded successfully.');
 }
 
