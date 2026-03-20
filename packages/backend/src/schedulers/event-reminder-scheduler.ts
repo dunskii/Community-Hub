@@ -133,15 +133,15 @@ export class EventReminderScheduler {
     const maxTime = new Date(targetTime.getTime() + REMINDER_TOLERANCE_MS);
 
     // Find events starting within the reminder window
-    const events = await prisma.event.findMany({
+    const events = await prisma.events.findMany({
       where: {
         status: EventStatus.ACTIVE,
-        startTime: {
+        start_time: {
           gte: minTime,
           lte: maxTime,
         },
         // Only include events with GOING RSVPs
-        rsvps: {
+        event_rsvps: {
           some: {
             status: RSVPStatus.GOING,
           },
@@ -150,7 +150,7 @@ export class EventReminderScheduler {
       select: {
         id: true,
         title: true,
-        startTime: true,
+        start_time: true,
       },
     });
 
@@ -162,7 +162,7 @@ export class EventReminderScheduler {
         reminders.push({
           eventId: event.id,
           eventTitle: event.title,
-          startTime: event.startTime,
+          startTime: event.start_time,
           reminderType,
         });
       }
@@ -177,12 +177,12 @@ export class EventReminderScheduler {
   private async processReminder(reminder: ScheduledReminder): Promise<void> {
     try {
       // Get full event data for notification
-      const event = await prisma.event.findUnique({
+      const event = await prisma.events.findUnique({
         where: { id: reminder.eventId },
         include: {
-          createdBy: {
+          users: {
             select: {
-              displayName: true,
+              display_name: true,
             },
           },
         },
@@ -197,12 +197,12 @@ export class EventReminderScheduler {
       const notificationData: EventNotificationData = {
         eventId: event.id,
         eventTitle: event.title,
-        eventStartTime: event.startTime,
-        eventEndTime: event.endTime,
-        locationType: event.locationType,
+        eventStartTime: event.start_time,
+        eventEndTime: event.end_time,
+        locationType: event.location_type,
         venue: event.venue as VenueInput | null,
-        onlineUrl: event.onlineUrl,
-        organizerName: event.createdBy.displayName,
+        onlineUrl: event.online_url,
+        organizerName: event.users.display_name,
       };
 
       // Send reminders
@@ -250,7 +250,7 @@ export class EventReminderScheduler {
    * Database fallback for checking reminder status
    */
   private async wasReminderSentDb(eventId: string, reminderType: '24h' | '1h'): Promise<boolean> {
-    const setting = await prisma.systemSetting.findFirst({
+    const setting = await prisma.system_settings.findFirst({
       where: {
         key: `reminder_sent_${eventId}_${reminderType}`,
       },
@@ -282,7 +282,7 @@ export class EventReminderScheduler {
    * Database fallback for marking reminder as sent
    */
   private async markReminderSentDb(eventId: string, reminderType: '24h' | '1h'): Promise<void> {
-    await prisma.systemSetting.upsert({
+    await prisma.system_settings.upsert({
       where: {
         key: `reminder_sent_${eventId}_${reminderType}`,
       },
@@ -290,9 +290,11 @@ export class EventReminderScheduler {
         key: `reminder_sent_${eventId}_${reminderType}`,
         value: { sent: true, timestamp: new Date().toISOString() },
         description: `Reminder sent marker for event ${eventId}`,
+        updated_at: new Date(),
       },
       update: {
         value: { sent: true, timestamp: new Date().toISOString() },
+        updated_at: new Date(),
       },
     });
   }

@@ -388,7 +388,7 @@ export function PhotosManagementPage() {
             {error || t('photos.notFoundDesc', "The business you're looking for doesn't exist.")}
           </p>
           <Link
-            to="/owner/dashboard"
+            to="/business/dashboard"
             className="inline-flex items-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90"
           >
             {t('common.backToDashboard', 'Back to Dashboard')}
@@ -409,7 +409,7 @@ export function PhotosManagementPage() {
           {/* Header */}
           <div className="mb-6">
             <Link
-              to="/owner/dashboard"
+              to="/business/dashboard"
               className="inline-flex items-center text-sm text-slate-600 dark:text-slate-400 hover:text-primary mb-4"
             >
               <ArrowLeftIcon className="w-4 h-4 mr-1" />

@@ -32,7 +32,7 @@ export class SavedController {
    */
   async saveBusiness(req: Request, res: Response): Promise<void> {
     try {
-      const { id: userId } = req.params;
+      const userId = req.params.id as string;
       const { businessId, listId, notes } = req.body;
 
       // Ensure user can only save for themselves
@@ -60,7 +60,8 @@ export class SavedController {
    */
   async unsaveBusiness(req: Request, res: Response): Promise<void> {
     try {
-      const { id: userId, businessId } = req.params;
+      const userId = req.params.id as string;
+      const businessId = req.params.businessId as string;
 
       // Ensure user can only unsave for themselves
       if (userId !== req.user!.id) {
@@ -87,7 +88,7 @@ export class SavedController {
    */
   async getSavedBusinesses(req: Request, res: Response): Promise<void> {
     try {
-      const { id: userId } = req.params;
+      const userId = req.params.id as string;
       const { listId, page = '1', limit = '10' } = req.query;
 
       // Ensure user can only view their own saved businesses
@@ -122,7 +123,7 @@ export class SavedController {
    */
   async createList(req: Request, res: Response): Promise<void> {
     try {
-      const { id: userId } = req.params;
+      const userId = req.params.id as string;
       const { name } = req.body;
 
       // Ensure user can only create lists for themselves
@@ -150,7 +151,8 @@ export class SavedController {
    */
   async updateList(req: Request, res: Response): Promise<void> {
     try {
-      const { id: userId, listId } = req.params;
+      const userId = req.params.id as string;
+      const listId = req.params.listId as string;
       const { name } = req.body;
 
       // Ensure user can only update their own lists
@@ -178,7 +180,8 @@ export class SavedController {
    */
   async deleteList(req: Request, res: Response): Promise<void> {
     try {
-      const { id: userId, listId } = req.params;
+      const userId = req.params.id as string;
+      const listId = req.params.listId as string;
 
       // Ensure user can only delete their own lists
       if (userId !== req.user!.id) {

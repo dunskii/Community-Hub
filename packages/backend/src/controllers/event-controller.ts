@@ -110,7 +110,7 @@ export class EventController {
    */
   async getEvent(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
       const userId = req.user?.id;
 
       const event = await eventService.getEvent(id, userId);
@@ -127,7 +127,7 @@ export class EventController {
    */
   async getEventBySlug(req: Request, res: Response): Promise<void> {
     try {
-      const { slug } = req.params;
+      const slug = req.params.slug as string;
       const userId = req.user?.id;
 
       const event = await eventService.getEventBySlug(slug, userId);
@@ -167,7 +167,7 @@ export class EventController {
    */
   async updateEvent(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
       const userId = req.user!.id;
       const data = req.body;
 
@@ -191,7 +191,7 @@ export class EventController {
    */
   async deleteEvent(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
       const userId = req.user!.id;
 
       await eventService.deleteEvent(id, userId, {
@@ -216,7 +216,7 @@ export class EventController {
    */
   async rsvpToEvent(req: Request, res: Response): Promise<void> {
     try {
-      const { id: eventId } = req.params;
+      const eventId = req.params.id as string;
       const userId = req.user!.id;
       const data = req.body;
 
@@ -240,7 +240,7 @@ export class EventController {
    */
   async cancelRSVP(req: Request, res: Response): Promise<void> {
     try {
-      const { id: eventId } = req.params;
+      const eventId = req.params.id as string;
       const userId = req.user!.id;
 
       await eventService.cancelRSVP(eventId, userId, {
@@ -263,7 +263,7 @@ export class EventController {
    */
   async getAttendees(req: Request, res: Response): Promise<void> {
     try {
-      const { id: eventId } = req.params;
+      const eventId = req.params.id as string;
       const userId = req.user!.id;
       const filters = {
         status: req.query.status as 'GOING' | 'INTERESTED' | 'NOT_GOING' | undefined,
@@ -287,7 +287,7 @@ export class EventController {
    */
   async exportICS(req: Request, res: Response): Promise<void> {
     try {
-      const { id: eventId } = req.params;
+      const eventId = req.params.id as string;
 
       const icsContent = await eventService.exportEventICS(eventId);
 
@@ -311,7 +311,7 @@ export class EventController {
    */
   async approveEvent(req: Request, res: Response): Promise<void> {
     try {
-      const { id: eventId } = req.params;
+      const eventId = req.params.id as string;
       const moderatorId = req.user!.id;
 
       const event = await eventService.approveEvent(eventId, moderatorId, {

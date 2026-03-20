@@ -14,14 +14,14 @@ describe('ReviewService', () => {
 
   beforeEach(async () => {
     // Clear database before each test
-    await prisma.review.deleteMany();
-    await prisma.reviewPhoto.deleteMany();
+    await prisma.reviews.deleteMany();
+    await prisma.review_photos.deleteMany();
   });
 
   afterEach(async () => {
     // Clean up after tests
-    await prisma.review.deleteMany();
-    await prisma.reviewPhoto.deleteMany();
+    await prisma.reviews.deleteMany();
+    await prisma.review_photos.deleteMany();
   });
 
   describe('createReview', () => {
@@ -180,7 +180,7 @@ describe('ReviewService', () => {
       const oldDate = new Date();
       oldDate.setDate(oldDate.getDate() - 8);
 
-      await prisma.review.update({
+      await prisma.reviews.update({
         where: { id: reviewId },
         data: { createdAt: oldDate },
       });
@@ -240,7 +240,7 @@ describe('ReviewService', () => {
         actorRole: 'USER',
       });
 
-      const deleted = await prisma.review.findUnique({
+      const deleted = await prisma.reviews.findUnique({
         where: { id: reviewId },
       });
 
@@ -286,7 +286,7 @@ describe('ReviewService', () => {
         actorRole: 'USER',
       });
 
-      const review = await prisma.review.findUnique({
+      const review = await prisma.reviews.findUnique({
         where: { id: reviewId },
       });
 
@@ -308,7 +308,7 @@ describe('ReviewService', () => {
         actorRole: 'USER',
       });
 
-      const review = await prisma.review.findUnique({
+      const review = await prisma.reviews.findUnique({
         where: { id: reviewId },
       });
 
@@ -375,12 +375,12 @@ describe('ReviewService', () => {
 
     it('should calculate average rating', async () => {
       // Approve all reviews first
-      const allReviews = await prisma.review.findMany({
+      const allReviews = await prisma.reviews.findMany({
         where: { businessId: mockBusinessId },
       });
 
       for (const review of allReviews) {
-        await prisma.review.update({
+        await prisma.reviews.update({
           where: { id: review.id },
           data: { status: 'APPROVED' },
         });

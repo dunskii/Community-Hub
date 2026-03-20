@@ -6,10 +6,13 @@
  */
 
 import { prisma } from '../db/index';
-import { UserSession } from '../generated/prisma';
+import { user_sessions } from '../generated/prisma';
 import { revokeToken } from './token-service';
 import { logger } from '../utils/logger';
 import crypto from 'crypto';
+
+// Re-export UserSession type with proper name
+export type UserSession = user_sessions;
 
 /**
  * Parse device info from User-Agent string
@@ -99,15 +102,16 @@ export async function createSession(
   const tokenHash = hashJti(refreshTokenJti);
   const parsedDeviceInfo = parseDeviceInfo(deviceInfo);
 
-  const session = await prisma.userSession.create({
+  const session = await prisma.user_sessions.create({
     data: {
-      userId,
-      tokenHash,
-      deviceInfo: parsedDeviceInfo,
-      ipAddress,
-      isCurrent: true, // Mark as current session
-      lastActiveAt: new Date(),
-      expiresAt,
+      id: crypto.randomUUID(),
+      user_id: userId,
+      token_hash: tokenHash,
+      device_info: parsedDeviceInfo,
+      ip_address: ipAddress,
+      is_current: true, // Mark as current session
+      last_active_at: new Date(),
+      expires_at: expiresAt,
     },
   });
 
@@ -131,15 +135,15 @@ export async function createSession(
  * @returns Array of active sessions
  */
 export async function listUserSessions(userId: string): Promise<UserSession[]> {
-  const sessions = await prisma.userSession.findMany({
+  const sessions = await prisma.user_sessions.findMany({
     where: {
-      userId,
-      expiresAt: {
+      user_id: userId,
+      expires_at: {
         gt: new Date(), // Only active sessions
       },
     },
     orderBy: {
-      lastActiveAt: 'desc',
+      last_active_at: 'desc',
     },
   });
 
@@ -158,11 +162,11 @@ export async function revokeSession(
   userId: string
 ): Promise<boolean> {
   // Find session
-  const session = await prisma.userSession.findUnique({
+  const session = await prisma.user_sessions.findUnique({
     where: { id: sessionId },
   });
 
-  if (!session || session.userId !== userId) {
+  if (!session || session.user_id !== userId) {
     return false;
   }
 
@@ -170,23 +174,23 @@ export async function revokeSession(
   const now = new Date();
   const ttl = Math.max(
     0,
-    Math.floor((session.expiresAt.getTime() - now.getTime()) / 1000)
+    Math.floor((session.expires_at.getTime() - now.getTime()) / 1000)
   );
 
   // Revoke the refresh token in Redis
   // We need to derive the JTI from the hash - but we can't reverse SHA-256
   // Instead, we'll add the tokenHash to Redis blocklist with a special prefix
   if (ttl > 0) {
-    await revokeToken(session.tokenHash, ttl);
+    await revokeToken(session.token_hash, ttl);
   }
 
   // Delete session from database
-  await prisma.userSession.delete({
+  await prisma.user_sessions.delete({
     where: { id: sessionId },
   });
 
   logger.info(
-    { userId, sessionId, ipAddress: session.ipAddress },
+    { userId, sessionId, ipAddress: session.ip_address },
     'Session revoked'
   );
 
@@ -205,9 +209,9 @@ export async function revokeAllUserSessions(
   excludeSessionId?: string
 ): Promise<number> {
   // Find all sessions
-  const sessions = await prisma.userSession.findMany({
+  const sessions = await prisma.user_sessions.findMany({
     where: {
-      userId,
+      user_id: userId,
       ...(excludeSessionId ? { id: { not: excludeSessionId } } : {}),
     },
   });
@@ -218,17 +222,17 @@ export async function revokeAllUserSessions(
   for (const session of sessions) {
     const ttl = Math.max(
       0,
-      Math.floor((session.expiresAt.getTime() - now.getTime()) / 1000)
+      Math.floor((session.expires_at.getTime() - now.getTime()) / 1000)
     );
     if (ttl > 0) {
-      await revokeToken(session.tokenHash, ttl);
+      await revokeToken(session.token_hash, ttl);
     }
   }
 
   // Delete sessions from database
-  const result = await prisma.userSession.deleteMany({
+  const result = await prisma.user_sessions.deleteMany({
     where: {
-      userId,
+      user_id: userId,
       ...(excludeSessionId ? { id: { not: excludeSessionId } } : {}),
     },
   });
@@ -252,11 +256,11 @@ export async function updateSessionActivity(
   const tokenHash = hashJti(refreshTokenJti);
 
   try {
-    await prisma.userSession.update({
-      where: { tokenHash },
+    await prisma.user_sessions.update({
+      where: { token_hash: tokenHash },
       data: {
-        lastActiveAt: new Date(),
-        isCurrent: true,
+        last_active_at: new Date(),
+        is_current: true,
       },
     });
   } catch (error) {
@@ -277,8 +281,8 @@ export async function findSessionByJti(
   const tokenHash = hashJti(refreshTokenJti);
 
   try {
-    const session = await prisma.userSession.findUnique({
-      where: { tokenHash },
+    const session = await prisma.user_sessions.findUnique({
+      where: { token_hash: tokenHash },
     });
     return session;
   } catch (error) {
@@ -293,9 +297,9 @@ export async function findSessionByJti(
  * @returns Number of sessions deleted
  */
 export async function cleanupExpiredSessions(): Promise<number> {
-  const result = await prisma.userSession.deleteMany({
+  const result = await prisma.user_sessions.deleteMany({
     where: {
-      expiresAt: {
+      expires_at: {
         lt: new Date(),
       },
     },

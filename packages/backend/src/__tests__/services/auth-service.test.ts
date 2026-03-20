@@ -130,8 +130,8 @@ describe('Auth Service', () => {
         updatedAt: new Date(),
       };
 
-      (prisma.user.findUnique as any).mockResolvedValue(null);
-      (prisma.user.create as any).mockResolvedValue(mockUser);
+      (prisma.users.findUnique as any).mockResolvedValue(null);
+      (prisma.users.create as any).mockResolvedValue(mockUser);
 
       const result = await registerUser(validRegistrationData);
 
@@ -145,7 +145,7 @@ describe('Auth Service', () => {
       expect(passwordUtils.hashPassword).toHaveBeenCalledWith('ValidPass123');
 
       // Verify user was created
-      expect(prisma.user.create).toHaveBeenCalledWith({
+      expect(prisma.users.create).toHaveBeenCalledWith({
         data: expect.objectContaining({
           email: 'test@example.com',
           displayName: 'Test User',
@@ -179,7 +179,7 @@ describe('Auth Service', () => {
     });
 
     it('should reject duplicate email', async () => {
-      (prisma.user.findUnique as any).mockResolvedValue({
+      (prisma.users.findUnique as any).mockResolvedValue({
         id: 'existing-user',
         email: 'test@example.com',
       });
@@ -195,8 +195,8 @@ describe('Auth Service', () => {
         email: 'Test@EXAMPLE.COM',
       };
 
-      (prisma.user.findUnique as any).mockResolvedValue(null);
-      (prisma.user.create as any).mockResolvedValue({
+      (prisma.users.findUnique as any).mockResolvedValue(null);
+      (prisma.users.create as any).mockResolvedValue({
         id: 'user-123',
         email: 'test@example.com',
         ...validRegistrationData,
@@ -204,21 +204,21 @@ describe('Auth Service', () => {
 
       await registerUser(upperCaseEmailData);
 
-      expect(prisma.user.findUnique).toHaveBeenCalledWith({
+      expect(prisma.users.findUnique).toHaveBeenCalledWith({
         where: { email: 'test@example.com' },
       });
     });
 
     it('should set default notification preferences', async () => {
-      (prisma.user.findUnique as any).mockResolvedValue(null);
-      (prisma.user.create as any).mockResolvedValue({
+      (prisma.users.findUnique as any).mockResolvedValue(null);
+      (prisma.users.create as any).mockResolvedValue({
         id: 'user-123',
         ...validRegistrationData,
       });
 
       await registerUser(validRegistrationData);
 
-      expect(prisma.user.create).toHaveBeenCalledWith({
+      expect(prisma.users.create).toHaveBeenCalledWith({
         data: expect.objectContaining({
           notificationPreferences: expect.objectContaining({
             emailDigest: 'daily',
@@ -248,8 +248,8 @@ describe('Auth Service', () => {
     };
 
     it('should login successfully with valid credentials', async () => {
-      (prisma.user.findUnique as any).mockResolvedValue(mockUser);
-      (prisma.user.update as any).mockResolvedValue({
+      (prisma.users.findUnique as any).mockResolvedValue(mockUser);
+      (prisma.users.update as any).mockResolvedValue({
         ...mockUser,
         lastLogin: new Date(),
       });
@@ -263,7 +263,7 @@ describe('Auth Service', () => {
       expect(result.user.email).toBe('test@example.com');
 
       // Verify lastLogin was updated
-      expect(prisma.user.update).toHaveBeenCalledWith({
+      expect(prisma.users.update).toHaveBeenCalledWith({
         where: { id: 'user-123' },
         data: { lastLogin: expect.any(Date) },
       });
@@ -273,7 +273,7 @@ describe('Auth Service', () => {
     });
 
     it('should reject invalid email', async () => {
-      (prisma.user.findUnique as any).mockResolvedValue(null);
+      (prisma.users.findUnique as any).mockResolvedValue(null);
 
       await expect(loginUser(validLoginData)).rejects.toThrow(
         'Invalid email or password'
@@ -281,7 +281,7 @@ describe('Auth Service', () => {
     });
 
     it('should reject invalid password', async () => {
-      (prisma.user.findUnique as any).mockResolvedValue(mockUser);
+      (prisma.users.findUnique as any).mockResolvedValue(mockUser);
       (tokenService.getFailedLoginAttempts as any).mockResolvedValue(0);
 
       const invalidPasswordData = {
@@ -298,7 +298,7 @@ describe('Auth Service', () => {
     });
 
     it('should lock account after 5 failed attempts', async () => {
-      (prisma.user.findUnique as any).mockResolvedValue(mockUser);
+      (prisma.users.findUnique as any).mockResolvedValue(mockUser);
       (tokenService.getFailedLoginAttempts as any).mockResolvedValue(5);
 
       await expect(loginUser(validLoginData)).rejects.toThrow(
@@ -307,7 +307,7 @@ describe('Auth Service', () => {
     });
 
     it('should reject PENDING users', async () => {
-      (prisma.user.findUnique as any).mockResolvedValue({
+      (prisma.users.findUnique as any).mockResolvedValue({
         ...mockUser,
         status: UserStatus.PENDING,
       });
@@ -319,7 +319,7 @@ describe('Auth Service', () => {
     });
 
     it('should reject SUSPENDED users', async () => {
-      (prisma.user.findUnique as any).mockResolvedValue({
+      (prisma.users.findUnique as any).mockResolvedValue({
         ...mockUser,
         status: UserStatus.SUSPENDED,
       });
@@ -331,7 +331,7 @@ describe('Auth Service', () => {
     });
 
     it('should reject DELETED users', async () => {
-      (prisma.user.findUnique as any).mockResolvedValue({
+      (prisma.users.findUnique as any).mockResolvedValue({
         ...mockUser,
         status: UserStatus.DELETED,
       });
@@ -358,7 +358,7 @@ describe('Auth Service', () => {
         languagePreference: 'en',
       };
 
-      (prisma.user.update as any).mockResolvedValue(mockUser);
+      (prisma.users.update as any).mockResolvedValue(mockUser);
 
       const result = await verifyEmail(userId, token);
 
@@ -367,7 +367,7 @@ describe('Auth Service', () => {
       expect(result.status).toBe(UserStatus.ACTIVE);
 
       // Verify user was updated
-      expect(prisma.user.update).toHaveBeenCalledWith({
+      expect(prisma.users.update).toHaveBeenCalledWith({
         where: { id: userId },
         data: {
           emailVerified: true,
@@ -405,7 +405,7 @@ describe('Auth Service', () => {
         languagePreference: 'en',
       };
 
-      (prisma.user.findUnique as any).mockResolvedValue(mockUser);
+      (prisma.users.findUnique as any).mockResolvedValue(mockUser);
 
       await resendVerificationEmail('test@example.com');
 
@@ -424,7 +424,7 @@ describe('Auth Service', () => {
     });
 
     it('should fail silently for non-existent email', async () => {
-      (prisma.user.findUnique as any).mockResolvedValue(null);
+      (prisma.users.findUnique as any).mockResolvedValue(null);
 
       await expect(
         resendVerificationEmail('nonexistent@example.com')
@@ -440,7 +440,7 @@ describe('Auth Service', () => {
         emailVerified: true,
       };
 
-      (prisma.user.findUnique as any).mockResolvedValue(mockUser);
+      (prisma.users.findUnique as any).mockResolvedValue(mockUser);
 
       await expect(resendVerificationEmail('test@example.com')).rejects.toThrow(
         'Email already verified'
@@ -457,7 +457,7 @@ describe('Auth Service', () => {
         languagePreference: 'en',
       };
 
-      (prisma.user.findUnique as any).mockResolvedValue(mockUser);
+      (prisma.users.findUnique as any).mockResolvedValue(mockUser);
 
       await initiatePasswordReset('test@example.com');
 
@@ -479,7 +479,7 @@ describe('Auth Service', () => {
     });
 
     it('should fail silently for non-existent email', async () => {
-      (prisma.user.findUnique as any).mockResolvedValue(null);
+      (prisma.users.findUnique as any).mockResolvedValue(null);
 
       await expect(
         initiatePasswordReset('nonexistent@example.com')
@@ -507,8 +507,8 @@ describe('Auth Service', () => {
         languagePreference: 'en',
       };
 
-      (prisma.user.findUnique as any).mockResolvedValue(mockUser);
-      (prisma.user.update as any).mockResolvedValue(mockUser);
+      (prisma.users.findUnique as any).mockResolvedValue(mockUser);
+      (prisma.users.update as any).mockResolvedValue(mockUser);
 
       await completePasswordReset(token, newPassword);
 
@@ -519,7 +519,7 @@ describe('Auth Service', () => {
       expect(passwordUtils.hashPassword).toHaveBeenCalledWith(newPassword);
 
       // Verify user password was updated
-      expect(prisma.user.update).toHaveBeenCalledWith({
+      expect(prisma.users.update).toHaveBeenCalledWith({
         where: { id: userId },
         data: { passwordHash: 'hashed_NewValidPass123' },
       });

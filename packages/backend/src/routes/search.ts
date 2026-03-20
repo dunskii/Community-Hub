@@ -17,7 +17,7 @@ import {
   handleSearchAll,
 } from '../controllers/search-controller.js';
 
-const router = Router();
+const router: Router = Router();
 
 // ─── Rate Limiters ────────────────────────────────────────────────
 

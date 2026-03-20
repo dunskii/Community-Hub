@@ -62,7 +62,7 @@ export function OwnerDashboardPage() {
   // Redirect if not authenticated
   useEffect(() => {
     if (!isAuthenticated) {
-      navigate('/login', { state: { from: '/owner/dashboard' } });
+      navigate('/login', { state: { from: '/business/dashboard' } });
     }
   }, [isAuthenticated, navigate]);
 
@@ -198,26 +198,7 @@ export function OwnerDashboardPage() {
       </Helmet>
 
       <PageContainer>
-        <div className="max-w-6xl mx-auto space-y-8">
-          {/* Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-              <h1 className="text-3xl font-bold text-slate-900 dark:text-white">
-                {t('owner.dashboardTitle', 'Business Dashboard')}
-              </h1>
-              <p className="text-slate-600 dark:text-slate-400 mt-1">
-                {t('owner.dashboardSubtitle', 'Manage your businesses and view performance')}
-              </p>
-            </div>
-            <button
-              onClick={handleLogout}
-              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors"
-            >
-              <ArrowRightOnRectangleIcon className="w-5 h-5" />
-              {t('navigation.logout', 'Log Out')}
-            </button>
-          </div>
-
+        <div className="max-w-6xl mx-auto space-y-8 pt-6">
           {/* Business Selector (if multiple businesses) */}
           {businesses.length > 1 && (
             <div className="bg-white dark:bg-slate-800 rounded-xl p-4 shadow-sm border border-slate-200 dark:border-slate-700">
@@ -297,7 +278,7 @@ export function OwnerDashboardPage() {
                         {t('owner.viewProfile', 'View Profile')}
                       </Link>
                       <Link
-                        to={`/owner/business/${selectedBusiness.id}/edit`}
+                        to={`/business/manage/${selectedBusiness.id}/edit`}
                         className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:bg-primary/90 transition-colors"
                       >
                         {t('owner.editProfile', 'Edit Profile')}
@@ -358,25 +339,25 @@ export function OwnerDashboardPage() {
                     title={t('owner.actions.analytics', 'View Analytics')}
                     description={t('owner.actions.analyticsDesc', 'See detailed performance metrics')}
                     icon={<ChartBarIcon className="w-8 h-8" />}
-                    to={`/owner/business/${selectedBusiness.id}/analytics`}
+                    to={`/business/manage/${selectedBusiness.id}/analytics`}
                   />
                   <ActionCard
                     title={t('owner.actions.reviews', 'Manage Reviews')}
                     description={t('owner.actions.reviewsDesc', 'Respond to customer reviews')}
                     icon={<StarIcon className="w-8 h-8" />}
-                    to={`/owner/business/${selectedBusiness.id}/reviews`}
+                    to={`/businesses/${selectedBusiness.slug}?tab=reviews`}
                   />
                   <ActionCard
                     title={t('owner.actions.photos', 'Update Photos')}
                     description={t('owner.actions.photosDesc', 'Add or manage business photos')}
                     icon={<PhotoIcon className="w-8 h-8" />}
-                    to={`/owner/business/${selectedBusiness.id}/photos`}
+                    to={`/business/manage/${selectedBusiness.id}/photos`}
                   />
                   <ActionCard
                     title={t('owner.actions.settings', 'Settings')}
                     description={t('owner.actions.settingsDesc', 'Update business information')}
                     icon={<Cog6ToothIcon className="w-8 h-8" />}
-                    to={`/owner/business/${selectedBusiness.id}/settings`}
+                    to={`/business/manage/${selectedBusiness.id}/edit`}
                   />
                 </div>
               </section>

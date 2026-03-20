@@ -32,7 +32,7 @@ export class FollowController {
    */
   async followBusiness(req: Request, res: Response): Promise<void> {
     try {
-      const { id: businessId } = req.params;
+      const businessId = req.params.id as string;
       const userId = req.user!.id;
 
       const follow = await followService.followBusiness(userId, businessId);
@@ -54,7 +54,7 @@ export class FollowController {
    */
   async unfollowBusiness(req: Request, res: Response): Promise<void> {
     try {
-      const { id: businessId } = req.params;
+      const businessId = req.params.id as string;
       const userId = req.user!.id;
 
       await followService.unfollowBusiness(userId, businessId);
@@ -76,7 +76,7 @@ export class FollowController {
    */
   async getFollowerCount(req: Request, res: Response): Promise<void> {
     try {
-      const { id: businessId } = req.params;
+      const businessId = req.params.id as string;
 
       const count = await followService.getFollowerCount(businessId);
 
@@ -97,7 +97,7 @@ export class FollowController {
    */
   async getBusinessFollowers(req: Request, res: Response): Promise<void> {
     try {
-      const { id: businessId } = req.params;
+      const businessId = req.params.id as string;
       const { page = '1', limit = '10' } = req.query;
 
       const result = await followService.getBusinessFollowers(
@@ -125,7 +125,7 @@ export class FollowController {
    */
   async getFollowedBusinesses(req: Request, res: Response): Promise<void> {
     try {
-      const { id: userId } = req.params;
+      const userId = req.params.id as string;
       const { page = '1', limit = '10' } = req.query;
 
       // Ensure user can only view their own following list
@@ -159,7 +159,7 @@ export class FollowController {
    */
   async getFollowStatus(req: Request, res: Response): Promise<void> {
     try {
-      const { id: businessId } = req.params;
+      const businessId = req.params.id as string;
       const userId = req.user?.id;
 
       if (!userId) {

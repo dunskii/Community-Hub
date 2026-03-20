@@ -3,6 +3,7 @@
  * Handles saving/unsaving businesses and managing custom lists
  */
 
+import crypto from 'crypto';
 import { getPlatformConfig } from '../config/platform-loader.js';
 import { prisma } from '../db/index.js';
 import { logger } from '../utils/logger.js';
@@ -26,11 +27,11 @@ export class SavedService {
     const config = getPlatformConfig();
 
     // Check if already saved
-    const existing = await prisma.savedBusiness.findUnique({
+    const existing = await prisma.saved_businesses.findUnique({
       where: {
-        userId_businessId: {
-          userId,
-          businessId,
+        user_id_business_id: {
+          user_id: userId,
+          business_id: businessId,
         },
       },
     });
@@ -40,7 +41,7 @@ export class SavedService {
     }
 
     // Verify business exists
-    const business = await prisma.business.findUnique({
+    const business = await prisma.businesses.findUnique({
       where: { id: businessId },
     });
 
@@ -49,8 +50,8 @@ export class SavedService {
     }
 
     // Check saved count limit
-    const savedCount = await prisma.savedBusiness.count({
-      where: { userId },
+    const savedCount = await prisma.saved_businesses.count({
+      where: { user_id: userId },
     });
 
     if (savedCount >= config.limits.maxSavedBusinessesPerUser) {
@@ -72,31 +73,32 @@ export class SavedService {
       targetListId = defaultList.id as string;
     } else {
       // Verify list exists and belongs to user
-      const list = await prisma.savedList.findUnique({
-        where: { id: listId },
+      const list = await prisma.saved_lists.findUnique({
+        where: { id: listId as string },
       });
 
-      if (!list || list.userId !== userId) {
+      if (!list || list.user_id !== userId) {
         throw ApiError.notFound('LIST_NOT_FOUND', 'List not found or does not belong to you');
       }
     }
 
-    const saved = await prisma.savedBusiness.create({
+    const saved = await prisma.saved_businesses.create({
       data: {
-        userId,
-        businessId,
-        listId: targetListId,
-        notes,
+        id: crypto.randomUUID(),
+        user_id: userId,
+        business_id: businessId,
+        list_id: targetListId ?? undefined,
+        notes: notes ?? undefined,
       },
       include: {
-        business: {
+        businesses: {
           select: {
             id: true,
             name: true,
             slug: true,
             logo: true,
             address: true,
-            categoryPrimary: {
+            categories: {
               select: {
                 id: true,
                 name: true,
@@ -104,11 +106,11 @@ export class SavedService {
             },
           },
         },
-        list: {
+        saved_lists: {
           select: {
             id: true,
             name: true,
-            isDefault: true,
+            is_default: true,
           },
         },
       },
@@ -123,11 +125,11 @@ export class SavedService {
    * Removes a business from saved list
    */
   async unsaveBusiness(userId: string, businessId: string): Promise<void> {
-    const saved = await prisma.savedBusiness.findUnique({
+    const saved = await prisma.saved_businesses.findUnique({
       where: {
-        userId_businessId: {
-          userId,
-          businessId,
+        user_id_business_id: {
+          user_id: userId,
+          business_id: businessId,
         },
       },
     });
@@ -136,11 +138,11 @@ export class SavedService {
       throw ApiError.notFound('NOT_SAVED', 'Business not saved');
     }
 
-    await prisma.savedBusiness.delete({
+    await prisma.saved_businesses.delete({
       where: {
-        userId_businessId: {
-          userId,
-          businessId,
+        user_id_business_id: {
+          user_id: userId,
+          business_id: businessId,
         },
       },
     });
@@ -166,20 +168,20 @@ export class SavedService {
     const { page, limit } = pagination;
     const skip = (page - 1) * limit;
 
-    const where: any = { userId };
+    const where: any = { user_id: userId };
     if (listId) {
-      where.listId = listId;
+      where.list_id = listId;
     }
 
     // Get saved businesses and lists in parallel
     const [savedBusinesses, total, lists] = await Promise.all([
-      prisma.savedBusiness.findMany({
+      prisma.saved_businesses.findMany({
         where,
-        orderBy: { createdAt: 'desc' },
+        orderBy: { created_at: 'desc' },
         skip,
         take: limit,
         include: {
-          business: {
+          businesses: {
             select: {
               id: true,
               name: true,
@@ -187,7 +189,7 @@ export class SavedService {
               logo: true,
               address: true,
               phone: true,
-              categoryPrimary: {
+              categories: {
                 select: {
                   id: true,
                   name: true,
@@ -195,23 +197,23 @@ export class SavedService {
               },
             },
           },
-          list: {
+          saved_lists: {
             select: {
               id: true,
               name: true,
-              isDefault: true,
+              is_default: true,
             },
           },
         },
       }),
-      prisma.savedBusiness.count({ where }),
-      prisma.savedList.findMany({
-        where: { userId },
-        orderBy: [{ isDefault: 'desc' }, { name: 'asc' }],
+      prisma.saved_businesses.count({ where }),
+      prisma.saved_lists.findMany({
+        where: { user_id: userId },
+        orderBy: [{ is_default: 'desc' }, { name: 'asc' }],
         include: {
           _count: {
             select: {
-              savedBusinesses: true,
+              saved_businesses: true,
             },
           },
         },
@@ -234,19 +236,21 @@ export class SavedService {
    * Gets or creates the default list for a user
    */
   async getDefaultList(userId: string): Promise<Record<string, unknown>> {
-    let defaultList = await prisma.savedList.findFirst({
+    let defaultList = await prisma.saved_lists.findFirst({
       where: {
-        userId,
-        isDefault: true,
+        user_id: userId,
+        is_default: true,
       },
     });
 
     if (!defaultList) {
-      defaultList = await prisma.savedList.create({
+      defaultList = await prisma.saved_lists.create({
         data: {
-          userId,
+          id: crypto.randomUUID(),
+          user_id: userId,
           name: 'Saved Businesses',
-          isDefault: true,
+          is_default: true,
+          updated_at: new Date(),
         },
       });
 
@@ -271,8 +275,8 @@ export class SavedService {
     }
 
     // Check list count limit
-    const listCount = await prisma.savedList.count({
-      where: { userId },
+    const listCount = await prisma.saved_lists.count({
+      where: { user_id: userId },
     });
 
     if (listCount >= config.limits.maxCustomLists) {
@@ -282,16 +286,18 @@ export class SavedService {
       );
     }
 
-    const list = await prisma.savedList.create({
+    const list = await prisma.saved_lists.create({
       data: {
-        userId,
+        id: crypto.randomUUID(),
+        user_id: userId,
         name,
-        isDefault: false,
+        is_default: false,
+        updated_at: new Date(),
       },
       include: {
         _count: {
           select: {
-            savedBusinesses: true,
+            saved_businesses: true,
           },
         },
       },
@@ -321,21 +327,21 @@ export class SavedService {
     }
 
     // Verify list exists and belongs to user
-    const list = await prisma.savedList.findUnique({
+    const list = await prisma.saved_lists.findUnique({
       where: { id: listId },
     });
 
-    if (!list || list.userId !== userId) {
+    if (!list || list.user_id !== userId) {
       throw ApiError.notFound('LIST_NOT_FOUND', 'List not found or does not belong to you');
     }
 
-    const updatedList = await prisma.savedList.update({
+    const updatedList = await prisma.saved_lists.update({
       where: { id: listId },
       data: { name },
       include: {
         _count: {
           select: {
-            savedBusinesses: true,
+            saved_businesses: true,
           },
         },
       },
@@ -351,20 +357,20 @@ export class SavedService {
    */
   async deleteList(userId: string, listId: string): Promise<void> {
     // Verify list exists and belongs to user
-    const list = await prisma.savedList.findUnique({
+    const list = await prisma.saved_lists.findUnique({
       where: { id: listId },
     });
 
-    if (!list || list.userId !== userId) {
+    if (!list || list.user_id !== userId) {
       throw ApiError.notFound('LIST_NOT_FOUND', 'List not found or does not belong to you');
     }
 
-    if (list.isDefault) {
+    if (list.is_default) {
       throw ApiError.badRequest('CANNOT_DELETE_DEFAULT', 'Cannot delete default list');
     }
 
     // Delete list (cascade will remove associated SavedBusiness entries via SetNull)
-    await prisma.savedList.delete({
+    await prisma.saved_lists.delete({
       where: { id: listId },
     });
 

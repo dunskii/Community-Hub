@@ -65,14 +65,14 @@ describe('Category Routes', () => {
     ];
 
     it('should list all active categories', async () => {
-      vi.mocked(prisma.category.findMany).mockResolvedValue(mockCategories as never);
+      vi.mocked(prisma.categories.findMany).mockResolvedValue(mockCategories as never);
 
       const response = await request(app).get('/categories');
 
       expect(response.status).toBe(200);
       expect(response.body.success).toBe(true);
       expect(response.body.data).toEqual(mockCategories);
-      expect(prisma.category.findMany).toHaveBeenCalledWith({
+      expect(prisma.categories.findMany).toHaveBeenCalledWith({
         where: { active: true },
         orderBy: [{ displayOrder: 'asc' }, { name: 'asc' }],
         include: expect.any(Object),
@@ -80,12 +80,12 @@ describe('Category Routes', () => {
     });
 
     it('should filter categories by type', async () => {
-      vi.mocked(prisma.category.findMany).mockResolvedValue(mockCategories as never);
+      vi.mocked(prisma.categories.findMany).mockResolvedValue(mockCategories as never);
 
       const response = await request(app).get('/categories?type=BUSINESS');
 
       expect(response.status).toBe(200);
-      expect(prisma.category.findMany).toHaveBeenCalledWith(
+      expect(prisma.categories.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
           where: expect.objectContaining({
             type: 'BUSINESS',
@@ -96,12 +96,12 @@ describe('Category Routes', () => {
     });
 
     it('should filter categories by parent ID', async () => {
-      vi.mocked(prisma.category.findMany).mockResolvedValue(mockCategories as never);
+      vi.mocked(prisma.categories.findMany).mockResolvedValue(mockCategories as never);
 
       const response = await request(app).get('/categories?parent=cat-1');
 
       expect(response.status).toBe(200);
-      expect(prisma.category.findMany).toHaveBeenCalledWith(
+      expect(prisma.categories.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
           where: expect.objectContaining({
             parentId: 'cat-1',
@@ -111,12 +111,12 @@ describe('Category Routes', () => {
     });
 
     it('should filter for top-level categories (parent=null)', async () => {
-      vi.mocked(prisma.category.findMany).mockResolvedValue(mockCategories as never);
+      vi.mocked(prisma.categories.findMany).mockResolvedValue(mockCategories as never);
 
       const response = await request(app).get('/categories?parent=null');
 
       expect(response.status).toBe(200);
-      expect(prisma.category.findMany).toHaveBeenCalledWith(
+      expect(prisma.categories.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
           where: expect.objectContaining({
             parentId: null,
@@ -126,12 +126,12 @@ describe('Category Routes', () => {
     });
 
     it('should include inactive categories when active=false', async () => {
-      vi.mocked(prisma.category.findMany).mockResolvedValue(mockCategories as never);
+      vi.mocked(prisma.categories.findMany).mockResolvedValue(mockCategories as never);
 
       const response = await request(app).get('/categories?active=false');
 
       expect(response.status).toBe(200);
-      expect(prisma.category.findMany).toHaveBeenCalledWith(
+      expect(prisma.categories.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
           where: expect.objectContaining({
             active: false,
@@ -155,7 +155,7 @@ describe('Category Routes', () => {
         },
       ];
 
-      vi.mocked(prisma.category.findMany).mockResolvedValue(categoriesWithChildren as never);
+      vi.mocked(prisma.categories.findMany).mockResolvedValue(categoriesWithChildren as never);
 
       const response = await request(app).get('/categories');
 
@@ -179,21 +179,21 @@ describe('Category Routes', () => {
     };
 
     it('should return a category by ID', async () => {
-      vi.mocked(prisma.category.findUnique).mockResolvedValue(mockCategory as never);
+      vi.mocked(prisma.categories.findUnique).mockResolvedValue(mockCategory as never);
 
       const response = await request(app).get('/categories/cat-1');
 
       expect(response.status).toBe(200);
       expect(response.body.success).toBe(true);
       expect(response.body.data).toEqual(mockCategory);
-      expect(prisma.category.findUnique).toHaveBeenCalledWith({
+      expect(prisma.categories.findUnique).toHaveBeenCalledWith({
         where: { id: 'cat-1' },
         include: expect.any(Object),
       });
     });
 
     it('should return 404 for non-existent category', async () => {
-      vi.mocked(prisma.category.findUnique).mockResolvedValue(null);
+      vi.mocked(prisma.categories.findUnique).mockResolvedValue(null);
 
       const response = await request(app).get('/categories/non-existent');
 
@@ -222,9 +222,9 @@ describe('Category Routes', () => {
     ];
 
     it('should return businesses for a category', async () => {
-      vi.mocked(prisma.category.findUnique).mockResolvedValue(mockCategory as never);
-      vi.mocked(prisma.business.findMany).mockResolvedValue(mockBusinesses as never);
-      vi.mocked(prisma.business.count).mockResolvedValue(1);
+      vi.mocked(prisma.categories.findUnique).mockResolvedValue(mockCategory as never);
+      vi.mocked(prisma.businesses.findMany).mockResolvedValue(mockBusinesses as never);
+      vi.mocked(prisma.businesses.count).mockResolvedValue(1);
 
       const response = await request(app).get('/categories/cat-1/businesses');
 
@@ -241,7 +241,7 @@ describe('Category Routes', () => {
     });
 
     it('should return 404 for non-existent category', async () => {
-      vi.mocked(prisma.category.findUnique).mockResolvedValue(null);
+      vi.mocked(prisma.categories.findUnique).mockResolvedValue(null);
 
       const response = await request(app).get('/categories/non-existent/businesses');
 
@@ -251,9 +251,9 @@ describe('Category Routes', () => {
     });
 
     it('should handle pagination correctly', async () => {
-      vi.mocked(prisma.category.findUnique).mockResolvedValue(mockCategory as never);
-      vi.mocked(prisma.business.findMany).mockResolvedValue(mockBusinesses as never);
-      vi.mocked(prisma.business.count).mockResolvedValue(50);
+      vi.mocked(prisma.categories.findUnique).mockResolvedValue(mockCategory as never);
+      vi.mocked(prisma.businesses.findMany).mockResolvedValue(mockBusinesses as never);
+      vi.mocked(prisma.businesses.count).mockResolvedValue(50);
 
       const response = await request(app).get('/categories/cat-1/businesses?page=2&limit=10');
 
@@ -264,7 +264,7 @@ describe('Category Routes', () => {
         total: 50,
         totalPages: 5,
       });
-      expect(prisma.business.findMany).toHaveBeenCalledWith(
+      expect(prisma.businesses.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
           skip: 10,
           take: 10,
@@ -273,15 +273,15 @@ describe('Category Routes', () => {
     });
 
     it('should enforce maximum limit of 100', async () => {
-      vi.mocked(prisma.category.findUnique).mockResolvedValue(mockCategory as never);
-      vi.mocked(prisma.business.findMany).mockResolvedValue(mockBusinesses as never);
-      vi.mocked(prisma.business.count).mockResolvedValue(200);
+      vi.mocked(prisma.categories.findUnique).mockResolvedValue(mockCategory as never);
+      vi.mocked(prisma.businesses.findMany).mockResolvedValue(mockBusinesses as never);
+      vi.mocked(prisma.businesses.count).mockResolvedValue(200);
 
       const response = await request(app).get('/categories/cat-1/businesses?limit=500');
 
       expect(response.status).toBe(200);
       expect(response.body.data.pagination.limit).toBe(100);
-      expect(prisma.business.findMany).toHaveBeenCalledWith(
+      expect(prisma.businesses.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
           take: 100,
         })
@@ -289,14 +289,14 @@ describe('Category Routes', () => {
     });
 
     it('should support custom sorting', async () => {
-      vi.mocked(prisma.category.findUnique).mockResolvedValue(mockCategory as never);
-      vi.mocked(prisma.business.findMany).mockResolvedValue(mockBusinesses as never);
-      vi.mocked(prisma.business.count).mockResolvedValue(1);
+      vi.mocked(prisma.categories.findUnique).mockResolvedValue(mockCategory as never);
+      vi.mocked(prisma.businesses.findMany).mockResolvedValue(mockBusinesses as never);
+      vi.mocked(prisma.businesses.count).mockResolvedValue(1);
 
       const response = await request(app).get('/categories/cat-1/businesses?sort=-name');
 
       expect(response.status).toBe(200);
-      expect(prisma.business.findMany).toHaveBeenCalledWith(
+      expect(prisma.businesses.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
           orderBy: [{ name: 'desc' }],
         })
@@ -304,14 +304,14 @@ describe('Category Routes', () => {
     });
 
     it('should only return ACTIVE businesses', async () => {
-      vi.mocked(prisma.category.findUnique).mockResolvedValue(mockCategory as never);
-      vi.mocked(prisma.business.findMany).mockResolvedValue(mockBusinesses as never);
-      vi.mocked(prisma.business.count).mockResolvedValue(1);
+      vi.mocked(prisma.categories.findUnique).mockResolvedValue(mockCategory as never);
+      vi.mocked(prisma.businesses.findMany).mockResolvedValue(mockBusinesses as never);
+      vi.mocked(prisma.businesses.count).mockResolvedValue(1);
 
       const response = await request(app).get('/categories/cat-1/businesses');
 
       expect(response.status).toBe(200);
-      expect(prisma.business.findMany).toHaveBeenCalledWith(
+      expect(prisma.businesses.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
           where: expect.objectContaining({
             status: 'ACTIVE',

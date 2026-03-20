@@ -43,20 +43,20 @@ export class EventNotificationService {
   async sendCancellationNotifications(eventData: EventNotificationData): Promise<void> {
     try {
       // Get all RSVPs with GOING or INTERESTED status
-      const rsvps = await prisma.eventRSVP.findMany({
+      const rsvps = await prisma.event_rsvps.findMany({
         where: {
-          eventId: eventData.eventId,
+          event_id: eventData.eventId,
           status: {
             in: [RSVPStatus.GOING, RSVPStatus.INTERESTED],
           },
         },
         include: {
-          user: {
+          users: {
             select: {
               id: true,
               email: true,
-              displayName: true,
-              languagePreference: true,
+              display_name: true,
+              language_preference: true,
             },
           },
         },
@@ -79,7 +79,16 @@ export class EventNotificationService {
 
         await Promise.all(
           batch.map((rsvp) =>
-            this.sendCancellationEmail(rsvp.user, eventData, rsvp.status)
+            this.sendCancellationEmail(
+              {
+                id: rsvp.users.id,
+                email: rsvp.users.email,
+                displayName: rsvp.users.display_name,
+                languagePreference: rsvp.users.language_preference,
+              },
+              eventData,
+              rsvp.status
+            )
           )
         );
       }
@@ -172,18 +181,18 @@ export class EventNotificationService {
   ): Promise<void> {
     try {
       // Get all RSVPs with GOING status
-      const rsvps = await prisma.eventRSVP.findMany({
+      const rsvps = await prisma.event_rsvps.findMany({
         where: {
-          eventId: eventData.eventId,
+          event_id: eventData.eventId,
           status: RSVPStatus.GOING,
         },
         include: {
-          user: {
+          users: {
             select: {
               id: true,
               email: true,
-              displayName: true,
-              languagePreference: true,
+              display_name: true,
+              language_preference: true,
             },
           },
         },
@@ -205,7 +214,16 @@ export class EventNotificationService {
 
         await Promise.all(
           batch.map((rsvp) =>
-            this.sendReminderEmail(rsvp.user, eventData, reminderType)
+            this.sendReminderEmail(
+              {
+                id: rsvp.users.id,
+                email: rsvp.users.email,
+                displayName: rsvp.users.display_name,
+                languagePreference: rsvp.users.language_preference,
+              },
+              eventData,
+              reminderType
+            )
           )
         );
       }
@@ -297,20 +315,20 @@ export class EventNotificationService {
   ): Promise<void> {
     try {
       // Get all RSVPs with GOING or INTERESTED status
-      const rsvps = await prisma.eventRSVP.findMany({
+      const rsvps = await prisma.event_rsvps.findMany({
         where: {
-          eventId: eventData.eventId,
+          event_id: eventData.eventId,
           status: {
             in: [RSVPStatus.GOING, RSVPStatus.INTERESTED],
           },
         },
         include: {
-          user: {
+          users: {
             select: {
               id: true,
               email: true,
-              displayName: true,
-              languagePreference: true,
+              display_name: true,
+              language_preference: true,
             },
           },
         },
@@ -332,7 +350,16 @@ export class EventNotificationService {
 
         await Promise.all(
           batch.map((rsvp) =>
-            this.sendUpdateEmail(rsvp.user, eventData, changes)
+            this.sendUpdateEmail(
+              {
+                id: rsvp.users.id,
+                email: rsvp.users.email,
+                displayName: rsvp.users.display_name,
+                languagePreference: rsvp.users.language_preference,
+              },
+              eventData,
+              changes
+            )
           )
         );
       }

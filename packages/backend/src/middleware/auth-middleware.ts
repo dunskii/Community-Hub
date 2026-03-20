@@ -82,7 +82,7 @@ export async function requireAuth(
     }
 
     // Check if user still exists and is active
-    const user = await prisma.user.findUnique({
+    const user = await prisma.users.findUnique({
       where: { id: payload.sub },
       select: {
         id: true,
@@ -174,7 +174,7 @@ export async function optionalAuth(
     }
 
     // Check if user still exists and is active
-    const user = await prisma.user.findUnique({
+    const user = await prisma.users.findUnique({
       where: { id: payload.sub },
       select: {
         id: true,

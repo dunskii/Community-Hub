@@ -8,8 +8,7 @@ import type {
   BusinessCreateInput,
   BusinessUpdateInput,
 } from '@community-hub/shared';
-
-const API_BASE = '/api/v1';
+import { get, post, put, del } from './api-client';
 
 export interface BusinessListParams {
   category?: string;
@@ -82,6 +81,11 @@ export interface CategoryBusinessesResponse {
   };
 }
 
+interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+}
+
 class BusinessApiClient {
   /**
    * List businesses with filtering and pagination
@@ -97,108 +101,48 @@ class BusinessApiClient {
     if (params.limit) queryParams.set('limit', String(params.limit));
     if (params.sort) queryParams.set('sort', params.sort);
 
-    const url = `${API_BASE}/businesses${queryParams.toString() ? `?${queryParams}` : ''}`;
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch businesses: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    return data.data;
+    const endpoint = `/businesses${queryParams.toString() ? `?${queryParams}` : ''}`;
+    const response = await get<ApiResponse<BusinessListResponse>>(endpoint);
+    return response.data;
   }
 
   /**
    * Get business by ID
    */
   async getBusinessById(id: string): Promise<Business> {
-    const response = await fetch(`${API_BASE}/businesses/${id}`);
-
-    if (!response.ok) {
-      if (response.status === 404) {
-        throw new Error('Business not found');
-      }
-      throw new Error(`Failed to fetch business: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    return data.data;
+    const response = await get<ApiResponse<Business>>(`/businesses/${id}`);
+    return response.data;
   }
 
   /**
    * Get business by slug (for SEO URLs)
    */
   async getBusinessBySlug(slug: string): Promise<Business> {
-    const response = await fetch(`${API_BASE}/businesses/slug/${slug}`);
-
-    if (!response.ok) {
-      if (response.status === 404) {
-        throw new Error('Business not found');
-      }
-      throw new Error(`Failed to fetch business: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    return data.data;
+    const response = await get<ApiResponse<Business>>(`/businesses/slug/${slug}`);
+    return response.data;
   }
 
   /**
    * Create new business (admin only)
    */
   async createBusiness(input: BusinessCreateInput): Promise<Business> {
-    const response = await fetch(`${API_BASE}/businesses`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include', // Include cookies for auth
-      body: JSON.stringify(input),
-    });
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error?.message || 'Failed to create business');
-    }
-
-    const data = await response.json();
-    return data.data;
+    const response = await post<ApiResponse<Business>>('/businesses', input);
+    return response.data;
   }
 
   /**
    * Update business (owner or admin)
    */
   async updateBusiness(id: string, input: BusinessUpdateInput): Promise<Business> {
-    const response = await fetch(`${API_BASE}/businesses/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-      body: JSON.stringify(input),
-    });
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error?.message || 'Failed to update business');
-    }
-
-    const data = await response.json();
-    return data.data;
+    const response = await put<ApiResponse<Business>>(`/businesses/${id}`, input);
+    return response.data;
   }
 
   /**
    * Delete business (admin only)
    */
   async deleteBusiness(id: string): Promise<void> {
-    const response = await fetch(`${API_BASE}/businesses/${id}`, {
-      method: 'DELETE',
-      credentials: 'include',
-    });
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error?.message || 'Failed to delete business');
-    }
+    await del<void>(`/businesses/${id}`);
   }
 
   /**
@@ -212,32 +156,17 @@ class BusinessApiClient {
     if (params.active !== undefined) queryParams.set('active', String(params.active));
     if (params.withBusinesses !== undefined) queryParams.set('withBusinesses', String(params.withBusinesses));
 
-    const url = `${API_BASE}/categories${queryParams.toString() ? `?${queryParams}` : ''}`;
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch categories: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    return data.data;
+    const endpoint = `/categories${queryParams.toString() ? `?${queryParams}` : ''}`;
+    const response = await get<ApiResponse<Category[]>>(endpoint);
+    return response.data;
   }
 
   /**
    * Get category by ID
    */
   async getCategoryById(id: string): Promise<Category> {
-    const response = await fetch(`${API_BASE}/categories/${id}`);
-
-    if (!response.ok) {
-      if (response.status === 404) {
-        throw new Error('Category not found');
-      }
-      throw new Error(`Failed to fetch category: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    return data.data;
+    const response = await get<ApiResponse<Category>>(`/categories/${id}`);
+    return response.data;
   }
 
   /**
@@ -253,18 +182,9 @@ class BusinessApiClient {
     if (params.limit) queryParams.set('limit', String(params.limit));
     if (params.sort) queryParams.set('sort', params.sort);
 
-    const url = `${API_BASE}/categories/${id}/businesses${queryParams.toString() ? `?${queryParams}` : ''}`;
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      if (response.status === 404) {
-        throw new Error('Category not found');
-      }
-      throw new Error(`Failed to fetch category businesses: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    return data.data;
+    const endpoint = `/categories/${id}/businesses${queryParams.toString() ? `?${queryParams}` : ''}`;
+    const response = await get<ApiResponse<CategoryBusinessesResponse>>(endpoint);
+    return response.data;
   }
 }
 

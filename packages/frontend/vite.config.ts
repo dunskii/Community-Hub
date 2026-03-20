@@ -83,8 +83,13 @@ export default defineConfig({
     port: 4002,
     proxy: {
       '/api': {
-        target: 'http://localhost:4005',
+        target: 'http://localhost:3000',
         changeOrigin: true,
+        // Rewrite cookie domain from backend to frontend
+        cookieDomainRewrite: {
+          'localhost:3000': 'localhost',
+          'localhost': 'localhost',
+        },
         // Suppress connection errors during backend startup
         configure: (proxy) => {
           proxy.on('error', (err, _req, res) => {

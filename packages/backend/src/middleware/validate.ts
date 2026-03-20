@@ -3,14 +3,6 @@ import type { ZodSchema, ZodError } from 'zod';
 
 import { ApiError } from '../utils/api-error.js';
 
-// Module augmentation: allow validated query replacement on Express Request.
-// Express types req.query as ParsedQs which is read-only in practice.
-declare module 'express' {
-  interface Request {
-    query: Record<string, unknown>;
-  }
-}
-
 interface ValidationSchemas {
   body?: ZodSchema;
   query?: ZodSchema;
@@ -27,7 +19,11 @@ function formatValidationErrors(error: ZodError): Array<{ field: string; message
 /**
  * Express middleware factory for Zod-based request validation.
  * Validates body, query, and/or params against provided schemas.
- * Replaces req.body/query/params with parsed (coerced) values on success.
+ *
+ * For body: replaces with parsed (coerced) values on success.
+ * For params: replaces with parsed values on success.
+ * For query: validates but does not replace (Express 5 req.query is read-only).
+ *            Route handlers can continue to use req.query after validation.
  *
  * Errors are thrown as ApiError.validation() and handled by the error-handler middleware.
  *
@@ -58,12 +54,16 @@ export function validate(schemas: ValidationSchemas) {
           formatValidationErrors(result.error),
         );
       }
-      req.query = result.data;
+      // Note: In Express 5, req.query is read-only (getter property).
+      // We validate but don't try to replace it - handlers use original req.query.
+      // If coercion is needed, handlers should coerce values themselves.
     }
 
     if (schemas.body) {
       const result = schemas.body.safeParse(req.body);
       if (!result.success) {
+        // Log full validation error for debugging
+        console.log('[VALIDATE] Body validation failed:', JSON.stringify(formatValidationErrors(result.error), null, 2));
         throw ApiError.validation(
           'Invalid request body',
           formatValidationErrors(result.error),

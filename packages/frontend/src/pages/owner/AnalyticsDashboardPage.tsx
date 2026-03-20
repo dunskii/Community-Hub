@@ -22,10 +22,29 @@ import {
   type AnalyticsResponse,
   type Granularity,
 } from '../../services/analytics-service';
+import {
+  ArrowLeftIcon,
+  ArrowDownTrayIcon,
+  EyeIcon,
+  UserIcon,
+  MagnifyingGlassIcon,
+  CursorArrowRaysIcon,
+  GlobeAltIcon,
+  PhoneIcon,
+  MapPinIcon,
+  BookmarkIcon,
+  HeartIcon,
+  PhotoIcon,
+  StarIcon,
+  PencilSquareIcon,
+  ArrowTrendingUpIcon,
+  ArrowTrendingDownIcon,
+  MinusIcon,
+} from '@heroicons/react/24/outline';
 
 export function AnalyticsDashboardPage() {
   const { businessId } = useParams<{ businessId: string }>();
-  const { t } = useTranslation();
+  const { t } = useTranslation('owner');
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
@@ -40,7 +59,7 @@ export function AnalyticsDashboardPage() {
   // Redirect if not authenticated
   useEffect(() => {
     if (!isAuthenticated) {
-      navigate('/login', { state: { from: `/owner/business/${businessId}/analytics` } });
+      navigate('/login', { state: { from: `/business/manage/${businessId}/analytics` } });
     }
   }, [isAuthenticated, navigate, businessId]);
 
@@ -107,16 +126,16 @@ export function AnalyticsDashboardPage() {
   if (loading) {
     return (
       <PageContainer>
-        <div className="analytics-dashboard">
+        <div className="max-w-7xl mx-auto px-4 py-6 space-y-6">
           <Skeleton variant="text" width="200px" height="32px" />
-          <div className="analytics-dashboard__controls">
+          <div className="flex gap-4">
             <Skeleton variant="rectangular" width="200px" height="40px" />
           </div>
-          <div className="analytics-dashboard__grid">
-            <Skeleton variant="rectangular" width="100%" height="150px" />
-            <Skeleton variant="rectangular" width="100%" height="150px" />
-            <Skeleton variant="rectangular" width="100%" height="150px" />
-            <Skeleton variant="rectangular" width="100%" height="150px" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <Skeleton variant="rectangular" width="100%" height="140px" />
+            <Skeleton variant="rectangular" width="100%" height="140px" />
+            <Skeleton variant="rectangular" width="100%" height="140px" />
+            <Skeleton variant="rectangular" width="100%" height="140px" />
           </div>
           <Skeleton variant="rectangular" width="100%" height="300px" />
         </div>
@@ -133,7 +152,10 @@ export function AnalyticsDashboardPage() {
           description={error}
           icon="⚠️"
           action={
-            <button onClick={() => window.location.reload()} className="btn btn--primary">
+            <button
+              onClick={() => window.location.reload()}
+              className="px-4 py-2 bg-primary text-white rounded-full font-medium hover:bg-primary/90 transition-colors"
+            >
               {t('common.retry')}
             </button>
           }
@@ -162,29 +184,47 @@ export function AnalyticsDashboardPage() {
       </Helmet>
 
       <PageContainer>
-        <div className="analytics-dashboard">
+        <div className="max-w-7xl mx-auto px-4 py-6 space-y-8">
           {/* Header */}
-          <header className="analytics-dashboard__header">
+          <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <Link to="/owner/dashboard" className="analytics-dashboard__back">
-                ← {t('analytics.backToDashboard')}
+              <Link
+                to="/business/dashboard"
+                className="inline-flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 hover:text-primary transition-colors mb-2"
+              >
+                <ArrowLeftIcon className="w-4 h-4" />
+                {t('analytics.backToDashboard')}
               </Link>
-              <h1>{t('analytics.title')}</h1>
-              <p className="analytics-dashboard__business-name">{analytics.businessName}</p>
+              <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
+                {t('analytics.title')}
+              </h1>
+              <p className="text-slate-600 dark:text-slate-400 mt-1">{analytics.businessName}</p>
             </div>
-            <button onClick={handleExport} className="btn btn--secondary">
+            <button
+              onClick={handleExport}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-full font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+            >
+              <ArrowDownTrayIcon className="w-5 h-5" />
               {t('analytics.exportCSV')}
             </button>
           </header>
 
           {/* Date Range Controls */}
-          <div className="analytics-dashboard__controls">
-            <div className="analytics-dashboard__date-buttons" role="group" aria-label={t('analytics.dateRange')}>
+          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+            <div
+              className="inline-flex rounded-full bg-slate-100 dark:bg-slate-800 p-1"
+              role="group"
+              aria-label={t('analytics.dateRange')}
+            >
               {(['7d', '30d', '90d', '1y'] as const).map((range) => (
                 <button
                   key={range}
                   onClick={() => setDateRange(range)}
-                  className={`analytics-dashboard__date-btn ${dateRange === range ? 'active' : ''}`}
+                  className={`px-4 py-2 text-sm font-medium rounded-full transition-colors ${
+                    dateRange === range
+                      ? 'bg-white dark:bg-slate-700 text-primary shadow-sm'
+                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                  }`}
                   aria-pressed={dateRange === range}
                 >
                   {t(`analytics.range.${range}`)}
@@ -194,131 +234,144 @@ export function AnalyticsDashboardPage() {
             <select
               value={granularity}
               onChange={(e) => setGranularity(e.target.value as Granularity)}
-              className="analytics-dashboard__granularity"
+              className="px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full text-sm font-medium text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-primary"
               aria-label={t('analytics.granularity')}
             >
-              <option value="day">{t('analytics.granularity.day')}</option>
-              <option value="week">{t('analytics.granularity.week')}</option>
-              <option value="month">{t('analytics.granularity.month')}</option>
+              <option value="day">{t('analytics.granularityOptions.day')}</option>
+              <option value="week">{t('analytics.granularityOptions.week')}</option>
+              <option value="month">{t('analytics.granularityOptions.month')}</option>
             </select>
           </div>
 
           {/* Summary Cards */}
-          <section className="analytics-dashboard__summary">
+          <section>
             <h2 className="sr-only">{t('analytics.summary')}</h2>
-            <div className="analytics-dashboard__summary-grid">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <MetricCard
                 label={t('analytics.metrics.profileViews')}
                 metric={analytics.summary.profileViews}
-                icon="👁️"
+                icon={<EyeIcon className="w-6 h-6" />}
               />
               <MetricCard
                 label={t('analytics.metrics.uniqueViews')}
                 metric={analytics.summary.uniqueViews}
-                icon="👤"
+                icon={<UserIcon className="w-6 h-6" />}
               />
               <MetricCard
                 label={t('analytics.metrics.searchAppearances')}
                 metric={analytics.summary.searchAppearances}
-                icon="🔍"
+                icon={<MagnifyingGlassIcon className="w-6 h-6" />}
               />
               <MetricCard
                 label={t('analytics.metrics.totalClicks')}
                 metric={analytics.summary.clicks.total}
-                icon="👆"
+                icon={<CursorArrowRaysIcon className="w-6 h-6" />}
               />
             </div>
           </section>
 
           {/* Click Breakdown */}
-          <section className="analytics-dashboard__clicks">
-            <h2>{t('analytics.clickBreakdown')}</h2>
-            <div className="analytics-dashboard__clicks-grid">
+          <section className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
+            <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
+              {t('analytics.clickBreakdown')}
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <MetricCard
                 label={t('analytics.metrics.websiteClicks')}
                 metric={analytics.summary.clicks.website}
-                icon="🌐"
+                icon={<GlobeAltIcon className="w-5 h-5" />}
                 size="small"
               />
               <MetricCard
                 label={t('analytics.metrics.phoneClicks')}
                 metric={analytics.summary.clicks.phone}
-                icon="📞"
+                icon={<PhoneIcon className="w-5 h-5" />}
                 size="small"
               />
               <MetricCard
                 label={t('analytics.metrics.directionsClicks')}
                 metric={analytics.summary.clicks.directions}
-                icon="🗺️"
+                icon={<MapPinIcon className="w-5 h-5" />}
                 size="small"
               />
             </div>
           </section>
 
           {/* Engagement Metrics */}
-          <section className="analytics-dashboard__engagement">
-            <h2>{t('analytics.engagement')}</h2>
-            <div className="analytics-dashboard__engagement-grid">
+          <section className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
+            <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
+              {t('analytics.engagement')}
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <MetricCard
                 label={t('analytics.metrics.saves')}
                 metric={analytics.summary.saves}
-                icon="🔖"
+                icon={<BookmarkIcon className="w-5 h-5" />}
                 size="small"
               />
               <MetricCard
                 label={t('analytics.metrics.follows')}
                 metric={analytics.summary.follows}
-                icon="❤️"
+                icon={<HeartIcon className="w-5 h-5" />}
                 size="small"
               />
               <MetricCard
                 label={t('analytics.metrics.photoViews')}
                 metric={analytics.summary.photoViews}
-                icon="📷"
+                icon={<PhotoIcon className="w-5 h-5" />}
                 size="small"
               />
             </div>
           </section>
 
           {/* Reviews Section */}
-          <section className="analytics-dashboard__reviews">
-            <h2>{t('analytics.reviewStats')}</h2>
-            <div className="analytics-dashboard__reviews-grid">
-              <div className="analytics-dashboard__review-card">
-                <span className="analytics-dashboard__review-value">
-                  <span aria-hidden="true">⭐</span> {analytics.summary.reviews.averageRating.toFixed(1)}
-                </span>
-                <span className="analytics-dashboard__review-label">
-                  {t('analytics.metrics.averageRating')}
-                </span>
+          <section className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
+            <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
+              {t('analytics.reviewStats')}
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="flex items-center gap-4 p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl">
+                <div className="p-3 bg-amber-100 dark:bg-amber-900/30 rounded-full">
+                  <StarIcon className="w-6 h-6 text-amber-500" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-slate-900 dark:text-white">
+                    {analytics.summary.reviews.averageRating.toFixed(1)}
+                  </p>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">
+                    {t('analytics.metrics.averageRating')}
+                  </p>
+                </div>
               </div>
               <MetricCard
                 label={t('analytics.metrics.newReviews')}
                 metric={analytics.summary.reviews.count}
-                icon="✍️"
+                icon={<PencilSquareIcon className="w-5 h-5" />}
                 size="small"
               />
             </div>
           </section>
 
           {/* Insights Tabs */}
-          <section className="analytics-dashboard__insights">
-            <h2>{t('analytics.insights')}</h2>
+          <section className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
+            <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
+              {t('analytics.insights')}
+            </h2>
             <Tabs
               tabs={[
                 {
                   id: 'search-terms',
-                  label: t('analytics.insights.searchTerms'),
+                  label: t('analytics.insightsLabels.searchTerms'),
                   content: (
-                    <div className="analytics-dashboard__insight-content">
+                    <div className="py-4">
                       {analytics.insights.topSearchTerms.length > 0 ? (
-                        <ul className="analytics-dashboard__insight-list">
+                        <ul className="space-y-3">
                           {analytics.insights.topSearchTerms.map((term, index) => (
-                            <li key={index} className="analytics-dashboard__insight-item">
-                              <span className="analytics-dashboard__insight-rank">
-                                #{index + 1}
+                            <li key={index} className="flex items-center gap-3">
+                              <span className="w-6 h-6 flex items-center justify-center text-xs font-medium text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-700 rounded-full">
+                                {index + 1}
                               </span>
-                              <span className="analytics-dashboard__insight-term">
+                              <span className="flex-1 text-slate-700 dark:text-slate-300">
                                 {term.term}
                               </span>
                               <Badge variant="default">{term.count}</Badge>
@@ -326,7 +379,7 @@ export function AnalyticsDashboardPage() {
                           ))}
                         </ul>
                       ) : (
-                        <p className="analytics-dashboard__no-data">
+                        <p className="text-slate-500 dark:text-slate-400 text-center py-8">
                           {t('analytics.noSearchTerms')}
                         </p>
                       )}
@@ -335,38 +388,38 @@ export function AnalyticsDashboardPage() {
                 },
                 {
                   id: 'referrals',
-                  label: t('analytics.insights.referralSources'),
+                  label: t('analytics.insightsLabels.referralSources'),
                   content: (
-                    <div className="analytics-dashboard__insight-content">
+                    <div className="py-4">
                       {analytics.insights.referralSources.length > 0 ? (
-                        <ul className="analytics-dashboard__insight-list">
+                        <ul className="space-y-4">
                           {analytics.insights.referralSources.map((source, index) => (
-                            <li key={index} className="analytics-dashboard__insight-item">
-                              <span className="analytics-dashboard__insight-source">
-                                {t(`analytics.referral.${source.source}`)}
-                              </span>
+                            <li key={index} className="space-y-1">
+                              <div className="flex justify-between text-sm">
+                                <span className="text-slate-700 dark:text-slate-300">
+                                  {t(`analytics.referral.${source.source}`)}
+                                </span>
+                                <span className="text-slate-500 dark:text-slate-400">
+                                  {source.percentage}%
+                                </span>
+                              </div>
                               <div
-                                className="analytics-dashboard__insight-bar"
+                                className="h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden"
                                 role="progressbar"
                                 aria-valuenow={source.percentage}
                                 aria-valuemin={0}
                                 aria-valuemax={100}
-                                aria-label={`${t(`analytics.referral.${source.source}`)}: ${source.percentage}%`}
                               >
                                 <div
-                                  className="analytics-dashboard__insight-bar-fill"
+                                  className="h-full bg-primary rounded-full transition-all"
                                   style={{ width: `${source.percentage}%` }}
-                                  aria-hidden="true"
                                 />
                               </div>
-                              <span className="analytics-dashboard__insight-percent">
-                                {source.percentage}%
-                              </span>
                             </li>
                           ))}
                         </ul>
                       ) : (
-                        <p className="analytics-dashboard__no-data">
+                        <p className="text-slate-500 dark:text-slate-400 text-center py-8">
                           {t('analytics.noReferrals')}
                         </p>
                       )}
@@ -375,22 +428,24 @@ export function AnalyticsDashboardPage() {
                 },
                 {
                   id: 'peak-times',
-                  label: t('analytics.insights.peakTimes'),
+                  label: t('analytics.insightsLabels.peakTimes'),
                   content: (
-                    <div className="analytics-dashboard__insight-content">
+                    <div className="py-4">
                       {analytics.insights.peakActivityTimes.length > 0 ? (
-                        <ul className="analytics-dashboard__insight-list">
+                        <ul className="space-y-3">
                           {analytics.insights.peakActivityTimes.slice(0, 5).map((time, index) => (
-                            <li key={index} className="analytics-dashboard__insight-item">
-                              <span className="analytics-dashboard__insight-time">
+                            <li key={index} className="flex items-center justify-between">
+                              <span className="text-slate-700 dark:text-slate-300">
                                 {time.dayOfWeek}, {formatHour(time.hour)}
                               </span>
-                              <Badge variant="default">{time.count} {t('analytics.views')}</Badge>
+                              <Badge variant="default">
+                                {time.count} {t('analytics.views')}
+                              </Badge>
                             </li>
                           ))}
                         </ul>
                       ) : (
-                        <p className="analytics-dashboard__no-data">
+                        <p className="text-slate-500 dark:text-slate-400 text-center py-8">
                           {t('analytics.noPeakTimes')}
                         </p>
                       )}
@@ -401,17 +456,18 @@ export function AnalyticsDashboardPage() {
             />
           </section>
 
-          {/* Timeseries Chart Placeholder */}
-          <section className="analytics-dashboard__chart">
-            <h2>{t('analytics.trend')}</h2>
-            <div className="analytics-dashboard__chart-container">
+          {/* Timeseries Chart */}
+          <section className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
+            <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
+              {t('analytics.trend')}
+            </h2>
+            <div>
               {analytics.timeseries.length > 0 ? (
-                <div className="analytics-dashboard__simple-chart">
-                  {/* Simple bar chart visualization */}
+                <div>
                   <div
-                    className="analytics-dashboard__chart-bars"
+                    className="flex items-end gap-1 h-48"
                     role="img"
-                    aria-label={`${t('analytics.profileViewsOverTime')}: ${analytics.timeseries.slice(-14).map(d => `${d.date}: ${d.profileViews}`).join(', ')}`}
+                    aria-label={`${t('analytics.profileViewsOverTime')}`}
                   >
                     {analytics.timeseries.slice(-14).map((day, index) => {
                       const maxViews = Math.max(...analytics.timeseries.map((d) => d.profileViews), 1);
@@ -419,20 +475,24 @@ export function AnalyticsDashboardPage() {
                       return (
                         <div
                           key={index}
-                          className="analytics-dashboard__chart-bar"
-                          style={{ height: `${height}%` }}
+                          className="flex-1 bg-primary/20 hover:bg-primary/40 rounded-t transition-colors cursor-pointer group relative"
+                          style={{ height: `${Math.max(height, 4)}%` }}
                           title={`${day.date}: ${day.profileViews} ${t('analytics.views')}`}
-                          aria-hidden="true"
-                        />
+                        >
+                          <div
+                            className="absolute bottom-0 left-0 right-0 bg-primary rounded-t transition-all"
+                            style={{ height: `${height}%` }}
+                          />
+                        </div>
                       );
                     })}
                   </div>
-                  <p className="analytics-dashboard__chart-label">
+                  <p className="text-sm text-slate-500 dark:text-slate-400 text-center mt-4">
                     {t('analytics.profileViewsOverTime')}
                   </p>
                 </div>
               ) : (
-                <p className="analytics-dashboard__no-data">
+                <p className="text-slate-500 dark:text-slate-400 text-center py-8">
                   {t('analytics.noTimeseriesData')}
                 </p>
               )}
@@ -449,23 +509,47 @@ export function AnalyticsDashboardPage() {
 interface MetricCardProps {
   label: string;
   metric: { current: number; previous: number; changePercent: number; trend: 'up' | 'down' | 'flat' };
-  icon: string;
+  icon: React.ReactNode;
   size?: 'normal' | 'small';
 }
 
 function MetricCard({ label, metric, icon, size = 'normal' }: MetricCardProps) {
   const { value, trend, trendClass } = formatMetricWithTrend(metric);
 
-  return (
-    <div className={`metric-card metric-card--${size}`}>
-      <div className="metric-card__icon" aria-hidden="true">{icon}</div>
-      <div className="metric-card__content">
-        <span className="metric-card__value">{value}</span>
-        <span className="metric-card__label">{label}</span>
-        <span className={`metric-card__trend ${trendClass}`} aria-label={`${trend} from previous period`}>
-          {trend}
-        </span>
+  const TrendIcon = metric.trend === 'up' ? ArrowTrendingUpIcon : metric.trend === 'down' ? ArrowTrendingDownIcon : MinusIcon;
+  const trendColor = metric.trend === 'up' ? 'text-emerald-500' : metric.trend === 'down' ? 'text-red-500' : 'text-slate-400';
+
+  if (size === 'small') {
+    return (
+      <div className="flex items-center gap-3 p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl">
+        <div className="p-2 bg-primary/10 dark:bg-primary/20 rounded-full text-primary">
+          {icon}
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-lg font-bold text-slate-900 dark:text-white">{value}</p>
+          <p className="text-xs text-slate-600 dark:text-slate-400 truncate">{label}</p>
+        </div>
+        <div className={`flex items-center gap-1 text-xs font-medium ${trendColor}`}>
+          <TrendIcon className="w-4 h-4" />
+          <span>{trend}</span>
+        </div>
       </div>
+    );
+  }
+
+  return (
+    <div className="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-slate-200 dark:border-slate-700">
+      <div className="flex items-start justify-between mb-3">
+        <div className="p-2 bg-primary/10 dark:bg-primary/20 rounded-full text-primary">
+          {icon}
+        </div>
+        <div className={`flex items-center gap-1 text-sm font-medium ${trendColor}`}>
+          <TrendIcon className="w-4 h-4" />
+          <span>{trend}</span>
+        </div>
+      </div>
+      <p className="text-2xl font-bold text-slate-900 dark:text-white">{value}</p>
+      <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">{label}</p>
     </div>
   );
 }

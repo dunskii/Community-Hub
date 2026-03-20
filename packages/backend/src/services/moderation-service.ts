@@ -3,6 +3,7 @@
  * Handles review approval, rejection, reporting, and appeals
  */
 
+import crypto from 'crypto';
 import { prisma } from '../db/index.js';
 import { logger } from '../utils/logger.js';
 import { ApiError } from '../utils/api-error.js';
@@ -33,7 +34,7 @@ export class ModerationService {
     notes: string | null,
     auditContext: AuditContext
   ): Promise<Record<string, unknown>> {
-    const review = await prisma.review.findUnique({
+    const review = await prisma.reviews.findUnique({
       where: { id: reviewId },
     });
 
@@ -45,22 +46,22 @@ export class ModerationService {
       throw ApiError.badRequest('INVALID_STATUS', 'Only pending reviews can be approved');
     }
 
-    const updatedReview = await prisma.review.update({
+    const updatedReview = await prisma.reviews.update({
       where: { id: reviewId },
       data: {
         status: 'PUBLISHED',
-        publishedAt: new Date(),
-        moderationNotes: notes,
+        published_at: new Date(),
+        moderation_notes: notes,
       },
       include: {
-        user: {
+        users: {
           select: {
             id: true,
-            displayName: true,
+            display_name: true,
             email: true,
           },
         },
-        business: {
+        businesses: {
           select: {
             id: true,
             name: true,
@@ -71,19 +72,20 @@ export class ModerationService {
     });
 
     // Audit log
-    await prisma.auditLog.create({
+    await prisma.audit_logs.create({
       data: {
-        actorId: auditContext.actorId,
-        actorRole: auditContext.actorRole as any,
+        id: crypto.randomUUID(),
+        actor_id: auditContext.actorId,
+        actor_role: auditContext.actorRole as any,
         action: 'review.approve',
-        targetType: 'Review',
-        targetId: reviewId,
-        newValue: {
+        target_type: 'Review',
+        target_id: reviewId,
+        new_value: {
           moderatorId,
           notes,
         },
-        ipAddress: auditContext.ipAddress || 'unknown',
-        userAgent: auditContext.userAgent || 'unknown',
+        ip_address: auditContext.ipAddress || 'unknown',
+        user_agent: auditContext.userAgent || 'unknown',
       },
     });
 
@@ -104,7 +106,7 @@ export class ModerationService {
     notes: string | null,
     auditContext: AuditContext
   ): Promise<void> {
-    const review = await prisma.review.findUnique({
+    const review = await prisma.reviews.findUnique({
       where: { id: reviewId },
     });
 
@@ -116,29 +118,30 @@ export class ModerationService {
       throw ApiError.badRequest('INVALID_STATUS', 'Only pending reviews can be rejected');
     }
 
-    await prisma.review.update({
+    await prisma.reviews.update({
       where: { id: reviewId },
       data: {
         status: 'HIDDEN',
-        moderationNotes: `${reason}${notes ? `\n\n${notes}` : ''}`,
+        moderation_notes: `${reason}${notes ? `\n\n${notes}` : ''}`,
       },
     });
 
     // Audit log
-    await prisma.auditLog.create({
+    await prisma.audit_logs.create({
       data: {
-        actorId: auditContext.actorId,
-        actorRole: auditContext.actorRole as any,
+        id: crypto.randomUUID(),
+        actor_id: auditContext.actorId,
+        actor_role: auditContext.actorRole as any,
         action: 'review.reject',
-        targetType: 'Review',
-        targetId: reviewId,
-        newValue: {
+        target_type: 'Review',
+        target_id: reviewId,
+        new_value: {
           moderatorId,
           reason,
           notes,
         },
-        ipAddress: auditContext.ipAddress || 'unknown',
-        userAgent: auditContext.userAgent || 'unknown',
+        ip_address: auditContext.ipAddress || 'unknown',
+        user_agent: auditContext.userAgent || 'unknown',
       },
     });
 
@@ -159,7 +162,7 @@ export class ModerationService {
   ): Promise<Record<string, unknown>> {
     // Verify content exists based on type
     if (contentType === 'REVIEW') {
-      const review = await prisma.review.findUnique({
+      const review = await prisma.reviews.findUnique({
         where: { id: contentId },
       });
       if (!review) {
@@ -167,20 +170,21 @@ export class ModerationService {
       }
     }
 
-    const report = await prisma.moderationReport.create({
+    const report = await prisma.moderation_reports.create({
       data: {
-        reporterId,
-        contentType,
-        contentId,
+        id: crypto.randomUUID(),
+        reporter_id: reporterId,
+        content_type: contentType,
+        content_id: contentId,
         reason,
         details,
         status: 'PENDING',
       },
       include: {
-        reporter: {
+        users_moderation_reports_reporter_idTousers: {
           select: {
             id: true,
-            displayName: true,
+            display_name: true,
             email: true,
           },
         },
@@ -215,21 +219,21 @@ export class ModerationService {
     };
 
     const [reviews, total] = await Promise.all([
-      prisma.review.findMany({
+      prisma.reviews.findMany({
         where,
-        orderBy: { createdAt: 'asc' }, // Oldest first (FIFO)
+        orderBy: { created_at: 'asc' }, // Oldest first (FIFO)
         skip,
         take: limit,
         include: {
-          photos: true,
-          user: {
+          review_photos: true,
+          users: {
             select: {
               id: true,
-              displayName: true,
-              profilePhoto: true,
+              display_name: true,
+              profile_photo: true,
             },
           },
-          business: {
+          businesses: {
             select: {
               id: true,
               name: true,
@@ -238,7 +242,7 @@ export class ModerationService {
           },
         },
       }),
-      prisma.review.count({ where }),
+      prisma.reviews.count({ where }),
     ]);
 
     const totalPages = Math.ceil(total / limit);
@@ -268,21 +272,22 @@ export class ModerationService {
       throw ApiError.badRequest('INVALID_REASON', 'Appeal reason must be between 10 and 1000 characters');
     }
 
-    const appeal = await prisma.appeal.create({
+    const appeal = await prisma.appeals.create({
       data: {
-        userId,
-        contentType,
-        contentId,
-        originalAction,
+        id: crypto.randomUUID(),
+        user_id: userId,
+        content_type: contentType,
+        content_id: contentId,
+        original_action: originalAction,
         reason,
-        supportingEvidence,
+        supporting_evidence: supportingEvidence,
         status: 'PENDING',
       },
       include: {
-        user: {
+        users_appeals_user_idTousers: {
           select: {
             id: true,
-            displayName: true,
+            display_name: true,
             email: true,
           },
         },
@@ -306,7 +311,7 @@ export class ModerationService {
     reviewerId: string,
     auditContext: AuditContext
   ): Promise<Record<string, unknown>> {
-    const appeal = await prisma.appeal.findUnique({
+    const appeal = await prisma.appeals.findUnique({
       where: { id: appealId },
     });
 
@@ -318,19 +323,19 @@ export class ModerationService {
       throw ApiError.badRequest('INVALID_STATUS', 'Appeal has already been reviewed');
     }
 
-    const updatedAppeal = await prisma.appeal.update({
+    const updatedAppeal = await prisma.appeals.update({
       where: { id: appealId },
       data: {
         status: decision,
-        reviewerId,
-        reviewerNotes,
-        reviewedAt: new Date(),
+        reviewer_id: reviewerId,
+        reviewer_notes: reviewerNotes,
+        reviewed_at: new Date(),
       },
       include: {
-        user: {
+        users_appeals_user_idTousers: {
           select: {
             id: true,
-            displayName: true,
+            display_name: true,
             email: true,
           },
         },
@@ -338,19 +343,20 @@ export class ModerationService {
     });
 
     // Audit log
-    await prisma.auditLog.create({
+    await prisma.audit_logs.create({
       data: {
-        actorId: auditContext.actorId,
-        actorRole: auditContext.actorRole as any,
+        id: crypto.randomUUID(),
+        actor_id: auditContext.actorId,
+        actor_role: auditContext.actorRole as any,
         action: 'appeal.review',
-        targetType: 'Appeal',
-        targetId: appealId,
-        newValue: {
+        target_type: 'Appeal',
+        target_id: appealId,
+        new_value: {
           decision,
           reviewerId,
         },
-        ipAddress: auditContext.ipAddress || 'unknown',
-        userAgent: auditContext.userAgent || 'unknown',
+        ip_address: auditContext.ipAddress || 'unknown',
+        user_agent: auditContext.userAgent || 'unknown',
       },
     });
 

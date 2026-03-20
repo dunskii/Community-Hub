@@ -119,20 +119,20 @@ export class DataRetentionScheduler {
       // Process AuditLog entries with old IP addresses
       // Note: ipAddress is required (non-nullable) in schema, so we only filter
       // for entries not already anonymized
-      const auditLogs = await prisma.auditLog.findMany({
+      const auditLogs = await prisma.audit_logs.findMany({
         where: {
-          createdAt: {
+          created_at: {
             lt: cutoffDate,
           },
           NOT: {
-            ipAddress: {
+            ip_address: {
               startsWith: 'ANON:',
             },
           },
         },
         select: {
           id: true,
-          ipAddress: true,
+          ip_address: true,
         },
         take: BATCH_SIZE,
       });
@@ -141,10 +141,10 @@ export class DataRetentionScheduler {
         // Batch update with anonymized IPs
         for (const log of auditLogs) {
           // The WHERE clause already filters out ANON: prefixed IPs
-          const anonymizedIp = this.anonymizeIp(log.ipAddress);
-          await prisma.auditLog.update({
+          const anonymizedIp = this.anonymizeIp(log.ip_address);
+          await prisma.audit_logs.update({
             where: { id: log.id },
-            data: { ipAddress: anonymizedIp },
+            data: { ip_address: anonymizedIp },
           });
           totalProcessed++;
         }
@@ -191,9 +191,9 @@ export class DataRetentionScheduler {
 
     try {
       // Count logs to be deleted
-      const count = await prisma.auditLog.count({
+      const count = await prisma.audit_logs.count({
         where: {
-          createdAt: {
+          created_at: {
             lt: cutoffDate,
           },
         },
@@ -204,9 +204,9 @@ export class DataRetentionScheduler {
       }
 
       // Delete all at once (Prisma handles batching internally)
-      const result = await prisma.auditLog.deleteMany({
+      const result = await prisma.audit_logs.deleteMany({
         where: {
-          createdAt: {
+          created_at: {
             lt: cutoffDate,
           },
         },
@@ -230,9 +230,9 @@ export class DataRetentionScheduler {
 
     try {
       // Find soft-deleted messages beyond retention period
-      const result = await prisma.message.deleteMany({
+      const result = await prisma.messages.deleteMany({
         where: {
-          deletedAt: {
+          deleted_at: {
             lt: cutoffDate,
             not: null,
           },

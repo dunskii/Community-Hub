@@ -61,7 +61,7 @@ export class ModerationController {
    */
   async approveReview(req: Request, res: Response): Promise<void> {
     try {
-      const { id: reviewId } = req.params;
+      const reviewId = req.params.id as string;
       const { notes } = req.body;
       const moderatorId = req.user!.id;
 
@@ -94,7 +94,7 @@ export class ModerationController {
    */
   async rejectReview(req: Request, res: Response): Promise<void> {
     try {
-      const { id: reviewId } = req.params;
+      const reviewId = req.params.id as string;
       const { reason, notes } = req.body;
       const moderatorId = req.user!.id;
 

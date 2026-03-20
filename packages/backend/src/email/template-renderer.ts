@@ -35,8 +35,8 @@ export class TemplateRenderer {
     userLanguage?: LanguageCode
   ): Promise<RenderResult> {
     // Load template from database
-    const template = await prisma.emailTemplate.findUnique({
-      where: { templateKey, active: true },
+    const template = await prisma.email_templates.findUnique({
+      where: { template_key: templateKey, active: true },
     });
 
     if (!template) {
@@ -49,8 +49,8 @@ export class TemplateRenderer {
 
     // Extract multilingual content
     const subjectJson = template.subject as Record<string, string>;
-    const bodyHtmlJson = template.bodyHtml as Record<string, string>;
-    const bodyTextJson = template.bodyText as Record<string, string>;
+    const bodyHtmlJson = template.body_html as Record<string, string>;
+    const bodyTextJson = template.body_text as Record<string, string>;
 
     const subject = subjectJson[language] ?? subjectJson['en'];
     let bodyHtml = bodyHtmlJson[language] ?? bodyHtmlJson['en'];

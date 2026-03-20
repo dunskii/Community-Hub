@@ -61,24 +61,24 @@ describe('FollowService', () => {
         },
       };
 
-      vi.mocked(prisma.businessFollow.findUnique).mockResolvedValue(null);
-      vi.mocked(prisma.business.findUnique).mockResolvedValue({
+      vi.mocked(prisma.business_follows.findUnique).mockResolvedValue(null);
+      vi.mocked(prisma.businesses.findUnique).mockResolvedValue({
         id: mockBusinessId,
         name: 'Test Business',
       } as any);
-      vi.mocked(prisma.businessFollow.create).mockResolvedValue(mockFollow as any);
+      vi.mocked(prisma.business_follows.create).mockResolvedValue(mockFollow as any);
 
       const result = await followService.followBusiness(mockUserId, mockBusinessId);
 
       expect(result).toEqual(mockFollow);
-      expect(prisma.businessFollow.create).toHaveBeenCalledWith({
+      expect(prisma.business_follows.create).toHaveBeenCalledWith({
         data: { userId: mockUserId, businessId: mockBusinessId },
         include: expect.any(Object),
       });
     });
 
     it('should throw error when already following', async () => {
-      vi.mocked(prisma.businessFollow.findUnique).mockResolvedValue({
+      vi.mocked(prisma.business_follows.findUnique).mockResolvedValue({
         id: 'follow-existing',
         userId: mockUserId,
         businessId: mockBusinessId,
@@ -88,33 +88,33 @@ describe('FollowService', () => {
         followService.followBusiness(mockUserId, mockBusinessId)
       ).rejects.toThrow(ApiError);
 
-      expect(prisma.businessFollow.create).not.toHaveBeenCalled();
+      expect(prisma.business_follows.create).not.toHaveBeenCalled();
     });
 
     it('should throw error when business not found', async () => {
-      vi.mocked(prisma.businessFollow.findUnique).mockResolvedValue(null);
-      vi.mocked(prisma.business.findUnique).mockResolvedValue(null);
+      vi.mocked(prisma.business_follows.findUnique).mockResolvedValue(null);
+      vi.mocked(prisma.businesses.findUnique).mockResolvedValue(null);
 
       await expect(
         followService.followBusiness(mockUserId, mockBusinessId)
       ).rejects.toThrow(ApiError);
 
-      expect(prisma.businessFollow.create).not.toHaveBeenCalled();
+      expect(prisma.business_follows.create).not.toHaveBeenCalled();
     });
   });
 
   describe('unfollowBusiness', () => {
     it('should unfollow a business successfully', async () => {
-      vi.mocked(prisma.businessFollow.findUnique).mockResolvedValue({
+      vi.mocked(prisma.business_follows.findUnique).mockResolvedValue({
         id: 'follow-789',
         userId: mockUserId,
         businessId: mockBusinessId,
       } as any);
-      vi.mocked(prisma.businessFollow.delete).mockResolvedValue({} as any);
+      vi.mocked(prisma.business_follows.delete).mockResolvedValue({} as any);
 
       await followService.unfollowBusiness(mockUserId, mockBusinessId);
 
-      expect(prisma.businessFollow.delete).toHaveBeenCalledWith({
+      expect(prisma.business_follows.delete).toHaveBeenCalledWith({
         where: {
           userId_businessId: { userId: mockUserId, businessId: mockBusinessId },
         },
@@ -122,24 +122,24 @@ describe('FollowService', () => {
     });
 
     it('should throw error when not following', async () => {
-      vi.mocked(prisma.businessFollow.findUnique).mockResolvedValue(null);
+      vi.mocked(prisma.business_follows.findUnique).mockResolvedValue(null);
 
       await expect(
         followService.unfollowBusiness(mockUserId, mockBusinessId)
       ).rejects.toThrow(ApiError);
 
-      expect(prisma.businessFollow.delete).not.toHaveBeenCalled();
+      expect(prisma.business_follows.delete).not.toHaveBeenCalled();
     });
   });
 
   describe('getFollowerCount', () => {
     it('should return follower count', async () => {
-      vi.mocked(prisma.businessFollow.count).mockResolvedValue(42);
+      vi.mocked(prisma.business_follows.count).mockResolvedValue(42);
 
       const count = await followService.getFollowerCount(mockBusinessId);
 
       expect(count).toBe(42);
-      expect(prisma.businessFollow.count).toHaveBeenCalledWith({
+      expect(prisma.business_follows.count).toHaveBeenCalledWith({
         where: { businessId: mockBusinessId },
       });
     });
@@ -147,7 +147,7 @@ describe('FollowService', () => {
 
   describe('isFollowing', () => {
     it('should return true when following', async () => {
-      vi.mocked(prisma.businessFollow.findUnique).mockResolvedValue({
+      vi.mocked(prisma.business_follows.findUnique).mockResolvedValue({
         id: 'follow-789',
       } as any);
 
@@ -157,7 +157,7 @@ describe('FollowService', () => {
     });
 
     it('should return false when not following', async () => {
-      vi.mocked(prisma.businessFollow.findUnique).mockResolvedValue(null);
+      vi.mocked(prisma.business_follows.findUnique).mockResolvedValue(null);
 
       const result = await followService.isFollowing(mockUserId, mockBusinessId);
 
@@ -180,8 +180,8 @@ describe('FollowService', () => {
         },
       ];
 
-      vi.mocked(prisma.businessFollow.findMany).mockResolvedValue(mockFollowing as any);
-      vi.mocked(prisma.businessFollow.count).mockResolvedValue(5);
+      vi.mocked(prisma.business_follows.findMany).mockResolvedValue(mockFollowing as any);
+      vi.mocked(prisma.business_follows.count).mockResolvedValue(5);
 
       const result = await followService.getFollowedBusinesses(mockUserId, {
         page: 1,
@@ -203,8 +203,8 @@ describe('FollowService', () => {
         { id: 'follow-2', user: { id: 'user-2', displayName: 'User 2' } },
       ];
 
-      vi.mocked(prisma.businessFollow.findMany).mockResolvedValue(mockFollowers as any);
-      vi.mocked(prisma.businessFollow.count).mockResolvedValue(10);
+      vi.mocked(prisma.business_follows.findMany).mockResolvedValue(mockFollowers as any);
+      vi.mocked(prisma.business_follows.count).mockResolvedValue(10);
 
       const result = await followService.getBusinessFollowers(mockBusinessId, {
         page: 1,

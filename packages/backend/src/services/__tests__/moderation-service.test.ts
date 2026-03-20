@@ -79,9 +79,9 @@ describe('ModerationService', () => {
         business: { id: 'business-1', name: 'Test Business', slug: 'test-business' },
       };
 
-      vi.mocked(prisma.review.findUnique).mockResolvedValue(mockReview as any);
-      vi.mocked(prisma.review.update).mockResolvedValue(mockUpdatedReview as any);
-      vi.mocked(prisma.auditLog.create).mockResolvedValue({} as any);
+      vi.mocked(prisma.reviews.findUnique).mockResolvedValue(mockReview as any);
+      vi.mocked(prisma.reviews.update).mockResolvedValue(mockUpdatedReview as any);
+      vi.mocked(prisma.audit_logs.create).mockResolvedValue({} as any);
 
       const result = await moderationService.approveReview(
         mockReviewId,
@@ -91,7 +91,7 @@ describe('ModerationService', () => {
       );
 
       expect(result.status).toBe('PUBLISHED');
-      expect(prisma.review.update).toHaveBeenCalledWith({
+      expect(prisma.reviews.update).toHaveBeenCalledWith({
         where: { id: mockReviewId },
         data: {
           status: 'PUBLISHED',
@@ -100,11 +100,11 @@ describe('ModerationService', () => {
         },
         include: expect.any(Object),
       });
-      expect(prisma.auditLog.create).toHaveBeenCalled();
+      expect(prisma.audit_logs.create).toHaveBeenCalled();
     });
 
     it('should throw error when review not found', async () => {
-      vi.mocked(prisma.review.findUnique).mockResolvedValue(null);
+      vi.mocked(prisma.reviews.findUnique).mockResolvedValue(null);
 
       await expect(
         moderationService.approveReview(mockReviewId, mockModeratorId, null, mockAuditContext)
@@ -112,7 +112,7 @@ describe('ModerationService', () => {
     });
 
     it('should throw error when review is not pending', async () => {
-      vi.mocked(prisma.review.findUnique).mockResolvedValue({
+      vi.mocked(prisma.reviews.findUnique).mockResolvedValue({
         id: mockReviewId,
         status: 'PUBLISHED', // Already published
       } as any);
@@ -127,9 +127,9 @@ describe('ModerationService', () => {
     it('should reject a pending review', async () => {
       const mockReview = { id: mockReviewId, status: 'PENDING' };
 
-      vi.mocked(prisma.review.findUnique).mockResolvedValue(mockReview as any);
-      vi.mocked(prisma.review.update).mockResolvedValue({} as any);
-      vi.mocked(prisma.auditLog.create).mockResolvedValue({} as any);
+      vi.mocked(prisma.reviews.findUnique).mockResolvedValue(mockReview as any);
+      vi.mocked(prisma.reviews.update).mockResolvedValue({} as any);
+      vi.mocked(prisma.audit_logs.create).mockResolvedValue({} as any);
 
       await moderationService.rejectReview(
         mockReviewId,
@@ -139,7 +139,7 @@ describe('ModerationService', () => {
         mockAuditContext
       );
 
-      expect(prisma.review.update).toHaveBeenCalledWith({
+      expect(prisma.reviews.update).toHaveBeenCalledWith({
         where: { id: mockReviewId },
         data: {
           status: 'HIDDEN',
@@ -149,7 +149,7 @@ describe('ModerationService', () => {
     });
 
     it('should throw error when review not found', async () => {
-      vi.mocked(prisma.review.findUnique).mockResolvedValue(null);
+      vi.mocked(prisma.reviews.findUnique).mockResolvedValue(null);
 
       await expect(
         moderationService.rejectReview(
@@ -163,7 +163,7 @@ describe('ModerationService', () => {
     });
 
     it('should throw error when review is not pending', async () => {
-      vi.mocked(prisma.review.findUnique).mockResolvedValue({
+      vi.mocked(prisma.reviews.findUnique).mockResolvedValue({
         id: mockReviewId,
         status: 'HIDDEN', // Already hidden
       } as any);
@@ -187,8 +187,8 @@ describe('ModerationService', () => {
         { id: 'review-2', status: 'PENDING', createdAt: new Date() },
       ];
 
-      vi.mocked(prisma.review.findMany).mockResolvedValue(mockReviews as any);
-      vi.mocked(prisma.review.count).mockResolvedValue(10);
+      vi.mocked(prisma.reviews.findMany).mockResolvedValue(mockReviews as any);
+      vi.mocked(prisma.reviews.count).mockResolvedValue(10);
 
       const result = await moderationService.getModerationQueue({}, { page: 1, limit: 2 });
 
@@ -198,12 +198,12 @@ describe('ModerationService', () => {
     });
 
     it('should filter by status', async () => {
-      vi.mocked(prisma.review.findMany).mockResolvedValue([]);
-      vi.mocked(prisma.review.count).mockResolvedValue(0);
+      vi.mocked(prisma.reviews.findMany).mockResolvedValue([]);
+      vi.mocked(prisma.reviews.count).mockResolvedValue(0);
 
       await moderationService.getModerationQueue({ status: 'PENDING' }, { page: 1, limit: 10 });
 
-      expect(prisma.review.findMany).toHaveBeenCalledWith(
+      expect(prisma.reviews.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
           where: { status: 'PENDING' },
         })
@@ -224,8 +224,8 @@ describe('ModerationService', () => {
         reporter: { id: mockUserId, displayName: 'Test User', email: 'test@test.com' },
       };
 
-      vi.mocked(prisma.review.findUnique).mockResolvedValue({ id: mockReviewId } as any);
-      vi.mocked(prisma.moderationReport.create).mockResolvedValue(mockReport as any);
+      vi.mocked(prisma.reviews.findUnique).mockResolvedValue({ id: mockReviewId } as any);
+      vi.mocked(prisma.moderation_reports.create).mockResolvedValue(mockReport as any);
 
       const result = await moderationService.reportContent(
         'REVIEW',
@@ -236,7 +236,7 @@ describe('ModerationService', () => {
       );
 
       expect(result).toEqual(mockReport);
-      expect(prisma.moderationReport.create).toHaveBeenCalledWith({
+      expect(prisma.moderation_reports.create).toHaveBeenCalledWith({
         data: {
           reporterId: mockUserId,
           contentType: 'REVIEW',
@@ -250,7 +250,7 @@ describe('ModerationService', () => {
     });
 
     it('should throw error when content not found', async () => {
-      vi.mocked(prisma.review.findUnique).mockResolvedValue(null);
+      vi.mocked(prisma.reviews.findUnique).mockResolvedValue(null);
 
       await expect(
         moderationService.reportContent('REVIEW', mockReviewId, 'SPAM', null, mockUserId)
@@ -272,7 +272,7 @@ describe('ModerationService', () => {
         user: { id: mockUserId, displayName: 'Test User', email: 'test@test.com' },
       };
 
-      vi.mocked(prisma.appeal.create).mockResolvedValue(mockAppeal as any);
+      vi.mocked(prisma.appeals.create).mockResolvedValue(mockAppeal as any);
 
       const result = await moderationService.appealRejection(
         mockReviewId,
@@ -316,9 +316,9 @@ describe('ModerationService', () => {
         user: { id: mockUserId, displayName: 'Test User', email: 'test@test.com' },
       };
 
-      vi.mocked(prisma.appeal.findUnique).mockResolvedValue(mockAppeal as any);
-      vi.mocked(prisma.appeal.update).mockResolvedValue(mockUpdatedAppeal as any);
-      vi.mocked(prisma.auditLog.create).mockResolvedValue({} as any);
+      vi.mocked(prisma.appeals.findUnique).mockResolvedValue(mockAppeal as any);
+      vi.mocked(prisma.appeals.update).mockResolvedValue(mockUpdatedAppeal as any);
+      vi.mocked(prisma.audit_logs.create).mockResolvedValue({} as any);
 
       const result = await moderationService.reviewAppeal(
         'appeal-1',
@@ -345,9 +345,9 @@ describe('ModerationService', () => {
         user: { id: mockUserId, displayName: 'Test User', email: 'test@test.com' },
       };
 
-      vi.mocked(prisma.appeal.findUnique).mockResolvedValue(mockAppeal as any);
-      vi.mocked(prisma.appeal.update).mockResolvedValue(mockUpdatedAppeal as any);
-      vi.mocked(prisma.auditLog.create).mockResolvedValue({} as any);
+      vi.mocked(prisma.appeals.findUnique).mockResolvedValue(mockAppeal as any);
+      vi.mocked(prisma.appeals.update).mockResolvedValue(mockUpdatedAppeal as any);
+      vi.mocked(prisma.audit_logs.create).mockResolvedValue({} as any);
 
       const result = await moderationService.reviewAppeal(
         'appeal-1',
@@ -361,7 +361,7 @@ describe('ModerationService', () => {
     });
 
     it('should throw error when appeal not found', async () => {
-      vi.mocked(prisma.appeal.findUnique).mockResolvedValue(null);
+      vi.mocked(prisma.appeals.findUnique).mockResolvedValue(null);
 
       await expect(
         moderationService.reviewAppeal(
@@ -375,7 +375,7 @@ describe('ModerationService', () => {
     });
 
     it('should throw error when appeal already reviewed', async () => {
-      vi.mocked(prisma.appeal.findUnique).mockResolvedValue({
+      vi.mocked(prisma.appeals.findUnique).mockResolvedValue({
         id: 'appeal-1',
         status: 'UPHELD', // Already reviewed
       } as any);

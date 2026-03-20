@@ -1,8 +1,11 @@
 import { getEsClient } from './elasticsearch-client.js';
 import { prisma } from '../db/index.js';
 import { logger } from '../utils/logger.js';
-import type { Business, Prisma } from '../generated/prisma/index.js';
+import type { businesses, Prisma } from '../generated/prisma/index.js';
 import { BusinessStatus } from '../generated/prisma/index.js';
+
+// Re-export Business type for compatibility
+export type Business = businesses;
 
 const INDEX_NAME = 'businesses';
 
@@ -45,7 +48,7 @@ export async function indexBusiness(business: Business): Promise<void> {
       id: business.id,
       name: business.name,
       description: business.description,
-      categorySlug: business.categoryPrimaryId, // Will be resolved to slug in query builder
+      categorySlug: business.category_primary_id, // Will be resolved to slug in query builder
       suburb: address?.suburb || '',
       location: {
         lat: address?.latitude || 0,
@@ -54,14 +57,14 @@ export async function indexBusiness(business: Business): Promise<void> {
       rating: 0, // TODO: Calculate from reviews in Phase 6
       reviewCount: 0, // TODO: Calculate from reviews in Phase 6
       status: business.status,
-      verified: business.verifiedAt !== null,
+      verified: business.verified_at !== null,
       featured: business.featured,
-      languagesSpoken: business.languagesSpoken,
+      languagesSpoken: business.languages_spoken,
       certifications: business.certifications,
-      accessibilityFeatures: business.accessibilityFeatures,
-      priceRange: business.priceRange,
-      createdAt: business.createdAt,
-      updatedAt: business.updatedAt,
+      accessibilityFeatures: business.accessibility_features,
+      priceRange: business.price_range,
+      createdAt: business.created_at,
+      updatedAt: business.updated_at,
     };
 
     await client.index({
@@ -108,7 +111,7 @@ export async function bulkReindexBusinesses(): Promise<void> {
 
   try {
     // Fetch all active businesses
-    const businesses = await prisma.business.findMany({
+    const businesses = await prisma.businesses.findMany({
       where: { status: BusinessStatus.ACTIVE },
     });
 
@@ -129,7 +132,7 @@ export async function bulkReindexBusinesses(): Promise<void> {
         id: business.id,
         name: business.name,
         description: business.description,
-        categorySlug: business.categoryPrimaryId,
+        categorySlug: business.category_primary_id,
         suburb: address?.suburb || '',
         location: {
           lat: address?.latitude || 0,
@@ -138,14 +141,14 @@ export async function bulkReindexBusinesses(): Promise<void> {
         rating: 0,
         reviewCount: 0,
         status: business.status,
-        verified: business.verifiedAt !== null,
+        verified: business.verified_at !== null,
         featured: business.featured,
-        languagesSpoken: business.languagesSpoken,
+        languagesSpoken: business.languages_spoken,
         certifications: business.certifications,
-        accessibilityFeatures: business.accessibilityFeatures,
-        priceRange: business.priceRange,
-        createdAt: business.createdAt,
-        updatedAt: business.updatedAt,
+        accessibilityFeatures: business.accessibility_features,
+        priceRange: business.price_range,
+        createdAt: business.created_at,
+        updatedAt: business.updated_at,
       });
     }
 

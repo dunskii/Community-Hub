@@ -303,7 +303,7 @@ router.put(
     } catch (error) {
       if (error instanceof Error) {
         if (error.message.includes('already in use')) {
-          throw ApiError.conflict('Email already in use');
+          throw ApiError.conflict('EMAIL_IN_USE', 'Email already in use');
         }
         if (error.message.includes('Failed to send')) {
           throw ApiError.internal('Failed to send verification email');

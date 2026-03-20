@@ -245,12 +245,12 @@ describe('EventReminderScheduler', () => {
         .mockResolvedValueOnce([]);
 
       vi.mocked(prisma.event.findUnique).mockResolvedValue(mockEvent as never);
-      vi.mocked(prisma.systemSetting.findFirst).mockResolvedValue(null);
-      vi.mocked(prisma.systemSetting.upsert).mockResolvedValue({} as never);
+      vi.mocked(prisma.system_settings.findFirst).mockResolvedValue(null);
+      vi.mocked(prisma.system_settings.upsert).mockResolvedValue({} as never);
 
       await scheduler.triggerCheck();
 
-      expect(vi.mocked(prisma.systemSetting.upsert)).toHaveBeenCalledWith(
+      expect(vi.mocked(prisma.system_settings.upsert)).toHaveBeenCalledWith(
         expect.objectContaining({
           where: { key: 'reminder_sent_event-1_24h' },
         })

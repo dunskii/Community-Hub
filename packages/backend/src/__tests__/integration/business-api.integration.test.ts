@@ -121,8 +121,8 @@ describe('Business API Integration Tests', () => {
     ];
 
     it('should list businesses with default pagination', async () => {
-      vi.mocked(prisma.business.findMany).mockResolvedValue(mockBusinesses as never);
-      vi.mocked(prisma.business.count).mockResolvedValue(1);
+      vi.mocked(prisma.businesses.findMany).mockResolvedValue(mockBusinesses as never);
+      vi.mocked(prisma.businesses.count).mockResolvedValue(1);
 
       const response = await request(app).get('/api/businesses');
 
@@ -138,13 +138,13 @@ describe('Business API Integration Tests', () => {
     });
 
     it('should filter businesses by category', async () => {
-      vi.mocked(prisma.business.findMany).mockResolvedValue(mockBusinesses as never);
-      vi.mocked(prisma.business.count).mockResolvedValue(1);
+      vi.mocked(prisma.businesses.findMany).mockResolvedValue(mockBusinesses as never);
+      vi.mocked(prisma.businesses.count).mockResolvedValue(1);
 
       const response = await request(app).get('/api/businesses?category=cat-1');
 
       expect(response.status).toBe(200);
-      expect(prisma.business.findMany).toHaveBeenCalledWith(
+      expect(prisma.businesses.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
           where: expect.objectContaining({
             categoryPrimaryId: 'cat-1',
@@ -154,8 +154,8 @@ describe('Business API Integration Tests', () => {
     });
 
     it('should support pagination', async () => {
-      vi.mocked(prisma.business.findMany).mockResolvedValue(mockBusinesses as never);
-      vi.mocked(prisma.business.count).mockResolvedValue(50);
+      vi.mocked(prisma.businesses.findMany).mockResolvedValue(mockBusinesses as never);
+      vi.mocked(prisma.businesses.count).mockResolvedValue(50);
 
       const response = await request(app).get('/api/businesses?page=2&limit=10');
 
@@ -169,8 +169,8 @@ describe('Business API Integration Tests', () => {
     });
 
     it('should support sorting', async () => {
-      vi.mocked(prisma.business.findMany).mockResolvedValue(mockBusinesses as never);
-      vi.mocked(prisma.business.count).mockResolvedValue(1);
+      vi.mocked(prisma.businesses.findMany).mockResolvedValue(mockBusinesses as never);
+      vi.mocked(prisma.businesses.count).mockResolvedValue(1);
 
       // Use 'sort' parameter with field name (asc) or '-' prefix (desc)
       const response = await request(app).get('/api/businesses?sort=name');
@@ -178,19 +178,19 @@ describe('Business API Integration Tests', () => {
       expect(response.status).toBe(200);
 
       // Check that the call includes the orderBy clause
-      const callArgs = vi.mocked(prisma.business.findMany).mock.calls[0][0];
+      const callArgs = vi.mocked(prisma.businesses.findMany).mock.calls[0][0];
       expect(callArgs).toBeDefined();
       expect(callArgs.orderBy).toEqual([{ name: 'asc' }]);
     });
 
     it('should only return ACTIVE businesses by default', async () => {
-      vi.mocked(prisma.business.findMany).mockResolvedValue(mockBusinesses as never);
-      vi.mocked(prisma.business.count).mockResolvedValue(1);
+      vi.mocked(prisma.businesses.findMany).mockResolvedValue(mockBusinesses as never);
+      vi.mocked(prisma.businesses.count).mockResolvedValue(1);
 
       const response = await request(app).get('/api/businesses');
 
       expect(response.status).toBe(200);
-      expect(prisma.business.findMany).toHaveBeenCalledWith(
+      expect(prisma.businesses.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
           where: expect.objectContaining({
             status: 'ACTIVE',
@@ -225,7 +225,7 @@ describe('Business API Integration Tests', () => {
     };
 
     it('should return business by ID', async () => {
-      vi.mocked(prisma.business.findUnique).mockResolvedValue(mockBusiness as never);
+      vi.mocked(prisma.businesses.findUnique).mockResolvedValue(mockBusiness as never);
 
       const response = await request(app).get('/api/businesses/biz-1');
 
@@ -235,7 +235,7 @@ describe('Business API Integration Tests', () => {
     });
 
     it('should return 404 for non-existent business', async () => {
-      vi.mocked(prisma.business.findUnique).mockResolvedValue(null);
+      vi.mocked(prisma.businesses.findUnique).mockResolvedValue(null);
 
       const response = await request(app).get('/api/businesses/non-existent');
 
@@ -244,13 +244,13 @@ describe('Business API Integration Tests', () => {
     });
 
     it('should include related data', async () => {
-      vi.mocked(prisma.business.findUnique).mockResolvedValue(mockBusiness as never);
+      vi.mocked(prisma.businesses.findUnique).mockResolvedValue(mockBusiness as never);
 
       const response = await request(app).get('/api/businesses/biz-1');
 
       expect(response.status).toBe(200);
       expect(response.body.data.categoryPrimary).toBeDefined();
-      expect(prisma.business.findUnique).toHaveBeenCalledWith({
+      expect(prisma.businesses.findUnique).toHaveBeenCalledWith({
         where: { id: 'biz-1' },
         include: expect.objectContaining({
           categoryPrimary: true,
@@ -269,7 +269,7 @@ describe('Business API Integration Tests', () => {
     };
 
     it('should return business by slug', async () => {
-      vi.mocked(prisma.business.findUnique).mockResolvedValue(mockBusiness as never);
+      vi.mocked(prisma.businesses.findUnique).mockResolvedValue(mockBusiness as never);
 
       const response = await request(app).get('/api/businesses/slug/test-restaurant');
 
@@ -279,7 +279,7 @@ describe('Business API Integration Tests', () => {
     });
 
     it('should return 404 for non-existent slug', async () => {
-      vi.mocked(prisma.business.findUnique).mockResolvedValue(null);
+      vi.mocked(prisma.businesses.findUnique).mockResolvedValue(null);
 
       const response = await request(app).get('/api/businesses/slug/non-existent');
 
@@ -314,9 +314,9 @@ describe('Business API Integration Tests', () => {
     };
 
     it('should create a new business with valid data', async () => {
-      vi.mocked(prisma.category.findUnique).mockResolvedValue({ id: 'cat-1' } as never);
-      vi.mocked(prisma.business.create).mockResolvedValue(mockCreatedBusiness as never);
-      vi.mocked(prisma.auditLog.create).mockResolvedValue({} as never);
+      vi.mocked(prisma.categories.findUnique).mockResolvedValue({ id: 'cat-1' } as never);
+      vi.mocked(prisma.businesses.create).mockResolvedValue(mockCreatedBusiness as never);
+      vi.mocked(prisma.audit_logs.create).mockResolvedValue({} as never);
 
       const response = await request(app)
         .post('/api/businesses')
@@ -341,7 +341,7 @@ describe('Business API Integration Tests', () => {
     });
 
     it('should return 404 for invalid category', async () => {
-      vi.mocked(prisma.category.findUnique).mockResolvedValue(null);
+      vi.mocked(prisma.categories.findUnique).mockResolvedValue(null);
 
       const response = await request(app)
         .post('/api/businesses')
@@ -351,9 +351,9 @@ describe('Business API Integration Tests', () => {
     });
 
     it('should set default status to PENDING', async () => {
-      vi.mocked(prisma.category.findUnique).mockResolvedValue({ id: 'cat-1' } as never);
-      vi.mocked(prisma.business.create).mockResolvedValue(mockCreatedBusiness as never);
-      vi.mocked(prisma.auditLog.create).mockResolvedValue({} as never);
+      vi.mocked(prisma.categories.findUnique).mockResolvedValue({ id: 'cat-1' } as never);
+      vi.mocked(prisma.businesses.create).mockResolvedValue(mockCreatedBusiness as never);
+      vi.mocked(prisma.audit_logs.create).mockResolvedValue({} as never);
 
       const response = await request(app)
         .post('/api/businesses')
@@ -364,16 +364,16 @@ describe('Business API Integration Tests', () => {
     });
 
     it('should create audit log entry', async () => {
-      vi.mocked(prisma.category.findUnique).mockResolvedValue({ id: 'cat-1' } as never);
-      vi.mocked(prisma.business.create).mockResolvedValue(mockCreatedBusiness as never);
-      vi.mocked(prisma.auditLog.create).mockResolvedValue({} as never);
+      vi.mocked(prisma.categories.findUnique).mockResolvedValue({ id: 'cat-1' } as never);
+      vi.mocked(prisma.businesses.create).mockResolvedValue(mockCreatedBusiness as never);
+      vi.mocked(prisma.audit_logs.create).mockResolvedValue({} as never);
 
       const response = await request(app)
         .post('/api/businesses')
         .send(validBusinessData);
 
       expect(response.status).toBe(201);
-      expect(prisma.auditLog.create).toHaveBeenCalled();
+      expect(prisma.audit_logs.create).toHaveBeenCalled();
     });
   });
 
@@ -403,9 +403,9 @@ describe('Business API Integration Tests', () => {
     };
 
     it('should update business with valid data', async () => {
-      vi.mocked(prisma.business.findUnique).mockResolvedValue(existingBusiness as never);
-      vi.mocked(prisma.business.update).mockResolvedValue(updatedBusiness as never);
-      vi.mocked(prisma.auditLog.create).mockResolvedValue({} as never);
+      vi.mocked(prisma.businesses.findUnique).mockResolvedValue(existingBusiness as never);
+      vi.mocked(prisma.businesses.update).mockResolvedValue(updatedBusiness as never);
+      vi.mocked(prisma.audit_logs.create).mockResolvedValue({} as never);
 
       const response = await request(app)
         .put('/api/businesses/biz-1')
@@ -417,7 +417,7 @@ describe('Business API Integration Tests', () => {
     });
 
     it('should return 404 for non-existent business', async () => {
-      vi.mocked(prisma.business.findUnique).mockResolvedValue(null);
+      vi.mocked(prisma.businesses.findUnique).mockResolvedValue(null);
 
       const response = await request(app)
         .put('/api/businesses/non-existent')
@@ -427,7 +427,7 @@ describe('Business API Integration Tests', () => {
     });
 
     it('should return 400 for invalid update data', async () => {
-      vi.mocked(prisma.business.findUnique).mockResolvedValue(existingBusiness as never);
+      vi.mocked(prisma.businesses.findUnique).mockResolvedValue(existingBusiness as never);
 
       const response = await request(app)
         .put('/api/businesses/biz-1')
@@ -439,16 +439,16 @@ describe('Business API Integration Tests', () => {
     });
 
     it('should create audit log entry for update', async () => {
-      vi.mocked(prisma.business.findUnique).mockResolvedValue(existingBusiness as never);
-      vi.mocked(prisma.business.update).mockResolvedValue(updatedBusiness as never);
-      vi.mocked(prisma.auditLog.create).mockResolvedValue({} as never);
+      vi.mocked(prisma.businesses.findUnique).mockResolvedValue(existingBusiness as never);
+      vi.mocked(prisma.businesses.update).mockResolvedValue(updatedBusiness as never);
+      vi.mocked(prisma.audit_logs.create).mockResolvedValue({} as never);
 
       const response = await request(app)
         .put('/api/businesses/biz-1')
         .send(updateData);
 
       expect(response.status).toBe(200);
-      expect(prisma.auditLog.create).toHaveBeenCalled();
+      expect(prisma.audit_logs.create).toHaveBeenCalled();
     });
   });
 
@@ -460,25 +460,25 @@ describe('Business API Integration Tests', () => {
     };
 
     it('should soft delete business', async () => {
-      vi.mocked(prisma.business.findUnique).mockResolvedValue(existingBusiness as never);
-      vi.mocked(prisma.business.update).mockResolvedValue({
+      vi.mocked(prisma.businesses.findUnique).mockResolvedValue(existingBusiness as never);
+      vi.mocked(prisma.businesses.update).mockResolvedValue({
         ...existingBusiness,
         status: 'DELETED',
       } as never);
-      vi.mocked(prisma.auditLog.create).mockResolvedValue({} as never);
+      vi.mocked(prisma.audit_logs.create).mockResolvedValue({} as never);
 
       const response = await request(app).delete('/api/businesses/biz-1');
 
       expect(response.status).toBe(200);
       expect(response.body.success).toBe(true);
-      expect(prisma.business.update).toHaveBeenCalledWith({
+      expect(prisma.businesses.update).toHaveBeenCalledWith({
         where: { id: 'biz-1' },
         data: { status: 'DELETED' },
       });
     });
 
     it('should return 404 for non-existent business', async () => {
-      vi.mocked(prisma.business.findUnique).mockResolvedValue(null);
+      vi.mocked(prisma.businesses.findUnique).mockResolvedValue(null);
 
       const response = await request(app).delete('/api/businesses/non-existent');
 
@@ -486,23 +486,23 @@ describe('Business API Integration Tests', () => {
     });
 
     it('should create audit log entry for deletion', async () => {
-      vi.mocked(prisma.business.findUnique).mockResolvedValue(existingBusiness as never);
-      vi.mocked(prisma.business.update).mockResolvedValue({
+      vi.mocked(prisma.businesses.findUnique).mockResolvedValue(existingBusiness as never);
+      vi.mocked(prisma.businesses.update).mockResolvedValue({
         ...existingBusiness,
         status: 'DELETED',
       } as never);
-      vi.mocked(prisma.auditLog.create).mockResolvedValue({} as never);
+      vi.mocked(prisma.audit_logs.create).mockResolvedValue({} as never);
 
       const response = await request(app).delete('/api/businesses/biz-1');
 
       expect(response.status).toBe(200);
-      expect(prisma.auditLog.create).toHaveBeenCalled();
+      expect(prisma.audit_logs.create).toHaveBeenCalled();
     });
   });
 
   describe('Error Handling', () => {
     it('should handle database errors gracefully', async () => {
-      vi.mocked(prisma.business.findMany).mockRejectedValue(new Error('Database error'));
+      vi.mocked(prisma.businesses.findMany).mockRejectedValue(new Error('Database error'));
 
       const response = await request(app).get('/api/businesses');
 
@@ -524,8 +524,8 @@ describe('Business API Integration Tests', () => {
 
   describe('Language Negotiation', () => {
     it('should respect Accept-Language header', async () => {
-      vi.mocked(prisma.business.findMany).mockResolvedValue([] as never);
-      vi.mocked(prisma.business.count).mockResolvedValue(0);
+      vi.mocked(prisma.businesses.findMany).mockResolvedValue([] as never);
+      vi.mocked(prisma.businesses.count).mockResolvedValue(0);
 
       const response = await request(app)
         .get('/api/businesses')
@@ -535,8 +535,8 @@ describe('Business API Integration Tests', () => {
     });
 
     it('should default to English if no Accept-Language header', async () => {
-      vi.mocked(prisma.business.findMany).mockResolvedValue([] as never);
-      vi.mocked(prisma.business.count).mockResolvedValue(0);
+      vi.mocked(prisma.businesses.findMany).mockResolvedValue([] as never);
+      vi.mocked(prisma.businesses.count).mockResolvedValue(0);
 
       const response = await request(app).get('/api/businesses');
 

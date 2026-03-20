@@ -103,7 +103,7 @@ describe('ClaimService', () => {
     };
 
     it('should reject claim for non-existent business', async () => {
-      vi.mocked(prisma.business.findUnique).mockResolvedValue(null);
+      vi.mocked(prisma.businesses.findUnique).mockResolvedValue(null);
 
       await expect(
         claimService.initiateClaim(
@@ -119,7 +119,7 @@ describe('ClaimService', () => {
     });
 
     it('should reject claim for already claimed business', async () => {
-      vi.mocked(prisma.business.findUnique).mockResolvedValue({
+      vi.mocked(prisma.businesses.findUnique).mockResolvedValue({
         ...mockBusiness,
         claimed: true,
         claimedBy: 'existing-owner',
@@ -139,8 +139,8 @@ describe('ClaimService', () => {
     });
 
     it('should reject claim if user has pending claim', async () => {
-      vi.mocked(prisma.business.findUnique).mockResolvedValue(mockBusiness as never);
-      vi.mocked(prisma.businessClaimRequest.findUnique).mockResolvedValue({
+      vi.mocked(prisma.businesses.findUnique).mockResolvedValue(mockBusiness as never);
+      vi.mocked(prisma.business_claim_requests.findUnique).mockResolvedValue({
         id: 'claim-123',
         claimStatus: 'PENDING',
       } as never);
@@ -160,9 +160,9 @@ describe('ClaimService', () => {
 
     describe('PHONE verification', () => {
       beforeEach(() => {
-        vi.mocked(prisma.business.findUnique).mockResolvedValue(mockBusiness as never);
-        vi.mocked(prisma.businessClaimRequest.findUnique).mockResolvedValue(null);
-        vi.mocked(prisma.businessClaimRequest.create).mockResolvedValue({
+        vi.mocked(prisma.businesses.findUnique).mockResolvedValue(mockBusiness as never);
+        vi.mocked(prisma.business_claim_requests.findUnique).mockResolvedValue(null);
+        vi.mocked(prisma.business_claim_requests.create).mockResolvedValue({
           id: 'claim-123',
           businessId: 'business-123',
           userId: 'user-123',
@@ -214,16 +214,16 @@ describe('ClaimService', () => {
         expect(result.verificationStatus).toBe('PENDING');
         expect(result.verificationMethod).toBe('PHONE');
         expect(result.pinExpiresAt).toBeDefined();
-        expect(prisma.businessClaimRequest.create).toHaveBeenCalled();
-        expect(prisma.auditLog.create).toHaveBeenCalled();
+        expect(prisma.business_claim_requests.create).toHaveBeenCalled();
+        expect(prisma.audit_logs.create).toHaveBeenCalled();
       });
     });
 
     describe('EMAIL verification', () => {
       beforeEach(() => {
-        vi.mocked(prisma.business.findUnique).mockResolvedValue(mockBusiness as never);
-        vi.mocked(prisma.businessClaimRequest.findUnique).mockResolvedValue(null);
-        vi.mocked(prisma.businessClaimRequest.create).mockResolvedValue({
+        vi.mocked(prisma.businesses.findUnique).mockResolvedValue(mockBusiness as never);
+        vi.mocked(prisma.business_claim_requests.findUnique).mockResolvedValue(null);
+        vi.mocked(prisma.business_claim_requests.create).mockResolvedValue({
           id: 'claim-123',
           businessId: 'business-123',
           userId: 'user-123',
@@ -267,9 +267,9 @@ describe('ClaimService', () => {
 
     describe('DOCUMENT verification', () => {
       beforeEach(() => {
-        vi.mocked(prisma.business.findUnique).mockResolvedValue(mockBusiness as never);
-        vi.mocked(prisma.businessClaimRequest.findUnique).mockResolvedValue(null);
-        vi.mocked(prisma.businessClaimRequest.create).mockResolvedValue({
+        vi.mocked(prisma.businesses.findUnique).mockResolvedValue(mockBusiness as never);
+        vi.mocked(prisma.business_claim_requests.findUnique).mockResolvedValue(null);
+        vi.mocked(prisma.business_claim_requests.create).mockResolvedValue({
           id: 'claim-123',
           businessId: 'business-123',
           userId: 'user-123',
@@ -327,8 +327,8 @@ describe('ClaimService', () => {
 
     describe('GOOGLE_BUSINESS verification', () => {
       beforeEach(() => {
-        vi.mocked(prisma.business.findUnique).mockResolvedValue(mockBusiness as never);
-        vi.mocked(prisma.businessClaimRequest.findUnique).mockResolvedValue(null);
+        vi.mocked(prisma.businesses.findUnique).mockResolvedValue(mockBusiness as never);
+        vi.mocked(prisma.business_claim_requests.findUnique).mockResolvedValue(null);
       });
 
       it('should reject GOOGLE_BUSINESS as not implemented', async () => {
@@ -360,7 +360,7 @@ describe('ClaimService', () => {
     };
 
     it('should reject non-existent claim', async () => {
-      vi.mocked(prisma.businessClaimRequest.findUnique).mockResolvedValue(null);
+      vi.mocked(prisma.business_claim_requests.findUnique).mockResolvedValue(null);
 
       await expect(
         claimService.verifyPhonePIN('non-existent', '123456', 'user-123', mockAuditContext)
@@ -368,7 +368,7 @@ describe('ClaimService', () => {
     });
 
     it('should reject if not phone verification', async () => {
-      vi.mocked(prisma.businessClaimRequest.findUnique).mockResolvedValue({
+      vi.mocked(prisma.business_claim_requests.findUnique).mockResolvedValue({
         ...mockClaim,
         verificationMethod: 'EMAIL',
       } as never);
@@ -379,7 +379,7 @@ describe('ClaimService', () => {
     });
 
     it('should reject expired PIN', async () => {
-      vi.mocked(prisma.businessClaimRequest.findUnique).mockResolvedValue({
+      vi.mocked(prisma.business_claim_requests.findUnique).mockResolvedValue({
         ...mockClaim,
         verificationExpiresAt: new Date(Date.now() - 60000), // Expired
       } as never);
@@ -390,7 +390,7 @@ describe('ClaimService', () => {
     });
 
     it('should reject if too many attempts', async () => {
-      vi.mocked(prisma.businessClaimRequest.findUnique).mockResolvedValue({
+      vi.mocked(prisma.business_claim_requests.findUnique).mockResolvedValue({
         ...mockClaim,
         verificationAttempts: 3,
       } as never);
@@ -422,7 +422,7 @@ describe('ClaimService', () => {
 
   describe('approveClaim', () => {
     it('should reject non-existent claim', async () => {
-      vi.mocked(prisma.businessClaimRequest.findUnique).mockResolvedValue(null);
+      vi.mocked(prisma.business_claim_requests.findUnique).mockResolvedValue(null);
 
       await expect(
         claimService.approveClaim('non-existent', 'admin-123', 'Approved', mockAuditContext)
@@ -434,7 +434,7 @@ describe('ClaimService', () => {
 
   describe('rejectClaim', () => {
     it('should reject non-existent claim', async () => {
-      vi.mocked(prisma.businessClaimRequest.findUnique).mockResolvedValue(null);
+      vi.mocked(prisma.business_claim_requests.findUnique).mockResolvedValue(null);
 
       await expect(
         claimService.rejectClaim('non-existent', 'admin-123', 'Documents not clear', mockAuditContext)
@@ -459,7 +459,7 @@ describe('ClaimService', () => {
     };
 
     it('should reject if claim not found', async () => {
-      vi.mocked(prisma.businessClaimRequest.findUnique).mockResolvedValue(null);
+      vi.mocked(prisma.business_claim_requests.findUnique).mockResolvedValue(null);
 
       await expect(
         claimService.resendPhonePIN('non-existent', 'user-123', mockAuditContext)
@@ -467,7 +467,7 @@ describe('ClaimService', () => {
     });
 
     it('should reject if not phone verification', async () => {
-      vi.mocked(prisma.businessClaimRequest.findUnique).mockResolvedValue({
+      vi.mocked(prisma.business_claim_requests.findUnique).mockResolvedValue({
         ...mockClaim,
         verificationMethod: 'EMAIL',
       } as never);
@@ -478,8 +478,8 @@ describe('ClaimService', () => {
     });
 
     it('should generate new PIN and update claim', async () => {
-      vi.mocked(prisma.businessClaimRequest.findUnique).mockResolvedValue(mockClaim as never);
-      vi.mocked(prisma.businessClaimRequest.update).mockResolvedValue({
+      vi.mocked(prisma.business_claim_requests.findUnique).mockResolvedValue(mockClaim as never);
+      vi.mocked(prisma.business_claim_requests.update).mockResolvedValue({
         ...mockClaim,
         verificationExpiresAt: new Date(Date.now() + 600000),
         verificationAttempts: 0,
@@ -490,7 +490,7 @@ describe('ClaimService', () => {
       expect(result.verificationStatus).toBe('PENDING');
       expect(result.pinExpiresAt).toBeDefined();
       expect(bcrypt.hash).toHaveBeenCalled();
-      expect(prisma.businessClaimRequest.update).toHaveBeenCalled();
+      expect(prisma.business_claim_requests.update).toHaveBeenCalled();
     });
   });
 });

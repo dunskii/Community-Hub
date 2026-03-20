@@ -6,6 +6,7 @@
  * Handles CRUD operations for business quick reply templates.
  */
 
+import crypto from 'crypto';
 import { prisma } from '../db/index.js';
 import { Prisma } from '../generated/prisma/index.js';
 import { logger } from '../utils/logger.js';
@@ -54,17 +55,18 @@ class QuickReplyService {
     userAgent: string;
   }): Promise<void> {
     try {
-      await prisma.auditLog.create({
+      await prisma.audit_logs.create({
         data: {
-          actorId: params.actorId,
-          actorRole: params.actorRole as ActorRole,
+          id: crypto.randomUUID(),
+          actor_id: params.actorId,
+          actor_role: params.actorRole as ActorRole,
           action: params.action,
-          targetType: params.targetType,
-          targetId: params.targetId,
-          previousValue: params.previousValue ? JSON.stringify(params.previousValue) : Prisma.DbNull,
-          newValue: params.newValue ? JSON.stringify(params.newValue) : Prisma.DbNull,
-          ipAddress: params.ipAddress,
-          userAgent: params.userAgent,
+          target_type: params.targetType,
+          target_id: params.targetId,
+          previous_value: params.previousValue ? JSON.stringify(params.previousValue) : Prisma.DbNull,
+          new_value: params.newValue ? JSON.stringify(params.newValue) : Prisma.DbNull,
+          ip_address: params.ipAddress,
+          user_agent: params.userAgent,
         },
       });
     } catch (error) {
@@ -84,22 +86,22 @@ class QuickReplyService {
     logger.info({ businessId, ownerId }, 'Creating quick reply template');
 
     // Verify business ownership
-    const business = await prisma.business.findUnique({
+    const business = await prisma.businesses.findUnique({
       where: { id: businessId },
-      select: { id: true, claimedBy: true },
+      select: { id: true, claimed_by: true },
     });
 
     if (!business) {
       throw ApiError.notFound('BUSINESS_NOT_FOUND', 'Business not found');
     }
 
-    if (business.claimedBy !== ownerId) {
+    if (business.claimed_by !== ownerId) {
       throw ApiError.forbidden('NOT_OWNER', 'You do not own this business');
     }
 
     // Check template limit
-    const existingCount = await prisma.quickReplyTemplate.count({
-      where: { businessId },
+    const existingCount = await prisma.quick_reply_templates.count({
+      where: { business_id: businessId },
     });
 
     if (existingCount >= MAX_TEMPLATES_PER_BUSINESS) {
@@ -110,20 +112,22 @@ class QuickReplyService {
     }
 
     // Get next order value
-    const maxOrder = await prisma.quickReplyTemplate.aggregate({
-      where: { businessId },
+    const maxOrder = await prisma.quick_reply_templates.aggregate({
+      where: { business_id: businessId },
       _max: { order: true },
     });
 
     const nextOrder = (maxOrder._max.order ?? -1) + 1;
 
     // Create template
-    const template = await prisma.quickReplyTemplate.create({
+    const template = await prisma.quick_reply_templates.create({
       data: {
-        businessId,
+        id: crypto.randomUUID(),
+        business_id: businessId,
         name: input.name,
         content: input.content,
         order: nextOrder,
+        updated_at: new Date(),
       },
     });
 
@@ -139,7 +143,15 @@ class QuickReplyService {
       userAgent: auditContext.userAgent || '',
     });
 
-    return template;
+    return {
+      id: template.id,
+      businessId: template.business_id,
+      name: template.name,
+      content: template.content,
+      order: template.order,
+      createdAt: template.created_at,
+      updatedAt: template.updated_at,
+    };
   }
 
   /**
@@ -147,36 +159,44 @@ class QuickReplyService {
    */
   async getTemplates(businessId: string, ownerId: string): Promise<QuickReplyTemplate[]> {
     // Verify business ownership
-    const business = await prisma.business.findUnique({
+    const business = await prisma.businesses.findUnique({
       where: { id: businessId },
-      select: { id: true, claimedBy: true },
+      select: { id: true, claimed_by: true },
     });
 
     if (!business) {
       throw ApiError.notFound('BUSINESS_NOT_FOUND', 'Business not found');
     }
 
-    if (business.claimedBy !== ownerId) {
+    if (business.claimed_by !== ownerId) {
       throw ApiError.forbidden('NOT_OWNER', 'You do not own this business');
     }
 
-    const templates = await prisma.quickReplyTemplate.findMany({
-      where: { businessId },
+    const templates = await prisma.quick_reply_templates.findMany({
+      where: { business_id: businessId },
       orderBy: { order: 'asc' },
     });
 
-    return templates;
+    return templates.map((t) => ({
+      id: t.id,
+      businessId: t.business_id,
+      name: t.name,
+      content: t.content,
+      order: t.order,
+      createdAt: t.created_at,
+      updatedAt: t.updated_at,
+    }));
   }
 
   /**
    * Get a single template by ID
    */
   async getTemplateById(templateId: string, ownerId: string): Promise<QuickReplyTemplate> {
-    const template = await prisma.quickReplyTemplate.findUnique({
+    const template = await prisma.quick_reply_templates.findUnique({
       where: { id: templateId },
       include: {
-        business: {
-          select: { claimedBy: true },
+        businesses: {
+          select: { claimed_by: true },
         },
       },
     });
@@ -185,18 +205,18 @@ class QuickReplyService {
       throw ApiError.notFound('TEMPLATE_NOT_FOUND', 'Template not found');
     }
 
-    if (template.business.claimedBy !== ownerId) {
+    if (template.businesses.claimed_by !== ownerId) {
       throw ApiError.forbidden('NOT_OWNER', 'You do not own this business');
     }
 
     return {
       id: template.id,
-      businessId: template.businessId,
+      businessId: template.business_id,
       name: template.name,
       content: template.content,
       order: template.order,
-      createdAt: template.createdAt,
-      updatedAt: template.updatedAt,
+      createdAt: template.created_at,
+      updatedAt: template.updated_at,
     };
   }
 
@@ -211,11 +231,11 @@ class QuickReplyService {
   ): Promise<QuickReplyTemplate> {
     logger.info({ templateId, ownerId }, 'Updating quick reply template');
 
-    const template = await prisma.quickReplyTemplate.findUnique({
+    const template = await prisma.quick_reply_templates.findUnique({
       where: { id: templateId },
       include: {
-        business: {
-          select: { claimedBy: true },
+        businesses: {
+          select: { claimed_by: true },
         },
       },
     });
@@ -224,17 +244,18 @@ class QuickReplyService {
       throw ApiError.notFound('TEMPLATE_NOT_FOUND', 'Template not found');
     }
 
-    if (template.business.claimedBy !== ownerId) {
+    if (template.businesses.claimed_by !== ownerId) {
       throw ApiError.forbidden('NOT_OWNER', 'You do not own this business');
     }
 
     const previousValue = { name: template.name, content: template.content };
 
-    const updatedTemplate = await prisma.quickReplyTemplate.update({
+    const updatedTemplate = await prisma.quick_reply_templates.update({
       where: { id: templateId },
       data: {
         name: input.name,
         content: input.content,
+        updated_at: new Date(),
       },
     });
 
@@ -251,7 +272,15 @@ class QuickReplyService {
       userAgent: auditContext.userAgent || '',
     });
 
-    return updatedTemplate;
+    return {
+      id: updatedTemplate.id,
+      businessId: updatedTemplate.business_id,
+      name: updatedTemplate.name,
+      content: updatedTemplate.content,
+      order: updatedTemplate.order,
+      createdAt: updatedTemplate.created_at,
+      updatedAt: updatedTemplate.updated_at,
+    };
   }
 
   /**
@@ -264,11 +293,11 @@ class QuickReplyService {
   ): Promise<void> {
     logger.info({ templateId, ownerId }, 'Deleting quick reply template');
 
-    const template = await prisma.quickReplyTemplate.findUnique({
+    const template = await prisma.quick_reply_templates.findUnique({
       where: { id: templateId },
       include: {
-        business: {
-          select: { claimedBy: true },
+        businesses: {
+          select: { claimed_by: true },
         },
       },
     });
@@ -277,11 +306,11 @@ class QuickReplyService {
       throw ApiError.notFound('TEMPLATE_NOT_FOUND', 'Template not found');
     }
 
-    if (template.business.claimedBy !== ownerId) {
+    if (template.businesses.claimed_by !== ownerId) {
       throw ApiError.forbidden('NOT_OWNER', 'You do not own this business');
     }
 
-    await prisma.quickReplyTemplate.delete({
+    await prisma.quick_reply_templates.delete({
       where: { id: templateId },
     });
 
@@ -292,7 +321,7 @@ class QuickReplyService {
       action: 'quickReply.delete',
       targetType: 'QuickReplyTemplate',
       targetId: templateId,
-      previousValue: { name: template.name, businessId: template.businessId },
+      previousValue: { name: template.name, businessId: template.business_id },
       ipAddress: auditContext.ipAddress || '',
       userAgent: auditContext.userAgent || '',
     });
@@ -310,22 +339,22 @@ class QuickReplyService {
     logger.info({ businessId, ownerId }, 'Reordering quick reply templates');
 
     // Verify business ownership
-    const business = await prisma.business.findUnique({
+    const business = await prisma.businesses.findUnique({
       where: { id: businessId },
-      select: { id: true, claimedBy: true },
+      select: { id: true, claimed_by: true },
     });
 
     if (!business) {
       throw ApiError.notFound('BUSINESS_NOT_FOUND', 'Business not found');
     }
 
-    if (business.claimedBy !== ownerId) {
+    if (business.claimed_by !== ownerId) {
       throw ApiError.forbidden('NOT_OWNER', 'You do not own this business');
     }
 
     // Verify all template IDs belong to this business
-    const templates = await prisma.quickReplyTemplate.findMany({
-      where: { businessId },
+    const templates = await prisma.quick_reply_templates.findMany({
+      where: { business_id: businessId },
     });
 
     const templateIds = new Set(templates.map((t) => t.id));
@@ -339,7 +368,7 @@ class QuickReplyService {
     // Update order in transaction
     await prisma.$transaction(
       input.templateIds.map((templateId, index) =>
-        prisma.quickReplyTemplate.update({
+        prisma.quick_reply_templates.update({
           where: { id: templateId },
           data: { order: index },
         })

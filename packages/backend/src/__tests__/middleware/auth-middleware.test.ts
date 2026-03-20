@@ -76,7 +76,7 @@ describe('Auth Middleware', () => {
       };
 
       (verifyAccessToken as any).mockResolvedValue(mockPayload);
-      (prisma.user.findUnique as any).mockResolvedValue(mockUser);
+      (prisma.users.findUnique as any).mockResolvedValue(mockUser);
 
       await requireAuth(
         mockRequest as Request,
@@ -85,7 +85,7 @@ describe('Auth Middleware', () => {
       );
 
       expect(verifyAccessToken).toHaveBeenCalledWith('valid-token-123');
-      expect(prisma.user.findUnique).toHaveBeenCalledWith({
+      expect(prisma.users.findUnique).toHaveBeenCalledWith({
         where: { id: 'user-123' },
         select: {
           id: true,
@@ -127,7 +127,7 @@ describe('Auth Middleware', () => {
       };
 
       (verifyAccessToken as any).mockResolvedValue(mockPayload);
-      (prisma.user.findUnique as any).mockResolvedValue(mockUser);
+      (prisma.users.findUnique as any).mockResolvedValue(mockUser);
 
       await requireAuth(
         mockRequest as Request,
@@ -188,7 +188,7 @@ describe('Auth Middleware', () => {
       };
 
       (verifyAccessToken as any).mockResolvedValue(mockPayload);
-      (prisma.user.findUnique as any).mockResolvedValue(null);
+      (prisma.users.findUnique as any).mockResolvedValue(null);
 
       await requireAuth(
         mockRequest as Request,
@@ -224,7 +224,7 @@ describe('Auth Middleware', () => {
       };
 
       (verifyAccessToken as any).mockResolvedValue(mockPayload);
-      (prisma.user.findUnique as any).mockResolvedValue(mockUser);
+      (prisma.users.findUnique as any).mockResolvedValue(mockUser);
 
       await requireAuth(
         mockRequest as Request,
@@ -260,7 +260,7 @@ describe('Auth Middleware', () => {
       };
 
       (verifyAccessToken as any).mockResolvedValue(mockPayload);
-      (prisma.user.findUnique as any).mockResolvedValue(mockUser);
+      (prisma.users.findUnique as any).mockResolvedValue(mockUser);
 
       await requireAuth(
         mockRequest as Request,
@@ -296,7 +296,7 @@ describe('Auth Middleware', () => {
       };
 
       (verifyAccessToken as any).mockResolvedValue(mockPayload);
-      (prisma.user.findUnique as any).mockResolvedValue(mockUser);
+      (prisma.users.findUnique as any).mockResolvedValue(mockUser);
 
       await requireAuth(
         mockRequest as Request,
@@ -334,7 +334,7 @@ describe('Auth Middleware', () => {
       };
 
       (verifyAccessToken as any).mockResolvedValue(mockPayload);
-      (prisma.user.findUnique as any).mockResolvedValue(mockUser);
+      (prisma.users.findUnique as any).mockResolvedValue(mockUser);
 
       await optionalAuth(
         mockRequest as Request,
@@ -403,7 +403,7 @@ describe('Auth Middleware', () => {
       };
 
       (verifyAccessToken as any).mockResolvedValue(mockPayload);
-      (prisma.user.findUnique as any).mockResolvedValue(mockUser);
+      (prisma.users.findUnique as any).mockResolvedValue(mockUser);
 
       await optionalAuth(
         mockRequest as Request,

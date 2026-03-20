@@ -65,7 +65,7 @@ describe('EventService', () => {
 
   beforeAll(async () => {
     // Create test user
-    const user = await prisma.user.create({
+    const user = await prisma.users.create({
       data: {
         email: 'event-test@example.com',
         passwordHash: 'hashed-password',
@@ -78,7 +78,7 @@ describe('EventService', () => {
     testUserId = user.id;
 
     // Create test category
-    const category = await prisma.category.create({
+    const category = await prisma.categories.create({
       data: {
         name: { en: 'Community Events' },
         slug: 'community-events-test',
@@ -91,7 +91,7 @@ describe('EventService', () => {
     testCategoryId = category.id;
 
     // Create test business
-    const business = await prisma.business.create({
+    const business = await prisma.businesses.create({
       data: {
         name: 'Test Business',
         slug: 'test-business-events',
@@ -116,16 +116,16 @@ describe('EventService', () => {
   afterAll(async () => {
     // Clean up in reverse order of dependencies
     await prisma.eventRSVP.deleteMany({ where: { event: { createdById: testUserId } } });
-    await prisma.event.deleteMany({ where: { createdById: testUserId } });
-    await prisma.business.deleteMany({ where: { id: testBusinessId } });
-    await prisma.category.deleteMany({ where: { id: testCategoryId } });
-    await prisma.user.deleteMany({ where: { id: testUserId } });
+    await prisma.events.deleteMany({ where: { createdById: testUserId } });
+    await prisma.businesses.deleteMany({ where: { id: testBusinessId } });
+    await prisma.categories.deleteMany({ where: { id: testCategoryId } });
+    await prisma.users.deleteMany({ where: { id: testUserId } });
   });
 
   beforeEach(async () => {
     // Clean up events before each test
     await prisma.eventRSVP.deleteMany({ where: { event: { createdById: testUserId } } });
-    await prisma.event.deleteMany({ where: { createdById: testUserId } });
+    await prisma.events.deleteMany({ where: { createdById: testUserId } });
   });
 
   afterEach(async () => {
@@ -203,7 +203,7 @@ describe('EventService', () => {
 
     it('should throw error when linking business user does not own', async () => {
       // Create another user who doesn't own the business
-      const otherUser = await prisma.user.create({
+      const otherUser = await prisma.users.create({
         data: {
           email: 'other-user@example.com',
           passwordHash: 'hashed-password',
@@ -227,7 +227,7 @@ describe('EventService', () => {
           })
         ).rejects.toThrow('You must be the business owner to link events');
       } finally {
-        await prisma.user.delete({ where: { id: otherUser.id } });
+        await prisma.users.delete({ where: { id: otherUser.id } });
       }
     });
 
@@ -293,7 +293,7 @@ describe('EventService', () => {
       const created = await eventService.createEvent(eventData, testUserId, mockAuditContext);
 
       // Approve the event first
-      await prisma.event.update({
+      await prisma.events.update({
         where: { id: created.id },
         data: { status: EventStatus.ACTIVE },
       });
@@ -309,7 +309,7 @@ describe('EventService', () => {
       const eventData = createEventData();
       const created = await eventService.createEvent(eventData, testUserId, mockAuditContext);
 
-      await prisma.event.update({
+      await prisma.events.update({
         where: { id: created.id },
         data: { status: EventStatus.ACTIVE },
       });
@@ -360,7 +360,7 @@ describe('EventService', () => {
       eventData.title = 'Slug Test Event';
       const created = await eventService.createEvent(eventData, testUserId, mockAuditContext);
 
-      await prisma.event.update({
+      await prisma.events.update({
         where: { id: created.id },
         data: { status: EventStatus.ACTIVE },
       });
@@ -431,7 +431,7 @@ describe('EventService', () => {
       const created = await eventService.createEvent(eventData, testUserId, mockAuditContext);
 
       // Cancel the event
-      await prisma.event.update({
+      await prisma.events.update({
         where: { id: created.id },
         data: { status: EventStatus.CANCELLED },
       });
@@ -470,7 +470,7 @@ describe('EventService', () => {
       await eventService.deleteEvent(created.id, testUserId, mockAuditContext);
 
       // Verify event is cancelled, not deleted
-      const event = await prisma.event.findUnique({ where: { id: created.id } });
+      const event = await prisma.events.findUnique({ where: { id: created.id } });
       expect(event).toBeDefined();
       expect(event!.status).toBe(EventStatus.CANCELLED);
     });
@@ -509,7 +509,7 @@ describe('EventService', () => {
       const baseData = createEventData();
 
       for (let i = 0; i < 5; i++) {
-        const event = await prisma.event.create({
+        const event = await prisma.events.create({
           data: {
             title: `Test Event ${i + 1}`,
             description: baseData.description,
@@ -653,7 +653,7 @@ describe('EventService', () => {
       const eventData = createEventData();
       const created = await eventService.createEvent(eventData, testUserId, mockAuditContext);
 
-      await prisma.event.update({
+      await prisma.events.update({
         where: { id: created.id },
         data: { status: EventStatus.ACTIVE },
       });
@@ -722,7 +722,7 @@ describe('EventService', () => {
 
       it('should enforce capacity limits', async () => {
         // Create event with capacity
-        const capacityEvent = await prisma.event.create({
+        const capacityEvent = await prisma.events.create({
           data: {
             title: 'Limited Capacity Event',
             description: createEventData().description,
@@ -748,7 +748,7 @@ describe('EventService', () => {
         );
 
         // Create another user for second RSVP
-        const otherUser = await prisma.user.create({
+        const otherUser = await prisma.users.create({
           data: {
             email: 'other-rsvp@example.com',
             passwordHash: 'hash',
@@ -771,8 +771,8 @@ describe('EventService', () => {
           ).rejects.toThrow('at full capacity');
         } finally {
           await prisma.eventRSVP.deleteMany({ where: { eventId: capacityEvent.id } });
-          await prisma.event.delete({ where: { id: capacityEvent.id } });
-          await prisma.user.delete({ where: { id: otherUser.id } });
+          await prisma.events.delete({ where: { id: capacityEvent.id } });
+          await prisma.users.delete({ where: { id: otherUser.id } });
         }
       });
 
@@ -882,7 +882,7 @@ describe('EventService', () => {
       const eventData = createEventData();
       const created = await eventService.createEvent(eventData, testUserId, mockAuditContext);
 
-      await prisma.event.update({
+      await prisma.events.update({
         where: { id: created.id },
         data: { status: EventStatus.ACTIVE },
       });
@@ -900,7 +900,7 @@ describe('EventService', () => {
       const eventData = createEventData();
       const created = await eventService.createEvent(eventData, testUserId, mockAuditContext);
 
-      await prisma.event.update({
+      await prisma.events.update({
         where: { id: created.id },
         data: { status: EventStatus.ACTIVE },
       });
@@ -967,7 +967,7 @@ describe('EventService', () => {
   describe('updatePastEventsStatus', () => {
     it('should update past events to PAST status', async () => {
       // Create an event with past end time
-      const pastEvent = await prisma.event.create({
+      const pastEvent = await prisma.events.create({
         data: {
           title: 'Past Event',
           description: createEventData().description,
@@ -987,7 +987,7 @@ describe('EventService', () => {
 
       expect(count).toBeGreaterThanOrEqual(1);
 
-      const updated = await prisma.event.findUnique({ where: { id: pastEvent.id } });
+      const updated = await prisma.events.findUnique({ where: { id: pastEvent.id } });
       expect(updated!.status).toBe(EventStatus.PAST);
     });
   });

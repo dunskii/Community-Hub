@@ -116,7 +116,7 @@ describe('BusinessService', () => {
     };
 
     it('should create a business with geocoding', async () => {
-      vi.mocked(prisma.category.findUnique).mockResolvedValue({ id: 'cat-123' } as never);
+      vi.mocked(prisma.categories.findUnique).mockResolvedValue({ id: 'cat-123' } as never);
       vi.mocked(seoService.generateBusinessSlug).mockResolvedValue('test-business');
       vi.mocked(geocodeAddress).mockResolvedValue({
         latitude: -33.8688,
@@ -124,8 +124,8 @@ describe('BusinessService', () => {
         formattedAddress: '123 Main St, Guildford NSW 2161, Australia',
         confidence: 'high',
       });
-      vi.mocked(prisma.business.create).mockResolvedValue(mockCreatedBusiness as never);
-      vi.mocked(prisma.auditLog.create).mockResolvedValue({} as never);
+      vi.mocked(prisma.businesses.create).mockResolvedValue(mockCreatedBusiness as never);
+      vi.mocked(prisma.audit_logs.create).mockResolvedValue({} as never);
 
       const result = await businessService.createBusiness(mockBusinessData, mockAuditContext);
 
@@ -137,7 +137,7 @@ describe('BusinessService', () => {
         postcode: '2161',
         country: 'Australia',
       });
-      expect(prisma.business.create).toHaveBeenCalledWith(
+      expect(prisma.businesses.create).toHaveBeenCalledWith(
         expect.objectContaining({
           data: expect.objectContaining({
             name: 'Test Business',
@@ -154,10 +154,10 @@ describe('BusinessService', () => {
     });
 
     it('should create business without coordinates if geocoding fails', async () => {
-      vi.mocked(prisma.category.findUnique).mockResolvedValue({ id: 'cat-123' } as never);
+      vi.mocked(prisma.categories.findUnique).mockResolvedValue({ id: 'cat-123' } as never);
       vi.mocked(seoService.generateBusinessSlug).mockResolvedValue('test-business');
       vi.mocked(geocodeAddress).mockRejectedValue(new Error('Geocoding failed'));
-      vi.mocked(prisma.business.create).mockResolvedValue({
+      vi.mocked(prisma.businesses.create).mockResolvedValue({
         ...mockCreatedBusiness,
         address: {
           ...mockCreatedBusiness.address,
@@ -165,7 +165,7 @@ describe('BusinessService', () => {
           longitude: 0,
         },
       } as never);
-      vi.mocked(prisma.auditLog.create).mockResolvedValue({} as never);
+      vi.mocked(prisma.audit_logs.create).mockResolvedValue({} as never);
 
       const result = await businessService.createBusiness(mockBusinessData, mockAuditContext);
 
@@ -173,11 +173,11 @@ describe('BusinessService', () => {
         latitude: 0,
         longitude: 0,
       });
-      expect(prisma.business.create).toHaveBeenCalled();
+      expect(prisma.businesses.create).toHaveBeenCalled();
     });
 
     it('should log audit trail for business creation', async () => {
-      vi.mocked(prisma.category.findUnique).mockResolvedValue({ id: 'cat-123' } as never);
+      vi.mocked(prisma.categories.findUnique).mockResolvedValue({ id: 'cat-123' } as never);
       vi.mocked(seoService.generateBusinessSlug).mockResolvedValue('test-business');
       vi.mocked(geocodeAddress).mockResolvedValue({
         latitude: -33.8688,
@@ -185,12 +185,12 @@ describe('BusinessService', () => {
         formattedAddress: '123 Main St, Guildford NSW 2161, Australia',
         confidence: 'high',
       });
-      vi.mocked(prisma.business.create).mockResolvedValue(mockCreatedBusiness as never);
-      vi.mocked(prisma.auditLog.create).mockResolvedValue({} as never);
+      vi.mocked(prisma.businesses.create).mockResolvedValue(mockCreatedBusiness as never);
+      vi.mocked(prisma.audit_logs.create).mockResolvedValue({} as never);
 
       await businessService.createBusiness(mockBusinessData, mockAuditContext);
 
-      expect(prisma.auditLog.create).toHaveBeenCalledWith({
+      expect(prisma.audit_logs.create).toHaveBeenCalledWith({
         data: {
           actorId: 'user-123',
           actorRole: 'ADMIN',
@@ -206,7 +206,7 @@ describe('BusinessService', () => {
     });
 
     it('should handle audit log failures gracefully', async () => {
-      vi.mocked(prisma.category.findUnique).mockResolvedValue({ id: 'cat-123' } as never);
+      vi.mocked(prisma.categories.findUnique).mockResolvedValue({ id: 'cat-123' } as never);
       vi.mocked(seoService.generateBusinessSlug).mockResolvedValue('test-business');
       vi.mocked(geocodeAddress).mockResolvedValue({
         latitude: -33.8688,
@@ -214,8 +214,8 @@ describe('BusinessService', () => {
         formattedAddress: '123 Main St, Guildford NSW 2161, Australia',
         confidence: 'high',
       });
-      vi.mocked(prisma.business.create).mockResolvedValue(mockCreatedBusiness as never);
-      vi.mocked(prisma.auditLog.create).mockRejectedValue(new Error('Audit log failed'));
+      vi.mocked(prisma.businesses.create).mockResolvedValue(mockCreatedBusiness as never);
+      vi.mocked(prisma.audit_logs.create).mockRejectedValue(new Error('Audit log failed'));
 
       // Should not throw even if audit log fails
       const result = await businessService.createBusiness(mockBusinessData, mockAuditContext);
@@ -224,7 +224,7 @@ describe('BusinessService', () => {
     });
 
     it('should set default status to PENDING', async () => {
-      vi.mocked(prisma.category.findUnique).mockResolvedValue({ id: 'cat-123' } as never);
+      vi.mocked(prisma.categories.findUnique).mockResolvedValue({ id: 'cat-123' } as never);
       vi.mocked(seoService.generateBusinessSlug).mockResolvedValue('test-business');
       vi.mocked(geocodeAddress).mockResolvedValue({
         latitude: -33.8688,
@@ -232,12 +232,12 @@ describe('BusinessService', () => {
         formattedAddress: '123 Main St, Guildford NSW 2161, Australia',
         confidence: 'high',
       });
-      vi.mocked(prisma.business.create).mockResolvedValue(mockCreatedBusiness as never);
-      vi.mocked(prisma.auditLog.create).mockResolvedValue({} as never);
+      vi.mocked(prisma.businesses.create).mockResolvedValue(mockCreatedBusiness as never);
+      vi.mocked(prisma.audit_logs.create).mockResolvedValue({} as never);
 
       await businessService.createBusiness(mockBusinessData, mockAuditContext);
 
-      expect(prisma.business.create).toHaveBeenCalledWith(
+      expect(prisma.businesses.create).toHaveBeenCalledWith(
         expect.objectContaining({
           data: expect.objectContaining({
             status: 'PENDING',
@@ -261,7 +261,7 @@ describe('BusinessService', () => {
         phone: '+61412345678',
       };
 
-      vi.mocked(prisma.category.findUnique).mockResolvedValue({ id: 'cat-123' } as never);
+      vi.mocked(prisma.categories.findUnique).mockResolvedValue({ id: 'cat-123' } as never);
       vi.mocked(seoService.generateBusinessSlug).mockResolvedValue('minimal-business');
       vi.mocked(geocodeAddress).mockResolvedValue({
         latitude: -33.8688,
@@ -269,13 +269,13 @@ describe('BusinessService', () => {
         formattedAddress: '123 Main St, Guildford NSW 2161, Australia',
         confidence: 'high',
       });
-      vi.mocked(prisma.business.create).mockResolvedValue(mockCreatedBusiness as never);
-      vi.mocked(prisma.auditLog.create).mockResolvedValue({} as never);
+      vi.mocked(prisma.businesses.create).mockResolvedValue(mockCreatedBusiness as never);
+      vi.mocked(prisma.audit_logs.create).mockResolvedValue({} as never);
 
       const result = await businessService.createBusiness(minimalData, mockAuditContext);
 
       expect(result).toBeDefined();
-      expect(prisma.business.create).toHaveBeenCalledWith(
+      expect(prisma.businesses.create).toHaveBeenCalledWith(
         expect.objectContaining({
           data: expect.objectContaining({
             categoriesSecondary: [],
@@ -299,12 +299,12 @@ describe('BusinessService', () => {
     };
 
     it('should get business by ID with relations', async () => {
-      vi.mocked(prisma.business.findUnique).mockResolvedValue(mockBusiness as never);
+      vi.mocked(prisma.businesses.findUnique).mockResolvedValue(mockBusiness as never);
 
       const result = await businessService.getBusinessById('business-123', true);
 
       expect(result).toEqual(mockBusiness);
-      expect(prisma.business.findUnique).toHaveBeenCalledWith({
+      expect(prisma.businesses.findUnique).toHaveBeenCalledWith({
         where: { id: 'business-123' },
         include: {
           categoryPrimary: true,
@@ -320,19 +320,19 @@ describe('BusinessService', () => {
     });
 
     it('should get business by ID without relations', async () => {
-      vi.mocked(prisma.business.findUnique).mockResolvedValue(mockBusiness as never);
+      vi.mocked(prisma.businesses.findUnique).mockResolvedValue(mockBusiness as never);
 
       const result = await businessService.getBusinessById('business-123', false);
 
       expect(result).toEqual(mockBusiness);
-      expect(prisma.business.findUnique).toHaveBeenCalledWith({
+      expect(prisma.businesses.findUnique).toHaveBeenCalledWith({
         where: { id: 'business-123' },
         include: undefined,
       });
     });
 
     it('should return null for non-existent business', async () => {
-      vi.mocked(prisma.business.findUnique).mockResolvedValue(null);
+      vi.mocked(prisma.businesses.findUnique).mockResolvedValue(null);
 
       const result = await businessService.getBusinessById('non-existent');
 
@@ -350,19 +350,19 @@ describe('BusinessService', () => {
     };
 
     it('should get business by slug', async () => {
-      vi.mocked(prisma.business.findUnique).mockResolvedValue(mockBusiness as never);
+      vi.mocked(prisma.businesses.findUnique).mockResolvedValue(mockBusiness as never);
 
       const result = await businessService.getBusinessBySlug('test-business');
 
       expect(result).toEqual(mockBusiness);
-      expect(prisma.business.findUnique).toHaveBeenCalledWith({
+      expect(prisma.businesses.findUnique).toHaveBeenCalledWith({
         where: { slug: 'test-business' },
         include: expect.any(Object),
       });
     });
 
     it('should return null for non-existent slug', async () => {
-      vi.mocked(prisma.business.findUnique).mockResolvedValue(null);
+      vi.mocked(prisma.businesses.findUnique).mockResolvedValue(null);
 
       const result = await businessService.getBusinessBySlug('non-existent');
 
@@ -377,8 +377,8 @@ describe('BusinessService', () => {
     ];
 
     it('should list businesses with default pagination', async () => {
-      vi.mocked(prisma.business.findMany).mockResolvedValue(mockBusinesses as never);
-      vi.mocked(prisma.business.count).mockResolvedValue(2);
+      vi.mocked(prisma.businesses.findMany).mockResolvedValue(mockBusinesses as never);
+      vi.mocked(prisma.businesses.count).mockResolvedValue(2);
 
       const result = await businessService.listBusinesses({}, {});
 
@@ -392,12 +392,12 @@ describe('BusinessService', () => {
     });
 
     it('should filter by category', async () => {
-      vi.mocked(prisma.business.findMany).mockResolvedValue(mockBusinesses as never);
-      vi.mocked(prisma.business.count).mockResolvedValue(2);
+      vi.mocked(prisma.businesses.findMany).mockResolvedValue(mockBusinesses as never);
+      vi.mocked(prisma.businesses.count).mockResolvedValue(2);
 
       await businessService.listBusinesses({ category: 'cat-123' }, {});
 
-      expect(prisma.business.findMany).toHaveBeenCalledWith(
+      expect(prisma.businesses.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
           where: expect.objectContaining({
             categoryPrimaryId: 'cat-123',
@@ -407,12 +407,12 @@ describe('BusinessService', () => {
     });
 
     it('should filter by status', async () => {
-      vi.mocked(prisma.business.findMany).mockResolvedValue(mockBusinesses as never);
-      vi.mocked(prisma.business.count).mockResolvedValue(2);
+      vi.mocked(prisma.businesses.findMany).mockResolvedValue(mockBusinesses as never);
+      vi.mocked(prisma.businesses.count).mockResolvedValue(2);
 
       await businessService.listBusinesses({ status: 'PENDING' }, {});
 
-      expect(prisma.business.findMany).toHaveBeenCalledWith(
+      expect(prisma.businesses.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
           where: expect.objectContaining({
             status: 'PENDING',
@@ -422,12 +422,12 @@ describe('BusinessService', () => {
     });
 
     it('should default to ACTIVE status when no status filter provided', async () => {
-      vi.mocked(prisma.business.findMany).mockResolvedValue(mockBusinesses as never);
-      vi.mocked(prisma.business.count).mockResolvedValue(2);
+      vi.mocked(prisma.businesses.findMany).mockResolvedValue(mockBusinesses as never);
+      vi.mocked(prisma.businesses.count).mockResolvedValue(2);
 
       await businessService.listBusinesses({}, {});
 
-      expect(prisma.business.findMany).toHaveBeenCalledWith(
+      expect(prisma.businesses.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
           where: expect.objectContaining({
             status: 'ACTIVE',
@@ -437,8 +437,8 @@ describe('BusinessService', () => {
     });
 
     it('should handle pagination correctly', async () => {
-      vi.mocked(prisma.business.findMany).mockResolvedValue(mockBusinesses as never);
-      vi.mocked(prisma.business.count).mockResolvedValue(50);
+      vi.mocked(prisma.businesses.findMany).mockResolvedValue(mockBusinesses as never);
+      vi.mocked(prisma.businesses.count).mockResolvedValue(50);
 
       const result = await businessService.listBusinesses({}, { page: 2, limit: 10 });
 
@@ -448,7 +448,7 @@ describe('BusinessService', () => {
         total: 50,
         totalPages: 5,
       });
-      expect(prisma.business.findMany).toHaveBeenCalledWith(
+      expect(prisma.businesses.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
           skip: 10, // (page 2 - 1) * 10
           take: 10,
@@ -457,12 +457,12 @@ describe('BusinessService', () => {
     });
 
     it('should enforce maximum limit of 100', async () => {
-      vi.mocked(prisma.business.findMany).mockResolvedValue(mockBusinesses as never);
-      vi.mocked(prisma.business.count).mockResolvedValue(200);
+      vi.mocked(prisma.businesses.findMany).mockResolvedValue(mockBusinesses as never);
+      vi.mocked(prisma.businesses.count).mockResolvedValue(200);
 
       await businessService.listBusinesses({}, { limit: 500 });
 
-      expect(prisma.business.findMany).toHaveBeenCalledWith(
+      expect(prisma.businesses.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
           take: 100, // Max enforced
         })
@@ -470,12 +470,12 @@ describe('BusinessService', () => {
     });
 
     it('should sort by name ascending', async () => {
-      vi.mocked(prisma.business.findMany).mockResolvedValue(mockBusinesses as never);
-      vi.mocked(prisma.business.count).mockResolvedValue(2);
+      vi.mocked(prisma.businesses.findMany).mockResolvedValue(mockBusinesses as never);
+      vi.mocked(prisma.businesses.count).mockResolvedValue(2);
 
       await businessService.listBusinesses({}, { sortBy: 'name', sortOrder: 'asc' });
 
-      expect(prisma.business.findMany).toHaveBeenCalledWith(
+      expect(prisma.businesses.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
           orderBy: [{ name: 'asc' }],
         })
@@ -483,12 +483,12 @@ describe('BusinessService', () => {
     });
 
     it('should sort by createdAt descending by default', async () => {
-      vi.mocked(prisma.business.findMany).mockResolvedValue(mockBusinesses as never);
-      vi.mocked(prisma.business.count).mockResolvedValue(2);
+      vi.mocked(prisma.businesses.findMany).mockResolvedValue(mockBusinesses as never);
+      vi.mocked(prisma.businesses.count).mockResolvedValue(2);
 
       await businessService.listBusinesses({}, {});
 
-      expect(prisma.business.findMany).toHaveBeenCalledWith(
+      expect(prisma.businesses.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
           orderBy: [{ createdAt: 'desc' }],
         })
@@ -520,14 +520,14 @@ describe('BusinessService', () => {
     };
 
     it('should update business and log audit trail', async () => {
-      vi.mocked(prisma.business.findUnique).mockResolvedValue(existingBusiness as never);
-      vi.mocked(prisma.business.update).mockResolvedValue(updatedBusiness as never);
-      vi.mocked(prisma.auditLog.create).mockResolvedValue({} as never);
+      vi.mocked(prisma.businesses.findUnique).mockResolvedValue(existingBusiness as never);
+      vi.mocked(prisma.businesses.update).mockResolvedValue(updatedBusiness as never);
+      vi.mocked(prisma.audit_logs.create).mockResolvedValue({} as never);
 
       const result = await businessService.updateBusiness('business-123', updateData, mockAuditContext);
 
       expect(result).toEqual(updatedBusiness);
-      expect(prisma.auditLog.create).toHaveBeenCalledWith({
+      expect(prisma.audit_logs.create).toHaveBeenCalledWith({
         data: expect.objectContaining({
           action: 'business.update',
           targetId: 'business-123',
@@ -538,7 +538,7 @@ describe('BusinessService', () => {
     });
 
     it('should throw error if business not found', async () => {
-      vi.mocked(prisma.business.findUnique).mockResolvedValue(null);
+      vi.mocked(prisma.businesses.findUnique).mockResolvedValue(null);
 
       await expect(
         businessService.updateBusiness('non-existent', updateData, mockAuditContext)
@@ -556,14 +556,14 @@ describe('BusinessService', () => {
         },
       };
 
-      vi.mocked(prisma.business.findUnique).mockResolvedValue(existingBusiness as never);
+      vi.mocked(prisma.businesses.findUnique).mockResolvedValue(existingBusiness as never);
       vi.mocked(geocodeAddress).mockResolvedValue({
         latitude: -33.8150,
         longitude: 151.0000,
         formattedAddress: '456 New St, Parramatta NSW 2150, Australia',
         confidence: 'high',
       });
-      vi.mocked(prisma.business.update).mockResolvedValue({
+      vi.mocked(prisma.businesses.update).mockResolvedValue({
         ...updatedBusiness,
         address: {
           street: '456 New St',
@@ -574,7 +574,7 @@ describe('BusinessService', () => {
           longitude: 151.0000,
         },
       } as never);
-      vi.mocked(prisma.auditLog.create).mockResolvedValue({} as never);
+      vi.mocked(prisma.audit_logs.create).mockResolvedValue({} as never);
 
       await businessService.updateBusiness('business-123', updateWithAddress, mockAuditContext);
 
@@ -597,14 +597,14 @@ describe('BusinessService', () => {
         },
       };
 
-      vi.mocked(prisma.business.findUnique).mockResolvedValue(existingBusiness as never);
+      vi.mocked(prisma.businesses.findUnique).mockResolvedValue(existingBusiness as never);
       vi.mocked(geocodeAddress).mockRejectedValue(new Error('Geocoding failed'));
-      vi.mocked(prisma.business.update).mockResolvedValue(updatedBusiness as never);
-      vi.mocked(prisma.auditLog.create).mockResolvedValue({} as never);
+      vi.mocked(prisma.businesses.update).mockResolvedValue(updatedBusiness as never);
+      vi.mocked(prisma.audit_logs.create).mockResolvedValue({} as never);
 
       await businessService.updateBusiness('business-123', updateWithAddress, mockAuditContext);
 
-      expect(prisma.business.update).toHaveBeenCalledWith(
+      expect(prisma.businesses.update).toHaveBeenCalledWith(
         expect.objectContaining({
           data: expect.objectContaining({
             address: expect.objectContaining({
@@ -625,32 +625,32 @@ describe('BusinessService', () => {
     };
 
     it('should soft delete business (set status to DELETED)', async () => {
-      vi.mocked(prisma.business.findUnique).mockResolvedValue(existingBusiness as never);
-      vi.mocked(prisma.business.update).mockResolvedValue({
+      vi.mocked(prisma.businesses.findUnique).mockResolvedValue(existingBusiness as never);
+      vi.mocked(prisma.businesses.update).mockResolvedValue({
         ...existingBusiness,
         status: 'DELETED',
       } as never);
-      vi.mocked(prisma.auditLog.create).mockResolvedValue({} as never);
+      vi.mocked(prisma.audit_logs.create).mockResolvedValue({} as never);
 
       await businessService.deleteBusiness('business-123', mockAuditContext);
 
-      expect(prisma.business.update).toHaveBeenCalledWith({
+      expect(prisma.businesses.update).toHaveBeenCalledWith({
         where: { id: 'business-123' },
         data: { status: 'DELETED' },
       });
     });
 
     it('should log audit trail for deletion', async () => {
-      vi.mocked(prisma.business.findUnique).mockResolvedValue(existingBusiness as never);
-      vi.mocked(prisma.business.update).mockResolvedValue({
+      vi.mocked(prisma.businesses.findUnique).mockResolvedValue(existingBusiness as never);
+      vi.mocked(prisma.businesses.update).mockResolvedValue({
         ...existingBusiness,
         status: 'DELETED',
       } as never);
-      vi.mocked(prisma.auditLog.create).mockResolvedValue({} as never);
+      vi.mocked(prisma.audit_logs.create).mockResolvedValue({} as never);
 
       await businessService.deleteBusiness('business-123', mockAuditContext);
 
-      expect(prisma.auditLog.create).toHaveBeenCalledWith({
+      expect(prisma.audit_logs.create).toHaveBeenCalledWith({
         data: expect.objectContaining({
           action: 'business.delete',
           targetId: 'business-123',
@@ -661,7 +661,7 @@ describe('BusinessService', () => {
     });
 
     it('should throw error if business not found', async () => {
-      vi.mocked(prisma.business.findUnique).mockResolvedValue(null);
+      vi.mocked(prisma.businesses.findUnique).mockResolvedValue(null);
 
       await expect(
         businessService.deleteBusiness('non-existent', mockAuditContext)

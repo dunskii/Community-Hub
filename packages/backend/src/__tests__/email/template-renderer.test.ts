@@ -86,7 +86,7 @@ describe('TemplateRenderer', () => {
         updatedAt: new Date(),
       };
 
-      vi.mocked(prisma.emailTemplate.findUnique).mockResolvedValue(mockTemplate);
+      vi.mocked(prisma.email_templates.findUnique).mockResolvedValue(mockTemplate);
 
       const result = await renderer.render(
         'email_verification',
@@ -131,7 +131,7 @@ describe('TemplateRenderer', () => {
         updatedAt: new Date(),
       };
 
-      vi.mocked(prisma.emailTemplate.findUnique).mockResolvedValue(mockTemplate);
+      vi.mocked(prisma.email_templates.findUnique).mockResolvedValue(mockTemplate);
 
       const result = await renderer.render(
         'password_reset',
@@ -173,7 +173,7 @@ describe('TemplateRenderer', () => {
         updatedAt: new Date(),
       };
 
-      vi.mocked(prisma.emailTemplate.findUnique).mockResolvedValue(mockTemplate);
+      vi.mocked(prisma.email_templates.findUnique).mockResolvedValue(mockTemplate);
 
       const result = await renderer.render(
         'email_verification',
@@ -211,7 +211,7 @@ describe('TemplateRenderer', () => {
         updatedAt: new Date(),
       };
 
-      vi.mocked(prisma.emailTemplate.findUnique).mockResolvedValue(mockTemplate);
+      vi.mocked(prisma.email_templates.findUnique).mockResolvedValue(mockTemplate);
 
       const result = await renderer.render(
         'email_verification',
@@ -247,7 +247,7 @@ describe('TemplateRenderer', () => {
         updatedAt: new Date(),
       };
 
-      vi.mocked(prisma.emailTemplate.findUnique).mockResolvedValue(mockTemplate);
+      vi.mocked(prisma.email_templates.findUnique).mockResolvedValue(mockTemplate);
 
       const result = await renderer.render(
         'password_reset',
@@ -270,7 +270,7 @@ describe('TemplateRenderer', () => {
     });
 
     it('should throw error if template not found', async () => {
-      vi.mocked(prisma.emailTemplate.findUnique).mockResolvedValue(null);
+      vi.mocked(prisma.email_templates.findUnique).mockResolvedValue(null);
 
       await expect(
         renderer.render(
@@ -306,7 +306,7 @@ describe('TemplateRenderer', () => {
         updatedAt: new Date(),
       };
 
-      vi.mocked(prisma.emailTemplate.findUnique).mockResolvedValue(mockTemplate);
+      vi.mocked(prisma.email_templates.findUnique).mockResolvedValue(mockTemplate);
 
       const result = await renderer.render(
         'email_verification',

@@ -72,14 +72,19 @@ export const LoginForm: React.FC = () => {
     }
 
     try {
-      await login(formData);
+      const user = await login(formData);
 
-      // Redirect to intended page, dashboard, or home
+      // Redirect to intended page, or role-appropriate dashboard
       const from = (location.state as any)?.from?.pathname;
-      if (from) {
+
+      // If there's a specific redirect path (not the generic dashboard), use it
+      if (from && from !== '/dashboard') {
         navigate(from, { replace: true });
+      } else if (user?.role === 'BUSINESS_OWNER') {
+        // Business owners go to business dashboard
+        navigate('/business/dashboard', { replace: true });
       } else {
-        // Default redirect to dashboard for logged in users
+        // Default redirect to dashboard for regular users
         navigate('/dashboard', { replace: true });
       }
     } catch (err) {

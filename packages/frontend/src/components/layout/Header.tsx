@@ -229,7 +229,7 @@ export function Header({
                         {t('navigation.dashboard', 'Dashboard')}
                       </Link>
                       <Link
-                        to="/owner/dashboard"
+                        to="/business/dashboard"
                         className="block px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700"
                         role="menuitem"
                         onClick={() => setUserMenuOpen(false)}

@@ -10,8 +10,15 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || '/api/v1';
  * Get CSRF token from cookie
  */
 function getCsrfToken(): string | null {
-  const match = document.cookie.match(/XSRF-TOKEN=([^;]+)/);
-  return match ? match[1] : null;
+  const cookies = document.cookie.split(';');
+  for (const cookie of cookies) {
+    const [name, ...valueParts] = cookie.trim().split('=');
+    if (name === 'XSRF-TOKEN') {
+      const value = valueParts.join('='); // Handle values with '=' in them
+      return value ? decodeURIComponent(value) : null;
+    }
+  }
+  return null;
 }
 
 export interface ApiError {
@@ -60,6 +67,13 @@ async function request<T>(
     const csrfToken = getCsrfToken();
     if (csrfToken) {
       headers['X-CSRF-Token'] = csrfToken;
+    } else {
+      // CSRF token not found - this will likely fail
+      // Log for debugging in development
+      if (import.meta.env.DEV) {
+        console.warn('[API] CSRF token not found in cookies. State-changing request may fail.');
+        console.warn('[API] Available cookies:', document.cookie);
+      }
     }
   }
 

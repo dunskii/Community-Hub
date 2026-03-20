@@ -6,6 +6,7 @@
  * Handles message operations: send, read, delete, pagination.
  */
 
+import crypto from 'crypto';
 import { prisma } from '../db/index.js';
 import { Prisma } from '../generated/prisma/index.js';
 import { logger } from '../utils/logger.js';
@@ -87,17 +88,18 @@ class MessageService {
     userAgent: string;
   }): Promise<void> {
     try {
-      await prisma.auditLog.create({
+      await prisma.audit_logs.create({
         data: {
-          actorId: params.actorId,
-          actorRole: params.actorRole as ActorRole,
+          id: crypto.randomUUID(),
+          actor_id: params.actorId,
+          actor_role: params.actorRole as ActorRole,
           action: params.action,
-          targetType: params.targetType,
-          targetId: params.targetId,
-          previousValue: params.previousValue ? JSON.stringify(params.previousValue) : Prisma.DbNull,
-          newValue: params.newValue ? JSON.stringify(params.newValue) : Prisma.DbNull,
-          ipAddress: params.ipAddress,
-          userAgent: params.userAgent,
+          target_type: params.targetType,
+          target_id: params.targetId,
+          previous_value: params.previousValue ? JSON.stringify(params.previousValue) : Prisma.DbNull,
+          new_value: params.newValue ? JSON.stringify(params.newValue) : Prisma.DbNull,
+          ip_address: params.ipAddress,
+          user_agent: params.userAgent,
         },
       });
     } catch (error) {
@@ -117,14 +119,14 @@ class MessageService {
     logger.info({ conversationId, senderId }, 'Sending message');
 
     // Get conversation and verify sender is participant
-    const conversation = await prisma.conversation.findUnique({
+    const conversation = await prisma.conversations.findUnique({
       where: { id: conversationId },
       include: {
-        business: {
-          select: { id: true, claimedBy: true },
+        businesses: {
+          select: { id: true, claimed_by: true },
         },
-        user: {
-          select: { id: true, displayName: true, profilePhoto: true },
+        users: {
+          select: { id: true, display_name: true, profile_photo: true },
         },
       },
     });
@@ -137,10 +139,14 @@ class MessageService {
     let senderType: SenderType;
     let sender: { id: string; displayName: string; profilePhoto: string | null } | null = null;
 
-    if (conversation.userId === senderId) {
+    if (conversation.user_id === senderId) {
       // User sending message
       senderType = SenderType.USER;
-      sender = conversation.user;
+      sender = {
+        id: conversation.users.id,
+        displayName: conversation.users.display_name,
+        profilePhoto: conversation.users.profile_photo,
+      };
 
       // Check if blocked
       if (conversation.status === ConversationStatus.BLOCKED) {
@@ -149,51 +155,59 @@ class MessageService {
           'You are blocked from messaging this business'
         );
       }
-    } else if (conversation.business.claimedBy === senderId) {
+    } else if (conversation.businesses.claimed_by === senderId) {
       // Business owner responding
       senderType = SenderType.BUSINESS;
 
       // Get business owner info
-      const owner = await prisma.user.findUnique({
+      const owner = await prisma.users.findUnique({
         where: { id: senderId },
-        select: { id: true, displayName: true, profilePhoto: true },
+        select: { id: true, display_name: true, profile_photo: true },
       });
-      sender = owner;
+      if (owner) {
+        sender = {
+          id: owner.id,
+          displayName: owner.display_name,
+          profilePhoto: owner.profile_photo,
+        };
+      }
     } else {
       throw ApiError.forbidden('NOT_AUTHORIZED', 'You are not a participant in this conversation');
     }
 
     // Create message with attachments in transaction
     const message = await prisma.$transaction(async (tx) => {
-      const msg = await tx.message.create({
+      const msg = await tx.messages.create({
         data: {
-          conversationId,
-          senderType,
-          senderId,
+          id: crypto.randomUUID(),
+          conversation_id: conversationId,
+          sender_type: senderType,
+          sender_id: senderId,
           content: input.content,
         },
         include: {
-          attachments: true,
+          message_attachments: true,
         },
       });
 
       // Create attachments if any
       if (input.attachments && input.attachments.length > 0) {
-        await tx.messageAttachment.createMany({
+        await tx.message_attachments.createMany({
           data: input.attachments.map((att) => ({
-            messageId: msg.id,
+            id: crypto.randomUUID(),
+            message_id: msg.id,
             url: att.url,
-            altText: att.altText || null,
-            sizeBytes: att.sizeBytes,
-            mimeType: att.mimeType,
+            alt_text: att.altText || null,
+            size_bytes: att.sizeBytes,
+            mime_type: att.mimeType,
           })),
         });
       }
 
       // Update conversation
       const updateData: Record<string, unknown> = {
-        lastMessageAt: new Date(),
-        updatedAt: new Date(),
+        last_message_at: new Date(),
+        updated_at: new Date(),
       };
 
       // If conversation was archived by user, reactivate it
@@ -203,27 +217,27 @@ class MessageService {
 
       // Update unread count
       if (senderType === SenderType.USER) {
-        updateData.unreadCountBusiness = { increment: 1 };
+        updateData.unread_count_business = { increment: 1 };
       } else {
-        updateData.unreadCountUser = { increment: 1 };
+        updateData.unread_count_user = { increment: 1 };
       }
 
-      await tx.conversation.update({
+      await tx.conversations.update({
         where: { id: conversationId },
         data: updateData,
       });
 
       // Fetch message with attachments
-      return tx.message.findUnique({
+      return tx.messages.findUnique({
         where: { id: msg.id },
         include: {
-          attachments: {
+          message_attachments: {
             select: {
               id: true,
               url: true,
-              altText: true,
-              sizeBytes: true,
-              mimeType: true,
+              alt_text: true,
+              size_bytes: true,
+              mime_type: true,
             },
           },
         },
@@ -235,7 +249,7 @@ class MessageService {
     }
 
     // Invalidate cache
-    await this.invalidateCache(conversation.userId, conversation.businessId);
+    await this.invalidateCache(conversation.user_id, conversation.business_id);
 
     // Log audit
     await this.createAuditLog({
@@ -256,14 +270,20 @@ class MessageService {
 
     return {
       id: message.id,
-      conversationId: message.conversationId,
-      senderType: message.senderType,
-      senderId: message.senderId,
+      conversationId: message.conversation_id,
+      senderType: message.sender_type,
+      senderId: message.sender_id,
       content: message.content,
-      readAt: message.readAt,
-      deletedAt: message.deletedAt,
-      createdAt: message.createdAt,
-      attachments: message.attachments,
+      readAt: message.read_at,
+      deletedAt: message.deleted_at,
+      createdAt: message.created_at,
+      attachments: message.message_attachments.map((att) => ({
+        id: att.id,
+        url: att.url,
+        altText: att.alt_text,
+        sizeBytes: att.size_bytes,
+        mimeType: att.mime_type,
+      })),
       sender,
     };
   }
@@ -279,11 +299,11 @@ class MessageService {
     const { page, limit } = pagination;
 
     // Verify access
-    const conversation = await prisma.conversation.findUnique({
+    const conversation = await prisma.conversations.findUnique({
       where: { id: conversationId },
       include: {
-        business: {
-          select: { claimedBy: true },
+        businesses: {
+          select: { claimed_by: true },
         },
       },
     });
@@ -292,67 +312,77 @@ class MessageService {
       throw ApiError.notFound('CONVERSATION_NOT_FOUND', 'Conversation not found');
     }
 
-    const isParticipant = conversation.userId === userId;
-    const isOwner = conversation.business.claimedBy === userId;
+    const isParticipant = conversation.user_id === userId;
+    const isOwner = conversation.businesses.claimed_by === userId;
 
     if (!isParticipant && !isOwner) {
       throw ApiError.forbidden('NOT_AUTHORIZED', 'You are not authorized to view these messages');
     }
 
     // Get total count
-    const total = await prisma.message.count({
+    const total = await prisma.messages.count({
       where: {
-        conversationId,
-        deletedAt: null,
+        conversation_id: conversationId,
+        deleted_at: null,
       },
     });
 
     // Get messages (newest first for pagination, reversed for display)
-    const messages = await prisma.message.findMany({
+    const messages = await prisma.messages.findMany({
       where: {
-        conversationId,
-        deletedAt: null,
+        conversation_id: conversationId,
+        deleted_at: null,
       },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { created_at: 'desc' },
       skip: (page - 1) * limit,
       take: limit,
       include: {
-        attachments: {
+        message_attachments: {
           select: {
             id: true,
             url: true,
-            altText: true,
-            sizeBytes: true,
-            mimeType: true,
+            alt_text: true,
+            size_bytes: true,
+            mime_type: true,
           },
         },
       },
     });
 
     // Batch load all senders in a single query to avoid N+1
-    const senderIds = [...new Set(messages.map((msg) => msg.senderId))];
+    const senderIds = [...new Set(messages.map((msg) => msg.sender_id))];
     const senders = senderIds.length > 0
-      ? await prisma.user.findMany({
+      ? await prisma.users.findMany({
           where: { id: { in: senderIds } },
-          select: { id: true, displayName: true, profilePhoto: true },
+          select: { id: true, display_name: true, profile_photo: true },
         })
       : [];
 
     // Create a map for O(1) sender lookup
-    const senderMap = new Map(senders.map((s) => [s.id, s]));
+    const senderMap = new Map(senders.map((s) => [s.id, {
+      id: s.id,
+      displayName: s.display_name,
+      profilePhoto: s.profile_photo,
+    }]));
 
     // Map messages with their senders
     const messagesWithSenders = messages.map((msg) => ({
       id: msg.id,
-      conversationId: msg.conversationId,
-      senderType: msg.senderType,
-      senderId: msg.senderId,
+      conversationId: msg.conversation_id,
+      senderType: msg.sender_type,
+      senderId: msg.sender_id,
       content: msg.content,
-      readAt: msg.readAt,
-      deletedAt: msg.deletedAt,
-      createdAt: msg.createdAt,
-      attachments: msg.attachments,
-      sender: senderMap.get(msg.senderId) || null,
+      readAt: msg.read_at,
+      deletedAt: msg.deleted_at,
+      createdAt: msg.created_at,
+      attachments: msg.message_attachments.map((att) => ({
+        id: att.id,
+        url: att.url,
+        altText: att.alt_text,
+        sizeBytes: att.size_bytes,
+        mimeType: att.mime_type,
+      })),
+      sender: senderMap.get(msg.sender_id) || null,
     }));
 
     const totalPages = Math.ceil(total / limit);
@@ -378,11 +408,11 @@ class MessageService {
     userId: string,
     _auditContext: AuditContext
   ): Promise<void> {
-    const conversation = await prisma.conversation.findUnique({
+    const conversation = await prisma.conversations.findUnique({
       where: { id: conversationId },
       include: {
-        business: {
-          select: { claimedBy: true },
+        businesses: {
+          select: { claimed_by: true },
         },
       },
     });
@@ -391,8 +421,8 @@ class MessageService {
       throw ApiError.notFound('CONVERSATION_NOT_FOUND', 'Conversation not found');
     }
 
-    const isUser = conversation.userId === userId;
-    const isOwner = conversation.business.claimedBy === userId;
+    const isUser = conversation.user_id === userId;
+    const isOwner = conversation.businesses.claimed_by === userId;
 
     if (!isUser && !isOwner) {
       throw ApiError.forbidden('NOT_AUTHORIZED', 'You are not authorized to mark this as read');
@@ -402,35 +432,35 @@ class MessageService {
       // Mark all messages as read
       if (isUser) {
         // Mark business messages as read
-        await tx.message.updateMany({
+        await tx.messages.updateMany({
           where: {
-            conversationId,
-            senderType: SenderType.BUSINESS,
-            readAt: null,
+            conversation_id: conversationId,
+            sender_type: SenderType.BUSINESS,
+            read_at: null,
           },
-          data: { readAt: new Date() },
+          data: { read_at: new Date() },
         });
 
         // Reset user unread count
-        await tx.conversation.update({
+        await tx.conversations.update({
           where: { id: conversationId },
-          data: { unreadCountUser: 0 },
+          data: { unread_count_user: 0 },
         });
       } else {
         // Mark user messages as read
-        await tx.message.updateMany({
+        await tx.messages.updateMany({
           where: {
-            conversationId,
-            senderType: SenderType.USER,
-            readAt: null,
+            conversation_id: conversationId,
+            sender_type: SenderType.USER,
+            read_at: null,
           },
-          data: { readAt: new Date() },
+          data: { read_at: new Date() },
         });
 
         // Reset business unread count
-        await tx.conversation.update({
+        await tx.conversations.update({
           where: { id: conversationId },
-          data: { unreadCountBusiness: 0 },
+          data: { unread_count_business: 0 },
         });
       }
     });
@@ -439,7 +469,7 @@ class MessageService {
     if (isUser) {
       await this.invalidateCache(userId);
     } else {
-      await this.invalidateCache(undefined, conversation.businessId);
+      await this.invalidateCache(undefined, conversation.business_id);
     }
 
     logger.debug({ conversationId, userId }, 'Conversation marked as read');
@@ -453,13 +483,13 @@ class MessageService {
     userId: string,
     auditContext: AuditContext
   ): Promise<void> {
-    const message = await prisma.message.findUnique({
+    const message = await prisma.messages.findUnique({
       where: { id: messageId },
       include: {
-        conversation: {
+        conversations: {
           include: {
-            business: {
-              select: { claimedBy: true },
+            businesses: {
+              select: { claimed_by: true },
             },
           },
         },
@@ -470,18 +500,18 @@ class MessageService {
       throw ApiError.notFound('MESSAGE_NOT_FOUND', 'Message not found');
     }
 
-    if (message.deletedAt) {
+    if (message.deleted_at) {
       throw ApiError.badRequest('ALREADY_DELETED', 'Message is already deleted');
     }
 
     // Verify sender owns the message
-    if (message.senderId !== userId) {
+    if (message.sender_id !== userId) {
       throw ApiError.forbidden('NOT_AUTHORIZED', 'You can only delete your own messages');
     }
 
     // Check 24h window
     const hoursSinceCreation =
-      (Date.now() - message.createdAt.getTime()) / (1000 * 60 * 60);
+      (Date.now() - message.created_at.getTime()) / (1000 * 60 * 60);
 
     if (hoursSinceCreation > MESSAGE_DELETE_WINDOW_HOURS) {
       throw ApiError.badRequest(
@@ -491,9 +521,9 @@ class MessageService {
     }
 
     // Soft delete
-    await prisma.message.update({
+    await prisma.messages.update({
       where: { id: messageId },
-      data: { deletedAt: new Date() },
+      data: { deleted_at: new Date() },
     });
 
     // Log audit

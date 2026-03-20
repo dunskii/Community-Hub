@@ -6,6 +6,7 @@
  * Handles RSVP operations for events.
  */
 
+import crypto from 'crypto';
 import { prisma } from '../db/index.js';
 import { logger } from '../utils/logger.js';
 import { ApiError } from '../utils/api-error.js';
@@ -36,16 +37,16 @@ export class EventRSVPService {
     getEventCallback: (eventId: string, userId?: string) => Promise<EventWithDetails>
   ): Promise<{ rsvp: AttendeeInfo; event: EventWithDetails }> {
     // Get event
-    const event = await prisma.event.findUnique({
+    const event = await prisma.events.findUnique({
       where: { id: eventId },
       include: {
-        rsvps: true,
-        category: true,
-        linkedBusiness: {
+        event_rsvps: true,
+        categories: true,
+        businesses: {
           select: { id: true, name: true, slug: true },
         },
-        createdBy: {
-          select: { id: true, displayName: true, profilePhoto: true },
+        users: {
+          select: { id: true, display_name: true, profile_photo: true },
         },
       },
     });
@@ -63,7 +64,7 @@ export class EventRSVPService {
     }
 
     // Check if event has already started
-    if (new Date() > event.startTime) {
+    if (new Date() > event.start_time) {
       throw ApiError.badRequest(
         'EVENT_STARTED',
         'Cannot RSVP to an event that has already started'
@@ -72,14 +73,14 @@ export class EventRSVPService {
 
     // Check capacity for GOING status
     if (data.status === 'GOING' && event.capacity) {
-      const currentGoing = event.rsvps
+      const currentGoing = event.event_rsvps
         .filter((r) => r.status === RSVPStatus.GOING)
-        .reduce((sum, r) => sum + r.guestCount, 0);
+        .reduce((sum, r) => sum + r.guest_count, 0);
 
       // Exclude current user's existing RSVP if updating
-      const existingRsvp = event.rsvps.find((r) => r.userId === userId);
+      const existingRsvp = event.event_rsvps.find((r) => r.user_id === userId);
       const existingGuests = existingRsvp?.status === RSVPStatus.GOING
-        ? existingRsvp.guestCount
+        ? existingRsvp.guest_count
         : 0;
 
       const newTotal = currentGoing - existingGuests + data.guestCount;
@@ -93,29 +94,32 @@ export class EventRSVPService {
     }
 
     // Create or update RSVP
-    const rsvp = await prisma.eventRSVP.upsert({
+    const rsvp = await prisma.event_rsvps.upsert({
       where: {
-        eventId_userId: { eventId, userId },
+        event_id_user_id: { event_id: eventId, user_id: userId },
       },
       update: {
         status: data.status as RSVPStatus,
-        guestCount: data.guestCount,
+        guest_count: data.guestCount,
         notes: data.notes,
-        rsvpDate: new Date(),
+        rsvp_date: new Date(),
+        updated_at: new Date(),
       },
       create: {
-        eventId,
-        userId,
+        id: crypto.randomUUID(),
+        event_id: eventId,
+        user_id: userId,
         status: data.status as RSVPStatus,
-        guestCount: data.guestCount,
+        guest_count: data.guestCount,
         notes: data.notes,
+        updated_at: new Date(),
       },
       include: {
-        user: {
+        users: {
           select: {
             id: true,
-            displayName: true,
-            profilePhoto: true,
+            display_name: true,
+            profile_photo: true,
           },
         },
       },
@@ -138,12 +142,16 @@ export class EventRSVPService {
     return {
       rsvp: {
         id: rsvp.id,
-        userId: rsvp.userId,
-        user: rsvp.user,
+        userId: rsvp.user_id,
+        user: {
+          id: rsvp.users.id,
+          displayName: rsvp.users.display_name,
+          profilePhoto: rsvp.users.profile_photo,
+        },
         status: rsvp.status,
-        guestCount: rsvp.guestCount,
+        guestCount: rsvp.guest_count,
         notes: rsvp.notes,
-        rsvpDate: rsvp.rsvpDate,
+        rsvpDate: rsvp.rsvp_date,
       },
       event: updatedEvent,
     };
@@ -157,9 +165,9 @@ export class EventRSVPService {
     userId: string,
     auditContext: AuditContext
   ): Promise<void> {
-    const rsvp = await prisma.eventRSVP.findUnique({
+    const rsvp = await prisma.event_rsvps.findUnique({
       where: {
-        eventId_userId: { eventId, userId },
+        event_id_user_id: { event_id: eventId, user_id: userId },
       },
     });
 
@@ -167,7 +175,7 @@ export class EventRSVPService {
       throw ApiError.notFound('RSVP_NOT_FOUND', 'RSVP not found');
     }
 
-    await prisma.eventRSVP.delete({
+    await prisma.event_rsvps.delete({
       where: { id: rsvp.id },
     });
 
@@ -189,7 +197,7 @@ export class EventRSVPService {
     filters: AttendeeFilterInput
   ): Promise<PaginatedAttendees> {
     // Verify event ownership
-    const event = await prisma.event.findUnique({
+    const event = await prisma.events.findUnique({
       where: { id: eventId },
     });
 
@@ -197,7 +205,7 @@ export class EventRSVPService {
       throw ApiError.notFound('EVENT_NOT_FOUND', 'Event not found');
     }
 
-    if (event.createdById !== userId) {
+    if (event.created_by_id !== userId) {
       throw ApiError.forbidden(
         'NOT_EVENT_OWNER',
         'Only the event owner can view attendees'
@@ -208,35 +216,35 @@ export class EventRSVPService {
     const skip = (page - 1) * limit;
 
     // Build where clause
-    const where: Record<string, unknown> = { eventId };
+    const where: Record<string, unknown> = { event_id: eventId };
     if (status) {
       where.status = status;
     }
 
     // Get attendees
     const [attendees, total, summary] = await Promise.all([
-      prisma.eventRSVP.findMany({
+      prisma.event_rsvps.findMany({
         where,
         skip,
         take: limit,
-        orderBy: { rsvpDate: 'desc' },
+        orderBy: { rsvp_date: 'desc' },
         include: {
-          user: {
+          users: {
             select: {
               id: true,
-              displayName: true,
-              profilePhoto: true,
+              display_name: true,
+              profile_photo: true,
               email: true, // Visible to owner
             },
           },
         },
       }),
-      prisma.eventRSVP.count({ where }),
-      prisma.eventRSVP.groupBy({
+      prisma.event_rsvps.count({ where }),
+      prisma.event_rsvps.groupBy({
         by: ['status'],
-        where: { eventId },
+        where: { event_id: eventId },
         _count: true,
-        _sum: { guestCount: true },
+        _sum: { guest_count: true },
       }),
     ]);
 
@@ -249,12 +257,17 @@ export class EventRSVPService {
     return {
       attendees: attendees.map((a) => ({
         id: a.id,
-        userId: a.userId,
-        user: a.user,
+        userId: a.user_id,
+        user: {
+          id: a.users.id,
+          displayName: a.users.display_name,
+          profilePhoto: a.users.profile_photo,
+          email: a.users.email,
+        },
         status: a.status,
-        guestCount: a.guestCount,
+        guestCount: a.guest_count,
         notes: a.notes,
-        rsvpDate: a.rsvpDate,
+        rsvpDate: a.rsvp_date,
       })),
       pagination: {
         page,
@@ -267,8 +280,8 @@ export class EventRSVPService {
         going: goingData?._count || 0,
         interested: interestedData?._count || 0,
         notGoing: notGoingData?._count || 0,
-        totalGuests: (goingData?._sum.guestCount || 0) +
-          (interestedData?._sum.guestCount || 0),
+        totalGuests: (goingData?._sum.guest_count || 0) +
+          (interestedData?._sum.guest_count || 0),
       },
     };
   }
@@ -308,7 +321,7 @@ export class EventRSVPService {
     const skip = (page - 1) * limit;
 
     // Build where clause
-    const where: Record<string, unknown> = { userId };
+    const where: Record<string, unknown> = { user_id: userId };
     if (status) {
       where.status = status;
     }
@@ -316,38 +329,38 @@ export class EventRSVPService {
     // Filter out past events unless requested
     const eventWhere: Record<string, unknown> = {};
     if (!includePast) {
-      eventWhere.endTime = { gte: new Date() };
+      eventWhere.end_time = { gte: new Date() };
       eventWhere.status = { not: EventStatus.PAST };
     }
 
     const [rsvps, total] = await Promise.all([
-      prisma.eventRSVP.findMany({
+      prisma.event_rsvps.findMany({
         where: {
           ...where,
-          event: eventWhere,
+          events: eventWhere,
         },
         skip,
         take: limit,
-        orderBy: { event: { startTime: 'asc' } },
+        orderBy: { events: { start_time: 'asc' } },
         include: {
-          event: {
+          events: {
             select: {
               id: true,
               title: true,
               slug: true,
-              startTime: true,
-              endTime: true,
-              locationType: true,
-              imageUrl: true,
+              start_time: true,
+              end_time: true,
+              location_type: true,
+              image_url: true,
               status: true,
             },
           },
         },
       }),
-      prisma.eventRSVP.count({
+      prisma.event_rsvps.count({
         where: {
           ...where,
-          event: eventWhere,
+          events: eventWhere,
         },
       }),
     ]);
@@ -356,9 +369,18 @@ export class EventRSVPService {
       rsvps: rsvps.map((r) => ({
         id: r.id,
         status: r.status,
-        guestCount: r.guestCount,
-        rsvpDate: r.rsvpDate,
-        event: r.event,
+        guestCount: r.guest_count,
+        rsvpDate: r.rsvp_date,
+        event: {
+          id: r.events.id,
+          title: r.events.title,
+          slug: r.events.slug,
+          startTime: r.events.start_time,
+          endTime: r.events.end_time,
+          locationType: r.events.location_type,
+          imageUrl: r.events.image_url,
+          status: r.events.status,
+        },
       })),
       pagination: {
         page,
@@ -381,17 +403,18 @@ export class EventRSVPService {
     context: AuditContext
   ): Promise<void> {
     try {
-      await prisma.auditLog.create({
+      await prisma.audit_logs.create({
         data: {
-          actorId: context.actorId,
-          actorRole: context.actorRole as 'USER' | 'BUSINESS_OWNER' | 'MODERATOR' | 'ADMIN' | 'SYSTEM',
+          id: crypto.randomUUID(),
+          actor_id: context.actorId,
+          actor_role: context.actorRole as 'USER' | 'BUSINESS_OWNER' | 'MODERATOR' | 'ADMIN' | 'SYSTEM',
           action,
-          targetType: 'EventRSVP',
-          targetId,
-          previousValue: previousValue ? JSON.parse(JSON.stringify(previousValue)) : null,
-          newValue: newValue ? JSON.parse(JSON.stringify(newValue)) : null,
-          ipAddress: context.ipAddress || 'unknown',
-          userAgent: context.userAgent || 'unknown',
+          target_type: 'EventRSVP',
+          target_id: targetId,
+          previous_value: previousValue ? JSON.parse(JSON.stringify(previousValue)) : null,
+          new_value: newValue ? JSON.parse(JSON.stringify(newValue)) : null,
+          ip_address: context.ipAddress || 'unknown',
+          user_agent: context.userAgent || 'unknown',
         },
       });
     } catch (error) {

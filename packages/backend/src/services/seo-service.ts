@@ -17,7 +17,7 @@ export class SEOService {
     const baseSlug = generateSlug(name);
 
     // Check if slug already exists
-    const existingBusiness = await prisma.business.findUnique({
+    const existingBusiness = await prisma.businesses.findUnique({
       where: { slug: baseSlug },
     });
 
@@ -26,7 +26,7 @@ export class SEOService {
     }
 
     // Slug exists, find a unique one
-    const existingSlugs = await prisma.business.findMany({
+    const existingSlugs = await prisma.businesses.findMany({
       where: {
         slug: {
           startsWith: baseSlug,
@@ -48,7 +48,7 @@ export class SEOService {
    * @returns true if slug is available
    */
   async isSlugAvailable(slug: string, excludeBusinessId?: string): Promise<boolean> {
-    const existing = await prisma.business.findUnique({
+    const existing = await prisma.businesses.findUnique({
       where: { slug },
     });
 

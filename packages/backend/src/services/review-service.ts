@@ -3,6 +3,7 @@
  * Handles CRUD operations for reviews, helpful votes, and business responses
  */
 
+import crypto from 'crypto';
 import { getPlatformConfig } from '../config/platform-loader.js';
 import { prisma } from '../db/index.js';
 import { logger } from '../utils/logger.js';
@@ -85,11 +86,11 @@ export class ReviewService {
     }
 
     // Check for duplicate review (one per user per business)
-    const existingReview = await prisma.review.findUnique({
+    const existingReview = await prisma.reviews.findUnique({
       where: {
-        userId_businessId: {
-          userId,
-          businessId: data.businessId,
+        user_id_business_id: {
+          user_id: userId,
+          business_id: data.businessId,
         },
       },
     });
@@ -102,7 +103,7 @@ export class ReviewService {
     }
 
     // Verify business exists
-    const business = await prisma.business.findUnique({
+    const business = await prisma.businesses.findUnique({
       where: { id: data.businessId },
     });
 
@@ -114,35 +115,38 @@ export class ReviewService {
     const language = detectLanguage(data.content, 'en');
 
     // Create review
-    const review = await prisma.review.create({
+    const review = await prisma.reviews.create({
       data: {
-        businessId: data.businessId,
-        userId,
+        id: crypto.randomUUID(),
+        business_id: data.businessId,
+        user_id: userId,
         rating: data.rating,
         title: data.title,
         content: data.content,
         language,
         status: 'PENDING', // All reviews start in moderation queue
-        photos: data.photos
+        updated_at: new Date(),
+        review_photos: data.photos
           ? {
               create: data.photos.map((photo, index) => ({
+                id: crypto.randomUUID(),
                 url: photo.url,
-                altText: photo.altText,
+                alt_text: photo.altText,
                 order: index,
               })),
             }
           : undefined,
       },
       include: {
-        photos: true,
-        user: {
+        review_photos: true,
+        users: {
           select: {
             id: true,
-            displayName: true,
-            profilePhoto: true,
+            display_name: true,
+            profile_photo: true,
           },
         },
-        business: {
+        businesses: {
           select: {
             id: true,
             name: true,
@@ -153,20 +157,21 @@ export class ReviewService {
     });
 
     // Audit log
-    await prisma.auditLog.create({
+    await prisma.audit_logs.create({
       data: {
-        actorId: auditContext.actorId,
-        actorRole: auditContext.actorRole as any,
+        id: crypto.randomUUID(),
+        actor_id: auditContext.actorId,
+        actor_role: auditContext.actorRole as any,
         action: 'review.create',
-        targetType: 'Review',
-        targetId: review.id,
-        newValue: {
+        target_type: 'Review',
+        target_id: review.id,
+        new_value: {
           businessId: data.businessId,
           rating: data.rating,
           status: 'PENDING',
         },
-        ipAddress: auditContext.ipAddress || 'unknown',
-        userAgent: auditContext.userAgent || 'unknown',
+        ip_address: auditContext.ipAddress || 'unknown',
+        user_agent: auditContext.userAgent || 'unknown',
       },
     });
 
@@ -187,7 +192,7 @@ export class ReviewService {
     const config = getPlatformConfig();
 
     // Fetch review
-    const review = await prisma.review.findUnique({
+    const review = await prisma.reviews.findUnique({
       where: { id: reviewId },
     });
 
@@ -196,13 +201,13 @@ export class ReviewService {
     }
 
     // Check ownership
-    if (review.userId !== userId) {
+    if (review.user_id !== userId) {
       throw ApiError.forbidden('NOT_YOUR_REVIEW', 'You can only edit your own reviews');
     }
 
     // Check edit window (7 days by default)
     const daysSinceCreation = Math.floor(
-      (Date.now() - review.createdAt.getTime()) / (1000 * 60 * 60 * 24)
+      (Date.now() - review.created_at.getTime()) / (1000 * 60 * 60 * 24)
     );
 
     if (daysSinceCreation > config.limits.reviewEditWindowDays) {
@@ -251,7 +256,7 @@ export class ReviewService {
     };
 
     // Update review (re-enters moderation queue)
-    const updatedReview = await prisma.review.update({
+    const updatedReview = await prisma.reviews.update({
       where: { id: reviewId },
       data: {
         rating: data.rating,
@@ -259,19 +264,19 @@ export class ReviewService {
         content: data.content,
         language,
         status: 'PENDING', // Re-enter moderation after edit
-        publishedAt: null,
-        updatedAt: new Date(),
+        published_at: null,
+        updated_at: new Date(),
       },
       include: {
-        photos: true,
-        user: {
+        review_photos: true,
+        users: {
           select: {
             id: true,
-            displayName: true,
-            profilePhoto: true,
+            display_name: true,
+            profile_photo: true,
           },
         },
-        business: {
+        businesses: {
           select: {
             id: true,
             name: true,
@@ -282,20 +287,21 @@ export class ReviewService {
     });
 
     // Audit log
-    await prisma.auditLog.create({
+    await prisma.audit_logs.create({
       data: {
-        actorId: auditContext.actorId,
-        actorRole: auditContext.actorRole as any,
+        id: crypto.randomUUID(),
+        actor_id: auditContext.actorId,
+        actor_role: auditContext.actorRole as any,
         action: 'review.update',
-        targetType: 'Review',
-        targetId: reviewId,
-        previousValue,
-        newValue: {
+        target_type: 'Review',
+        target_id: reviewId,
+        previous_value: previousValue,
+        new_value: JSON.parse(JSON.stringify({
           changes: data,
           status: 'PENDING',
-        },
-        ipAddress: auditContext.ipAddress || 'unknown',
-        userAgent: auditContext.userAgent || 'unknown',
+        })),
+        ip_address: auditContext.ipAddress || 'unknown',
+        user_agent: auditContext.userAgent || 'unknown',
       },
     });
 
@@ -313,7 +319,7 @@ export class ReviewService {
     auditContext: AuditContext
   ): Promise<void> {
     // Fetch review
-    const review = await prisma.review.findUnique({
+    const review = await prisma.reviews.findUnique({
       where: { id: reviewId },
     });
 
@@ -322,33 +328,34 @@ export class ReviewService {
     }
 
     // Check ownership
-    if (review.userId !== userId) {
+    if (review.user_id !== userId) {
       throw ApiError.forbidden('NOT_YOUR_REVIEW', 'You can only delete your own reviews');
     }
 
     // Soft delete (status: deleted)
-    await prisma.review.update({
+    await prisma.reviews.update({
       where: { id: reviewId },
       data: {
         status: 'DELETED',
-        updatedAt: new Date(),
+        updated_at: new Date(),
       },
     });
 
     // Audit log
-    await prisma.auditLog.create({
+    await prisma.audit_logs.create({
       data: {
-        actorId: auditContext.actorId,
-        actorRole: auditContext.actorRole as any,
+        id: crypto.randomUUID(),
+        actor_id: auditContext.actorId,
+        actor_role: auditContext.actorRole as any,
         action: 'review.delete',
-        targetType: 'Review',
-        targetId: reviewId,
-        previousValue: {
-          businessId: review.businessId,
+        target_type: 'Review',
+        target_id: reviewId,
+        previous_value: {
+          businessId: review.business_id,
           status: review.status,
         },
-        ipAddress: auditContext.ipAddress || 'unknown',
-        userAgent: auditContext.userAgent || 'unknown',
+        ip_address: auditContext.ipAddress || 'unknown',
+        user_agent: auditContext.userAgent || 'unknown',
       },
     });
 
@@ -359,18 +366,18 @@ export class ReviewService {
    * Gets a single review by ID
    */
   async getReviewById(reviewId: string): Promise<Record<string, unknown> | null> {
-    const review = await prisma.review.findUnique({
+    const review = await prisma.reviews.findUnique({
       where: { id: reviewId },
       include: {
-        photos: true,
-        user: {
+        review_photos: true,
+        users: {
           select: {
             id: true,
-            displayName: true,
-            profilePhoto: true,
+            display_name: true,
+            profile_photo: true,
           },
         },
-        business: {
+        businesses: {
           select: {
             id: true,
             name: true,
@@ -403,7 +410,7 @@ export class ReviewService {
 
     // Build where clause
     const where: any = {
-      businessId,
+      business_id: businessId,
       status: 'PUBLISHED', // Only show published reviews
     };
 
@@ -415,7 +422,7 @@ export class ReviewService {
     let orderBy: any = {};
     switch (sort) {
       case 'helpful':
-        orderBy = { helpfulCount: 'desc' };
+        orderBy = { helpful_count: 'desc' };
         break;
       case 'highest':
         orderBy = { rating: 'desc' };
@@ -425,29 +432,29 @@ export class ReviewService {
         break;
       case 'newest':
       default:
-        orderBy = { createdAt: 'desc' };
+        orderBy = { created_at: 'desc' };
         break;
     }
 
     // Execute queries in parallel
     const [reviews, total] = await Promise.all([
-      prisma.review.findMany({
+      prisma.reviews.findMany({
         where,
         orderBy,
         skip,
         take: limit,
         include: {
-          photos: true,
-          user: {
+          review_photos: true,
+          users: {
             select: {
               id: true,
-              displayName: true,
-              profilePhoto: true,
+              display_name: true,
+              profile_photo: true,
             },
           },
         },
       }),
-      prisma.review.count({ where }),
+      prisma.reviews.count({ where }),
     ]);
 
     const totalPages = Math.ceil(total / limit);
@@ -478,19 +485,19 @@ export class ReviewService {
     const skip = (page - 1) * limit;
 
     const where = {
-      userId,
+      user_id: userId,
       status: { not: 'DELETED' as const },
     };
 
     const [reviews, total] = await Promise.all([
-      prisma.review.findMany({
+      prisma.reviews.findMany({
         where,
-        orderBy: { createdAt: 'desc' },
+        orderBy: { created_at: 'desc' },
         skip,
         take: limit,
         include: {
-          photos: true,
-          business: {
+          review_photos: true,
+          businesses: {
             select: {
               id: true,
               name: true,
@@ -500,7 +507,7 @@ export class ReviewService {
           },
         },
       }),
-      prisma.review.count({ where }),
+      prisma.reviews.count({ where }),
     ]);
 
     const totalPages = Math.ceil(total / limit);
@@ -519,11 +526,11 @@ export class ReviewService {
    */
   async markHelpful(reviewId: string, userId: string): Promise<{ helpfulCount: number }> {
     // Check if already marked helpful
-    const existing = await prisma.reviewHelpful.findUnique({
+    const existing = await prisma.review_helpful.findUnique({
       where: {
-        reviewId_userId: {
-          reviewId,
-          userId,
+        review_id_user_id: {
+          review_id: reviewId,
+          user_id: userId,
         },
       },
     });
@@ -533,7 +540,7 @@ export class ReviewService {
     }
 
     // Verify review exists
-    const review = await prisma.review.findUnique({
+    const review = await prisma.reviews.findUnique({
       where: { id: reviewId },
     });
 
@@ -543,28 +550,29 @@ export class ReviewService {
 
     // Create helpful record and increment count
     const [_, updatedReview] = await prisma.$transaction([
-      prisma.reviewHelpful.create({
+      prisma.review_helpful.create({
         data: {
-          reviewId,
-          userId,
+          id: crypto.randomUUID(),
+          review_id: reviewId,
+          user_id: userId,
         },
       }),
-      prisma.review.update({
+      prisma.reviews.update({
         where: { id: reviewId },
         data: {
-          helpfulCount: {
+          helpful_count: {
             increment: 1,
           },
         },
         select: {
-          helpfulCount: true,
+          helpful_count: true,
         },
       }),
     ]);
 
     logger.info({ reviewId, userId }, 'Review marked helpful');
 
-    return { helpfulCount: updatedReview.helpfulCount };
+    return { helpfulCount: updatedReview.helpful_count };
   }
 
   /**
@@ -572,11 +580,11 @@ export class ReviewService {
    */
   async unmarkHelpful(reviewId: string, userId: string): Promise<{ helpfulCount: number }> {
     // Check if marked helpful
-    const existing = await prisma.reviewHelpful.findUnique({
+    const existing = await prisma.review_helpful.findUnique({
       where: {
-        reviewId_userId: {
-          reviewId,
-          userId,
+        review_id_user_id: {
+          review_id: reviewId,
+          user_id: userId,
         },
       },
     });
@@ -587,30 +595,30 @@ export class ReviewService {
 
     // Delete helpful record and decrement count
     const [_, updatedReview] = await prisma.$transaction([
-      prisma.reviewHelpful.delete({
+      prisma.review_helpful.delete({
         where: {
-          reviewId_userId: {
-            reviewId,
-            userId,
+          review_id_user_id: {
+            review_id: reviewId,
+            user_id: userId,
           },
         },
       }),
-      prisma.review.update({
+      prisma.reviews.update({
         where: { id: reviewId },
         data: {
-          helpfulCount: {
+          helpful_count: {
             decrement: 1,
           },
         },
         select: {
-          helpfulCount: true,
+          helpful_count: true,
         },
       }),
     ]);
 
     logger.info({ reviewId, userId }, 'Review unmarked helpful');
 
-    return { helpfulCount: updatedReview.helpfulCount };
+    return { helpfulCount: updatedReview.helpful_count };
   }
 
   /**
@@ -637,10 +645,10 @@ export class ReviewService {
     }
 
     // Fetch review
-    const review = await prisma.review.findUnique({
+    const review = await prisma.reviews.findUnique({
       where: { id: reviewId },
       include: {
-        business: true,
+        businesses: true,
       },
     });
 
@@ -649,32 +657,32 @@ export class ReviewService {
     }
 
     // Check business ownership
-    if (review.business.claimedBy !== businessOwnerId) {
+    if (review.businesses.claimed_by !== businessOwnerId) {
       throw ApiError.forbidden('NOT_BUSINESS_OWNER', 'Only the business owner can respond to reviews');
     }
 
     // Check if already responded
-    if (review.businessResponse) {
+    if (review.business_response) {
       throw ApiError.conflict('ALREADY_RESPONDED', 'You have already responded to this review');
     }
 
     // Update review with response
-    const updatedReview = await prisma.review.update({
+    const updatedReview = await prisma.reviews.update({
       where: { id: reviewId },
       data: {
-        businessResponse: response,
-        businessResponseAt: new Date(),
+        business_response: response,
+        business_response_at: new Date(),
       },
       include: {
-        photos: true,
-        user: {
+        review_photos: true,
+        users: {
           select: {
             id: true,
-            displayName: true,
-            profilePhoto: true,
+            display_name: true,
+            profile_photo: true,
           },
         },
-        business: {
+        businesses: {
           select: {
             id: true,
             name: true,
@@ -685,18 +693,19 @@ export class ReviewService {
     });
 
     // Audit log
-    await prisma.auditLog.create({
+    await prisma.audit_logs.create({
       data: {
-        actorId: auditContext.actorId,
-        actorRole: auditContext.actorRole as any,
+        id: crypto.randomUUID(),
+        actor_id: auditContext.actorId,
+        actor_role: auditContext.actorRole as any,
         action: 'review.respond',
-        targetType: 'Review',
-        targetId: reviewId,
-        newValue: {
+        target_type: 'Review',
+        target_id: reviewId,
+        new_value: {
           responseLength: response.length,
         },
-        ipAddress: auditContext.ipAddress || 'unknown',
-        userAgent: auditContext.userAgent || 'unknown',
+        ip_address: auditContext.ipAddress || 'unknown',
+        user_agent: auditContext.userAgent || 'unknown',
       },
     });
 

@@ -39,7 +39,7 @@ export class ReviewController {
    */
   async createReview(req: Request, res: Response): Promise<void> {
     try {
-      const { id: businessId } = req.params;
+      const businessId = req.params.id as string;
       const userId = req.user!.id;
       const data = req.body;
 
@@ -71,7 +71,7 @@ export class ReviewController {
    */
   async updateReview(req: Request, res: Response): Promise<void> {
     try {
-      const { id: reviewId } = req.params;
+      const reviewId = req.params.id as string;
       const userId = req.user!.id;
       const data = req.body;
 
@@ -104,7 +104,7 @@ export class ReviewController {
    */
   async deleteReview(req: Request, res: Response): Promise<void> {
     try {
-      const { id: reviewId } = req.params;
+      const reviewId = req.params.id as string;
       const userId = req.user!.id;
 
       await reviewService.deleteReview(
@@ -135,7 +135,7 @@ export class ReviewController {
    */
   async markHelpful(req: Request, res: Response): Promise<void> {
     try {
-      const { id: reviewId } = req.params;
+      const reviewId = req.params.id as string;
       const userId = req.user!.id;
 
       const result = await reviewService.markHelpful(reviewId, userId);
@@ -157,7 +157,7 @@ export class ReviewController {
    */
   async unmarkHelpful(req: Request, res: Response): Promise<void> {
     try {
-      const { id: reviewId } = req.params;
+      const reviewId = req.params.id as string;
       const userId = req.user!.id;
 
       const result = await reviewService.unmarkHelpful(reviewId, userId);
@@ -179,7 +179,7 @@ export class ReviewController {
    */
   async reportReview(req: Request, res: Response): Promise<void> {
     try {
-      const { id: reviewId } = req.params;
+      const reviewId = req.params.id as string;
       const { reason, details } = req.body;
       const userId = req.user!.id;
 
@@ -208,7 +208,7 @@ export class ReviewController {
    */
   async respondToReview(req: Request, res: Response): Promise<void> {
     try {
-      const { id: reviewId } = req.params;
+      const reviewId = req.params.id as string;
       const { response } = req.body;
       const userId = req.user!.id;
 
@@ -241,13 +241,13 @@ export class ReviewController {
    */
   async getBusinessReviews(req: Request, res: Response): Promise<void> {
     try {
-      const { id: businessId } = req.params;
+      const businessId = req.params.id as string;
       const { sort = 'newest', rating, page = '1', limit = '10' } = req.query;
 
       const reviews = await reviewService.getBusinessReviews(
         businessId,
         {
-          sort: sort as string,
+          sort: sort as 'newest' | 'helpful' | 'highest' | 'lowest' | undefined,
           rating: rating ? parseInt(rating as string, 10) : undefined,
         },
         {
@@ -273,7 +273,7 @@ export class ReviewController {
    */
   async getReviewById(req: Request, res: Response): Promise<void> {
     try {
-      const { id: reviewId } = req.params;
+      const reviewId = req.params.id as string;
 
       const review = await reviewService.getReviewById(reviewId);
 
@@ -299,7 +299,7 @@ export class ReviewController {
    */
   async getUserReviews(req: Request, res: Response): Promise<void> {
     try {
-      const { id: userId } = req.params;
+      const userId = req.params.id as string;
       const { page = '1', limit = '10' } = req.query;
 
       const reviews = await reviewService.getUserReviews(

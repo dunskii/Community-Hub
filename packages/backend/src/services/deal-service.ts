@@ -13,7 +13,7 @@ import { ApiError } from '../utils/api-error.js';
 import { getRedis } from '../cache/redis-client.js';
 import type { DealCreateInput, DealUpdateInput, DealFilterInput, Deal } from '@community-hub/shared';
 import { DealStatus, DiscountType } from '../generated/prisma/index.js';
-import { Decimal } from '@prisma/client/runtime/library';
+import { Decimal } from '../generated/prisma/runtime/client.js';
 
 // ─── Constants ────────────────────────────────────────────────
 

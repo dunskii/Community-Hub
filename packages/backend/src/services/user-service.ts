@@ -6,7 +6,7 @@
  */
 
 import { prisma } from '../db/index';
-import { User } from '../generated/prisma';
+import { users } from '../generated/prisma';
 import { EmailService } from '../email/email-service';
 import { hashPassword, comparePassword, validatePasswordStrength } from '../utils/password';
 import { UserPublic, NotificationPreferences } from '../types/auth';
@@ -15,26 +15,29 @@ import { TIME_MS } from '../constants/time';
 
 const emailService = new EmailService();
 
+// Re-export User type with proper name
+export type User = users;
+
 /**
  * Convert User model to public user data (omit password hash)
  */
-function toUserPublic(user: User): UserPublic {
+function toUserPublic(user: users): UserPublic {
   return {
     id: user.id,
     email: user.email,
-    displayName: user.displayName,
-    profilePhoto: user.profilePhoto,
-    languagePreference: user.languagePreference as any,
+    displayName: user.display_name,
+    profilePhoto: user.profile_photo,
+    languagePreference: user.language_preference as any,
     suburb: user.suburb,
     bio: user.bio,
     interests: user.interests,
-    notificationPreferences: user.notificationPreferences as NotificationPreferences | null,
+    notificationPreferences: user.notification_preferences as NotificationPreferences | null,
     role: user.role,
     status: user.status,
-    emailVerified: user.emailVerified,
-    createdAt: user.createdAt,
-    updatedAt: user.updatedAt,
-    lastLogin: user.lastLogin,
+    emailVerified: user.email_verified,
+    createdAt: user.created_at,
+    updatedAt: user.updated_at,
+    lastLogin: user.last_login,
   };
 }
 
@@ -45,7 +48,7 @@ function toUserPublic(user: User): UserPublic {
  * @returns Public user object or null
  */
 export async function getUserById(userId: string): Promise<UserPublic | null> {
-  const user = await prisma.user.findUnique({
+  const user = await prisma.users.findUnique({
     where: { id: userId },
   });
 
@@ -76,9 +79,17 @@ export async function updateUserProfile(
     interests?: string[];
   }
 ): Promise<UserPublic> {
-  const user = await prisma.user.update({
+  // Transform camelCase to snake_case
+  const updateData: Record<string, unknown> = {};
+  if (data.displayName !== undefined) updateData['display_name'] = data.displayName;
+  if (data.bio !== undefined) updateData['bio'] = data.bio;
+  if (data.suburb !== undefined) updateData['suburb'] = data.suburb;
+  if (data.languagePreference !== undefined) updateData['language_preference'] = data.languagePreference;
+  if (data.interests !== undefined) updateData['interests'] = data.interests;
+
+  const user = await prisma.users.update({
     where: { id: userId },
-    data,
+    data: updateData,
   });
 
   logger.info({ userId }, 'User profile updated');
@@ -101,7 +112,7 @@ export async function updateProfilePhoto(
   const path = await import('path');
 
   // Get current user to check for existing photo
-  const user = await prisma.user.findUnique({
+  const user = await prisma.users.findUnique({
     where: { id: userId },
   });
 
@@ -141,8 +152,8 @@ export async function updateProfilePhoto(
   }
 
   // Delete old photo if exists and is different
-  if (user.profilePhoto && user.profilePhoto !== `/uploads/profiles/${filename}`) {
-    const oldPath = path.join(process.cwd(), user.profilePhoto.replace(/^\//, ''));
+  if (user.profile_photo && user.profile_photo !== `/uploads/profiles/${filename}`) {
+    const oldPath = path.join(process.cwd(), user.profile_photo.replace(/^\//, ''));
     try {
       await fs.unlink(oldPath);
     } catch (error) {
@@ -153,9 +164,9 @@ export async function updateProfilePhoto(
 
   // Update user record
   const photoUrl = `/uploads/profiles/${filename}`;
-  const updatedUser = await prisma.user.update({
+  const updatedUser = await prisma.users.update({
     where: { id: userId },
-    data: { profilePhoto: photoUrl },
+    data: { profile_photo: photoUrl },
   });
 
   logger.info({ userId, photoUrl }, 'Profile photo updated');
@@ -174,7 +185,7 @@ export async function deleteProfilePhoto(userId: string): Promise<UserPublic> {
   const path = await import('path');
 
   // Get current user
-  const user = await prisma.user.findUnique({
+  const user = await prisma.users.findUnique({
     where: { id: userId },
   });
 
@@ -182,12 +193,12 @@ export async function deleteProfilePhoto(userId: string): Promise<UserPublic> {
     throw new Error('User not found');
   }
 
-  if (!user.profilePhoto) {
+  if (!user.profile_photo) {
     throw new Error('No profile photo to delete');
   }
 
   // Delete file from disk
-  const filepath = path.join(process.cwd(), user.profilePhoto.replace(/^\//, ''));
+  const filepath = path.join(process.cwd(), user.profile_photo.replace(/^\//, ''));
   try {
     await fs.unlink(filepath);
   } catch (error) {
@@ -196,9 +207,9 @@ export async function deleteProfilePhoto(userId: string): Promise<UserPublic> {
   }
 
   // Update user record
-  const updatedUser = await prisma.user.update({
+  const updatedUser = await prisma.users.update({
     where: { id: userId },
-    data: { profilePhoto: null },
+    data: { profile_photo: null },
   });
 
   logger.info({ userId }, 'Profile photo deleted');
@@ -223,7 +234,7 @@ export async function changePassword(
   ipAddress?: string
 ): Promise<void> {
   // Get user with password hash
-  const user = await prisma.user.findUnique({
+  const user = await prisma.users.findUnique({
     where: { id: userId },
   });
 
@@ -232,7 +243,7 @@ export async function changePassword(
   }
 
   // Verify current password
-  const passwordValid = await comparePassword(currentPassword, user.passwordHash);
+  const passwordValid = await comparePassword(currentPassword, user.password_hash);
   if (!passwordValid) {
     throw new Error('Current password is incorrect');
   }
@@ -247,9 +258,9 @@ export async function changePassword(
   const passwordHash = await hashPassword(newPassword);
 
   // Update password
-  await prisma.user.update({
+  await prisma.users.update({
     where: { id: userId },
-    data: { passwordHash },
+    data: { password_hash: passwordHash },
   });
 
   // Revoke all user sessions except current one (force re-login on other devices)
@@ -262,9 +273,9 @@ export async function changePassword(
       'password_changed',
       user.email,
       {
-        userName: user.displayName,
+        userName: user.display_name,
       },
-      user.languagePreference as any
+      user.language_preference as any
     );
   } catch (error) {
     logger.error({ error, userId }, 'Failed to send password changed email');
@@ -291,7 +302,7 @@ export async function changeEmail(
   ipAddress?: string
 ): Promise<void> {
   // Check if email is already taken
-  const existingUser = await prisma.user.findUnique({
+  const existingUser = await prisma.users.findUnique({
     where: { email: newEmail.toLowerCase() },
   });
 
@@ -300,7 +311,7 @@ export async function changeEmail(
   }
 
   // Get current user
-  const user = await prisma.user.findUnique({
+  const user = await prisma.users.findUnique({
     where: { id: userId },
   });
 
@@ -309,10 +320,10 @@ export async function changeEmail(
   }
 
   // Set pending email (don't change actual email yet)
-  await prisma.user.update({
+  await prisma.users.update({
     where: { id: userId },
     data: {
-      pendingEmail: newEmail.toLowerCase(),
+      pending_email: newEmail.toLowerCase(),
     },
   });
 
@@ -338,11 +349,11 @@ export async function changeEmail(
       'email_verification',
       newEmail.toLowerCase(),
       {
-        userName: user.displayName,
+        userName: user.display_name,
         verificationLink,
         expiryHours: 24,
       },
-      user.languagePreference as any
+      user.language_preference as any
     );
   } catch (error) {
     logger.error({ error, userId }, 'Failed to send email change verification');
@@ -376,7 +387,7 @@ export async function verifyEmailChange(
   }
 
   // Get user
-  const user = await prisma.user.findUnique({
+  const user = await prisma.users.findUnique({
     where: { id: userId },
   });
 
@@ -385,19 +396,19 @@ export async function verifyEmailChange(
   }
 
   // Verify that the token matches the pending email
-  if (!user.pendingEmail || user.pendingEmail !== email.toLowerCase()) {
+  if (!user.pending_email || user.pending_email !== email.toLowerCase()) {
     throw new Error('Verification token does not match pending email');
   }
 
   const oldEmail = user.email;
 
   // Update email and clear pending email
-  const updatedUser = await prisma.user.update({
+  const updatedUser = await prisma.users.update({
     where: { id: userId },
     data: {
-      email: user.pendingEmail,
-      pendingEmail: null,
-      emailVerified: true,
+      email: user.pending_email,
+      pending_email: null,
+      email_verified: true,
     },
   });
 
@@ -407,18 +418,18 @@ export async function verifyEmailChange(
       'password_changed', // TODO: Create email_changed template
       oldEmail,
       {
-        userName: user.displayName,
+        userName: user.display_name,
       },
-      user.languagePreference as any
+      user.language_preference as any
     );
 
     await emailService.sendTemplatedEmail(
       'password_changed', // TODO: Create email_changed template
       updatedUser.email,
       {
-        userName: user.displayName,
+        userName: user.display_name,
       },
-      user.languagePreference as any
+      user.language_preference as any
     );
   } catch (error) {
     logger.error({ error, userId }, 'Failed to send email change confirmation');
@@ -443,10 +454,10 @@ export async function updateNotificationPreferences(
   userId: string,
   preferences: NotificationPreferences
 ): Promise<UserPublic> {
-  const user = await prisma.user.update({
+  const user = await prisma.users.update({
     where: { id: userId },
     data: {
-      notificationPreferences: preferences as any,
+      notification_preferences: preferences as any,
     },
   });
 
@@ -466,10 +477,10 @@ export async function requestAccountDeletion(
   userId: string,
   ipAddress?: string
 ): Promise<void> {
-  const user = await prisma.user.update({
+  const user = await prisma.users.update({
     where: { id: userId },
     data: {
-      deletionRequestedAt: new Date(),
+      deletion_requested_at: new Date(),
     },
   });
 
@@ -488,9 +499,9 @@ export async function requestAccountDeletion(
       'password_changed', // TODO: Create account_deletion template
       user.email,
       {
-        userName: user.displayName,
+        userName: user.display_name,
       } as any,
-      user.languagePreference as any
+      user.language_preference as any
     );
   } catch (error) {
     logger.error({ error, userId }, 'Failed to send account deletion email');
@@ -510,7 +521,7 @@ export async function requestAccountDeletion(
  * @param userId - User ID
  */
 export async function cancelAccountDeletion(userId: string): Promise<void> {
-  const user = await prisma.user.findUnique({
+  const user = await prisma.users.findUnique({
     where: { id: userId },
   });
 
@@ -518,23 +529,23 @@ export async function cancelAccountDeletion(userId: string): Promise<void> {
     throw new Error('User not found');
   }
 
-  if (!user.deletionRequestedAt) {
+  if (!user.deletion_requested_at) {
     throw new Error('No deletion request found');
   }
 
   // Check if within grace period (30 days)
   const now = new Date();
   const daysSinceRequest =
-    (now.getTime() - user.deletionRequestedAt.getTime()) / TIME_MS.DAY;
+    (now.getTime() - user.deletion_requested_at.getTime()) / TIME_MS.DAY;
 
   if (daysSinceRequest >= 30) {
     throw new Error('Grace period has expired');
   }
 
-  await prisma.user.update({
+  await prisma.users.update({
     where: { id: userId },
     data: {
-      deletionRequestedAt: null,
+      deletion_requested_at: null,
     },
   });
 
@@ -553,9 +564,9 @@ export async function deleteExpiredAccounts(): Promise<number> {
   const thirtyDaysAgo = new Date(Date.now() - 30 * TIME_MS.DAY);
 
   // Find users scheduled for deletion
-  const usersToDelete = await prisma.user.findMany({
+  const usersToDelete = await prisma.users.findMany({
     where: {
-      deletionRequestedAt: {
+      deletion_requested_at: {
         lte: thirtyDaysAgo,
       },
     },
@@ -568,9 +579,9 @@ export async function deleteExpiredAccounts(): Promise<number> {
         'password_changed', // TODO: Create account_deleted template
         user.email,
         {
-          userName: user.displayName,
+          userName: user.display_name,
         },
-        user.languagePreference as any
+        user.language_preference as any
       );
     } catch (error) {
       logger.error({ error, userId: user.id }, 'Failed to send account deleted email');
@@ -578,9 +589,9 @@ export async function deleteExpiredAccounts(): Promise<number> {
   }
 
   // Delete users (cascade will handle related records)
-  const result = await prisma.user.deleteMany({
+  const result = await prisma.users.deleteMany({
     where: {
-      deletionRequestedAt: {
+      deletion_requested_at: {
         lte: thirtyDaysAgo,
       },
     },

@@ -33,7 +33,7 @@ router.get('/categories', apiRateLimiter, async (req: Request, res: Response, ne
     }
 
     if (parent) {
-      where.parentId = parent === 'null' ? null : parent;
+      where.parent_id = parent === 'null' ? null : parent;
     }
 
     if (active !== undefined) {
@@ -43,18 +43,19 @@ router.get('/categories', apiRateLimiter, async (req: Request, res: Response, ne
       where.active = true;
     }
 
-    const categories = await prisma.category.findMany({
+    const categories = await prisma.categories.findMany({
       where,
-      orderBy: [{ displayOrder: 'asc' }, { name: 'asc' }],
+      orderBy: [{ display_order: 'asc' }, { name: 'asc' }],
       include: {
-        parent: {
+        categories: {
+          where: { active: true },
           select: {
             id: true,
             name: true,
             slug: true,
           },
         },
-        children: {
+        other_categories: {
           where: { active: true },
           select: {
             id: true,
@@ -65,9 +66,7 @@ router.get('/categories', apiRateLimiter, async (req: Request, res: Response, ne
         },
         _count: {
           select: {
-            businesses: {
-              where: { status: 'ACTIVE' },
-            },
+            businesses: true,
           },
         },
       },
@@ -76,15 +75,21 @@ router.get('/categories', apiRateLimiter, async (req: Request, res: Response, ne
     // Calculate business counts including children
     const categoriesWithCounts = await Promise.all(
       categories.map(async (category) => {
-        // Get direct business count
-        let businessCount = category._count.businesses;
+        // Get direct business count (only ACTIVE businesses)
+        const directBusinessCount = await prisma.businesses.count({
+          where: {
+            category_primary_id: category.id,
+            status: 'ACTIVE',
+          },
+        });
+        let businessCount = directBusinessCount;
 
         // If this is a parent category, also count businesses in child categories
-        if (category.children && category.children.length > 0) {
-          const childIds = category.children.map(c => c.id);
-          const childBusinessCount = await prisma.business.count({
+        if (category.other_categories && category.other_categories.length > 0) {
+          const childIds = category.other_categories.map((c: { id: string }) => c.id);
+          const childBusinessCount = await prisma.businesses.count({
             where: {
-              categoryPrimaryId: { in: childIds },
+              category_primary_id: { in: childIds },
               status: 'ACTIVE',
             },
           });
@@ -120,17 +125,17 @@ router.get('/categories/:id', apiRateLimiter, async (req: Request, res: Response
   try {
     const { id } = req.params;
 
-    const category = await prisma.category.findUnique({
+    const category = await prisma.categories.findUnique({
       where: { id: id as string },
       include: {
-        parent: {
+        categories: {
           select: {
             id: true,
             name: true,
             slug: true,
           },
         },
-        children: {
+        other_categories: {
           where: { active: true },
           select: {
             id: true,
@@ -171,7 +176,7 @@ router.get(
       const skip = (pageNum - 1) * limitNum;
 
       // Check if category exists
-      const category = await prisma.category.findUnique({
+      const category = await prisma.categories.findUnique({
         where: { id: id as string },
       });
 
@@ -187,21 +192,21 @@ router.get(
         const sortDirection = (sort as string).startsWith('-') ? 'desc' : 'asc';
         orderBy.push({ [sortField]: sortDirection });
       } else {
-        orderBy.push({ createdAt: 'desc' });
+        orderBy.push({ created_at: 'desc' });
       }
 
       // Get businesses and total count
       const [businesses, total] = await Promise.all([
-        prisma.business.findMany({
+        prisma.businesses.findMany({
           where: {
-            categoryPrimaryId: id as string,
+            category_primary_id: id as string,
             status: 'ACTIVE',
           },
           skip,
           take: limitNum,
           orderBy,
           include: {
-            categoryPrimary: {
+            categories: {
               select: {
                 id: true,
                 name: true,
@@ -210,9 +215,9 @@ router.get(
             },
           },
         }),
-        prisma.business.count({
+        prisma.businesses.count({
           where: {
-            categoryPrimaryId: id as string,
+            category_primary_id: id as string,
             status: 'ACTIVE',
           },
         }),

@@ -119,7 +119,7 @@ router.post(
     } catch (error) {
       if (error instanceof Error) {
         if (error.message === 'Email already registered') {
-          throw ApiError.conflict('Email already registered');
+          throw ApiError.conflict('EMAIL_EXISTS', 'Email already registered');
         }
         throw ApiError.validation(error.message);
       }
@@ -360,7 +360,7 @@ router.post(
     } catch (error) {
       if (error instanceof Error) {
         if (error.message === 'Email already verified') {
-          throw ApiError.conflict('Email already verified');
+          throw ApiError.conflict('EMAIL_VERIFIED', 'Email already verified');
         }
         throw ApiError.internal('Failed to send verification email');
       }
@@ -382,24 +382,24 @@ router.get('/me', requireAuth, async (req: Request, res: Response) => {
     }
 
     // Fetch full user details
-    const user = await prisma.user.findUnique({
+    const user = await prisma.users.findUnique({
       where: { id: req.user.id },
       select: {
         id: true,
         email: true,
-        displayName: true,
-        profilePhoto: true,
-        languagePreference: true,
+        display_name: true,
+        profile_photo: true,
+        language_preference: true,
         suburb: true,
         bio: true,
         interests: true,
-        notificationPreferences: true,
+        notification_preferences: true,
         role: true,
         status: true,
-        emailVerified: true,
-        createdAt: true,
-        updatedAt: true,
-        lastLogin: true,
+        email_verified: true,
+        created_at: true,
+        updated_at: true,
+        last_login: true,
       },
     });
 
@@ -407,9 +407,28 @@ router.get('/me', requireAuth, async (req: Request, res: Response) => {
       throw ApiError.notFound('User not found');
     }
 
+    // Transform to camelCase for frontend
+    const userResponse = {
+      id: user.id,
+      email: user.email,
+      displayName: user.display_name,
+      profilePhoto: user.profile_photo,
+      languagePreference: user.language_preference,
+      suburb: user.suburb,
+      bio: user.bio,
+      interests: user.interests,
+      notificationPreferences: user.notification_preferences,
+      role: user.role,
+      status: user.status,
+      emailVerified: user.email_verified,
+      createdAt: user.created_at,
+      updatedAt: user.updated_at,
+      lastLogin: user.last_login,
+    };
+
     res.json({
       success: true,
-      data: { user },
+      data: { user: userResponse },
     });
   } catch (error) {
     logger.error({ error }, 'Get current user error');
@@ -440,7 +459,7 @@ router.post('/refresh', async (req: Request, res: Response) => {
     await updateSessionActivity(payload.jti);
 
     // Check if user still exists and is active
-    const user = await prisma.user.findUnique({
+    const user = await prisma.users.findUnique({
       where: { id: payload.sub },
       select: {
         id: true,

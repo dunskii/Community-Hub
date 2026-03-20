@@ -178,7 +178,7 @@ export function BusinessInboxPage() {
   // Handle conversation selection
   const handleSelectConversation = useCallback(
     (id: string) => {
-      navigate(`/owner/business/${businessId}/inbox/${id}`);
+      navigate(`/business/manage/${businessId}/inbox/${id}`);
     },
     [navigate, businessId]
   );
@@ -186,7 +186,7 @@ export function BusinessInboxPage() {
   // Handle back to list (mobile)
   const handleBackToList = useCallback(() => {
     setIsMobileListView(true);
-    navigate(`/owner/business/${businessId}/inbox`);
+    navigate(`/business/manage/${businessId}/inbox`);
   }, [navigate, businessId]);
 
   // Handle send message

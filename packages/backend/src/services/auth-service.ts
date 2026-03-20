@@ -6,7 +6,7 @@
  */
 
 import { prisma } from '../db/index';
-import { UserStatus } from '../generated/prisma';
+import { UserStatus, users } from '../generated/prisma';
 import { EmailService } from '../email/email-service';
 import {
   hashPassword,
@@ -31,7 +31,6 @@ import {
   LoginResponse,
   UserPublic,
 } from '../types/auth';
-import { User } from '../generated/prisma';
 import { logger } from '../utils/logger';
 import { TIME_MS } from '../constants/time';
 
@@ -44,23 +43,23 @@ const LOCKOUT_DURATION_MINUTES = 15;
 /**
  * Convert User model to public user data (omit password hash)
  */
-function toUserPublic(user: User): UserPublic {
+function toUserPublic(user: users): UserPublic {
   return {
     id: user.id,
     email: user.email,
-    displayName: user.displayName,
-    profilePhoto: user.profilePhoto,
-    languagePreference: user.languagePreference as any,
+    displayName: user.display_name,
+    profilePhoto: user.profile_photo,
+    languagePreference: user.language_preference as any,
     suburb: user.suburb,
     bio: user.bio,
     interests: user.interests,
-    notificationPreferences: user.notificationPreferences as any,
+    notificationPreferences: user.notification_preferences as any,
     role: user.role,
     status: user.status,
-    emailVerified: user.emailVerified,
-    createdAt: user.createdAt,
-    updatedAt: user.updatedAt,
-    lastLogin: user.lastLogin,
+    emailVerified: user.email_verified,
+    createdAt: user.created_at,
+    updatedAt: user.updated_at,
+    lastLogin: user.last_login,
   };
 }
 
@@ -86,7 +85,7 @@ export async function registerUser(data: RegisterData): Promise<UserPublic> {
   }
 
   // Check if email already exists
-  const existingUser = await prisma.user.findUnique({
+  const existingUser = await prisma.users.findUnique({
     where: { email: data.email.toLowerCase() },
   });
 
@@ -109,17 +108,19 @@ export async function registerUser(data: RegisterData): Promise<UserPublic> {
   };
 
   // Create user
-  const user = await prisma.user.create({
+  const user = await prisma.users.create({
     data: {
+      id: crypto.randomUUID(),
       email: data.email.toLowerCase(),
-      passwordHash,
-      displayName: data.displayName,
-      languagePreference: data.languagePreference || 'en',
+      password_hash: passwordHash,
+      display_name: data.displayName,
+      language_preference: data.languagePreference || 'en',
       suburb: data.suburb,
       interests: data.interests || [],
-      notificationPreferences: defaultPreferences,
+      notification_preferences: defaultPreferences,
       status: UserStatus.PENDING,
-      emailVerified: false,
+      email_verified: false,
+      updated_at: new Date(),
     },
   });
 
@@ -142,7 +143,7 @@ export async function registerUser(data: RegisterData): Promise<UserPublic> {
       'email_verification',
       user.email,
       {
-        userName: user.displayName,
+        userName: user.display_name,
         verificationLink,
         expiryHours: 24,
       },
@@ -178,7 +179,7 @@ export async function loginUser(
   ipAddress?: string
 ): Promise<LoginResponse> {
   // Find user by email
-  const user = await prisma.user.findUnique({
+  const user = await prisma.users.findUnique({
     where: { email: data.email.toLowerCase() },
   });
 
@@ -199,7 +200,7 @@ export async function loginUser(
   }
 
   // Verify password
-  const passwordValid = await comparePassword(data.password, user.passwordHash);
+  const passwordValid = await comparePassword(data.password, user.password_hash);
   if (!passwordValid) {
     // Increment failed attempts
     const newAttempts = await incrementFailedLoginAttempts(user.id);
@@ -223,9 +224,9 @@ export async function loginUser(
   }
 
   // Check for pending deletion
-  if (user.deletionRequestedAt) {
+  if (user.deletion_requested_at) {
     const daysSinceRequest =
-      (new Date().getTime() - user.deletionRequestedAt.getTime()) /
+      (new Date().getTime() - user.deletion_requested_at.getTime()) /
       TIME_MS.DAY;
 
     if (daysSinceRequest >= 30) {
@@ -265,9 +266,9 @@ export async function loginUser(
   // Note: refreshToken is generated in the route handler to set cookie
 
   // Update last login
-  const updatedUser = await prisma.user.update({
+  const updatedUser = await prisma.users.update({
     where: { id: user.id },
-    data: { lastLogin: new Date() },
+    data: { last_login: new Date() },
   });
 
   logger.info(
@@ -299,10 +300,10 @@ export async function verifyEmail(
   }
 
   // Update user
-  const user = await prisma.user.update({
+  const user = await prisma.users.update({
     where: { id: userId },
     data: {
-      emailVerified: true,
+      email_verified: true,
       status: UserStatus.ACTIVE,
     },
   });
@@ -313,9 +314,9 @@ export async function verifyEmail(
       'welcome',
       user.email,
       {
-        userName: user.displayName,
+        userName: user.display_name,
       },
-      user.languagePreference as any
+      user.language_preference as any
     );
   } catch (error) {
     logger.error({ error, userId }, 'Failed to send welcome email');
@@ -332,7 +333,7 @@ export async function verifyEmail(
  * @param email - User email
  */
 export async function resendVerificationEmail(email: string): Promise<void> {
-  const user = await prisma.user.findUnique({
+  const user = await prisma.users.findUnique({
     where: { email: email.toLowerCase() },
   });
 
@@ -341,7 +342,7 @@ export async function resendVerificationEmail(email: string): Promise<void> {
     return;
   }
 
-  if (user.emailVerified) {
+  if (user.email_verified) {
     throw new Error('Email already verified');
   }
 
@@ -364,11 +365,11 @@ export async function resendVerificationEmail(email: string): Promise<void> {
       'email_verification',
       user.email,
       {
-        userName: user.displayName,
+        userName: user.display_name,
         verificationLink,
         expiryHours: 24,
       },
-      user.languagePreference as any
+      user.language_preference as any
     );
   } catch (error) {
     logger.error({ error, userId: user.id }, 'Failed to resend verification email');
@@ -387,7 +388,7 @@ export async function initiatePasswordReset(
   email: string,
   ipAddress?: string
 ): Promise<void> {
-  const user = await prisma.user.findUnique({
+  const user = await prisma.users.findUnique({
     where: { email: email.toLowerCase() },
   });
 
@@ -415,13 +416,13 @@ export async function initiatePasswordReset(
       'password_reset',
       user.email,
       {
-        userName: user.displayName,
+        userName: user.display_name,
         resetLink,
         expiryMinutes: 60,
         ipAddress: ipAddress || 'unknown',
         timestamp: new Date().toISOString(),
       },
-      user.languagePreference as any
+      user.language_preference as any
     );
   } catch (error) {
     logger.error({ error, userId: user.id }, 'Failed to send password reset email');
@@ -461,9 +462,9 @@ export async function completePasswordReset(
   const passwordHash = await hashPassword(newPassword);
 
   // Update user password
-  await prisma.user.update({
+  await prisma.users.update({
     where: { id: tokenData.userId },
-    data: { passwordHash },
+    data: { password_hash: passwordHash },
   });
 
   // Revoke all user sessions (force re-login)
@@ -471,7 +472,7 @@ export async function completePasswordReset(
   await revokeAllUserSessions(tokenData.userId);
 
   // Send confirmation email
-  const user = await prisma.user.findUnique({
+  const user = await prisma.users.findUnique({
     where: { id: tokenData.userId },
   });
 
@@ -481,9 +482,9 @@ export async function completePasswordReset(
         'password_changed',
         user.email,
         {
-          userName: user.displayName,
+          userName: user.display_name,
         },
-        user.languagePreference as any
+        user.language_preference as any
       );
     } catch (error) {
       logger.error({ error, userId: user.id }, 'Failed to send password changed email');

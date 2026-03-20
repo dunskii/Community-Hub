@@ -3,6 +3,7 @@
  * Handles following/unfollowing businesses
  */
 
+import crypto from 'crypto';
 import { prisma } from '../db/index.js';
 import { logger } from '../utils/logger.js';
 import { ApiError } from '../utils/api-error.js';
@@ -18,11 +19,11 @@ export class FollowService {
    */
   async followBusiness(userId: string, businessId: string): Promise<Record<string, unknown>> {
     // Check if already following
-    const existing = await prisma.businessFollow.findUnique({
+    const existing = await prisma.business_follows.findUnique({
       where: {
-        userId_businessId: {
-          userId,
-          businessId,
+        user_id_business_id: {
+          user_id: userId,
+          business_id: businessId,
         },
       },
     });
@@ -32,7 +33,7 @@ export class FollowService {
     }
 
     // Verify business exists
-    const business = await prisma.business.findUnique({
+    const business = await prisma.businesses.findUnique({
       where: { id: businessId },
     });
 
@@ -40,20 +41,21 @@ export class FollowService {
       throw ApiError.notFound('BUSINESS_NOT_FOUND', 'Business not found');
     }
 
-    const follow = await prisma.businessFollow.create({
+    const follow = await prisma.business_follows.create({
       data: {
-        userId,
-        businessId,
+        id: crypto.randomUUID(),
+        user_id: userId,
+        business_id: businessId,
       },
       include: {
-        business: {
+        businesses: {
           select: {
             id: true,
             name: true,
             slug: true,
             logo: true,
             address: true,
-            categoryPrimary: {
+            categories: {
               select: {
                 id: true,
                 name: true,
@@ -73,11 +75,11 @@ export class FollowService {
    * Unfollows a business
    */
   async unfollowBusiness(userId: string, businessId: string): Promise<void> {
-    const existing = await prisma.businessFollow.findUnique({
+    const existing = await prisma.business_follows.findUnique({
       where: {
-        userId_businessId: {
-          userId,
-          businessId,
+        user_id_business_id: {
+          user_id: userId,
+          business_id: businessId,
         },
       },
     });
@@ -86,11 +88,11 @@ export class FollowService {
       throw ApiError.notFound('NOT_FOLLOWING', 'Not following this business');
     }
 
-    await prisma.businessFollow.delete({
+    await prisma.business_follows.delete({
       where: {
-        userId_businessId: {
-          userId,
-          businessId,
+        user_id_business_id: {
+          user_id: userId,
+          business_id: businessId,
         },
       },
     });
@@ -102,8 +104,8 @@ export class FollowService {
    * Gets follower count for a business
    */
   async getFollowerCount(businessId: string): Promise<number> {
-    return prisma.businessFollow.count({
-      where: { businessId },
+    return prisma.business_follows.count({
+      where: { business_id: businessId },
     });
   }
 
@@ -111,11 +113,11 @@ export class FollowService {
    * Checks if a user is following a business
    */
   async isFollowing(userId: string, businessId: string): Promise<boolean> {
-    const follow = await prisma.businessFollow.findUnique({
+    const follow = await prisma.business_follows.findUnique({
       where: {
-        userId_businessId: {
-          userId,
-          businessId,
+        user_id_business_id: {
+          user_id: userId,
+          business_id: businessId,
         },
       },
     });
@@ -140,13 +142,13 @@ export class FollowService {
     const skip = (page - 1) * limit;
 
     const [following, total] = await Promise.all([
-      prisma.businessFollow.findMany({
-        where: { userId },
-        orderBy: { createdAt: 'desc' },
+      prisma.business_follows.findMany({
+        where: { user_id: userId },
+        orderBy: { created_at: 'desc' },
         skip,
         take: limit,
         include: {
-          business: {
+          businesses: {
             select: {
               id: true,
               name: true,
@@ -154,7 +156,7 @@ export class FollowService {
               logo: true,
               address: true,
               phone: true,
-              categoryPrimary: {
+              categories: {
                 select: {
                   id: true,
                   name: true,
@@ -164,7 +166,7 @@ export class FollowService {
           },
         },
       }),
-      prisma.businessFollow.count({ where: { userId } }),
+      prisma.business_follows.count({ where: { user_id: userId } }),
     ]);
 
     const totalPages = Math.ceil(total / limit);
@@ -195,22 +197,22 @@ export class FollowService {
     const skip = (page - 1) * limit;
 
     const [followers, total] = await Promise.all([
-      prisma.businessFollow.findMany({
-        where: { businessId },
-        orderBy: { createdAt: 'desc' },
+      prisma.business_follows.findMany({
+        where: { business_id: businessId },
+        orderBy: { created_at: 'desc' },
         skip,
         take: limit,
         include: {
-          user: {
+          users: {
             select: {
               id: true,
-              displayName: true,
-              profilePhoto: true,
+              display_name: true,
+              profile_photo: true,
             },
           },
         },
       }),
-      prisma.businessFollow.count({ where: { businessId } }),
+      prisma.business_follows.count({ where: { business_id: businessId } }),
     ]);
 
     const totalPages = Math.ceil(total / limit);

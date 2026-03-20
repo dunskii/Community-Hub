@@ -8,6 +8,7 @@
  * Quick reply templates are in quick-reply-service.ts
  */
 
+import crypto from 'crypto';
 import { prisma } from '../db/index.js';
 import { Prisma } from '../generated/prisma/index.js';
 import { logger } from '../utils/logger.js';
@@ -147,7 +148,7 @@ class ConversationService {
     logger.info({ businessId: input.businessId, userId }, 'Creating conversation');
 
     // Check if business exists
-    const business = await prisma.business.findUnique({
+    const business = await prisma.businesses.findUnique({
       where: { id: input.businessId },
       select: {
         id: true,
@@ -169,11 +170,11 @@ class ConversationService {
     }
 
     // Check for existing conversation (only one per user-business pair)
-    const existingConversation = await prisma.conversation.findUnique({
+    const existingConversation = await prisma.conversations.findUnique({
       where: {
-        businessId_userId: {
-          businessId: input.businessId,
-          userId: userId,
+        business_id_user_id: {
+          business_id: input.businessId,
+          user_id: userId,
         },
       },
     });
@@ -190,7 +191,7 @@ class ConversationService {
 
       // Unarchive if archived and add message
       if (existingConversation.status === ConversationStatus.ARCHIVED) {
-        await prisma.conversation.update({
+        await prisma.conversations.update({
           where: { id: existingConversation.id },
           data: { status: ConversationStatus.ACTIVE },
         });
@@ -210,38 +211,42 @@ class ConversationService {
 
     // Create new conversation with initial message
     const conversation = await prisma.$transaction(async (tx) => {
-      const conv = await tx.conversation.create({
+      const conv = await tx.conversations.create({
         data: {
-          businessId: input.businessId,
-          userId: userId,
+          id: crypto.randomUUID(),
+          business_id: input.businessId,
+          user_id: userId,
           subject: input.subject,
-          subjectCategory: input.subjectCategory as SubjectCategory,
+          subject_category: input.subjectCategory as SubjectCategory,
           status: ConversationStatus.ACTIVE,
-          lastMessageAt: new Date(),
-          unreadCountBusiness: 1,
-          unreadCountUser: 0,
+          last_message_at: new Date(),
+          unread_count_business: 1,
+          unread_count_user: 0,
+          updated_at: new Date(),
         },
       });
 
       // Create initial message
-      const message = await tx.message.create({
+      const message = await tx.messages.create({
         data: {
-          conversationId: conv.id,
-          senderType: SenderType.USER,
-          senderId: userId,
+          id: crypto.randomUUID(),
+          conversation_id: conv.id,
+          sender_type: SenderType.USER,
+          sender_id: userId,
           content: input.message,
         },
       });
 
       // Create attachments if any
       if (input.attachments && input.attachments.length > 0) {
-        await tx.messageAttachment.createMany({
+        await tx.message_attachments.createMany({
           data: input.attachments.map((att) => ({
-            messageId: message.id,
+            id: crypto.randomUUID(),
+            message_id: message.id,
             url: att.url,
-            altText: att.altText || null,
-            sizeBytes: att.sizeBytes,
-            mimeType: att.mimeType,
+            alt_text: att.altText || null,
+            size_bytes: att.sizeBytes,
+            mime_type: att.mimeType,
           })),
         });
       }
@@ -280,41 +285,43 @@ class ConversationService {
   ): Promise<void> {
     await prisma.$transaction(async (tx) => {
       // Create message
-      const message = await tx.message.create({
+      const message = await tx.messages.create({
         data: {
-          conversationId,
-          senderType,
-          senderId,
+          id: crypto.randomUUID(),
+          conversation_id: conversationId,
+          sender_type: senderType,
+          sender_id: senderId,
           content,
         },
       });
 
       // Create attachments
       if (attachments && attachments.length > 0) {
-        await tx.messageAttachment.createMany({
+        await tx.message_attachments.createMany({
           data: attachments.map((att) => ({
-            messageId: message.id,
+            id: crypto.randomUUID(),
+            message_id: message.id,
             url: att.url,
-            altText: att.altText || null,
-            sizeBytes: att.sizeBytes,
-            mimeType: att.mimeType,
+            alt_text: att.altText || null,
+            size_bytes: att.sizeBytes,
+            mime_type: att.mimeType,
           })),
         });
       }
 
       // Update conversation
       const updateData: Record<string, unknown> = {
-        lastMessageAt: new Date(),
-        updatedAt: new Date(),
+        last_message_at: new Date(),
+        updated_at: new Date(),
       };
 
       if (senderType === SenderType.USER) {
-        updateData.unreadCountBusiness = { increment: 1 };
+        updateData.unread_count_business = { increment: 1 };
       } else {
-        updateData.unreadCountUser = { increment: 1 };
+        updateData.unread_count_user = { increment: 1 };
       }
 
-      await tx.conversation.update({
+      await tx.conversations.update({
         where: { id: conversationId },
         data: updateData,
       });
@@ -329,10 +336,10 @@ class ConversationService {
     userId: string,
     isBusinessOwner: boolean = false
   ): Promise<ConversationWithMessages> {
-    const conversation = await prisma.conversation.findUnique({
+    const conversation = await prisma.conversations.findUnique({
       where: { id: conversationId },
       include: {
-        business: {
+        businesses: {
           select: {
             id: true,
             name: true,
@@ -340,27 +347,27 @@ class ConversationService {
             logo: true,
             email: true,
             phone: true,
-            claimedBy: true,
+            claimed_by: true,
           },
         },
-        user: {
+        users: {
           select: {
             id: true,
-            displayName: true,
-            profilePhoto: true,
+            display_name: true,
+            profile_photo: true,
           },
         },
         messages: {
-          where: { deletedAt: null },
-          orderBy: { createdAt: 'asc' },
+          where: { deleted_at: null },
+          orderBy: { created_at: 'asc' },
           include: {
-            attachments: {
+            message_attachments: {
               select: {
                 id: true,
                 url: true,
-                altText: true,
-                sizeBytes: true,
-                mimeType: true,
+                alt_text: true,
+                size_bytes: true,
+                mime_type: true,
               },
             },
           },
@@ -373,8 +380,8 @@ class ConversationService {
     }
 
     // Check authorization
-    const isParticipant = conversation.userId === userId;
-    const isOwner = conversation.business.claimedBy === userId;
+    const isParticipant = conversation.user_id === userId;
+    const isOwner = conversation.businesses.claimed_by === userId;
 
     if (!isParticipant && !isOwner && !isBusinessOwner) {
       throw ApiError.forbidden('NOT_AUTHORIZED', 'You are not authorized to view this conversation');
@@ -382,26 +389,46 @@ class ConversationService {
 
     return {
       id: conversation.id,
-      businessId: conversation.businessId,
+      businessId: conversation.business_id,
       business: {
-        id: conversation.business.id,
-        name: conversation.business.name,
-        slug: conversation.business.slug,
-        logo: conversation.business.logo,
-        email: conversation.business.email,
-        phone: conversation.business.phone,
+        id: conversation.businesses.id,
+        name: conversation.businesses.name,
+        slug: conversation.businesses.slug,
+        logo: conversation.businesses.logo,
+        email: conversation.businesses.email,
+        phone: conversation.businesses.phone,
       },
-      userId: conversation.userId,
-      user: conversation.user,
+      userId: conversation.user_id,
+      user: {
+        id: conversation.users.id,
+        displayName: conversation.users.display_name,
+        profilePhoto: conversation.users.profile_photo,
+      },
       subject: conversation.subject,
-      subjectCategory: conversation.subjectCategory,
+      subjectCategory: conversation.subject_category,
       status: conversation.status,
-      lastMessageAt: conversation.lastMessageAt,
-      unreadCountBusiness: conversation.unreadCountBusiness,
-      unreadCountUser: conversation.unreadCountUser,
-      createdAt: conversation.createdAt,
-      updatedAt: conversation.updatedAt,
-      messages: conversation.messages,
+      lastMessageAt: conversation.last_message_at,
+      unreadCountBusiness: conversation.unread_count_business,
+      unreadCountUser: conversation.unread_count_user,
+      createdAt: conversation.created_at,
+      updatedAt: conversation.updated_at,
+      messages: conversation.messages.map((msg) => ({
+        id: msg.id,
+        conversationId: msg.conversation_id,
+        senderType: msg.sender_type,
+        senderId: msg.sender_id,
+        content: msg.content,
+        readAt: msg.read_at,
+        deletedAt: msg.deleted_at,
+        createdAt: msg.created_at,
+        attachments: msg.message_attachments.map((att) => ({
+          id: att.id,
+          url: att.url,
+          altText: att.alt_text,
+          sizeBytes: att.size_bytes,
+          mimeType: att.mime_type,
+        })),
+      })),
     };
   }
 
@@ -415,7 +442,7 @@ class ConversationService {
     const { status, search, page, limit } = filters;
 
     // Build where clause
-    const where: Record<string, unknown> = { userId };
+    const where: Record<string, unknown> = { user_id: userId };
 
     if (status === 'active') {
       where.status = ConversationStatus.ACTIVE;
@@ -427,21 +454,21 @@ class ConversationService {
     if (search) {
       where.OR = [
         { subject: { contains: search, mode: 'insensitive' } },
-        { business: { name: { contains: search, mode: 'insensitive' } } },
+        { businesses: { name: { contains: search, mode: 'insensitive' } } },
       ];
     }
 
     // Get total count
-    const total = await prisma.conversation.count({ where });
+    const total = await prisma.conversations.count({ where });
 
     // Get conversations with last message
-    const conversations = await prisma.conversation.findMany({
+    const conversations = await prisma.conversations.findMany({
       where,
-      orderBy: { lastMessageAt: 'desc' },
+      orderBy: { last_message_at: 'desc' },
       skip: (page - 1) * limit,
       take: limit,
       include: {
-        business: {
+        businesses: {
           select: {
             id: true,
             name: true,
@@ -449,16 +476,16 @@ class ConversationService {
             logo: true,
           },
         },
-        user: {
+        users: {
           select: {
             id: true,
-            displayName: true,
-            profilePhoto: true,
+            display_name: true,
+            profile_photo: true,
           },
         },
         messages: {
-          where: { deletedAt: null },
-          orderBy: { createdAt: 'desc' },
+          where: { deleted_at: null },
+          orderBy: { created_at: 'desc' },
           take: 1,
           select: {
             content: true,
@@ -472,18 +499,27 @@ class ConversationService {
     return {
       conversations: conversations.map((conv) => ({
         id: conv.id,
-        businessId: conv.businessId,
-        business: conv.business,
-        userId: conv.userId,
-        user: conv.user,
+        businessId: conv.business_id,
+        business: {
+          id: conv.businesses.id,
+          name: conv.businesses.name,
+          slug: conv.businesses.slug,
+          logo: conv.businesses.logo,
+        },
+        userId: conv.user_id,
+        user: {
+          id: conv.users.id,
+          displayName: conv.users.display_name,
+          profilePhoto: conv.users.profile_photo,
+        },
         subject: conv.subject,
-        subjectCategory: conv.subjectCategory,
+        subjectCategory: conv.subject_category,
         status: conv.status,
-        lastMessageAt: conv.lastMessageAt,
+        lastMessageAt: conv.last_message_at,
         lastMessagePreview: conv.messages[0]?.content?.substring(0, 100) || null,
-        unreadCount: conv.unreadCountUser,
-        createdAt: conv.createdAt,
-        updatedAt: conv.updatedAt,
+        unreadCount: conv.unread_count_user,
+        createdAt: conv.created_at,
+        updatedAt: conv.updated_at,
       })),
       pagination: {
         page,
@@ -504,23 +540,23 @@ class ConversationService {
     filters: BusinessInboxFilterInput
   ): Promise<PaginatedConversations> {
     // Verify business ownership
-    const business = await prisma.business.findUnique({
+    const business = await prisma.businesses.findUnique({
       where: { id: businessId },
-      select: { id: true, claimedBy: true, name: true, slug: true, logo: true },
+      select: { id: true, claimed_by: true, name: true, slug: true, logo: true },
     });
 
     if (!business) {
       throw ApiError.notFound('BUSINESS_NOT_FOUND', 'Business not found');
     }
 
-    if (business.claimedBy !== ownerId) {
+    if (business.claimed_by !== ownerId) {
       throw ApiError.forbidden('NOT_OWNER', 'You do not own this business');
     }
 
     const { status, search, unreadOnly, page, limit } = filters;
 
     // Build where clause
-    const where: Record<string, unknown> = { businessId };
+    const where: Record<string, unknown> = { business_id: businessId };
 
     if (status === 'active') {
       where.status = ConversationStatus.ACTIVE;
@@ -531,27 +567,27 @@ class ConversationService {
     }
 
     if (unreadOnly) {
-      where.unreadCountBusiness = { gt: 0 };
+      where.unread_count_business = { gt: 0 };
     }
 
     if (search) {
       where.OR = [
         { subject: { contains: search, mode: 'insensitive' } },
-        { user: { displayName: { contains: search, mode: 'insensitive' } } },
+        { users: { display_name: { contains: search, mode: 'insensitive' } } },
       ];
     }
 
     // Get total count
-    const total = await prisma.conversation.count({ where });
+    const total = await prisma.conversations.count({ where });
 
     // Get conversations
-    const conversations = await prisma.conversation.findMany({
+    const conversations = await prisma.conversations.findMany({
       where,
-      orderBy: { lastMessageAt: 'desc' },
+      orderBy: { last_message_at: 'desc' },
       skip: (page - 1) * limit,
       take: limit,
       include: {
-        business: {
+        businesses: {
           select: {
             id: true,
             name: true,
@@ -559,16 +595,16 @@ class ConversationService {
             logo: true,
           },
         },
-        user: {
+        users: {
           select: {
             id: true,
-            displayName: true,
-            profilePhoto: true,
+            display_name: true,
+            profile_photo: true,
           },
         },
         messages: {
-          where: { deletedAt: null },
-          orderBy: { createdAt: 'desc' },
+          where: { deleted_at: null },
+          orderBy: { created_at: 'desc' },
           take: 1,
           select: {
             content: true,
@@ -582,18 +618,27 @@ class ConversationService {
     return {
       conversations: conversations.map((conv) => ({
         id: conv.id,
-        businessId: conv.businessId,
-        business: conv.business,
-        userId: conv.userId,
-        user: conv.user,
+        businessId: conv.business_id,
+        business: {
+          id: conv.businesses.id,
+          name: conv.businesses.name,
+          slug: conv.businesses.slug,
+          logo: conv.businesses.logo,
+        },
+        userId: conv.user_id,
+        user: {
+          id: conv.users.id,
+          displayName: conv.users.display_name,
+          profilePhoto: conv.users.profile_photo,
+        },
         subject: conv.subject,
-        subjectCategory: conv.subjectCategory,
+        subjectCategory: conv.subject_category,
         status: conv.status,
-        lastMessageAt: conv.lastMessageAt,
+        lastMessageAt: conv.last_message_at,
         lastMessagePreview: conv.messages[0]?.content?.substring(0, 100) || null,
-        unreadCount: conv.unreadCountBusiness,
-        createdAt: conv.createdAt,
-        updatedAt: conv.updatedAt,
+        unreadCount: conv.unread_count_business,
+        createdAt: conv.created_at,
+        updatedAt: conv.updated_at,
       })),
       pagination: {
         page,
@@ -620,23 +665,23 @@ class ConversationService {
     }
   ): Promise<PaginatedConversations> {
     // Verify business ownership
-    const business = await prisma.business.findUnique({
+    const business = await prisma.businesses.findUnique({
       where: { id: businessId },
-      select: { id: true, claimedBy: true },
+      select: { id: true, claimed_by: true },
     });
 
     if (!business) {
       throw ApiError.notFound('BUSINESS_NOT_FOUND', 'Business not found');
     }
 
-    if (business.claimedBy !== ownerId) {
+    if (business.claimed_by !== ownerId) {
       throw ApiError.forbidden('NOT_OWNER', 'You do not own this business');
     }
 
     const { status, unreadOnly, search, page, limit } = filters;
 
     // Build where clause
-    const where: Record<string, unknown> = { businessId };
+    const where: Record<string, unknown> = { business_id: businessId };
 
     if (status === 'active') {
       where.status = ConversationStatus.ACTIVE;
@@ -648,27 +693,27 @@ class ConversationService {
     // 'all' means no status filter
 
     if (unreadOnly) {
-      where.unreadCountBusiness = { gt: 0 };
+      where.unread_count_business = { gt: 0 };
     }
 
     if (search) {
       where.OR = [
         { subject: { contains: search, mode: 'insensitive' } },
-        { user: { displayName: { contains: search, mode: 'insensitive' } } },
+        { users: { display_name: { contains: search, mode: 'insensitive' } } },
       ];
     }
 
     // Get total count
-    const total = await prisma.conversation.count({ where });
+    const total = await prisma.conversations.count({ where });
 
     // Get conversations with last message
-    const conversations = await prisma.conversation.findMany({
+    const conversations = await prisma.conversations.findMany({
       where,
-      orderBy: { lastMessageAt: 'desc' },
+      orderBy: { last_message_at: 'desc' },
       skip: (page - 1) * limit,
       take: limit,
       include: {
-        business: {
+        businesses: {
           select: {
             id: true,
             name: true,
@@ -676,16 +721,16 @@ class ConversationService {
             logo: true,
           },
         },
-        user: {
+        users: {
           select: {
             id: true,
-            displayName: true,
-            profilePhoto: true,
+            display_name: true,
+            profile_photo: true,
           },
         },
         messages: {
-          where: { deletedAt: null },
-          orderBy: { createdAt: 'desc' },
+          where: { deleted_at: null },
+          orderBy: { created_at: 'desc' },
           take: 1,
           select: {
             content: true,
@@ -699,18 +744,27 @@ class ConversationService {
     return {
       conversations: conversations.map((conv) => ({
         id: conv.id,
-        businessId: conv.businessId,
-        business: conv.business,
-        userId: conv.userId,
-        user: conv.user,
+        businessId: conv.business_id,
+        business: {
+          id: conv.businesses.id,
+          name: conv.businesses.name,
+          slug: conv.businesses.slug,
+          logo: conv.businesses.logo,
+        },
+        userId: conv.user_id,
+        user: {
+          id: conv.users.id,
+          displayName: conv.users.display_name,
+          profilePhoto: conv.users.profile_photo,
+        },
         subject: conv.subject,
-        subjectCategory: conv.subjectCategory,
+        subjectCategory: conv.subject_category,
         status: conv.status,
-        lastMessageAt: conv.lastMessageAt,
+        lastMessageAt: conv.last_message_at,
         lastMessagePreview: conv.messages[0]?.content?.substring(0, 100) || null,
-        unreadCount: conv.unreadCountBusiness,
-        createdAt: conv.createdAt,
-        updatedAt: conv.updatedAt,
+        unreadCount: conv.unread_count_business,
+        createdAt: conv.created_at,
+        updatedAt: conv.updated_at,
       })),
       pagination: {
         page,
@@ -727,16 +781,16 @@ class ConversationService {
    */
   async getBusinessUnreadCount(businessId: string, ownerId: string): Promise<number> {
     // Verify business ownership
-    const business = await prisma.business.findUnique({
+    const business = await prisma.businesses.findUnique({
       where: { id: businessId },
-      select: { id: true, claimedBy: true },
+      select: { id: true, claimed_by: true },
     });
 
     if (!business) {
       throw ApiError.notFound('BUSINESS_NOT_FOUND', 'Business not found');
     }
 
-    if (business.claimedBy !== ownerId) {
+    if (business.claimed_by !== ownerId) {
       throw ApiError.forbidden('NOT_OWNER', 'You do not own this business');
     }
 
@@ -750,17 +804,17 @@ class ConversationService {
     }
 
     // Count unread conversations
-    const result = await prisma.conversation.aggregate({
+    const result = await prisma.conversations.aggregate({
       where: {
-        businessId,
+        business_id: businessId,
         status: { not: ConversationStatus.BLOCKED },
       },
       _sum: {
-        unreadCountBusiness: true,
+        unread_count_business: true,
       },
     });
 
-    const count = result._sum.unreadCountBusiness ?? 0;
+    const count = result._sum.unread_count_business ?? 0;
 
     // Cache for 5 minutes
     await redis.setex(cacheKey, 300, count.toString());
@@ -776,16 +830,16 @@ class ConversationService {
     userId: string,
     auditContext: AuditContext
   ): Promise<void> {
-    const conversation = await prisma.conversation.findUnique({
+    const conversation = await prisma.conversations.findUnique({
       where: { id: conversationId },
-      select: { id: true, userId: true, status: true },
+      select: { id: true, user_id: true, status: true },
     });
 
     if (!conversation) {
       throw ApiError.notFound('CONVERSATION_NOT_FOUND', 'Conversation not found');
     }
 
-    if (conversation.userId !== userId) {
+    if (conversation.user_id !== userId) {
       throw ApiError.forbidden('NOT_AUTHORIZED', 'You can only archive your own conversations');
     }
 
@@ -793,7 +847,7 @@ class ConversationService {
       throw ApiError.badRequest('CANNOT_ARCHIVE_BLOCKED', 'Cannot archive a blocked conversation');
     }
 
-    await prisma.conversation.update({
+    await prisma.conversations.update({
       where: { id: conversationId },
       data: { status: ConversationStatus.ARCHIVED },
     });
@@ -817,16 +871,16 @@ class ConversationService {
     userId: string,
     auditContext: AuditContext
   ): Promise<void> {
-    const conversation = await prisma.conversation.findUnique({
+    const conversation = await prisma.conversations.findUnique({
       where: { id: conversationId },
-      select: { id: true, userId: true, status: true },
+      select: { id: true, user_id: true, status: true },
     });
 
     if (!conversation) {
       throw ApiError.notFound('CONVERSATION_NOT_FOUND', 'Conversation not found');
     }
 
-    if (conversation.userId !== userId) {
+    if (conversation.user_id !== userId) {
       throw ApiError.forbidden('NOT_AUTHORIZED', 'You can only unarchive your own conversations');
     }
 
@@ -834,7 +888,7 @@ class ConversationService {
       throw ApiError.badRequest('NOT_ARCHIVED', 'Conversation is not archived');
     }
 
-    await prisma.conversation.update({
+    await prisma.conversations.update({
       where: { id: conversationId },
       data: { status: ConversationStatus.ACTIVE },
     });
@@ -858,11 +912,11 @@ class ConversationService {
     ownerId: string,
     auditContext: AuditContext
   ): Promise<void> {
-    const conversation = await prisma.conversation.findUnique({
+    const conversation = await prisma.conversations.findUnique({
       where: { id: conversationId },
       include: {
-        business: {
-          select: { id: true, claimedBy: true },
+        businesses: {
+          select: { id: true, claimed_by: true },
         },
       },
     });
@@ -871,7 +925,7 @@ class ConversationService {
       throw ApiError.notFound('CONVERSATION_NOT_FOUND', 'Conversation not found');
     }
 
-    if (conversation.business.claimedBy !== ownerId) {
+    if (conversation.businesses.claimed_by !== ownerId) {
       throw ApiError.forbidden('NOT_OWNER', 'Only the business owner can block users');
     }
 
@@ -879,7 +933,7 @@ class ConversationService {
       throw ApiError.badRequest('ALREADY_BLOCKED', 'User is already blocked');
     }
 
-    await prisma.conversation.update({
+    await prisma.conversations.update({
       where: { id: conversationId },
       data: { status: ConversationStatus.BLOCKED },
     });
@@ -892,7 +946,7 @@ class ConversationService {
       auditContext
     );
 
-    await this.invalidateCache(conversation.userId, conversation.businessId);
+    await this.invalidateCache(conversation.user_id, conversation.business_id);
   }
 
   /**
@@ -903,11 +957,11 @@ class ConversationService {
     ownerId: string,
     auditContext: AuditContext
   ): Promise<void> {
-    const conversation = await prisma.conversation.findUnique({
+    const conversation = await prisma.conversations.findUnique({
       where: { id: conversationId },
       include: {
-        business: {
-          select: { id: true, claimedBy: true },
+        businesses: {
+          select: { id: true, claimed_by: true },
         },
       },
     });
@@ -916,7 +970,7 @@ class ConversationService {
       throw ApiError.notFound('CONVERSATION_NOT_FOUND', 'Conversation not found');
     }
 
-    if (conversation.business.claimedBy !== ownerId) {
+    if (conversation.businesses.claimed_by !== ownerId) {
       throw ApiError.forbidden('NOT_OWNER', 'Only the business owner can unblock users');
     }
 
@@ -924,7 +978,7 @@ class ConversationService {
       throw ApiError.badRequest('NOT_BLOCKED', 'User is not blocked');
     }
 
-    await prisma.conversation.update({
+    await prisma.conversations.update({
       where: { id: conversationId },
       data: { status: ConversationStatus.ACTIVE },
     });
@@ -937,7 +991,7 @@ class ConversationService {
       auditContext
     );
 
-    await this.invalidateCache(conversation.userId, conversation.businessId);
+    await this.invalidateCache(conversation.user_id, conversation.business_id);
   }
 
   /**
@@ -949,9 +1003,9 @@ class ConversationService {
     input: ReportConversationInput,
     auditContext: AuditContext
   ): Promise<void> {
-    const conversation = await prisma.conversation.findUnique({
+    const conversation = await prisma.conversations.findUnique({
       where: { id: conversationId },
-      select: { id: true, userId: true, businessId: true },
+      select: { id: true, user_id: true, business_id: true },
     });
 
     if (!conversation) {
@@ -959,24 +1013,25 @@ class ConversationService {
     }
 
     // Only participants can report
-    if (conversation.userId !== userId) {
+    if (conversation.user_id !== userId) {
       // Check if business owner
-      const business = await prisma.business.findUnique({
-        where: { id: conversation.businessId },
-        select: { claimedBy: true },
+      const business = await prisma.businesses.findUnique({
+        where: { id: conversation.business_id },
+        select: { claimed_by: true },
       });
 
-      if (business?.claimedBy !== userId) {
+      if (business?.claimed_by !== userId) {
         throw ApiError.forbidden('NOT_AUTHORIZED', 'Only participants can report a conversation');
       }
     }
 
     // Create moderation report
-    await prisma.moderationReport.create({
+    await prisma.moderation_reports.create({
       data: {
-        reporterId: userId,
-        contentType: ContentType.MESSAGE,
-        contentId: conversationId,
+        id: crypto.randomUUID(),
+        reporter_id: userId,
+        content_type: ContentType.MESSAGE,
+        content_id: conversationId,
         reason: input.reason as ReportReason,
         details: input.details || null,
       },
@@ -1007,18 +1062,18 @@ class ConversationService {
     }
 
     // Count unread conversations
-    const result = await prisma.conversation.aggregate({
+    const result = await prisma.conversations.aggregate({
       where: {
-        userId,
+        user_id: userId,
         status: { not: ConversationStatus.BLOCKED },
-        unreadCountUser: { gt: 0 },
+        unread_count_user: { gt: 0 },
       },
       _sum: {
-        unreadCountUser: true,
+        unread_count_user: true,
       },
     });
 
-    const count = result._sum.unreadCountUser || 0;
+    const count = result._sum.unread_count_user || 0;
 
     // Cache for 5 minutes
     await redis.setex(cacheKey, CACHE_TTL, count.toString());
@@ -1052,17 +1107,18 @@ class ConversationService {
     context: AuditContext
   ): Promise<void> {
     try {
-      await prisma.auditLog.create({
+      await prisma.audit_logs.create({
         data: {
-          actorId: context.actorId,
-          actorRole: context.actorRole as 'USER' | 'BUSINESS_OWNER' | 'MODERATOR' | 'ADMIN' | 'SYSTEM',
+          id: crypto.randomUUID(),
+          actor_id: context.actorId,
+          actor_role: context.actorRole as 'USER' | 'BUSINESS_OWNER' | 'MODERATOR' | 'ADMIN' | 'SYSTEM',
           action,
-          targetType: 'Conversation',
-          targetId,
-          previousValue: previousValue ? JSON.parse(JSON.stringify(previousValue)) : Prisma.DbNull,
-          newValue: newValue ? JSON.parse(JSON.stringify(newValue)) : Prisma.DbNull,
-          ipAddress: context.ipAddress || 'unknown',
-          userAgent: context.userAgent || 'unknown',
+          target_type: 'Conversation',
+          target_id: targetId,
+          previous_value: previousValue ? JSON.parse(JSON.stringify(previousValue)) : Prisma.DbNull,
+          new_value: newValue ? JSON.parse(JSON.stringify(newValue)) : Prisma.DbNull,
+          ip_address: context.ipAddress || 'unknown',
+          user_agent: context.userAgent || 'unknown',
         },
       });
     } catch (error) {

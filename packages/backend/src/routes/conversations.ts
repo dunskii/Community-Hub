@@ -294,4 +294,4 @@ router.get(
   (req, res) => messagingAnalyticsController.getMessagingStats(req, res)
 );
 
-export const conversationsRouter = router;
+export const conversationsRouter: Router = router;

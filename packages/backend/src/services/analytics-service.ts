@@ -9,7 +9,7 @@ import { prisma } from '../db/index.js';
 import { logger } from '../utils/logger.js';
 import { ApiError } from '../utils/api-error.js';
 import { getRedis } from '../cache/redis-client.js';
-import { AnalyticsEventType } from '../generated/prisma/index.js';
+import { AnalyticsEventType, ReviewStatus } from '../generated/prisma/index.js';
 import crypto from 'crypto';
 
 // ─── Types ──────────────────────────────────────────────────
@@ -98,12 +98,13 @@ const IP_HASH_RETENTION_DAYS = 90;
 
 /**
  * Get Redis client with fallback
+ * Returns null if Redis is not available or not connected
  */
 function getRedisClient() {
   try {
     const redis = getRedis();
     // Check if connection is actually open
-    if (redis.status !== 'ready' && redis.status !== 'connect') {
+    if (redis.status !== 'ready') {
       return null;
     }
     return redis;
@@ -167,16 +168,17 @@ export class AnalyticsService {
       // Generate session ID if not provided (for unique view tracking)
       const sessionId = data.sessionId || (data.ipAddress ? hashIPAddress(data.ipAddress + new Date().toDateString()) : null);
 
-      await prisma.businessAnalyticsEvent.create({
+      await prisma.business_analytics_events.create({
         data: {
-          businessId: data.businessId,
-          eventType: data.eventType,
-          userId: data.userId,
-          sessionId,
-          referralSource: data.referralSource,
-          searchTerm: data.searchTerm,
-          ipAddressHash,
-          userAgent: data.userAgent?.substring(0, 500),
+          id: crypto.randomUUID(),
+          business_id: data.businessId,
+          event_type: data.eventType,
+          user_id: data.userId,
+          session_id: sessionId,
+          referral_source: data.referralSource,
+          search_term: data.searchTerm,
+          ip_address_hash: ipAddressHash,
+          user_agent: data.userAgent?.substring(0, 500),
           metadata: data.metadata as object | undefined,
         },
       });
@@ -235,15 +237,16 @@ export class AnalyticsService {
     // For UNSAVE/UNFOLLOW, we should decrement, but for simplicity we track net
     // In production, consider tracking separately or using signed values
 
-    await prisma.businessAnalyticsDaily.upsert({
+    await prisma.business_analytics_daily.upsert({
       where: {
-        businessId_date: {
-          businessId,
+        business_id_date: {
+          business_id: businessId,
           date: today,
         },
       },
       create: {
-        businessId,
+        id: crypto.randomUUID(),
+        business_id: businessId,
         date: today,
         [field]: 1,
       },
@@ -257,28 +260,28 @@ export class AnalyticsService {
     // Update unique views for PROFILE_VIEW
     if (eventType === 'PROFILE_VIEW') {
       // Count unique sessions for today
-      const uniqueCount = await prisma.businessAnalyticsEvent.groupBy({
-        by: ['sessionId'],
+      const uniqueCount = await prisma.business_analytics_events.groupBy({
+        by: ['session_id'],
         where: {
-          businessId,
-          eventType: 'PROFILE_VIEW',
-          eventDate: {
+          business_id: businessId,
+          event_type: 'PROFILE_VIEW',
+          event_date: {
             gte: today,
             lt: new Date(today.getTime() + 24 * 60 * 60 * 1000),
           },
-          sessionId: { not: null },
+          session_id: { not: null },
         },
       });
 
-      await prisma.businessAnalyticsDaily.update({
+      await prisma.business_analytics_daily.update({
         where: {
-          businessId_date: {
-            businessId,
+          business_id_date: {
+            business_id: businessId,
             date: today,
           },
         },
         data: {
-          uniqueViews: uniqueCount.length,
+          unique_views: uniqueCount.length,
         },
       });
     }
@@ -306,14 +309,18 @@ export class AnalyticsService {
     const cacheKey = `analytics:${businessId}:${options.startDate.toISOString()}:${options.endDate.toISOString()}`;
 
     if (redis) {
-      const cached = await redis.get(cacheKey);
-      if (cached) {
-        return JSON.parse(cached);
+      try {
+        const cached = await redis.get(cacheKey);
+        if (cached) {
+          return JSON.parse(cached);
+        }
+      } catch (cacheError) {
+        logger.warn({ error: cacheError }, 'Failed to read analytics from cache');
       }
     }
 
     // Get business info
-    const business = await prisma.business.findUnique({
+    const business = await prisma.businesses.findUnique({
       where: { id: businessId },
       select: { id: true, name: true },
     });
@@ -378,7 +385,11 @@ export class AnalyticsService {
 
     // Cache response
     if (redis) {
-      await redis.setex(cacheKey, CACHE_TTL_SECONDS, JSON.stringify(response));
+      try {
+        await redis.setex(cacheKey, CACHE_TTL_SECONDS, JSON.stringify(response));
+      } catch (cacheError) {
+        logger.warn({ error: cacheError }, 'Failed to cache analytics response');
+      }
     }
 
     return response;
@@ -404,22 +415,22 @@ export class AnalyticsService {
     reviews: number;
     messages: number;
   }> {
-    const aggregates = await prisma.businessAnalyticsDaily.aggregate({
+    const aggregates = await prisma.business_analytics_daily.aggregate({
       where: {
-        businessId,
+        business_id: businessId,
         date: {
           gte: startDate,
           lte: endDate,
         },
       },
       _sum: {
-        profileViews: true,
-        uniqueViews: true,
-        searchAppearances: true,
-        websiteClicks: true,
-        phoneClicks: true,
-        directionsClicks: true,
-        photoViews: true,
+        profile_views: true,
+        unique_views: true,
+        search_appearances: true,
+        website_clicks: true,
+        phone_clicks: true,
+        directions_clicks: true,
+        photo_views: true,
         saves: true,
         follows: true,
         reviews: true,
@@ -428,13 +439,13 @@ export class AnalyticsService {
     });
 
     return {
-      profileViews: aggregates._sum.profileViews || 0,
-      uniqueViews: aggregates._sum.uniqueViews || 0,
-      searchAppearances: aggregates._sum.searchAppearances || 0,
-      websiteClicks: aggregates._sum.websiteClicks || 0,
-      phoneClicks: aggregates._sum.phoneClicks || 0,
-      directionsClicks: aggregates._sum.directionsClicks || 0,
-      photoViews: aggregates._sum.photoViews || 0,
+      profileViews: aggregates._sum.profile_views || 0,
+      uniqueViews: aggregates._sum.unique_views || 0,
+      searchAppearances: aggregates._sum.search_appearances || 0,
+      websiteClicks: aggregates._sum.website_clicks || 0,
+      phoneClicks: aggregates._sum.phone_clicks || 0,
+      directionsClicks: aggregates._sum.directions_clicks || 0,
+      photoViews: aggregates._sum.photo_views || 0,
       saves: aggregates._sum.saves || 0,
       follows: aggregates._sum.follows || 0,
       reviews: aggregates._sum.reviews || 0,
@@ -451,9 +462,9 @@ export class AnalyticsService {
     endDate: Date,
     _granularity?: 'day' | 'week' | 'month'
   ): Promise<AnalyticsResponse['timeseries']> {
-    const dailyData = await prisma.businessAnalyticsDaily.findMany({
+    const dailyData = await prisma.business_analytics_daily.findMany({
       where: {
-        businessId,
+        business_id: businessId,
         date: {
           gte: startDate,
           lte: endDate,
@@ -464,15 +475,15 @@ export class AnalyticsService {
 
     // For now, return daily data
     // TODO: Implement week/month aggregation based on _granularity
-    return dailyData.map((day) => ({
+    return dailyData.map((day: { date: Date; profile_views: number; unique_views: number; search_appearances: number; website_clicks: number; phone_clicks: number; directions_clicks: number; photo_views: number; saves: number; follows: number; reviews: number }) => ({
       date: day.date.toISOString().split('T')[0] ?? '',
-      profileViews: day.profileViews,
-      uniqueViews: day.uniqueViews,
-      searchAppearances: day.searchAppearances,
-      websiteClicks: day.websiteClicks,
-      phoneClicks: day.phoneClicks,
-      directionsClicks: day.directionsClicks,
-      photoViews: day.photoViews,
+      profileViews: day.profile_views,
+      uniqueViews: day.unique_views,
+      searchAppearances: day.search_appearances,
+      websiteClicks: day.website_clicks,
+      phoneClicks: day.phone_clicks,
+      directionsClicks: day.directions_clicks,
+      photoViews: day.photo_views,
       saves: day.saves,
       follows: day.follows,
       reviews: day.reviews,
@@ -488,57 +499,57 @@ export class AnalyticsService {
     endDate: Date
   ): Promise<AnalyticsResponse['insights']> {
     // Top search terms
-    const searchTerms = await prisma.businessAnalyticsEvent.groupBy({
-      by: ['searchTerm'],
+    const searchTerms = await prisma.business_analytics_events.groupBy({
+      by: ['search_term'],
       where: {
-        businessId,
-        eventType: 'SEARCH_APPEARANCE',
-        searchTerm: { not: null },
-        eventDate: {
+        business_id: businessId,
+        event_type: 'SEARCH_APPEARANCE',
+        search_term: { not: null },
+        event_date: {
           gte: startDate,
           lte: endDate,
         },
       },
-      _count: { searchTerm: true },
-      orderBy: { _count: { searchTerm: 'desc' } },
+      _count: { search_term: true },
+      orderBy: { _count: { search_term: 'desc' } },
       take: 10,
     });
 
     // Referral sources
-    const referrals = await prisma.businessAnalyticsEvent.groupBy({
-      by: ['referralSource'],
+    const referrals = await prisma.business_analytics_events.groupBy({
+      by: ['referral_source'],
       where: {
-        businessId,
-        eventType: 'PROFILE_VIEW',
-        referralSource: { not: null },
-        eventDate: {
+        business_id: businessId,
+        event_type: 'PROFILE_VIEW',
+        referral_source: { not: null },
+        event_date: {
           gte: startDate,
           lte: endDate,
         },
       },
-      _count: { referralSource: true },
-      orderBy: { _count: { referralSource: 'desc' } },
+      _count: { referral_source: true },
+      orderBy: { _count: { referral_source: 'desc' } },
     });
 
-    const totalReferrals = referrals.reduce((sum, r) => sum + r._count.referralSource, 0);
+    const totalReferrals = referrals.reduce((sum: number, r: { _count: { referral_source: number } }) => sum + r._count.referral_source, 0);
 
     // Peak activity times (by hour and day of week)
-    const events = await prisma.businessAnalyticsEvent.findMany({
+    const events = await prisma.business_analytics_events.findMany({
       where: {
-        businessId,
-        eventType: 'PROFILE_VIEW',
-        eventDate: {
+        business_id: businessId,
+        event_type: 'PROFILE_VIEW',
+        event_date: {
           gte: startDate,
           lte: endDate,
         },
       },
-      select: { eventDate: true },
+      select: { event_date: true },
     });
 
     // Aggregate by day and hour
     const activityMap = new Map<string, number>();
     for (const event of events) {
-      const date = new Date(event.eventDate);
+      const date = new Date(event.event_date);
       const key = `${date.getDay()}-${date.getHours()}`;
       activityMap.set(key, (activityMap.get(key) || 0) + 1);
     }
@@ -558,14 +569,14 @@ export class AnalyticsService {
       .slice(0, 10);
 
     return {
-      topSearchTerms: searchTerms.map((t) => ({
-        term: t.searchTerm!,
-        count: t._count.searchTerm,
+      topSearchTerms: searchTerms.map((t: { search_term: string | null; _count: { search_term: number } }) => ({
+        term: t.search_term!,
+        count: t._count.search_term,
       })),
-      referralSources: referrals.map((r) => ({
-        source: r.referralSource!,
-        count: r._count.referralSource,
-        percentage: totalReferrals > 0 ? Math.round((r._count.referralSource / totalReferrals) * 100) : 0,
+      referralSources: referrals.map((r: { referral_source: string | null; _count: { referral_source: number } }) => ({
+        source: r.referral_source!,
+        count: r._count.referral_source,
+        percentage: totalReferrals > 0 ? Math.round((r._count.referral_source / totalReferrals) * 100) : 0,
       })),
       peakActivityTimes: peakTimes,
     };
@@ -579,19 +590,19 @@ export class AnalyticsService {
     startDate: Date,
     endDate: Date
   ): Promise<{ averageRating: number; newReviews: number }> {
-    const reviews = await prisma.review.aggregate({
+    const reviews = await prisma.reviews.aggregate({
       where: {
-        businessId,
-        status: 'PUBLISHED',
+        business_id: businessId,
+        status: ReviewStatus.PUBLISHED,
       },
       _avg: { rating: true },
     });
 
-    const newReviews = await prisma.review.count({
+    const newReviews = await prisma.reviews.count({
       where: {
-        businessId,
-        status: 'PUBLISHED',
-        createdAt: {
+        business_id: businessId,
+        status: ReviewStatus.PUBLISHED,
+        created_at: {
           gte: startDate,
           lte: endDate,
         },
@@ -673,12 +684,12 @@ export class AnalyticsService {
     const effectiveSessionId = sessionId || (ipAddress ? hashIPAddress(ipAddress + today.toDateString()) : null);
 
     if (effectiveSessionId) {
-      const existingView = await prisma.businessAnalyticsEvent.findFirst({
+      const existingView = await prisma.business_analytics_events.findFirst({
         where: {
-          businessId,
-          eventType: 'PROFILE_VIEW',
-          sessionId: effectiveSessionId,
-          eventDate: {
+          business_id: businessId,
+          event_type: 'PROFILE_VIEW',
+          session_id: effectiveSessionId,
+          event_date: {
             gte: today,
           },
         },
@@ -709,13 +720,13 @@ export class AnalyticsService {
     const cutoffDate = new Date();
     cutoffDate.setDate(cutoffDate.getDate() - IP_HASH_RETENTION_DAYS);
 
-    const result = await prisma.businessAnalyticsEvent.updateMany({
+    const result = await prisma.business_analytics_events.updateMany({
       where: {
-        eventDate: { lt: cutoffDate },
-        ipAddressHash: { not: null },
+        event_date: { lt: cutoffDate },
+        ip_address_hash: { not: null },
       },
       data: {
-        ipAddressHash: null,
+        ip_address_hash: null,
       },
     });
 

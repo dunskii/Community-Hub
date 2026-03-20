@@ -22,16 +22,27 @@ interface AuthContextValue {
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
-  login: (data: LoginData) => Promise<void>;
+  login: (data: LoginData) => Promise<User>;
   logout: () => Promise<void>;
   register: (data: RegisterData) => Promise<void>;
   refreshToken: () => Promise<void>;
   clearError: () => void;
 }
 
-export const AuthContext = createContext<AuthContextValue | undefined>(
-  undefined
-);
+// Create context with default value to avoid HMR issues
+const defaultValue: AuthContextValue = {
+  user: null,
+  isAuthenticated: false,
+  isLoading: true,
+  error: null,
+  login: async () => { throw new Error('AuthProvider not initialized'); },
+  logout: async () => { throw new Error('AuthProvider not initialized'); },
+  register: async () => { throw new Error('AuthProvider not initialized'); },
+  refreshToken: async () => { throw new Error('AuthProvider not initialized'); },
+  clearError: () => {},
+};
+
+export const AuthContext = createContext<AuthContextValue>(defaultValue);
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -139,7 +150,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
    *
    * Tokens are automatically set in HttpOnly cookies by server.
    */
-  const login = useCallback(async (data: LoginData) => {
+  const login = useCallback(async (data: LoginData): Promise<User> => {
     setIsLoading(true);
     setError(null);
 
@@ -150,6 +161,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       // Set user
       setUser(userData);
       setIsLoading(false);
+      return userData;
     } catch (err) {
       setIsLoading(false);
       if (err instanceof HttpError) {

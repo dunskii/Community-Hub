@@ -68,16 +68,16 @@ class MessagingAnalyticsService {
     logger.info({ businessId, ownerId }, 'Getting messaging stats');
 
     // Verify business ownership
-    const business = await prisma.business.findUnique({
+    const business = await prisma.businesses.findUnique({
       where: { id: businessId },
-      select: { id: true, claimedBy: true },
+      select: { id: true, claimed_by: true },
     });
 
     if (!business) {
       throw ApiError.notFound('BUSINESS_NOT_FOUND', 'Business not found');
     }
 
-    if (business.claimedBy !== ownerId) {
+    if (business.claimed_by !== ownerId) {
       throw ApiError.forbidden('NOT_OWNER', 'You do not own this business');
     }
 
@@ -117,9 +117,9 @@ class MessagingAnalyticsService {
     }
 
     // Get conversation counts by status
-    const conversationCounts = await prisma.conversation.groupBy({
+    const conversationCounts = await prisma.conversations.groupBy({
       by: ['status'],
-      where: { businessId },
+      where: { business_id: businessId },
       _count: true,
     });
 
@@ -131,11 +131,11 @@ class MessagingAnalyticsService {
     }
 
     // Get message counts
-    const messageCounts = await prisma.message.groupBy({
-      by: ['senderType'],
+    const messageCounts = await prisma.messages.groupBy({
+      by: ['sender_type'],
       where: {
-        conversation: { businessId },
-        deletedAt: null,
+        conversations: { business_id: businessId },
+        deleted_at: null,
       },
       _count: true,
     });
@@ -143,7 +143,7 @@ class MessagingAnalyticsService {
     let messagesReceived = 0;
     let messagesSent = 0;
     for (const item of messageCounts) {
-      if (item.senderType === SenderType.USER) {
+      if (item.sender_type === SenderType.USER) {
         messagesReceived = item._count;
       } else {
         messagesSent = item._count;
@@ -151,13 +151,13 @@ class MessagingAnalyticsService {
     }
 
     // Get unread count
-    const unreadResult = await prisma.conversation.aggregate({
+    const unreadResult = await prisma.conversations.aggregate({
       where: {
-        businessId,
+        business_id: businessId,
         status: { not: ConversationStatus.BLOCKED },
       },
       _sum: {
-        unreadCountBusiness: true,
+        unread_count_business: true,
       },
     });
 
@@ -174,7 +174,7 @@ class MessagingAnalyticsService {
       messagesSent,
       averageResponseTimeMinutes: responseMetrics.averageResponseTimeMinutes,
       responseRate: responseMetrics.responseRate,
-      unreadCount: unreadResult._sum.unreadCountBusiness || 0,
+      unreadCount: unreadResult._sum.unread_count_business || 0,
     };
 
     // Cache for 5 minutes
@@ -190,24 +190,24 @@ class MessagingAnalyticsService {
     businessId: string
   ): Promise<{ averageResponseTimeMinutes: number | null; responseRate: number }> {
     // Get all conversations with at least one user message
-    const conversations = await prisma.conversation.findMany({
+    const conversations = await prisma.conversations.findMany({
       where: {
-        businessId,
+        business_id: businessId,
         messages: {
           some: {
-            senderType: SenderType.USER,
-            deletedAt: null,
+            sender_type: SenderType.USER,
+            deleted_at: null,
           },
         },
       },
       include: {
         messages: {
-          where: { deletedAt: null },
-          orderBy: { createdAt: 'asc' },
+          where: { deleted_at: null },
+          orderBy: { created_at: 'asc' },
           select: {
             id: true,
-            senderType: true,
-            createdAt: true,
+            sender_type: true,
+            created_at: true,
           },
         },
       },
@@ -226,14 +226,14 @@ class MessagingAnalyticsService {
       let firstBusinessResponseTime: Date | null = null;
 
       for (const msg of conv.messages) {
-        if (msg.senderType === SenderType.USER && !firstUserMessageTime) {
-          firstUserMessageTime = msg.createdAt;
+        if (msg.sender_type === SenderType.USER && !firstUserMessageTime) {
+          firstUserMessageTime = msg.created_at;
         } else if (
-          msg.senderType === SenderType.BUSINESS &&
+          msg.sender_type === SenderType.BUSINESS &&
           firstUserMessageTime &&
           !firstBusinessResponseTime
         ) {
-          firstBusinessResponseTime = msg.createdAt;
+          firstBusinessResponseTime = msg.created_at;
           break;
         }
       }
@@ -342,9 +342,9 @@ class MessagingAnalyticsService {
    */
   async trackMessageSent(conversationId: string, _senderType: SenderType): Promise<void> {
     try {
-      const conversation = await prisma.conversation.findUnique({
+      const conversation = await prisma.conversations.findUnique({
         where: { id: conversationId },
-        select: { businessId: true },
+        select: { business_id: true },
       });
 
       if (!conversation) return;
@@ -353,10 +353,10 @@ class MessagingAnalyticsService {
       today.setHours(0, 0, 0, 0);
 
       // Update or create daily analytics record
-      await prisma.businessAnalyticsDaily.upsert({
+      await prisma.business_analytics_daily.upsert({
         where: {
-          businessId_date: {
-            businessId: conversation.businessId,
+          business_id_date: {
+            business_id: conversation.business_id,
             date: today,
           },
         },
@@ -364,7 +364,8 @@ class MessagingAnalyticsService {
           messages: { increment: 1 },
         },
         create: {
-          businessId: conversation.businessId,
+          id: crypto.randomUUID(),
+          business_id: conversation.business_id,
           date: today,
           messages: 1,
         },
@@ -372,7 +373,7 @@ class MessagingAnalyticsService {
 
       // Invalidate cache
       const redis = getRedis();
-      await redis.del(getCacheKey(conversation.businessId, 'overview'));
+      await redis.del(getCacheKey(conversation.business_id, 'overview'));
     } catch (error) {
       logger.error({ conversationId, error }, 'Failed to track message sent');
     }

@@ -9,6 +9,7 @@
  * Email notifications are in event-notification-service.ts
  */
 
+import crypto from 'crypto';
 import { getPlatformConfig } from '../config/platform-loader.js';
 import { prisma } from '../db/index.js';
 import { logger } from '../utils/logger.js';
@@ -171,7 +172,7 @@ export class EventService {
     }
 
     // Validate category exists and is of type EVENT
-    const category = await prisma.category.findUnique({
+    const category = await prisma.categories.findUnique({
       where: { id: data.categoryId },
     });
 
@@ -188,7 +189,7 @@ export class EventService {
 
     // Validate linked business if provided
     if (data.linkedBusinessId) {
-      const business = await prisma.business.findUnique({
+      const business = await prisma.businesses.findUnique({
         where: { id: data.linkedBusinessId },
       });
 
@@ -197,7 +198,7 @@ export class EventService {
       }
 
       // Check if user is the business owner
-      if (business.claimedBy !== userId) {
+      if (business.claimed_by !== userId) {
         throw ApiError.forbidden(
           'NOT_BUSINESS_OWNER',
           'You must be the business owner to link events'
@@ -209,48 +210,50 @@ export class EventService {
     const slug = await this.generateSlug(data.title);
 
     // Create event
-    const event = await prisma.event.create({
+    const event = await prisma.events.create({
       data: {
+        id: crypto.randomUUID(),
         title: data.title,
         description: data.description,
-        categoryId: data.categoryId,
-        startTime: new Date(data.startTime),
-        endTime: new Date(data.endTime),
+        category_id: data.categoryId,
+        start_time: new Date(data.startTime),
+        end_time: new Date(data.endTime),
         timezone: data.timezone || config.location.timezone,
-        locationType: data.locationType as LocationType,
+        location_type: data.locationType as LocationType,
         venue: data.venue as object | undefined,
-        onlineUrl: data.onlineUrl,
-        linkedBusinessId: data.linkedBusinessId,
-        imageUrl: data.imageUrl,
-        ticketUrl: data.ticketUrl,
+        online_url: data.onlineUrl,
+        linked_business_id: data.linkedBusinessId,
+        image_url: data.imageUrl,
+        ticket_url: data.ticketUrl,
         cost: data.cost,
         capacity: data.capacity,
-        ageRestriction: data.ageRestriction,
+        age_restriction: data.ageRestriction,
         accessibility: data.accessibility || [],
         recurrence: data.recurrence as object | undefined,
-        createdById: userId,
+        created_by_id: userId,
         status: EventStatus.PENDING,
         slug,
+        updated_at: new Date(),
       },
       include: {
-        category: true,
-        linkedBusiness: {
+        categories: true,
+        businesses: {
           select: {
             id: true,
             name: true,
             slug: true,
           },
         },
-        createdBy: {
+        users: {
           select: {
             id: true,
-            displayName: true,
-            profilePhoto: true,
+            display_name: true,
+            profile_photo: true,
           },
         },
         _count: {
           select: {
-            rsvps: true,
+            event_rsvps: true,
           },
         },
       },
@@ -277,15 +280,15 @@ export class EventService {
     auditContext: AuditContext
   ): Promise<EventWithDetails> {
     // Get existing event
-    const existingEvent = await prisma.event.findUnique({
+    const existingEvent = await prisma.events.findUnique({
       where: { id: eventId },
       include: {
-        createdBy: {
-          select: { displayName: true },
+        users: {
+          select: { display_name: true },
         },
         _count: {
           select: {
-            rsvps: {
+            event_rsvps: {
               where: { status: RSVPStatus.GOING },
             },
           },
@@ -298,7 +301,7 @@ export class EventService {
     }
 
     // Verify ownership
-    if (existingEvent.createdById !== userId) {
+    if (existingEvent.created_by_id !== userId) {
       throw ApiError.forbidden('NOT_EVENT_OWNER', 'You are not the event owner');
     }
 
@@ -314,18 +317,18 @@ export class EventService {
     const changes: string[] = [];
 
     // If changing start time and there are RSVPs, track for notification
-    if (data.startTime && existingEvent._count.rsvps > 0) {
+    if (data.startTime && existingEvent._count.event_rsvps > 0) {
       const newStartTime = new Date(data.startTime);
-      if (newStartTime.getTime() !== existingEvent.startTime.getTime()) {
+      if (newStartTime.getTime() !== existingEvent.start_time.getTime()) {
         changes.push('date/time');
         logger.info(
-          { eventId, rsvpCount: existingEvent._count.rsvps },
+          { eventId, rsvpCount: existingEvent._count.event_rsvps },
           'Event start time changed with existing RSVPs'
         );
       }
     }
 
-    if (data.locationType && data.locationType !== existingEvent.locationType) {
+    if (data.locationType && data.locationType !== existingEvent.location_type) {
       changes.push('location type');
     }
     if (data.venue) {
@@ -337,40 +340,40 @@ export class EventService {
 
     if (data.title !== undefined) updateData.title = data.title;
     if (data.description !== undefined) updateData.description = data.description;
-    if (data.categoryId !== undefined) updateData.categoryId = data.categoryId;
-    if (data.startTime !== undefined) updateData.startTime = new Date(data.startTime);
-    if (data.endTime !== undefined) updateData.endTime = new Date(data.endTime);
+    if (data.categoryId !== undefined) updateData.category_id = data.categoryId;
+    if (data.startTime !== undefined) updateData.start_time = new Date(data.startTime);
+    if (data.endTime !== undefined) updateData.end_time = new Date(data.endTime);
     if (data.timezone !== undefined) updateData.timezone = data.timezone;
-    if (data.locationType !== undefined) updateData.locationType = data.locationType;
+    if (data.locationType !== undefined) updateData.location_type = data.locationType;
     if (data.venue !== undefined) updateData.venue = data.venue as object | null;
-    if (data.onlineUrl !== undefined) updateData.onlineUrl = data.onlineUrl;
-    if (data.linkedBusinessId !== undefined) updateData.linkedBusinessId = data.linkedBusinessId;
-    if (data.imageUrl !== undefined) updateData.imageUrl = data.imageUrl;
-    if (data.ticketUrl !== undefined) updateData.ticketUrl = data.ticketUrl;
+    if (data.onlineUrl !== undefined) updateData.online_url = data.onlineUrl;
+    if (data.linkedBusinessId !== undefined) updateData.linked_business_id = data.linkedBusinessId;
+    if (data.imageUrl !== undefined) updateData.image_url = data.imageUrl;
+    if (data.ticketUrl !== undefined) updateData.ticket_url = data.ticketUrl;
     if (data.cost !== undefined) updateData.cost = data.cost;
     if (data.capacity !== undefined) updateData.capacity = data.capacity;
-    if (data.ageRestriction !== undefined) updateData.ageRestriction = data.ageRestriction;
+    if (data.ageRestriction !== undefined) updateData.age_restriction = data.ageRestriction;
     if (data.accessibility !== undefined) updateData.accessibility = data.accessibility;
     if (data.status !== undefined) updateData.status = data.status;
 
     // Update event
-    const updatedEvent = await prisma.event.update({
+    const updatedEvent = await prisma.events.update({
       where: { id: eventId },
       data: updateData,
       include: {
-        category: true,
-        linkedBusiness: {
+        categories: true,
+        businesses: {
           select: {
             id: true,
             name: true,
             slug: true,
           },
         },
-        createdBy: {
+        users: {
           select: {
             id: true,
-            displayName: true,
-            profilePhoto: true,
+            display_name: true,
+            profile_photo: true,
           },
         },
       },
@@ -382,18 +385,18 @@ export class EventService {
     logger.info({ eventId, userId }, 'Event updated');
 
     // Send update notifications if there were significant changes
-    if (changes.length > 0 && existingEvent._count.rsvps > 0) {
+    if (changes.length > 0 && existingEvent._count.event_rsvps > 0) {
       // Fire and forget - don't block the response
       eventNotificationService.sendEventUpdateNotification(
         {
           eventId: updatedEvent.id,
           eventTitle: updatedEvent.title,
-          eventStartTime: updatedEvent.startTime,
-          eventEndTime: updatedEvent.endTime,
-          locationType: updatedEvent.locationType,
+          eventStartTime: updatedEvent.start_time,
+          eventEndTime: updatedEvent.end_time,
+          locationType: updatedEvent.location_type,
           venue: updatedEvent.venue as VenueInput | null,
-          onlineUrl: updatedEvent.onlineUrl,
-          organizerName: existingEvent.createdBy.displayName,
+          onlineUrl: updatedEvent.online_url,
+          organizerName: existingEvent.users.display_name,
         },
         changes
       ).catch((err) => {
@@ -415,20 +418,20 @@ export class EventService {
     userId: string,
     auditContext: AuditContext
   ): Promise<void> {
-    const event = await prisma.event.findUnique({
+    const event = await prisma.events.findUnique({
       where: { id: eventId },
       include: {
-        createdBy: {
-          select: { displayName: true },
+        users: {
+          select: { display_name: true },
         },
-        rsvps: {
+        event_rsvps: {
           where: { status: RSVPStatus.GOING },
           include: {
-            user: {
+            users: {
               select: {
                 id: true,
                 email: true,
-                displayName: true,
+                display_name: true,
               },
             },
           },
@@ -440,12 +443,12 @@ export class EventService {
       throw ApiError.notFound('EVENT_NOT_FOUND', 'Event not found');
     }
 
-    if (event.createdById !== userId) {
+    if (event.created_by_id !== userId) {
       throw ApiError.forbidden('NOT_EVENT_OWNER', 'You are not the event owner');
     }
 
     // Mark as cancelled instead of deleting
-    await prisma.event.update({
+    await prisma.events.update({
       where: { id: eventId },
       data: { status: EventStatus.CANCELLED },
     });
@@ -454,21 +457,21 @@ export class EventService {
     await this.logAudit('event.cancel', eventId, event, { status: 'CANCELLED' }, auditContext);
 
     logger.info(
-      { eventId, userId, rsvpCount: event.rsvps.length },
+      { eventId, userId, rsvpCount: event.event_rsvps.length },
       'Event cancelled'
     );
 
     // Send cancellation emails to RSVPs (fire and forget)
-    if (event.rsvps.length > 0) {
+    if (event.event_rsvps.length > 0) {
       eventNotificationService.sendCancellationNotifications({
         eventId: event.id,
         eventTitle: event.title,
-        eventStartTime: event.startTime,
-        eventEndTime: event.endTime,
-        locationType: event.locationType,
+        eventStartTime: event.start_time,
+        eventEndTime: event.end_time,
+        locationType: event.location_type,
         venue: event.venue as VenueInput | null,
-        onlineUrl: event.onlineUrl,
-        organizerName: event.createdBy.displayName,
+        onlineUrl: event.online_url,
+        organizerName: event.users.display_name,
       }).catch((err) => {
         logger.error({ err, eventId }, 'Failed to send cancellation notifications');
       });
@@ -482,25 +485,25 @@ export class EventService {
    * Gets a single event by ID
    */
   async getEvent(eventId: string, userId?: string): Promise<EventWithDetails> {
-    const event = await prisma.event.findUnique({
+    const event = await prisma.events.findUnique({
       where: { id: eventId },
       include: {
-        category: true,
-        linkedBusiness: {
+        categories: true,
+        businesses: {
           select: {
             id: true,
             name: true,
             slug: true,
           },
         },
-        createdBy: {
+        users: {
           select: {
             id: true,
-            displayName: true,
-            profilePhoto: true,
+            display_name: true,
+            profile_photo: true,
           },
         },
-        rsvps: true,
+        event_rsvps: true,
       },
     });
 
@@ -509,25 +512,25 @@ export class EventService {
     }
 
     // Only show active events publicly (or pending to owner/admin)
-    if (event.status !== EventStatus.ACTIVE && event.createdById !== userId) {
+    if (event.status !== EventStatus.ACTIVE && event.created_by_id !== userId) {
       throw ApiError.notFound('EVENT_NOT_FOUND', 'Event not found');
     }
 
     // Get user's RSVP if logged in
     let userRSVP = null;
     if (userId) {
-      const rsvp = await prisma.eventRSVP.findUnique({
+      const rsvp = await prisma.event_rsvps.findUnique({
         where: {
-          eventId_userId: {
-            eventId,
-            userId,
+          event_id_user_id: {
+            event_id: eventId,
+            user_id: userId,
           },
         },
       });
       if (rsvp) {
         userRSVP = {
           status: rsvp.status,
-          guestCount: rsvp.guestCount,
+          guestCount: rsvp.guest_count,
         };
       }
     }
@@ -539,25 +542,25 @@ export class EventService {
    * Gets a single event by slug
    */
   async getEventBySlug(slug: string, userId?: string): Promise<EventWithDetails> {
-    const event = await prisma.event.findFirst({
+    const event = await prisma.events.findFirst({
       where: { slug },
       include: {
-        category: true,
-        linkedBusiness: {
+        categories: true,
+        businesses: {
           select: {
             id: true,
             name: true,
             slug: true,
           },
         },
-        createdBy: {
+        users: {
           select: {
             id: true,
-            displayName: true,
-            profilePhoto: true,
+            display_name: true,
+            profile_photo: true,
           },
         },
-        rsvps: true,
+        event_rsvps: true,
       },
     });
 
@@ -565,24 +568,24 @@ export class EventService {
       throw ApiError.notFound('EVENT_NOT_FOUND', 'Event not found');
     }
 
-    if (event.status !== EventStatus.ACTIVE && event.createdById !== userId) {
+    if (event.status !== EventStatus.ACTIVE && event.created_by_id !== userId) {
       throw ApiError.notFound('EVENT_NOT_FOUND', 'Event not found');
     }
 
     let userRSVP = null;
     if (userId) {
-      const rsvp = await prisma.eventRSVP.findUnique({
+      const rsvp = await prisma.event_rsvps.findUnique({
         where: {
-          eventId_userId: {
-            eventId: event.id,
-            userId,
+          event_id_user_id: {
+            event_id: event.id,
+            user_id: userId,
           },
         },
       });
       if (rsvp) {
         userRSVP = {
           status: rsvp.status,
-          guestCount: rsvp.guestCount,
+          guestCount: rsvp.guest_count,
         };
       }
     }
@@ -608,43 +611,43 @@ export class EventService {
       where.status = filterOptions.status;
     } else if (!filterOptions.includePast) {
       where.status = EventStatus.ACTIVE;
-      where.endTime = { gte: new Date() };
+      where.end_time = { gte: new Date() };
     } else {
       where.status = { in: [EventStatus.ACTIVE, EventStatus.PAST] };
     }
 
     // Date range filter
     if (filterOptions.dateFrom) {
-      where.startTime = {
-        ...(where.startTime as object || {}),
+      where.start_time = {
+        ...(where.start_time as object || {}),
         gte: new Date(filterOptions.dateFrom),
       };
     }
     if (filterOptions.dateTo) {
-      where.endTime = {
-        ...(where.endTime as object || {}),
+      where.end_time = {
+        ...(where.end_time as object || {}),
         lte: new Date(filterOptions.dateTo),
       };
     }
 
     // Category filter
     if (filterOptions.categoryId) {
-      where.categoryId = filterOptions.categoryId;
+      where.category_id = filterOptions.categoryId;
     }
 
     // Location type filter
     if (filterOptions.locationType) {
-      where.locationType = filterOptions.locationType;
+      where.location_type = filterOptions.locationType;
     }
 
     // Linked business filter
     if (filterOptions.linkedBusinessId) {
-      where.linkedBusinessId = filterOptions.linkedBusinessId;
+      where.linked_business_id = filterOptions.linkedBusinessId;
     }
 
     // Created by filter
     if (filterOptions.createdById) {
-      where.createdById = filterOptions.createdById;
+      where.created_by_id = filterOptions.createdById;
     }
 
     // Free events filter
@@ -671,59 +674,59 @@ export class EventService {
     let orderBy: Record<string, string>[] = [];
     switch (sort) {
       case 'upcoming':
-        orderBy = [{ startTime: 'asc' }];
+        orderBy = [{ start_time: 'asc' }];
         break;
       case 'newest':
-        orderBy = [{ createdAt: 'desc' }];
+        orderBy = [{ created_at: 'desc' }];
         break;
       case 'popular':
         // Will be handled differently - by RSVP count
-        orderBy = [{ startTime: 'asc' }];
+        orderBy = [{ start_time: 'asc' }];
         break;
       default:
-        orderBy = [{ startTime: 'asc' }];
+        orderBy = [{ start_time: 'asc' }];
     }
 
     // Execute query
     const [events, total] = await Promise.all([
-      prisma.event.findMany({
+      prisma.events.findMany({
         where,
         orderBy,
         skip,
         take: limit,
         include: {
-          category: true,
-          linkedBusiness: {
+          categories: true,
+          businesses: {
             select: {
               id: true,
               name: true,
               slug: true,
             },
           },
-          createdBy: {
+          users: {
             select: {
               id: true,
-              displayName: true,
-              profilePhoto: true,
+              display_name: true,
+              profile_photo: true,
             },
           },
-          rsvps: true,
+          event_rsvps: true,
         },
       }),
-      prisma.event.count({ where }),
+      prisma.events.count({ where }),
     ]);
 
     // Get user RSVPs if logged in
     let userRsvps: Map<string, { status: RSVPStatus; guestCount: number }> = new Map();
     if (userId && events.length > 0) {
-      const rsvps = await prisma.eventRSVP.findMany({
+      const rsvps = await prisma.event_rsvps.findMany({
         where: {
-          userId,
-          eventId: { in: events.map((e) => e.id) },
+          user_id: userId,
+          event_id: { in: events.map((e) => e.id) },
         },
       });
       userRsvps = new Map(
-        rsvps.map((r) => [r.eventId, { status: r.status, guestCount: r.guestCount }])
+        rsvps.map((r) => [r.event_id, { status: r.status, guestCount: r.guest_count }])
       );
     }
 
@@ -793,10 +796,10 @@ export class EventService {
    * Updates past events to PAST status (batch job)
    */
   async updatePastEventsStatus(): Promise<number> {
-    const result = await prisma.event.updateMany({
+    const result = await prisma.events.updateMany({
       where: {
         status: EventStatus.ACTIVE,
-        endTime: { lt: new Date() },
+        end_time: { lt: new Date() },
       },
       data: {
         status: EventStatus.PAST,
@@ -819,7 +822,7 @@ export class EventService {
     moderatorId: string,
     auditContext: AuditContext
   ): Promise<EventWithDetails> {
-    const event = await prisma.event.findUnique({
+    const event = await prisma.events.findUnique({
       where: { id: eventId },
     });
 
@@ -834,16 +837,16 @@ export class EventService {
       );
     }
 
-    const updatedEvent = await prisma.event.update({
+    const updatedEvent = await prisma.events.update({
       where: { id: eventId },
       data: { status: EventStatus.ACTIVE },
       include: {
-        category: true,
-        linkedBusiness: {
+        categories: true,
+        businesses: {
           select: { id: true, name: true, slug: true },
         },
-        createdBy: {
-          select: { id: true, displayName: true, profilePhoto: true },
+        users: {
+          select: { id: true, display_name: true, profile_photo: true },
         },
       },
     });
@@ -878,7 +881,7 @@ export class EventService {
     let slug = baseSlug;
     let counter = 1;
 
-    while (await prisma.event.findFirst({ where: { slug } })) {
+    while (await prisma.events.findFirst({ where: { slug } })) {
       slug = `${baseSlug}-${counter}`;
       counter++;
     }
@@ -893,11 +896,11 @@ export class EventService {
     event: Record<string, unknown>,
     userRSVP: { status: RSVPStatus; guestCount: number } | null
   ): EventWithDetails {
-    const rsvps = (event.rsvps as Array<{ status: RSVPStatus; guestCount: number }>) || [];
+    const rsvps = (event.event_rsvps as Array<{ status: RSVPStatus; guest_count: number }>) || [];
 
     const goingCount = rsvps
       .filter((r) => r.status === RSVPStatus.GOING)
-      .reduce((sum, r) => sum + r.guestCount, 0);
+      .reduce((sum, r) => sum + r.guest_count, 0);
 
     const interestedCount = rsvps.filter(
       (r) => r.status === RSVPStatus.INTERESTED
@@ -906,33 +909,42 @@ export class EventService {
     const capacity = event.capacity as number | null;
     const spotsRemaining = capacity !== null ? capacity - goingCount : null;
 
+    // Map snake_case to camelCase for API response
+    const users = event.users as { id: string; display_name: string; profile_photo: string | null } | undefined;
+    const categories = event.categories as EventWithDetails['category'] | undefined;
+    const businesses = event.businesses as EventWithDetails['linkedBusiness'] | undefined;
+
     return {
       id: event.id as string,
       title: event.title as string,
       description: event.description as string,
-      categoryId: event.categoryId as string,
-      category: event.category as EventWithDetails['category'],
-      startTime: event.startTime as Date,
-      endTime: event.endTime as Date,
+      categoryId: event.category_id as string,
+      category: categories as EventWithDetails['category'],
+      startTime: event.start_time as Date,
+      endTime: event.end_time as Date,
       timezone: event.timezone as string,
-      locationType: event.locationType as LocationType,
+      locationType: event.location_type as LocationType,
       venue: event.venue as VenueInput | null,
-      onlineUrl: event.onlineUrl as string | null,
-      linkedBusinessId: event.linkedBusinessId as string | null,
-      linkedBusiness: event.linkedBusiness as EventWithDetails['linkedBusiness'],
-      imageUrl: event.imageUrl as string | null,
-      ticketUrl: event.ticketUrl as string | null,
+      onlineUrl: event.online_url as string | null,
+      linkedBusinessId: event.linked_business_id as string | null,
+      linkedBusiness: businesses as EventWithDetails['linkedBusiness'],
+      imageUrl: event.image_url as string | null,
+      ticketUrl: event.ticket_url as string | null,
       cost: event.cost as string | null,
       capacity,
-      ageRestriction: event.ageRestriction as string | null,
+      ageRestriction: event.age_restriction as string | null,
       accessibility: event.accessibility as string[],
       recurrence: event.recurrence as RecurrenceRuleInput | null,
-      createdById: event.createdById as string,
-      createdBy: event.createdBy as EventWithDetails['createdBy'],
+      createdById: event.created_by_id as string,
+      createdBy: users ? {
+        id: users.id,
+        displayName: users.display_name,
+        profilePhoto: users.profile_photo,
+      } : event.createdBy as EventWithDetails['createdBy'],
       status: event.status as EventStatus,
       slug: event.slug as string | null,
-      createdAt: event.createdAt as Date,
-      updatedAt: event.updatedAt as Date,
+      createdAt: event.created_at as Date,
+      updatedAt: event.updated_at as Date,
       rsvpCount: {
         going: goingCount,
         interested: interestedCount,
@@ -954,17 +966,18 @@ export class EventService {
     context: AuditContext
   ): Promise<void> {
     try {
-      await prisma.auditLog.create({
+      await prisma.audit_logs.create({
         data: {
-          actorId: context.actorId,
-          actorRole: context.actorRole as 'USER' | 'BUSINESS_OWNER' | 'MODERATOR' | 'ADMIN' | 'SYSTEM',
+          id: crypto.randomUUID(),
+          actor_id: context.actorId,
+          actor_role: context.actorRole as 'USER' | 'BUSINESS_OWNER' | 'MODERATOR' | 'ADMIN' | 'SYSTEM',
           action,
-          targetType: 'Event',
-          targetId,
-          previousValue: previousValue ? JSON.parse(JSON.stringify(previousValue)) : null,
-          newValue: newValue ? JSON.parse(JSON.stringify(newValue)) : null,
-          ipAddress: context.ipAddress || 'unknown',
-          userAgent: context.userAgent || 'unknown',
+          target_type: 'Event',
+          target_id: targetId,
+          previous_value: previousValue ? JSON.parse(JSON.stringify(previousValue)) : null,
+          new_value: newValue ? JSON.parse(JSON.stringify(newValue)) : null,
+          ip_address: context.ipAddress || 'unknown',
+          user_agent: context.userAgent || 'unknown',
         },
       });
     } catch (error) {

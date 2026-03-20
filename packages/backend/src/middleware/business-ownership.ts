@@ -21,7 +21,8 @@ export async function requireBusinessOwnership(
   next: NextFunction
 ): Promise<void> {
   try {
-    const { id } = req.params;
+    // Support both :id and :businessId param names
+    const businessId = req.params.businessId || req.params.id;
     const user = req.user;
 
     if (!user) {
@@ -36,10 +37,10 @@ export async function requireBusinessOwnership(
     }
 
     // Check if user owns this business
-    const business = await prisma.business.findUnique({
-      where: { id: id as string },
+    const business = await prisma.businesses.findUnique({
+      where: { id: businessId as string },
       select: {
-        claimedBy: true,
+        claimed_by: true,
         claimed: true,
       },
     });
@@ -50,7 +51,7 @@ export async function requireBusinessOwnership(
     }
 
     // Check ownership
-    if (!business.claimed || business.claimedBy !== user.id) {
+    if (!business.claimed || business.claimed_by !== user.id) {
       sendError(res, 'FORBIDDEN', 'You do not have permission to modify this business', 403);
       return;
     }
@@ -72,10 +73,11 @@ export async function attachBusiness(
   next: NextFunction
 ): Promise<void> {
   try {
-    const { id } = req.params;
+    // Support both :id and :businessId param names
+    const businessId = req.params.businessId || req.params.id;
 
-    const business = await prisma.business.findUnique({
-      where: { id: id as string },
+    const business = await prisma.businesses.findUnique({
+      where: { id: businessId as string },
     });
 
     if (!business) {

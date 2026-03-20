@@ -175,13 +175,13 @@ export class ClaimService {
     }
 
     // Get business
-    const business = await prisma.business.findUnique({
+    const business = await prisma.businesses.findUnique({
       where: { id: data.businessId },
       select: {
         id: true,
         name: true,
         claimed: true,
-        claimedBy: true,
+        claimed_by: true,
         email: true,
         website: true,
       },
@@ -197,19 +197,19 @@ export class ClaimService {
     }
 
     // Check for existing pending claim by this user
-    const existingClaim = await prisma.businessClaimRequest.findUnique({
+    const existingClaim = await prisma.business_claim_requests.findUnique({
       where: {
-        businessId_userId: {
-          businessId: data.businessId,
-          userId,
+        business_id_user_id: {
+          business_id: data.businessId,
+          user_id: userId,
         },
       },
     });
 
     if (existingClaim) {
       // Check if user can resubmit
-      if (existingClaim.claimStatus === 'REJECTED') {
-        const resubmitAfter = new Date(existingClaim.decisionAt || existingClaim.createdAt);
+      if (existingClaim.claim_status === 'REJECTED') {
+        const resubmitAfter = new Date(existingClaim.decision_at || existingClaim.created_at);
         resubmitAfter.setDate(resubmitAfter.getDate() + CLAIM_RESUBMIT_WAIT_DAYS);
 
         if (new Date() < resubmitAfter) {
@@ -220,12 +220,12 @@ export class ClaimService {
         }
 
         // Delete old rejected claim to allow resubmission
-        await prisma.businessClaimRequest.delete({
+        await prisma.business_claim_requests.delete({
           where: { id: existingClaim.id },
         });
-      } else if (existingClaim.claimStatus === 'PENDING') {
+      } else if (existingClaim.claim_status === 'PENDING') {
         throw ApiError.conflict('CLAIM_ALREADY_PENDING', 'You already have a pending claim for this business');
-      } else if (existingClaim.claimStatus === 'APPROVED') {
+      } else if (existingClaim.claim_status === 'APPROVED') {
         throw ApiError.conflict('CLAIM_ALREADY_APPROVED', 'Your claim for this business has already been approved');
       }
     }
@@ -269,17 +269,19 @@ export class ClaimService {
     const expiresAt = new Date(Date.now() + PIN_EXPIRY_MINUTES * 60 * 1000);
 
     // Create claim request
-    const claim = await prisma.businessClaimRequest.create({
+    const claim = await prisma.business_claim_requests.create({
       data: {
-        businessId: data.businessId,
-        userId,
-        verificationMethod: 'PHONE',
-        verificationStatus: 'PENDING',
-        claimStatus: 'PENDING',
-        verificationCode: hashedPIN,
-        verificationExpiresAt: expiresAt,
-        ipAddress: auditContext.ipAddress,
-        userAgent: auditContext.userAgent,
+        id: crypto.randomUUID(),
+        business_id: data.businessId,
+        user_id: userId,
+        verification_method: 'PHONE',
+        verification_status: 'PENDING',
+        claim_status: 'PENDING',
+        verification_code: hashedPIN,
+        verification_expires_at: expiresAt,
+        ip_address: auditContext.ipAddress,
+        user_agent: auditContext.userAgent,
+        updated_at: new Date(),
       },
     });
 
@@ -347,16 +349,18 @@ export class ClaimService {
     const expiresAt = new Date(Date.now() + EMAIL_TOKEN_EXPIRY_HOURS * 60 * 60 * 1000);
 
     // Create claim request first to get ID
-    const claim = await prisma.businessClaimRequest.create({
+    const claim = await prisma.business_claim_requests.create({
       data: {
-        businessId: data.businessId,
-        userId,
-        verificationMethod: 'EMAIL',
-        verificationStatus: 'PENDING',
-        claimStatus: 'PENDING',
-        tokenExpiresAt: expiresAt,
-        ipAddress: auditContext.ipAddress,
-        userAgent: auditContext.userAgent,
+        id: crypto.randomUUID(),
+        business_id: data.businessId,
+        user_id: userId,
+        verification_method: 'EMAIL',
+        verification_status: 'PENDING',
+        claim_status: 'PENDING',
+        token_expires_at: expiresAt,
+        ip_address: auditContext.ipAddress,
+        user_agent: auditContext.userAgent,
+        updated_at: new Date(),
       },
     });
 
@@ -364,9 +368,9 @@ export class ClaimService {
     const token = generateEmailVerificationToken(claim.id, data.businessId, userId, data.businessEmail);
 
     // Update claim with token
-    await prisma.businessClaimRequest.update({
+    await prisma.business_claim_requests.update({
       where: { id: claim.id },
-      data: { verificationToken: token },
+      data: { verification_token: token },
     });
 
     // Log audit
@@ -422,17 +426,19 @@ export class ClaimService {
     }
 
     // Create claim request
-    const claim = await prisma.businessClaimRequest.create({
+    const claim = await prisma.business_claim_requests.create({
       data: {
-        businessId: data.businessId,
-        userId,
-        verificationMethod: 'DOCUMENT',
-        verificationStatus: 'PENDING',
-        claimStatus: 'PENDING',
-        documentType: data.documentType,
-        documentUrls: data.documentUrls,
-        ipAddress: auditContext.ipAddress,
-        userAgent: auditContext.userAgent,
+        id: crypto.randomUUID(),
+        business_id: data.businessId,
+        user_id: userId,
+        verification_method: 'DOCUMENT',
+        verification_status: 'PENDING',
+        claim_status: 'PENDING',
+        document_type: data.documentType,
+        document_urls: data.documentUrls,
+        ip_address: auditContext.ipAddress,
+        user_agent: auditContext.userAgent,
+        updated_at: new Date(),
       },
     });
 
@@ -481,10 +487,10 @@ export class ClaimService {
     userId: string,
     auditContext: AuditContext
   ): Promise<ClaimResult> {
-    const claim = await prisma.businessClaimRequest.findUnique({
+    const claim = await prisma.business_claim_requests.findUnique({
       where: { id: claimId },
       include: {
-        business: {
+        businesses: {
           select: { id: true, name: true },
         },
       },
@@ -495,56 +501,56 @@ export class ClaimService {
     }
 
     // Verify ownership
-    if (claim.userId !== userId) {
+    if (claim.user_id !== userId) {
       throw ApiError.forbidden('NOT_CLAIM_OWNER', 'You are not authorized to verify this claim');
     }
 
     // Check method
-    if (claim.verificationMethod !== 'PHONE') {
+    if (claim.verification_method !== 'PHONE') {
       throw ApiError.badRequest('INVALID_VERIFICATION_METHOD', 'This claim uses a different verification method');
     }
 
     // Check if already verified
-    if (claim.verificationStatus === 'VERIFIED') {
+    if (claim.verification_status === 'VERIFIED') {
       throw ApiError.conflict('ALREADY_VERIFIED', 'This claim has already been verified');
     }
 
     // Check if expired
-    if (claim.verificationExpiresAt && new Date() > claim.verificationExpiresAt) {
-      await prisma.businessClaimRequest.update({
+    if (claim.verification_expires_at && new Date() > claim.verification_expires_at) {
+      await prisma.business_claim_requests.update({
         where: { id: claimId },
-        data: { verificationStatus: 'EXPIRED' },
+        data: { verification_status: 'EXPIRED' },
       });
       throw ApiError.badRequest('PIN_EXPIRED', 'Verification PIN has expired. Please request a new one.');
     }
 
     // Check lockout
-    if (claim.verificationAttempts >= MAX_PIN_ATTEMPTS) {
+    if (claim.verification_attempts >= MAX_PIN_ATTEMPTS) {
       throw ApiError.rateLimited(
         `Too many failed attempts. Please wait ${LOCKOUT_MINUTES} minutes before trying again.`
       );
     }
 
     // Verify PIN
-    if (!claim.verificationCode) {
+    if (!claim.verification_code) {
       throw ApiError.internal('Verification code not found');
     }
 
-    const isValid = await verifyPIN(pin, claim.verificationCode);
+    const isValid = await verifyPIN(pin, claim.verification_code);
 
     if (!isValid) {
       // Increment attempts
-      await prisma.businessClaimRequest.update({
+      await prisma.business_claim_requests.update({
         where: { id: claimId },
-        data: { verificationAttempts: claim.verificationAttempts + 1 },
+        data: { verification_attempts: claim.verification_attempts + 1 },
       });
 
-      const attemptsRemaining = MAX_PIN_ATTEMPTS - claim.verificationAttempts - 1;
+      const attemptsRemaining = MAX_PIN_ATTEMPTS - claim.verification_attempts - 1;
 
       if (attemptsRemaining <= 0) {
-        await prisma.businessClaimRequest.update({
+        await prisma.business_claim_requests.update({
           where: { id: claimId },
-          data: { verificationStatus: 'FAILED' },
+          data: { verification_status: 'FAILED' },
         });
         throw ApiError.rateLimited(
           'Maximum attempts exceeded. Please request a new verification.'
@@ -571,7 +577,7 @@ export class ClaimService {
       throw ApiError.badRequest('INVALID_TOKEN', 'Invalid or expired verification token');
     }
 
-    const claim = await prisma.businessClaimRequest.findUnique({
+    const claim = await prisma.business_claim_requests.findUnique({
       where: { id: payload.claimId },
     });
 
@@ -580,26 +586,26 @@ export class ClaimService {
     }
 
     // Verify token matches
-    if (claim.verificationToken !== token) {
+    if (claim.verification_token !== token) {
       throw ApiError.badRequest('TOKEN_MISMATCH', 'Token does not match claim');
     }
 
     // Check if already verified
-    if (claim.verificationStatus === 'VERIFIED') {
+    if (claim.verification_status === 'VERIFIED') {
       throw ApiError.conflict('ALREADY_VERIFIED', 'This claim has already been verified');
     }
 
     // Check if token expired
-    if (claim.tokenExpiresAt && new Date() > claim.tokenExpiresAt) {
-      await prisma.businessClaimRequest.update({
+    if (claim.token_expires_at && new Date() > claim.token_expires_at) {
+      await prisma.business_claim_requests.update({
         where: { id: claim.id },
-        data: { verificationStatus: 'EXPIRED' },
+        data: { verification_status: 'EXPIRED' },
       });
       throw ApiError.badRequest('TOKEN_EXPIRED', 'Verification token has expired. Please request a new one.');
     }
 
     // Email verified - approve claim
-    return this.approveClaim(claim.id, claim.userId, auditContext, 'Email verification successful');
+    return this.approveClaim(claim.id, claim.user_id, auditContext, 'Email verification successful');
   }
 
   /**
@@ -611,11 +617,11 @@ export class ClaimService {
     auditContext: AuditContext,
     notes?: string
   ): Promise<ClaimResult> {
-    const claim = await prisma.businessClaimRequest.findUnique({
+    const claim = await prisma.business_claim_requests.findUnique({
       where: { id: claimId },
       include: {
-        business: true,
-        user: true,
+        businesses: true,
+        users_business_claim_requests_user_idTousers: true,
       },
     });
 
@@ -624,31 +630,32 @@ export class ClaimService {
     }
 
     // Update claim status
-    await prisma.businessClaimRequest.update({
+    await prisma.business_claim_requests.update({
       where: { id: claimId },
       data: {
-        verificationStatus: 'VERIFIED',
-        claimStatus: 'APPROVED',
-        moderatorId: approvedBy !== claim.userId ? approvedBy : null,
-        moderatorNotes: notes,
-        decisionAt: new Date(),
+        verification_status: 'VERIFIED',
+        claim_status: 'APPROVED',
+        moderator_id: approvedBy !== claim.user_id ? approvedBy : null,
+        moderator_notes: notes,
+        decision_at: new Date(),
+        updated_at: new Date(),
       },
     });
 
     // Update business ownership
-    await prisma.business.update({
-      where: { id: claim.businessId },
+    await prisma.businesses.update({
+      where: { id: claim.business_id },
       data: {
         claimed: true,
-        claimedBy: claim.userId,
-        verifiedAt: new Date(),
+        claimed_by: claim.user_id,
+        verified_at: new Date(),
       },
     });
 
     // Upgrade user role if needed
-    if (claim.user.role === 'COMMUNITY') {
-      await prisma.user.update({
-        where: { id: claim.userId },
+    if (claim.users_business_claim_requests_user_idTousers.role === 'COMMUNITY') {
+      await prisma.users.update({
+        where: { id: claim.user_id },
         data: { role: 'BUSINESS_OWNER' },
       });
     }
@@ -660,17 +667,23 @@ export class ClaimService {
       'BusinessClaimRequest',
       claimId,
       { claimStatus: 'PENDING' },
-      { claimStatus: 'APPROVED', businessId: claim.businessId }
+      { claimStatus: 'APPROVED', businessId: claim.business_id }
     );
 
     // TODO: Send approval notification email
+
+    // Re-fetch the claim with businesses for the message
+    const updatedClaim = await prisma.business_claim_requests.findUnique({
+      where: { id: claimId },
+      include: { businesses: true },
+    });
 
     return {
       claimRequestId: claim.id,
       verificationStatus: 'VERIFIED',
       claimStatus: 'APPROVED',
-      verificationMethod: claim.verificationMethod,
-      message: `Congratulations! Your claim for "${claim.business.name}" has been approved. You can now manage your business profile.`,
+      verificationMethod: claim.verification_method,
+      message: `Congratulations! Your claim for "${updatedClaim?.businesses.name}" has been approved. You can now manage your business profile.`,
     };
   }
 
@@ -683,10 +696,10 @@ export class ClaimService {
     reason: string,
     auditContext: AuditContext
   ): Promise<ClaimResult> {
-    const claim = await prisma.businessClaimRequest.findUnique({
+    const claim = await prisma.business_claim_requests.findUnique({
       where: { id: claimId },
       include: {
-        business: true,
+        businesses: true,
       },
     });
 
@@ -694,20 +707,21 @@ export class ClaimService {
       throw ApiError.notFound('CLAIM_NOT_FOUND', 'Claim request not found');
     }
 
-    if (claim.claimStatus !== 'PENDING') {
+    if (claim.claim_status !== 'PENDING') {
       throw ApiError.conflict('CLAIM_NOT_PENDING', 'Only pending claims can be rejected');
     }
 
     // Update claim
-    await prisma.businessClaimRequest.update({
+    await prisma.business_claim_requests.update({
       where: { id: claimId },
       data: {
-        verificationStatus: 'FAILED',
-        claimStatus: 'REJECTED',
-        moderatorId,
-        moderatorNotes: reason,
-        rejectionReason: reason,
-        decisionAt: new Date(),
+        verification_status: 'FAILED',
+        claim_status: 'REJECTED',
+        moderator_id: moderatorId,
+        moderator_notes: reason,
+        rejection_reason: reason,
+        decision_at: new Date(),
+        updated_at: new Date(),
       },
     });
 
@@ -730,8 +744,8 @@ export class ClaimService {
       claimRequestId: claim.id,
       verificationStatus: 'FAILED',
       claimStatus: 'REJECTED',
-      verificationMethod: claim.verificationMethod,
-      message: `Your claim for "${claim.business.name}" has been rejected. Reason: ${reason}. You may appeal within ${CLAIM_APPEAL_WINDOW_DAYS} days.`,
+      verificationMethod: claim.verification_method,
+      message: `Your claim for "${claim.businesses.name}" has been rejected. Reason: ${reason}. You may appeal within ${CLAIM_APPEAL_WINDOW_DAYS} days.`,
     };
   }
 
@@ -744,10 +758,10 @@ export class ClaimService {
     appealReason: string,
     auditContext: AuditContext
   ): Promise<ClaimResult> {
-    const claim = await prisma.businessClaimRequest.findUnique({
+    const claim = await prisma.business_claim_requests.findUnique({
       where: { id: claimId },
       include: {
-        business: true,
+        businesses: true,
       },
     });
 
@@ -756,18 +770,18 @@ export class ClaimService {
     }
 
     // Verify ownership
-    if (claim.userId !== userId) {
+    if (claim.user_id !== userId) {
       throw ApiError.forbidden('NOT_CLAIM_OWNER', 'You are not authorized to appeal this claim');
     }
 
     // Check if claim was rejected
-    if (claim.claimStatus !== 'REJECTED') {
+    if (claim.claim_status !== 'REJECTED') {
       throw ApiError.badRequest('CLAIM_NOT_REJECTED', 'Only rejected claims can be appealed');
     }
 
     // Check appeal window
-    if (claim.decisionAt) {
-      const appealDeadline = new Date(claim.decisionAt);
+    if (claim.decision_at) {
+      const appealDeadline = new Date(claim.decision_at);
       appealDeadline.setDate(appealDeadline.getDate() + CLAIM_APPEAL_WINDOW_DAYS);
 
       if (new Date() > appealDeadline) {
@@ -776,17 +790,18 @@ export class ClaimService {
     }
 
     // Check if already appealed
-    if (claim.appealedAt) {
+    if (claim.appealed_at) {
       throw ApiError.conflict('ALREADY_APPEALED', 'This claim has already been appealed');
     }
 
     // Update claim
-    await prisma.businessClaimRequest.update({
+    await prisma.business_claim_requests.update({
       where: { id: claimId },
       data: {
-        claimStatus: 'APPEALED',
-        appealedAt: new Date(),
-        appealReason,
+        claim_status: 'APPEALED',
+        appealed_at: new Date(),
+        appeal_reason: appealReason,
+        updated_at: new Date(),
       },
     });
 
@@ -802,9 +817,9 @@ export class ClaimService {
 
     return {
       claimRequestId: claim.id,
-      verificationStatus: claim.verificationStatus,
+      verificationStatus: claim.verification_status,
       claimStatus: 'APPEALED',
-      verificationMethod: claim.verificationMethod,
+      verificationMethod: claim.verification_method,
       message: 'Your appeal has been submitted and will be reviewed by our team.',
     };
   }
@@ -823,26 +838,37 @@ export class ClaimService {
       rejectionReason?: string | null;
     };
   }> {
-    const claim = await prisma.businessClaimRequest.findUnique({
+    const claim = await prisma.business_claim_requests.findUnique({
       where: {
-        businessId_userId: {
-          businessId,
-          userId,
+        business_id_user_id: {
+          business_id: businessId,
+          user_id: userId,
         },
       },
       select: {
         id: true,
-        verificationMethod: true,
-        verificationStatus: true,
-        claimStatus: true,
-        createdAt: true,
-        rejectionReason: true,
+        verification_method: true,
+        verification_status: true,
+        claim_status: true,
+        created_at: true,
+        rejection_reason: true,
       },
     });
 
+    if (!claim) {
+      return { hasClaim: false };
+    }
+
     return {
-      hasClaim: !!claim,
-      claim: claim || undefined,
+      hasClaim: true,
+      claim: {
+        id: claim.id,
+        verificationMethod: claim.verification_method,
+        verificationStatus: claim.verification_status,
+        claimStatus: claim.claim_status,
+        createdAt: claim.created_at,
+        rejectionReason: claim.rejection_reason,
+      },
     };
   }
 
@@ -858,36 +884,36 @@ export class ClaimService {
     const skip = (page - 1) * limit;
 
     const where = {
-      claimStatus: 'PENDING' as ClaimStatus,
-      verificationMethod: method ? method : undefined,
+      claim_status: 'PENDING' as ClaimStatus,
+      verification_method: method ? method : undefined,
       // Only document claims need moderation
-      ...(method === undefined && { verificationMethod: 'DOCUMENT' as VerificationMethod }),
+      ...(method === undefined && { verification_method: 'DOCUMENT' as VerificationMethod }),
     };
 
     const [claims, total] = await Promise.all([
-      prisma.businessClaimRequest.findMany({
+      prisma.business_claim_requests.findMany({
         where,
         include: {
-          business: {
+          businesses: {
             select: {
               id: true,
               name: true,
               slug: true,
             },
           },
-          user: {
+          users_business_claim_requests_user_idTousers: {
             select: {
               id: true,
-              displayName: true,
+              display_name: true,
               email: true,
             },
           },
         },
-        orderBy: { createdAt: 'asc' },
+        orderBy: { created_at: 'asc' },
         skip,
         take: limit,
       }),
-      prisma.businessClaimRequest.count({ where }),
+      prisma.business_claim_requests.count({ where }),
     ]);
 
     return {
@@ -909,7 +935,7 @@ export class ClaimService {
     userId: string,
     _auditContext: AuditContext
   ): Promise<ClaimResult> {
-    const claim = await prisma.businessClaimRequest.findUnique({
+    const claim = await prisma.business_claim_requests.findUnique({
       where: { id: claimId },
     });
 
@@ -917,15 +943,15 @@ export class ClaimService {
       throw ApiError.notFound('CLAIM_NOT_FOUND', 'Claim request not found');
     }
 
-    if (claim.userId !== userId) {
+    if (claim.user_id !== userId) {
       throw ApiError.forbidden('NOT_CLAIM_OWNER', 'You are not authorized to resend verification');
     }
 
-    if (claim.verificationMethod !== 'PHONE') {
+    if (claim.verification_method !== 'PHONE') {
       throw ApiError.badRequest('INVALID_METHOD', 'This claim does not use phone verification');
     }
 
-    if (claim.claimStatus !== 'PENDING') {
+    if (claim.claim_status !== 'PENDING') {
       throw ApiError.badRequest('CLAIM_NOT_PENDING', 'Cannot resend PIN for non-pending claims');
     }
 
@@ -934,13 +960,14 @@ export class ClaimService {
     const hashedPIN = await hashPIN(pin);
     const expiresAt = new Date(Date.now() + PIN_EXPIRY_MINUTES * 60 * 1000);
 
-    await prisma.businessClaimRequest.update({
+    await prisma.business_claim_requests.update({
       where: { id: claimId },
       data: {
-        verificationCode: hashedPIN,
-        verificationExpiresAt: expiresAt,
-        verificationAttempts: 0,
-        verificationStatus: 'PENDING',
+        verification_code: hashedPIN,
+        verification_expires_at: expiresAt,
+        verification_attempts: 0,
+        verification_status: 'PENDING',
+        updated_at: new Date(),
       },
     });
 
@@ -972,17 +999,18 @@ export class ClaimService {
     newValue: unknown
   ): Promise<void> {
     try {
-      await prisma.auditLog.create({
+      await prisma.audit_logs.create({
         data: {
-          actorId: context.actorId,
-          actorRole: context.actorRole as 'USER' | 'BUSINESS_OWNER' | 'MODERATOR' | 'ADMIN' | 'SYSTEM',
+          id: crypto.randomUUID(),
+          actor_id: context.actorId,
+          actor_role: context.actorRole as 'USER' | 'BUSINESS_OWNER' | 'MODERATOR' | 'ADMIN' | 'SYSTEM',
           action,
-          targetType,
-          targetId,
-          previousValue: previousValue ? JSON.parse(JSON.stringify(previousValue)) : null,
-          newValue: newValue ? JSON.parse(JSON.stringify(newValue)) : null,
-          ipAddress: context.ipAddress || '',
-          userAgent: context.userAgent || '',
+          target_type: targetType,
+          target_id: targetId,
+          previous_value: previousValue ? JSON.parse(JSON.stringify(previousValue)) : null,
+          new_value: newValue ? JSON.parse(JSON.stringify(newValue)) : null,
+          ip_address: context.ipAddress || '',
+          user_agent: context.userAgent || '',
         },
       });
     } catch (error) {
@@ -1001,31 +1029,31 @@ export const claimService = new ClaimService();
  * @returns Array of owned businesses
  */
 export async function getOwnedBusinesses(userId: string) {
-  const approvedClaims = await prisma.businessClaimRequest.findMany({
+  const approvedClaims = await prisma.business_claim_requests.findMany({
     where: {
-      userId,
-      claimStatus: ClaimStatus.APPROVED,
+      user_id: userId,
+      claim_status: ClaimStatus.APPROVED,
     },
     include: {
-      business: {
+      businesses: {
         include: {
-          categoryPrimary: true,
+          categories: true,
           _count: {
             select: {
               reviews: true,
-              followers: true,
+              business_follows: true,
             },
           },
         },
       },
     },
     orderBy: {
-      updatedAt: 'desc',
+      updated_at: 'desc',
     },
   });
 
   return approvedClaims.map((claim) => {
-    const business = claim.business;
+    const business = claim.businesses;
     const gallery = business.gallery as Array<{ url: string }> | null;
 
     return {
@@ -1034,10 +1062,10 @@ export async function getOwnedBusinesses(userId: string) {
       slug: business.slug,
       status: business.status,
       claimed: business.claimed,
-      verifiedAt: claim.decisionAt?.toISOString() || null,
-      rating: business.rating,
+      verifiedAt: claim.decision_at?.toISOString() || null,
+      rating: null, // Rating will be calculated separately
       reviewCount: business._count.reviews,
-      followerCount: business._count.followers,
+      followerCount: business._count.business_follows,
       photos: gallery?.map((p) => p.url).slice(0, 3) || [],
     };
   });

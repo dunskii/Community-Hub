@@ -93,7 +93,7 @@ describe('AnalyticsService', () => {
 
   describe('getAnalytics', () => {
     it('should reject non-existent business', async () => {
-      vi.mocked(prisma.business.findUnique).mockResolvedValue(null);
+      vi.mocked(prisma.businesses.findUnique).mockResolvedValue(null);
 
       await expect(
         analyticsService.getAnalytics('non-existent', {
@@ -104,7 +104,7 @@ describe('AnalyticsService', () => {
     });
 
     it('should reject date range exceeding max', async () => {
-      vi.mocked(prisma.business.findUnique).mockResolvedValue({
+      vi.mocked(prisma.businesses.findUnique).mockResolvedValue({
         id: 'business-123',
         name: 'Test Business',
       } as never);
@@ -127,7 +127,7 @@ describe('AnalyticsService', () => {
         insights: {},
       };
       vi.mocked(mockRedis.get).mockResolvedValue(JSON.stringify(cachedResult));
-      vi.mocked(prisma.business.findUnique).mockResolvedValue({
+      vi.mocked(prisma.businesses.findUnique).mockResolvedValue({
         id: 'business-123',
         name: 'Test Business',
       } as never);
@@ -145,7 +145,7 @@ describe('AnalyticsService', () => {
 
   describe('exportCSV', () => {
     it('should reject non-existent business', async () => {
-      vi.mocked(prisma.business.findUnique).mockResolvedValue(null);
+      vi.mocked(prisma.businesses.findUnique).mockResolvedValue(null);
 
       await expect(
         analyticsService.exportCSV('non-existent', new Date(), new Date())

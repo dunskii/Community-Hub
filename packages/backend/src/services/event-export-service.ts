@@ -18,15 +18,15 @@ export class EventExportService {
    * Exports an event to ICS format
    */
   async exportEventICS(eventId: string): Promise<string> {
-    const event = await prisma.event.findUnique({
+    const event = await prisma.events.findUnique({
       where: { id: eventId },
       include: {
-        category: true,
-        linkedBusiness: {
+        categories: true,
+        businesses: {
           select: { name: true },
         },
-        createdBy: {
-          select: { displayName: true },
+        users: {
+          select: { display_name: true },
         },
       },
     });
@@ -73,16 +73,16 @@ export class EventExportService {
       'BEGIN:VEVENT',
       `UID:${event.id}@communityhub.local`,
       `DTSTAMP:${formatDate(new Date())}`,
-      `DTSTART:${formatDate(event.startTime as Date)}`,
-      `DTEND:${formatDate(event.endTime as Date)}`,
+      `DTSTART:${formatDate(event.start_time as Date)}`,
+      `DTEND:${formatDate(event.end_time as Date)}`,
       `SUMMARY:${escapeText(event.title as string)}`,
       `DESCRIPTION:${escapeText(event.description as string)}`,
     ];
 
     // Add location
-    const locationType = event.locationType as string;
+    const locationType = event.location_type as string;
     const venue = event.venue as VenueInput | null;
-    const onlineUrl = event.onlineUrl as string | null;
+    const onlineUrl = event.online_url as string | null;
 
     if (locationType === 'PHYSICAL' && venue) {
       const location = `${venue.street}, ${venue.suburb}, ${venue.state} ${venue.postcode}`;
@@ -104,8 +104,8 @@ export class EventExportService {
     }
 
     // Add organizer
-    const createdBy = event.createdBy as { displayName: string };
-    lines.push(`ORGANIZER;CN=${escapeText(createdBy.displayName)}:MAILTO:noreply@communityhub.local`);
+    const createdBy = event.users as { display_name: string };
+    lines.push(`ORGANIZER;CN=${escapeText(createdBy.display_name)}:MAILTO:noreply@communityhub.local`);
 
     // Add recurrence rule if present
     const recurrence = event.recurrence as RecurrenceRuleInput | null;

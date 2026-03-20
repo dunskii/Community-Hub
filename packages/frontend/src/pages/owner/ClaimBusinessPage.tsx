@@ -508,7 +508,7 @@ export function ClaimBusinessPage() {
                   {t('claim.pending.estimate')}: {claimResult.moderationEstimate}
                 </p>
               )}
-              <Link to="/owner/dashboard" className="btn btn--primary">
+              <Link to="/business/dashboard" className="btn btn--primary">
                 {t('claim.pending.goToDashboard')}
               </Link>
             </section>
@@ -520,7 +520,7 @@ export function ClaimBusinessPage() {
               <div className="claim-page__status-icon">✅</div>
               <h2>{t('claim.success.title')}</h2>
               <p>{t('claim.success.description', { businessName: business.name })}</p>
-              <Link to="/owner/dashboard" className="btn btn--primary">
+              <Link to="/business/dashboard" className="btn btn--primary">
                 {t('claim.success.goToDashboard')}
               </Link>
             </section>

@@ -199,7 +199,7 @@ const DashboardPage: React.FC = () => {
 
   // Business owner links
   const ownerLinks = [
-    { href: '/owner/dashboard', label: t('navigation.businessDashboard', 'Business Dashboard'), icon: '📊' },
+    { href: '/business/dashboard', label: t('navigation.businessDashboard', 'Business Dashboard'), icon: '📊' },
     { href: '/claim-business', label: t('navigation.claimBusiness', 'Claim a Business'), icon: '🏪' },
   ];
 
@@ -330,7 +330,7 @@ export function App() {
 
             {/* Owner Dashboard Routes */}
             <Route
-              path="/owner/dashboard"
+              path="/business/dashboard"
               element={
                 <ProtectedRoute>
                   <OwnerDashboardPage />
@@ -338,7 +338,7 @@ export function App() {
               }
             />
             <Route
-              path="/owner/business/:businessId/analytics"
+              path="/business/manage/:businessId/analytics"
               element={
                 <ProtectedRoute>
                   <AnalyticsDashboardPage />
@@ -346,7 +346,7 @@ export function App() {
               }
             />
             <Route
-              path="/owner/business/:businessId/edit"
+              path="/business/manage/:businessId/edit"
               element={
                 <ProtectedRoute>
                   <EditBusinessPage />
@@ -354,7 +354,7 @@ export function App() {
               }
             />
             <Route
-              path="/owner/business/:businessId/photos"
+              path="/business/manage/:businessId/photos"
               element={
                 <ProtectedRoute>
                   <PhotosManagementPage />
@@ -362,7 +362,7 @@ export function App() {
               }
             />
             <Route
-              path="/owner/business/:businessId/inbox"
+              path="/business/manage/:businessId/inbox"
               element={
                 <ProtectedRoute>
                   <BusinessInboxPage />
@@ -370,7 +370,7 @@ export function App() {
               }
             />
             <Route
-              path="/owner/business/:businessId/inbox/:conversationId"
+              path="/business/manage/:businessId/inbox/:conversationId"
               element={
                 <ProtectedRoute>
                   <BusinessInboxPage />

@@ -133,7 +133,7 @@ describe('User Service', () => {
         lastLogin: new Date(),
       };
 
-      (prisma.user.findUnique as any).mockResolvedValue(mockUser);
+      (prisma.users.findUnique as any).mockResolvedValue(mockUser);
 
       const result = await getUserById('user-123');
 
@@ -143,13 +143,13 @@ describe('User Service', () => {
       // Password hash should not be included
       expect((result as any).passwordHash).toBeUndefined();
 
-      expect(prisma.user.findUnique).toHaveBeenCalledWith({
+      expect(prisma.users.findUnique).toHaveBeenCalledWith({
         where: { id: 'user-123' },
       });
     });
 
     it('should return null for non-existent user', async () => {
-      (prisma.user.findUnique as any).mockResolvedValue(null);
+      (prisma.users.findUnique as any).mockResolvedValue(null);
 
       const result = await getUserById('non-existent');
 
@@ -182,7 +182,7 @@ describe('User Service', () => {
         lastLogin: null,
       };
 
-      (prisma.user.update as any).mockResolvedValue(mockUpdatedUser);
+      (prisma.users.update as any).mockResolvedValue(mockUpdatedUser);
 
       const result = await updateUserProfile('user-123', updateData);
 
@@ -191,7 +191,7 @@ describe('User Service', () => {
       expect(result.bio).toBe('Updated bio');
       expect(result.languagePreference).toBe('es');
 
-      expect(prisma.user.update).toHaveBeenCalledWith({
+      expect(prisma.users.update).toHaveBeenCalledWith({
         where: { id: 'user-123' },
         data: updateData,
       });
@@ -221,7 +221,7 @@ describe('User Service', () => {
         lastLogin: null,
       };
 
-      (prisma.user.update as any).mockResolvedValue(mockUpdatedUser);
+      (prisma.users.update as any).mockResolvedValue(mockUpdatedUser);
 
       const result = await updateUserProfile('user-123', updateData);
 
@@ -258,15 +258,15 @@ describe('User Service', () => {
       };
 
       // Mock findUnique to return the user
-      (prisma.user.findUnique as any).mockResolvedValue(mockUser);
+      (prisma.users.findUnique as any).mockResolvedValue(mockUser);
       // Mock update to return the updated user
-      (prisma.user.update as any).mockResolvedValue(mockUpdatedUser);
+      (prisma.users.update as any).mockResolvedValue(mockUpdatedUser);
 
       const result = await updateProfilePhoto('user-123', Buffer.from('fake-image'));
 
       expect(result.profilePhoto).toBe(expectedPhotoUrl);
 
-      expect(prisma.user.update).toHaveBeenCalledWith({
+      expect(prisma.users.update).toHaveBeenCalledWith({
         where: { id: 'user-123' },
         data: { profilePhoto: expectedPhotoUrl },
       });
@@ -285,8 +285,8 @@ describe('User Service', () => {
         status: UserStatus.ACTIVE,
       };
 
-      (prisma.user.findUnique as any).mockResolvedValue(mockUser);
-      (prisma.user.update as any).mockResolvedValue({
+      (prisma.users.findUnique as any).mockResolvedValue(mockUser);
+      (prisma.users.update as any).mockResolvedValue({
         ...mockUser,
         passwordHash: 'hashed_NewPass123',
       });
@@ -306,7 +306,7 @@ describe('User Service', () => {
       expect(passwordUtils.hashPassword).toHaveBeenCalledWith('NewPass123');
 
       // Verify database update
-      expect(prisma.user.update).toHaveBeenCalledWith({
+      expect(prisma.users.update).toHaveBeenCalledWith({
         where: { id: 'user-123' },
         data: { passwordHash: 'hashed_NewPass123' },
       });
@@ -326,7 +326,7 @@ describe('User Service', () => {
         passwordHash: 'hashed_CorrectPass123',
       };
 
-      (prisma.user.findUnique as any).mockResolvedValue(mockUser);
+      (prisma.users.findUnique as any).mockResolvedValue(mockUser);
 
       await expect(
         changePassword('user-123', 'WrongPass123', 'NewPass123')
@@ -339,7 +339,7 @@ describe('User Service', () => {
         passwordHash: 'hashed_OldPass123',
       };
 
-      (prisma.user.findUnique as any).mockResolvedValue(mockUser);
+      (prisma.users.findUnique as any).mockResolvedValue(mockUser);
 
       await expect(changePassword('user-123', 'OldPass123', 'weak')).rejects.toThrow(
         'Password must be at least 8 characters'
@@ -347,7 +347,7 @@ describe('User Service', () => {
     });
 
     it('should throw error for non-existent user', async () => {
-      (prisma.user.findUnique as any).mockResolvedValue(null);
+      (prisma.users.findUnique as any).mockResolvedValue(null);
 
       await expect(
         changePassword('non-existent', 'OldPass123', 'NewPass123')
@@ -364,18 +364,18 @@ describe('User Service', () => {
         languagePreference: 'en',
       };
 
-      (prisma.user.findUnique as any)
+      (prisma.users.findUnique as any)
         .mockResolvedValueOnce(null) // New email not taken
         .mockResolvedValueOnce(mockUser); // Current user
 
-      (prisma.user.update as any).mockResolvedValue({
+      (prisma.users.update as any).mockResolvedValue({
         ...mockUser,
         pendingEmail: 'new@example.com',
       });
 
       await changeEmail('user-123', 'new@example.com');
 
-      expect(prisma.user.update).toHaveBeenCalledWith({
+      expect(prisma.users.update).toHaveBeenCalledWith({
         where: { id: 'user-123' },
         data: {
           pendingEmail: 'new@example.com',
@@ -384,7 +384,7 @@ describe('User Service', () => {
     });
 
     it('should reject email already in use', async () => {
-      (prisma.user.findUnique as any).mockResolvedValue({
+      (prisma.users.findUnique as any).mockResolvedValue({
         id: 'other-user',
         email: 'taken@example.com',
       });
@@ -402,11 +402,11 @@ describe('User Service', () => {
         languagePreference: 'en',
       };
 
-      (prisma.user.findUnique as any)
+      (prisma.users.findUnique as any)
         .mockResolvedValueOnce(mockUser) // Same user
         .mockResolvedValueOnce(mockUser); // Current user
 
-      (prisma.user.update as any).mockResolvedValue({
+      (prisma.users.update as any).mockResolvedValue({
         ...mockUser,
         pendingEmail: 'test@example.com',
       });
@@ -422,18 +422,18 @@ describe('User Service', () => {
         languagePreference: 'en',
       };
 
-      (prisma.user.findUnique as any)
+      (prisma.users.findUnique as any)
         .mockResolvedValueOnce(null)
         .mockResolvedValueOnce(mockUser);
 
-      (prisma.user.update as any).mockResolvedValue({
+      (prisma.users.update as any).mockResolvedValue({
         ...mockUser,
         pendingEmail: 'new@example.com',
       });
 
       await changeEmail('user-123', 'NEW@EXAMPLE.COM');
 
-      expect(prisma.user.update).toHaveBeenCalledWith({
+      expect(prisma.users.update).toHaveBeenCalledWith({
         where: { id: 'user-123' },
         data: expect.objectContaining({
           pendingEmail: 'new@example.com',
@@ -470,13 +470,13 @@ describe('User Service', () => {
         lastLogin: null,
       };
 
-      (prisma.user.update as any).mockResolvedValue(mockUpdatedUser);
+      (prisma.users.update as any).mockResolvedValue(mockUpdatedUser);
 
       const result = await updateNotificationPreferences('user-123', preferences);
 
       expect(result.notificationPreferences).toEqual(preferences);
 
-      expect(prisma.user.update).toHaveBeenCalledWith({
+      expect(prisma.users.update).toHaveBeenCalledWith({
         where: { id: 'user-123' },
         data: { notificationPreferences: preferences },
       });
@@ -494,11 +494,11 @@ describe('User Service', () => {
         deletionRequestedAt: new Date(),
       };
 
-      (prisma.user.update as any).mockResolvedValue(mockUser);
+      (prisma.users.update as any).mockResolvedValue(mockUser);
 
       await requestAccountDeletion('user-123');
 
-      expect(prisma.user.update).toHaveBeenCalledWith({
+      expect(prisma.users.update).toHaveBeenCalledWith({
         where: { id: 'user-123' },
         data: expect.objectContaining({
           deletionRequestedAt: expect.any(Date),
@@ -518,15 +518,15 @@ describe('User Service', () => {
         deletionRequestedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // 7 days ago
       };
 
-      (prisma.user.findUnique as any).mockResolvedValue(mockUser);
-      (prisma.user.update as any).mockResolvedValue({
+      (prisma.users.findUnique as any).mockResolvedValue(mockUser);
+      (prisma.users.update as any).mockResolvedValue({
         ...mockUser,
         deletionRequestedAt: null,
       });
 
       await cancelAccountDeletion('user-123');
 
-      expect(prisma.user.update).toHaveBeenCalledWith({
+      expect(prisma.users.update).toHaveBeenCalledWith({
         where: { id: 'user-123' },
         data: expect.objectContaining({
           deletionRequestedAt: null,

@@ -19,7 +19,7 @@ describe('Search Flow Integration', () => {
 
   beforeAll(async () => {
     // Create test category
-    await prisma.category.upsert({
+    await prisma.categories.upsert({
       where: { id: testCategoryId },
       update: {},
       create: {
@@ -33,7 +33,7 @@ describe('Search Flow Integration', () => {
     });
 
     // Create test business
-    await prisma.business.upsert({
+    await prisma.businesses.upsert({
       where: { id: testBusinessId },
       update: {},
       create: {
@@ -63,7 +63,7 @@ describe('Search Flow Integration', () => {
     });
 
     // Index the business
-    const business = await prisma.business.findUnique({
+    const business = await prisma.businesses.findUnique({
       where: { id: testBusinessId },
     });
     if (business) {
@@ -77,8 +77,8 @@ describe('Search Flow Integration', () => {
   afterAll(async () => {
     // Clean up
     await deindexBusiness(testBusinessId);
-    await prisma.business.delete({ where: { id: testBusinessId } }).catch(() => {});
-    await prisma.category.delete({ where: { id: testCategoryId } }).catch(() => {});
+    await prisma.businesses.delete({ where: { id: testBusinessId } }).catch(() => {});
+    await prisma.categories.delete({ where: { id: testCategoryId } }).catch(() => {});
   });
 
   describe('Full-text Search', () => {

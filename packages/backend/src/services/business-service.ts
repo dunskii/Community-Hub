@@ -8,14 +8,14 @@ import type {
   BusinessUpdateInput,
   BusinessStatus,
 } from '@community-hub/shared';
-import { Prisma } from '@prisma/client';
+import { Prisma, ActorRole } from '../generated/prisma/index.js';
 import { prisma } from '../db/index.js';
 import { geocodeAddress } from './maps/geocoding-service.js';
-import { getEsClient } from '../search/index.js';
 import { indexBusiness, deindexBusiness } from '../search/indexing-service.js';
 import { seoService } from './seo-service.js';
 import { logger } from '../utils/logger.js';
 import { ApiError } from '../utils/api-error.js';
+import crypto from 'crypto';
 
 export interface BusinessListFilters {
   category?: string; // Category ID
@@ -47,7 +47,7 @@ export class BusinessService {
     auditContext: AuditContext
   ): Promise<Record<string, unknown>> {
     // Validate category exists
-    const category = await prisma.category.findUnique({
+    const category = await prisma.categories.findUnique({
       where: { id: data.categoryPrimaryId },
     });
 
@@ -88,36 +88,37 @@ export class BusinessService {
     };
 
     // Create business in database
-    const business = await prisma.business.create({
+    const business = await prisma.businesses.create({
       data: {
+        id: crypto.randomUUID(),
         name: data.name,
         slug,
-        description: data.description,
-        categoryPrimaryId: data.categoryPrimaryId,
-        categoriesSecondary: data.categoriesSecondary || [],
-        address: address as Prisma.JsonValue,
+        description: data.description as Prisma.InputJsonValue,
+        category_primary_id: data.categoryPrimaryId,
+        categories_secondary: data.categoriesSecondary || [],
+        address: address as Prisma.InputJsonValue,
         phone: data.phone,
         email: data.email,
         website: data.website,
-        secondaryPhone: data.secondaryPhone,
-        operatingHours: data.operatingHours as Prisma.JsonValue,
-        socialLinks: data.socialLinks as Prisma.JsonValue,
-        languagesSpoken: data.languagesSpoken || [],
+        secondary_phone: data.secondaryPhone,
+        operating_hours: data.operatingHours as unknown as Prisma.InputJsonValue,
+        languages_spoken: data.languagesSpoken || [],
         certifications: data.certifications || [],
-        paymentMethods: data.paymentMethods || [],
-        accessibilityFeatures: data.accessibilityFeatures || [],
-        priceRange: data.priceRange,
-        parkingInformation: data.parkingInformation,
-        yearEstablished: data.yearEstablished,
+        payment_methods: data.paymentMethods || [],
+        accessibility_features: data.accessibilityFeatures || [],
+        price_range: data.priceRange,
+        parking_information: data.parkingInformation,
+        year_established: data.yearEstablished,
         status: 'PENDING', // Default status - admin must approve
         claimed: false,
+        updated_at: new Date(),
       },
       include: {
-        categoryPrimary: true,
-        claimedByUser: {
+        categories: true,
+        users: {
           select: {
             id: true,
-            displayName: true,
+            display_name: true,
             email: true,
           },
         },
@@ -139,15 +140,15 @@ export class BusinessService {
    * Gets a business by ID
    */
   async getBusinessById(id: string, includeRelations: boolean = true): Promise<Record<string, unknown> | null> {
-    const business = await prisma.business.findUnique({
+    const business = await prisma.businesses.findUnique({
       where: { id },
       include: includeRelations
         ? {
-            categoryPrimary: true,
-            claimedByUser: {
+            categories: true,
+            users: {
               select: {
                 id: true,
-                displayName: true,
+                display_name: true,
                 email: true,
               },
             },
@@ -162,14 +163,14 @@ export class BusinessService {
    * Gets a business by slug (for SEO URLs)
    */
   async getBusinessBySlug(slug: string): Promise<Record<string, unknown> | null> {
-    const business = await prisma.business.findUnique({
+    const business = await prisma.businesses.findUnique({
       where: { slug },
       include: {
-        categoryPrimary: true,
-        claimedByUser: {
+        categories: true,
+        users: {
           select: {
             id: true,
-            displayName: true,
+            display_name: true,
             email: true,
           },
         },
@@ -203,22 +204,22 @@ export class BusinessService {
 
     if (filters.category) {
       // Check if this is a parent category with children
-      const category = await prisma.category.findUnique({
+      const category = await prisma.categories.findUnique({
         where: { id: filters.category },
         include: {
-          children: {
+          other_categories: {
             select: { id: true },
           },
         },
       });
 
-      if (category && category.children && category.children.length > 0) {
+      if (category && category.other_categories && category.other_categories.length > 0) {
         // Parent category - include all child category IDs
-        const categoryIds = [filters.category, ...category.children.map(c => c.id)];
-        where.categoryPrimaryId = { in: categoryIds };
+        const categoryIds = [filters.category, ...category.other_categories.map((c: { id: string }) => c.id)];
+        where.category_primary_id = { in: categoryIds };
       } else {
         // Leaf category or not found - filter by exact ID
-        where.categoryPrimaryId = filters.category;
+        where.category_primary_id = filters.category;
       }
     }
 
@@ -232,23 +233,23 @@ export class BusinessService {
     // Build orderBy clause
     const orderBy: Record<string, string>[] = [];
     if (options.sortBy) {
-      const sortField = options.sortBy === 'name' ? 'name' : 'createdAt';
+      const sortField = options.sortBy === 'name' ? 'name' : 'created_at';
       const sortDirection = options.sortOrder === 'asc' ? 'asc' : 'desc';
       orderBy.push({ [sortField]: sortDirection });
     } else {
       // Default sort: newest first
-      orderBy.push({ createdAt: 'desc' });
+      orderBy.push({ created_at: 'desc' });
     }
 
     // Get businesses and total count
     const [businesses, total] = await Promise.all([
-      prisma.business.findMany({
+      prisma.businesses.findMany({
         where,
         skip,
         take: limit,
         orderBy,
         include: {
-          categoryPrimary: {
+          categories: {
             select: {
               id: true,
               name: true,
@@ -257,7 +258,7 @@ export class BusinessService {
           },
         },
       }),
-      prisma.business.count({ where }),
+      prisma.businesses.count({ where }),
     ]);
 
     return {
@@ -280,7 +281,7 @@ export class BusinessService {
     auditContext: AuditContext
   ): Promise<Record<string, unknown>> {
     // Get existing business for audit log
-    const existingBusiness = await prisma.business.findUnique({
+    const existingBusiness = await prisma.businesses.findUnique({
       where: { id },
     });
 
@@ -292,6 +293,7 @@ export class BusinessService {
     let address = existingBusiness.address as Record<string, unknown>;
 
     if (data.address) {
+      logger.info({ address: data.address }, 'Attempting to geocode address for business update');
       try {
         const geocodeResult = await geocodeAddress({
           street: data.address.street,
@@ -305,48 +307,51 @@ export class BusinessService {
           latitude: geocodeResult.latitude,
           longitude: geocodeResult.longitude,
         };
+        logger.info({ latitude: geocodeResult.latitude, longitude: geocodeResult.longitude }, 'Geocoding successful');
       } catch (error) {
+        const existingLat = (existingBusiness.address as Record<string, unknown>).latitude;
+        const existingLng = (existingBusiness.address as Record<string, unknown>).longitude;
         logger.warn(
-          { error, address: data.address },
+          { error, address: data.address, existingLat, existingLng },
           'Geocoding failed during update, keeping old coordinates'
         );
         address = {
           ...data.address,
-          latitude: (existingBusiness.address as Record<string, unknown>).latitude || 0,
-          longitude: (existingBusiness.address as Record<string, unknown>).longitude || 0,
+          latitude: existingLat || 0,
+          longitude: existingLng || 0,
         };
       }
     }
 
     // Update business
-    const business = await prisma.business.update({
+    const business = await prisma.businesses.update({
       where: { id },
       data: {
         name: data.name,
-        description: data.description,
-        categoryPrimaryId: data.categoryPrimaryId,
-        categoriesSecondary: data.categoriesSecondary,
-        address: address as Prisma.JsonValue,
+        description: data.description as Prisma.InputJsonValue,
+        category_primary_id: data.categoryPrimaryId,
+        categories_secondary: data.categoriesSecondary,
+        address: address as Prisma.InputJsonValue,
         phone: data.phone,
         email: data.email,
         website: data.website,
-        secondaryPhone: data.secondaryPhone,
-        operatingHours: data.operatingHours as Prisma.JsonValue,
-        socialLinks: data.socialLinks as Prisma.JsonValue,
-        languagesSpoken: data.languagesSpoken,
+        secondary_phone: data.secondaryPhone,
+        operating_hours: data.operatingHours as unknown as Prisma.InputJsonValue,
+        languages_spoken: data.languagesSpoken,
         certifications: data.certifications,
-        paymentMethods: data.paymentMethods,
-        accessibilityFeatures: data.accessibilityFeatures,
-        priceRange: data.priceRange,
-        parkingInformation: data.parkingInformation,
-        yearEstablished: data.yearEstablished,
+        payment_methods: data.paymentMethods,
+        accessibility_features: data.accessibilityFeatures,
+        price_range: data.priceRange,
+        parking_information: data.parkingInformation,
+        year_established: data.yearEstablished,
+        updated_at: new Date(),
       },
       include: {
-        categoryPrimary: true,
-        claimedByUser: {
+        categories: true,
+        users: {
           select: {
             id: true,
-            displayName: true,
+            display_name: true,
             email: true,
           },
         },
@@ -369,7 +374,7 @@ export class BusinessService {
    */
   async deleteBusiness(id: string, auditContext: AuditContext): Promise<void> {
     // Get business for audit log
-    const existingBusiness = await prisma.business.findUnique({
+    const existingBusiness = await prisma.businesses.findUnique({
       where: { id },
     });
 
@@ -378,10 +383,11 @@ export class BusinessService {
     }
 
     // Soft delete: set status to DELETED
-    await prisma.business.update({
+    await prisma.businesses.update({
       where: { id },
       data: {
         status: 'DELETED',
+        updated_at: new Date(),
       },
     });
 
@@ -395,74 +401,6 @@ export class BusinessService {
   }
 
   /**
-   * Indexes a business in Elasticsearch
-   */
-  private async indexBusiness(businessId: string): Promise<void> {
-    try {
-      const business = await prisma.business.findUnique({
-        where: { id: businessId },
-        include: {
-          categoryPrimary: true,
-        },
-      });
-
-      if (!business || business.status === 'DELETED') {
-        return;
-      }
-
-      const esClient = getEsClient();
-      const address = business.address as Record<string, unknown>;
-
-      await esClient.index({
-        index: 'businesses',
-        id: businessId,
-        document: {
-          id: business.id,
-          name: business.name,
-          slug: business.slug,
-          description: business.description,
-          category_primary: business.categoryPrimaryId,
-          categories_secondary: business.categoriesSecondary,
-          suburb: address.suburb,
-          postcode: address.postcode,
-          location: {
-            lat: address.latitude,
-            lon: address.longitude,
-          },
-          status: business.status,
-          created_at: business.createdAt,
-        },
-      });
-
-      logger.debug({ businessId }, 'Business indexed in Elasticsearch');
-    } catch (error) {
-      logger.error({ error, businessId }, 'Failed to index business');
-      throw error;
-    }
-  }
-
-  /**
-   * Removes a business from Elasticsearch index
-   */
-  private async removeFromIndex(businessId: string): Promise<void> {
-    try {
-      const esClient = getEsClient();
-      await esClient.delete({
-        index: 'businesses',
-        id: businessId,
-      });
-
-      logger.debug({ businessId }, 'Business removed from Elasticsearch');
-    } catch (error) {
-      // Ignore 404 errors (document not found)
-      if ((error as { statusCode?: number }).statusCode !== 404) {
-        logger.error({ error, businessId }, 'Failed to remove business from index');
-        throw error;
-      }
-    }
-  }
-
-  /**
    * Logs business changes to audit trail
    */
   private async logBusinessChange(
@@ -473,17 +411,18 @@ export class BusinessService {
     newValue: Record<string, unknown> | null
   ): Promise<void> {
     try {
-      await prisma.auditLog.create({
+      await prisma.audit_logs.create({
         data: {
-          actorId: auditContext.actorId,
-          actorRole: auditContext.actorRole as Prisma.JsonValue,
+          id: crypto.randomUUID(),
+          actor_id: auditContext.actorId,
+          actor_role: auditContext.actorRole as ActorRole,
           action: `business.${action}`,
-          targetType: 'Business',
-          targetId: businessId,
-          previousValue: (previousValue || undefined) as Prisma.JsonValue,
-          newValue: (newValue || undefined) as Prisma.JsonValue,
-          ipAddress: auditContext.ipAddress || '0.0.0.0',
-          userAgent: auditContext.userAgent || 'unknown',
+          target_type: 'Business',
+          target_id: businessId,
+          previous_value: previousValue as Prisma.InputJsonValue ?? Prisma.DbNull,
+          new_value: newValue as Prisma.InputJsonValue ?? Prisma.DbNull,
+          ip_address: auditContext.ipAddress || '0.0.0.0',
+          user_agent: auditContext.userAgent || 'unknown',
         },
       });
     } catch (error) {

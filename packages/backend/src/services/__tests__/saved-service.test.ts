@@ -78,20 +78,20 @@ describe('SavedService', () => {
         list: mockDefaultList,
       };
 
-      vi.mocked(prisma.savedBusiness.findUnique).mockResolvedValue(null);
-      vi.mocked(prisma.business.findUnique).mockResolvedValue({ id: mockBusinessId } as any);
-      vi.mocked(prisma.savedBusiness.count).mockResolvedValue(10);
-      vi.mocked(prisma.savedList.findFirst).mockResolvedValue(mockDefaultList as any);
-      vi.mocked(prisma.savedBusiness.create).mockResolvedValue(mockSaved as any);
+      vi.mocked(prisma.saved_businesses.findUnique).mockResolvedValue(null);
+      vi.mocked(prisma.businesses.findUnique).mockResolvedValue({ id: mockBusinessId } as any);
+      vi.mocked(prisma.saved_businesses.count).mockResolvedValue(10);
+      vi.mocked(prisma.saved_lists.findFirst).mockResolvedValue(mockDefaultList as any);
+      vi.mocked(prisma.saved_businesses.create).mockResolvedValue(mockSaved as any);
 
       const result = await savedService.saveBusiness(mockUserId, mockBusinessId, null, null);
 
       expect(result).toEqual(mockSaved);
-      expect(prisma.savedBusiness.create).toHaveBeenCalled();
+      expect(prisma.saved_businesses.create).toHaveBeenCalled();
     });
 
     it('should throw error when already saved', async () => {
-      vi.mocked(prisma.savedBusiness.findUnique).mockResolvedValue({
+      vi.mocked(prisma.saved_businesses.findUnique).mockResolvedValue({
         id: 'existing',
         userId: mockUserId,
         businessId: mockBusinessId,
@@ -101,12 +101,12 @@ describe('SavedService', () => {
         savedService.saveBusiness(mockUserId, mockBusinessId, null, null)
       ).rejects.toThrow(ApiError);
 
-      expect(prisma.savedBusiness.create).not.toHaveBeenCalled();
+      expect(prisma.saved_businesses.create).not.toHaveBeenCalled();
     });
 
     it('should throw error when business not found', async () => {
-      vi.mocked(prisma.savedBusiness.findUnique).mockResolvedValue(null);
-      vi.mocked(prisma.business.findUnique).mockResolvedValue(null);
+      vi.mocked(prisma.saved_businesses.findUnique).mockResolvedValue(null);
+      vi.mocked(prisma.businesses.findUnique).mockResolvedValue(null);
 
       await expect(
         savedService.saveBusiness(mockUserId, mockBusinessId, null, null)
@@ -114,9 +114,9 @@ describe('SavedService', () => {
     });
 
     it('should throw error when save limit reached', async () => {
-      vi.mocked(prisma.savedBusiness.findUnique).mockResolvedValue(null);
-      vi.mocked(prisma.business.findUnique).mockResolvedValue({ id: mockBusinessId } as any);
-      vi.mocked(prisma.savedBusiness.count).mockResolvedValue(1000); // At limit
+      vi.mocked(prisma.saved_businesses.findUnique).mockResolvedValue(null);
+      vi.mocked(prisma.businesses.findUnique).mockResolvedValue({ id: mockBusinessId } as any);
+      vi.mocked(prisma.saved_businesses.count).mockResolvedValue(1000); // At limit
 
       await expect(
         savedService.saveBusiness(mockUserId, mockBusinessId, null, null)
@@ -124,9 +124,9 @@ describe('SavedService', () => {
     });
 
     it('should throw error when notes too long', async () => {
-      vi.mocked(prisma.savedBusiness.findUnique).mockResolvedValue(null);
-      vi.mocked(prisma.business.findUnique).mockResolvedValue({ id: mockBusinessId } as any);
-      vi.mocked(prisma.savedBusiness.count).mockResolvedValue(10);
+      vi.mocked(prisma.saved_businesses.findUnique).mockResolvedValue(null);
+      vi.mocked(prisma.businesses.findUnique).mockResolvedValue({ id: mockBusinessId } as any);
+      vi.mocked(prisma.saved_businesses.count).mockResolvedValue(10);
 
       const longNotes = 'a'.repeat(501);
 
@@ -145,11 +145,11 @@ describe('SavedService', () => {
         list: mockCustomList,
       };
 
-      vi.mocked(prisma.savedBusiness.findUnique).mockResolvedValue(null);
-      vi.mocked(prisma.business.findUnique).mockResolvedValue({ id: mockBusinessId } as any);
-      vi.mocked(prisma.savedBusiness.count).mockResolvedValue(10);
-      vi.mocked(prisma.savedList.findUnique).mockResolvedValue(mockCustomList as any);
-      vi.mocked(prisma.savedBusiness.create).mockResolvedValue(mockSaved as any);
+      vi.mocked(prisma.saved_businesses.findUnique).mockResolvedValue(null);
+      vi.mocked(prisma.businesses.findUnique).mockResolvedValue({ id: mockBusinessId } as any);
+      vi.mocked(prisma.saved_businesses.count).mockResolvedValue(10);
+      vi.mocked(prisma.saved_lists.findUnique).mockResolvedValue(mockCustomList as any);
+      vi.mocked(prisma.saved_businesses.create).mockResolvedValue(mockSaved as any);
 
       const result = await savedService.saveBusiness(mockUserId, mockBusinessId, mockListId, null);
 
@@ -157,10 +157,10 @@ describe('SavedService', () => {
     });
 
     it('should throw error when list not found or not owned', async () => {
-      vi.mocked(prisma.savedBusiness.findUnique).mockResolvedValue(null);
-      vi.mocked(prisma.business.findUnique).mockResolvedValue({ id: mockBusinessId } as any);
-      vi.mocked(prisma.savedBusiness.count).mockResolvedValue(10);
-      vi.mocked(prisma.savedList.findUnique).mockResolvedValue({
+      vi.mocked(prisma.saved_businesses.findUnique).mockResolvedValue(null);
+      vi.mocked(prisma.businesses.findUnique).mockResolvedValue({ id: mockBusinessId } as any);
+      vi.mocked(prisma.saved_businesses.count).mockResolvedValue(10);
+      vi.mocked(prisma.saved_lists.findUnique).mockResolvedValue({
         id: mockListId,
         userId: 'other-user', // Different user
       } as any);
@@ -173,16 +173,16 @@ describe('SavedService', () => {
 
   describe('unsaveBusiness', () => {
     it('should unsave a business successfully', async () => {
-      vi.mocked(prisma.savedBusiness.findUnique).mockResolvedValue({
+      vi.mocked(prisma.saved_businesses.findUnique).mockResolvedValue({
         id: 'saved-1',
         userId: mockUserId,
         businessId: mockBusinessId,
       } as any);
-      vi.mocked(prisma.savedBusiness.delete).mockResolvedValue({} as any);
+      vi.mocked(prisma.saved_businesses.delete).mockResolvedValue({} as any);
 
       await savedService.unsaveBusiness(mockUserId, mockBusinessId);
 
-      expect(prisma.savedBusiness.delete).toHaveBeenCalledWith({
+      expect(prisma.saved_businesses.delete).toHaveBeenCalledWith({
         where: {
           userId_businessId: { userId: mockUserId, businessId: mockBusinessId },
         },
@@ -190,13 +190,13 @@ describe('SavedService', () => {
     });
 
     it('should throw error when not saved', async () => {
-      vi.mocked(prisma.savedBusiness.findUnique).mockResolvedValue(null);
+      vi.mocked(prisma.saved_businesses.findUnique).mockResolvedValue(null);
 
       await expect(
         savedService.unsaveBusiness(mockUserId, mockBusinessId)
       ).rejects.toThrow(ApiError);
 
-      expect(prisma.savedBusiness.delete).not.toHaveBeenCalled();
+      expect(prisma.saved_businesses.delete).not.toHaveBeenCalled();
     });
   });
 
@@ -207,8 +207,8 @@ describe('SavedService', () => {
         { id: 'saved-2', business: { id: 'biz-2', name: 'Business 2' } },
       ];
 
-      vi.mocked(prisma.savedBusiness.findMany).mockResolvedValue(mockSaved as any);
-      vi.mocked(prisma.savedBusiness.count).mockResolvedValue(5);
+      vi.mocked(prisma.saved_businesses.findMany).mockResolvedValue(mockSaved as any);
+      vi.mocked(prisma.saved_businesses.count).mockResolvedValue(5);
 
       const result = await savedService.getSavedBusinesses(mockUserId, null, {
         page: 1,
@@ -222,12 +222,12 @@ describe('SavedService', () => {
     });
 
     it('should filter by listId when provided', async () => {
-      vi.mocked(prisma.savedBusiness.findMany).mockResolvedValue([]);
-      vi.mocked(prisma.savedBusiness.count).mockResolvedValue(0);
+      vi.mocked(prisma.saved_businesses.findMany).mockResolvedValue([]);
+      vi.mocked(prisma.saved_businesses.count).mockResolvedValue(0);
 
       await savedService.getSavedBusinesses(mockUserId, mockListId, { page: 1, limit: 10 });
 
-      expect(prisma.savedBusiness.findMany).toHaveBeenCalledWith(
+      expect(prisma.saved_businesses.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
           where: { userId: mockUserId, listId: mockListId },
         })
@@ -244,17 +244,17 @@ describe('SavedService', () => {
         isDefault: false,
       };
 
-      vi.mocked(prisma.savedList.count).mockResolvedValue(5);
-      vi.mocked(prisma.savedList.create).mockResolvedValue(mockList as any);
+      vi.mocked(prisma.saved_lists.count).mockResolvedValue(5);
+      vi.mocked(prisma.saved_lists.create).mockResolvedValue(mockList as any);
 
       const result = await savedService.createList(mockUserId, 'My Favorites');
 
       expect(result).toEqual(mockList);
-      expect(prisma.savedList.create).toHaveBeenCalled();
+      expect(prisma.saved_lists.create).toHaveBeenCalled();
     });
 
     it('should throw error when list limit reached', async () => {
-      vi.mocked(prisma.savedList.count).mockResolvedValue(10); // At limit
+      vi.mocked(prisma.saved_lists.count).mockResolvedValue(10); // At limit
 
       await expect(
         savedService.createList(mockUserId, 'New List')
@@ -262,7 +262,7 @@ describe('SavedService', () => {
     });
 
     it('should throw error when name too long', async () => {
-      vi.mocked(prisma.savedList.count).mockResolvedValue(5);
+      vi.mocked(prisma.saved_lists.count).mockResolvedValue(5);
 
       const longName = 'a'.repeat(51);
 
@@ -274,22 +274,22 @@ describe('SavedService', () => {
 
   describe('deleteList', () => {
     it('should delete a custom list', async () => {
-      vi.mocked(prisma.savedList.findUnique).mockResolvedValue({
+      vi.mocked(prisma.saved_lists.findUnique).mockResolvedValue({
         id: mockListId,
         userId: mockUserId,
         isDefault: false,
       } as any);
-      vi.mocked(prisma.savedList.delete).mockResolvedValue({} as any);
+      vi.mocked(prisma.saved_lists.delete).mockResolvedValue({} as any);
 
       await savedService.deleteList(mockUserId, mockListId);
 
-      expect(prisma.savedList.delete).toHaveBeenCalledWith({
+      expect(prisma.saved_lists.delete).toHaveBeenCalledWith({
         where: { id: mockListId },
       });
     });
 
     it('should throw error when trying to delete default list', async () => {
-      vi.mocked(prisma.savedList.findUnique).mockResolvedValue({
+      vi.mocked(prisma.saved_lists.findUnique).mockResolvedValue({
         id: mockListId,
         userId: mockUserId,
         isDefault: true,
@@ -301,7 +301,7 @@ describe('SavedService', () => {
     });
 
     it('should throw error when list not found or not owned', async () => {
-      vi.mocked(prisma.savedList.findUnique).mockResolvedValue(null);
+      vi.mocked(prisma.saved_lists.findUnique).mockResolvedValue(null);
 
       await expect(
         savedService.deleteList(mockUserId, mockListId)
@@ -313,7 +313,7 @@ describe('SavedService', () => {
     it('should return existing default list', async () => {
       const mockDefaultList = { id: 'default', name: 'Saved Businesses', isDefault: true };
 
-      vi.mocked(prisma.savedList.findFirst).mockResolvedValue(mockDefaultList as any);
+      vi.mocked(prisma.saved_lists.findFirst).mockResolvedValue(mockDefaultList as any);
 
       const result = await savedService.getDefaultList(mockUserId);
 
@@ -323,13 +323,13 @@ describe('SavedService', () => {
     it('should create default list if not exists', async () => {
       const mockNewDefaultList = { id: 'new-default', name: 'Saved Businesses', isDefault: true };
 
-      vi.mocked(prisma.savedList.findFirst).mockResolvedValue(null);
-      vi.mocked(prisma.savedList.create).mockResolvedValue(mockNewDefaultList as any);
+      vi.mocked(prisma.saved_lists.findFirst).mockResolvedValue(null);
+      vi.mocked(prisma.saved_lists.create).mockResolvedValue(mockNewDefaultList as any);
 
       const result = await savedService.getDefaultList(mockUserId);
 
       expect(result).toEqual(mockNewDefaultList);
-      expect(prisma.savedList.create).toHaveBeenCalled();
+      expect(prisma.saved_lists.create).toHaveBeenCalled();
     });
   });
 });
