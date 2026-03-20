@@ -1,0 +1,80 @@
+{
+  "deal": {
+    "title": "प्रचार और ऑफर",
+    "description": "विशेष ऑफर और छूट",
+    "discountOff": "{{value}} की छूट",
+    "bogo": "1 खरीदें 1 पाएं",
+    "freeItem": "मुफ्त आइटम",
+    "featured": "विशेष",
+    "endingSoon": "{{days}} दिनों में समाप्त",
+    "expired": "समाप्त",
+    "validUntil": "{{date}} तक वैध",
+    "revealCode": "वाउचर कोड प्राप्त करें",
+    "copyCode": "कोड कॉपी करें",
+    "hasVoucherCode": "वाउचर कोड उपलब्ध",
+    "activeDeals": "सक्रिय ऑफर",
+    "limitReached": "अधिकतम ऑफर सीमा पूरी हुई",
+    "confirmDelete": "क्या आप वाकई इस प्रचार को हटाना चाहते हैं?",
+    "editDeal": "{{title}} संपादित करें",
+    "deleteDeal": "{{title}} हटाएं",
+    "status": {
+      "active": "सक्रिय",
+      "expired": "समाप्त",
+      "cancelled": "रद्द"
+    },
+    "discountType": {
+      "none": "कोई छूट प्रकार नहीं",
+      "percentage": "प्रतिशत छूट",
+      "fixed": "निश्चित राशि छूट",
+      "bogo": "एक खरीदें एक पाएं",
+      "freeItem": "मुफ्त आइटम शामिल"
+    },
+    "empty": {
+      "title": "अभी कोई प्रचार नहीं",
+      "description": "अधिक ग्राहकों को आकर्षित करने के लिए अपना पहला प्रचार बनाएं"
+    },
+    "form": {
+      "basicInfo": "मूल जानकारी",
+      "title": "शीर्षक",
+      "description": "विवरण",
+      "descriptionHint": "न्यूनतम {{min}} अक्षर, अधिकतम {{max}} अक्षर",
+      "duration": "सेवा अवधि",
+      "durationPlaceholder": "उदा., 30 मिनट सत्र, 1 घंटे का उपचार",
+      "pricing": "मूल्य निर्धारण",
+      "promoPrice": "प्रचार मूल्य",
+      "originalPrice": "मूल मूल्य",
+      "discountType": "छूट प्रकार",
+      "discountValue": "छूट मूल्य",
+      "validity": "वैधता अवधि",
+      "validFrom": "प्रारंभ तिथि",
+      "validUntil": "समाप्ति तिथि",
+      "additionalDetails": "अतिरिक्त विवरण",
+      "voucherCode": "वाउचर कोड",
+      "voucherCodeHint": "ग्राहकों के लिए वैकल्पिक रिडेम्पशन कोड",
+      "imageUrl": "छवि URL",
+      "terms": "नियम और शर्तें",
+      "termsHint": "इस ऑफर पर लागू वैकल्पिक नियम",
+      "featured": "विशेष ऑफर के रूप में चिह्नित करें",
+      "create": "प्रचार बनाएं",
+      "update": "प्रचार अपडेट करें"
+    },
+    "validation": {
+      "titleRequired": "शीर्षक आवश्यक है",
+      "titleTooLong": "शीर्षक बहुत लंबा है",
+      "descriptionRequired": "विवरण आवश्यक है",
+      "descriptionTooShort": "विवरण बहुत छोटा है",
+      "descriptionTooLong": "विवरण बहुत लंबा है",
+      "invalidPrice": "कृपया वैध मूल्य दर्ज करें",
+      "priceNegative": "मूल्य नकारात्मक नहीं हो सकता",
+      "priceMustBeLower": "प्रचार मूल्य मूल मूल्य से कम होना चाहिए",
+      "percentageRange": "प्रतिशत 0 से 100 के बीच होना चाहिए",
+      "startDateRequired": "प्रारंभ तिथि आवश्यक है",
+      "endDateRequired": "समाप्ति तिथि आवश्यक है",
+      "endAfterStart": "समाप्ति तिथि प्रारंभ तिथि के बाद होनी चाहिए",
+      "invalidUrl": "कृपया वैध URL दर्ज करें"
+    },
+    "error": {
+      "submitFailed": "प्रचार सहेजने में विफल। कृपया पुनः प्रयास करें।"
+    }
+  }
+}

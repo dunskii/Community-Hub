@@ -98,6 +98,22 @@
       "external": "External"
     }
   },
+  "editBusiness": {
+    "tabs": {
+      "basic": "Basic Info",
+      "contact": "Contact & Location",
+      "hours": "Operating Hours",
+      "details": "Details & Features",
+      "promotions": "Promotions"
+    },
+    "promotions": {
+      "title": "Promotions & Deals",
+      "description": "Create special offers to attract customers",
+      "addPromotion": "Add Promotion",
+      "editPromotion": "Edit Promotion",
+      "newPromotion": "New Promotion"
+    }
+  },
   "claim": {
     "title": "Claim This Business",
     "selectMethod": "Choose Verification Method",

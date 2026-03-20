@@ -1,0 +1,80 @@
+{
+  "deal": {
+    "title": "Promozioni e Offerte",
+    "description": "Offerte speciali e sconti",
+    "discountOff": "{{value}} DI SCONTO",
+    "bogo": "Compra 1 Prendi 1",
+    "freeItem": "Articolo Gratuito",
+    "featured": "In evidenza",
+    "endingSoon": "Termina tra {{days}} giorni",
+    "expired": "Scaduta",
+    "validUntil": "Valida fino al {{date}}",
+    "revealCode": "Ottieni Codice Voucher",
+    "copyCode": "Copia Codice",
+    "hasVoucherCode": "Codice voucher disponibile",
+    "activeDeals": "offerte attive",
+    "limitReached": "Limite massimo offerte raggiunto",
+    "confirmDelete": "Sei sicuro di voler eliminare questa promozione?",
+    "editDeal": "Modifica {{title}}",
+    "deleteDeal": "Elimina {{title}}",
+    "status": {
+      "active": "Attiva",
+      "expired": "Scaduta",
+      "cancelled": "Annullata"
+    },
+    "discountType": {
+      "none": "Nessun tipo di sconto",
+      "percentage": "Sconto percentuale",
+      "fixed": "Sconto fisso",
+      "bogo": "Compra uno prendi uno",
+      "freeItem": "Articolo gratuito incluso"
+    },
+    "empty": {
+      "title": "Nessuna Promozione",
+      "description": "Crea la tua prima promozione per attirare più clienti"
+    },
+    "form": {
+      "basicInfo": "Informazioni di Base",
+      "title": "Titolo",
+      "description": "Descrizione",
+      "descriptionHint": "Minimo {{min}} caratteri, massimo {{max}} caratteri",
+      "duration": "Durata del Servizio",
+      "durationPlaceholder": "es., sessione di 30 min, trattamento di 1 ora",
+      "pricing": "Prezzi",
+      "promoPrice": "Prezzo Promozionale",
+      "originalPrice": "Prezzo Originale",
+      "discountType": "Tipo di Sconto",
+      "discountValue": "Valore dello Sconto",
+      "validity": "Periodo di Validità",
+      "validFrom": "Data di Inizio",
+      "validUntil": "Data di Fine",
+      "additionalDetails": "Dettagli Aggiuntivi",
+      "voucherCode": "Codice Voucher",
+      "voucherCodeHint": "Codice opzionale che i clienti possono utilizzare",
+      "imageUrl": "URL Immagine",
+      "terms": "Termini e Condizioni",
+      "termsHint": "Termini opzionali applicabili a questa offerta",
+      "featured": "Segna come offerta in evidenza",
+      "create": "Crea Promozione",
+      "update": "Aggiorna Promozione"
+    },
+    "validation": {
+      "titleRequired": "Il titolo è obbligatorio",
+      "titleTooLong": "Il titolo è troppo lungo",
+      "descriptionRequired": "La descrizione è obbligatoria",
+      "descriptionTooShort": "La descrizione è troppo corta",
+      "descriptionTooLong": "La descrizione è troppo lunga",
+      "invalidPrice": "Inserisci un prezzo valido",
+      "priceNegative": "Il prezzo non può essere negativo",
+      "priceMustBeLower": "Il prezzo promozionale deve essere inferiore al prezzo originale",
+      "percentageRange": "La percentuale deve essere compresa tra 0 e 100",
+      "startDateRequired": "La data di inizio è obbligatoria",
+      "endDateRequired": "La data di fine è obbligatoria",
+      "endAfterStart": "La data di fine deve essere successiva alla data di inizio",
+      "invalidUrl": "Inserisci un URL valido"
+    },
+    "error": {
+      "submitFailed": "Impossibile salvare la promozione. Riprova."
+    }
+  }
+}

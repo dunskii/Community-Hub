@@ -73,6 +73,18 @@ import eventsIT from './locales/it/events.json';
 import messagingEN from './locales/en/messaging.json';
 import messagingAR from './locales/ar/messaging.json';
 
+// Import deal translations (Phase 10)
+import dealEN from './locales/en/deal.json';
+import dealAR from './locales/ar/deal.json';
+import dealZH_CN from './locales/zh-CN/deal.json';
+import dealZH_TW from './locales/zh-TW/deal.json';
+import dealVI from './locales/vi/deal.json';
+import dealHI from './locales/hi/deal.json';
+import dealUR from './locales/ur/deal.json';
+import dealKO from './locales/ko/deal.json';
+import dealEL from './locales/el/deal.json';
+import dealIT from './locales/it/deal.json';
+
 const resources = {
   en: {
     translation: translationEN,
@@ -83,6 +95,7 @@ const resources = {
     home: homeEN,
     events: eventsEN,
     messaging: messagingEN,
+    deal: dealEN,
   },
   ar: {
     translation: translationAR,
@@ -93,6 +106,7 @@ const resources = {
     home: homeAR,
     events: eventsAR,
     messaging: messagingAR,
+    deal: dealAR,
   },
   'zh-CN': {
     translation: translationZH_CN,
@@ -100,6 +114,7 @@ const resources = {
     owner: ownerZH_CN,
     home: homeZH_CN,
     events: eventsZH_CN,
+    deal: dealZH_CN,
   },
   'zh-TW': {
     translation: translationZH_TW,
@@ -107,6 +122,7 @@ const resources = {
     owner: ownerZH_TW,
     home: homeZH_TW,
     events: eventsZH_TW,
+    deal: dealZH_TW,
   },
   vi: {
     translation: translationVI,
@@ -114,6 +130,7 @@ const resources = {
     owner: ownerVI,
     home: homeVI,
     events: eventsVI,
+    deal: dealVI,
   },
   hi: {
     translation: translationHI,
@@ -121,6 +138,7 @@ const resources = {
     owner: ownerHI,
     home: homeHI,
     events: eventsHI,
+    deal: dealHI,
   },
   ur: {
     translation: translationUR,
@@ -128,6 +146,7 @@ const resources = {
     owner: ownerUR,
     home: homeUR,
     events: eventsUR,
+    deal: dealUR,
   },
   ko: {
     translation: translationKO,
@@ -135,6 +154,7 @@ const resources = {
     owner: ownerKO,
     home: homeKO,
     events: eventsKO,
+    deal: dealKO,
   },
   el: {
     translation: translationEL,
@@ -142,6 +162,7 @@ const resources = {
     owner: ownerEL,
     home: homeEL,
     events: eventsEL,
+    deal: dealEL,
   },
   it: {
     translation: translationIT,
@@ -149,6 +170,7 @@ const resources = {
     owner: ownerIT,
     home: homeIT,
     events: eventsIT,
+    deal: dealIT,
   },
 };
 
@@ -167,8 +189,8 @@ i18n
     resources,
     fallbackLng: 'en',
     defaultNS: 'translation',
-    ns: ['translation', 'business', 'category', 'reviews', 'owner', 'home', 'events', 'messaging'],
-    fallbackNS: ['owner', 'events', 'home', 'messaging', 'reviews', 'business', 'category'],
+    ns: ['translation', 'business', 'category', 'reviews', 'owner', 'home', 'events', 'messaging', 'deal'],
+    fallbackNS: ['owner', 'events', 'home', 'messaging', 'reviews', 'business', 'category', 'deal'],
     debug: import.meta.env.DEV,
     interpolation: {
       escapeValue: false, // React already escapes

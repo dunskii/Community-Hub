@@ -14,6 +14,7 @@ import { Skeleton } from '../components/display/Skeleton';
 import { EmptyState } from '../components/display/EmptyState';
 import { OperatingHoursDisplay } from '../components/business/OperatingHoursDisplay';
 import { ReviewsTab } from '../components/business/ReviewsTab';
+import { DealsSection } from '../components/business/DealsSection';
 import { SaveButton } from '../components/SaveButton';
 import { FollowButton } from '../components/FollowButton';
 import { useBusinessDetail } from '../hooks/useBusinessDetail';
@@ -35,14 +36,17 @@ import {
   CheckBadgeIcon,
   PhotoIcon,
   BuildingStorefrontIcon,
+  ArrowTopRightOnSquareIcon,
+  TagIcon,
 } from '@heroicons/react/24/outline';
+import { BusinessMap } from '../components/maps/BusinessMap';
 import { StarIcon as StarSolidIcon } from '@heroicons/react/24/solid';
 
 export function BusinessDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const { t, i18n } = useTranslation('business');
   const { business, loading, error } = useBusinessDetail({ slug });
-  const { isOpen } = useIsOpenNow(business?.operatingHours);
+  const { isOpen, nextOpeningTime } = useIsOpenNow(business?.operatingHours);
 
   const { isSaved, toggleSaved } = useSavedBusiness(business?.id || '');
   const { isFollowing, followerCount, toggleFollow } = useFollowBusiness(business?.id || '');
@@ -175,7 +179,14 @@ export function BusinessDetailPage() {
                 ) : isOpen ? (
                   <Badge variant="success">{t('openNow', 'Open Now')}</Badge>
                 ) : (
-                  <Badge variant="default">{t('closed', 'Closed')}</Badge>
+                  <Badge variant="default">
+                    {t('closed', 'Closed')}
+                    {nextOpeningTime && (
+                      <span className="ml-1">
+                        · {t('opensAt', 'Opens at')} {nextOpeningTime}
+                      </span>
+                    )}
+                  </Badge>
                 )}
 
                 <SaveButton
@@ -265,17 +276,42 @@ export function BusinessDetailPage() {
                           )}
 
                           {business.address && (
-                            <div className="flex items-start gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-700/50">
-                              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                                <MapPinIcon className="w-5 h-5 text-primary" />
+                            <div className="space-y-4">
+                              <div className="flex items-start gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-700/50">
+                                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                                  <MapPinIcon className="w-5 h-5 text-primary" />
+                                </div>
+                                <div className="flex-1">
+                                  <p className="text-sm text-slate-500 dark:text-slate-400">{t('address', 'Address')}</p>
+                                  <address className="not-italic font-medium text-slate-900 dark:text-white">
+                                    {business.address.street}<br />
+                                    {business.address.suburb}, {business.address.state} {business.address.postcode}
+                                  </address>
+                                </div>
+                                <a
+                                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                                    `${business.address.street}, ${business.address.suburb}, ${business.address.state} ${business.address.postcode}`
+                                  )}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="flex items-center gap-1 text-sm text-primary hover:text-primary/80 transition-colors"
+                                  aria-label={t('getDirections', 'Get directions')}
+                                >
+                                  <ArrowTopRightOnSquareIcon className="w-4 h-4" />
+                                  <span className="hidden sm:inline">{t('directions', 'Directions')}</span>
+                                </a>
                               </div>
-                              <div>
-                                <p className="text-sm text-slate-500 dark:text-slate-400">{t('address', 'Address')}</p>
-                                <address className="not-italic font-medium text-slate-900 dark:text-white">
-                                  {business.address.streetAddress}<br />
-                                  {business.address.suburb}, {business.address.state} {business.address.postcode}
-                                </address>
-                              </div>
+
+                              {/* Location Map */}
+                              {business.address.latitude && business.address.longitude && (
+                                <BusinessMap
+                                  latitude={business.address.latitude}
+                                  longitude={business.address.longitude}
+                                  businessName={name}
+                                  address={`${business.address.street}, ${business.address.suburb}, ${business.address.state} ${business.address.postcode}`}
+                                  className="h-64 rounded-xl"
+                                />
+                              )}
                             </div>
                           )}
                         </div>
@@ -372,6 +408,16 @@ export function BusinessDetailPage() {
                   content: (
                     <div className="p-6 md:p-8">
                       <ReviewsTab businessId={business.id} businessName={name} />
+                    </div>
+                  ),
+                },
+                {
+                  id: 'deals',
+                  label: t('tabs.deals', 'Deals'),
+                  icon: <TagIcon className="w-5 h-5" />,
+                  content: (
+                    <div className="p-6 md:p-8">
+                      <DealsSection businessId={business.id} businessName={name} />
                     </div>
                   ),
                 },

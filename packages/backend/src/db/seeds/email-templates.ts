@@ -9,10 +9,11 @@ export async function seedEmailTemplates(): Promise<void> {
   logger.info('Seeding email templates...');
 
   // Email Verification Template
-  await prisma.emailTemplate.upsert({
-    where: { templateKey: 'email_verification' },
+  await prisma.email_templates.upsert({
+    where: { template_key: 'email_verification' },
     create: {
-      templateKey: 'email_verification',
+      id: crypto.randomUUID(),
+      template_key: 'email_verification',
       name: 'Email Verification',
       description: 'Email sent to new users to verify their email address. Includes 24-hour expiry verification link.',
       subject: {
@@ -27,7 +28,7 @@ export async function seedEmailTemplates(): Promise<void> {
         el: 'Επαλήθευση διεύθυνσης email',
         it: 'Verifica il tuo indirizzo email',
       },
-      bodyHtml: {
+      body_html: {
         en: `
           <h2 style="margin: 0 0 16px; font-family: 'Montserrat', Arial, sans-serif; font-size: 22px; font-weight: 600; color: #2C3E50;">
             Welcome, {{userName}}!
@@ -259,7 +260,7 @@ export async function seedEmailTemplates(): Promise<void> {
           </p>
         `,
       },
-      bodyText: {
+      body_text: {
         en: `Welcome, {{userName}}!
 
 Thank you for joining our community. To complete your registration, please verify your email address by clicking the link below:
@@ -353,15 +354,17 @@ Se non hai creato un account, ignora questa email.`,
       },
       variables: ['userName', 'verificationLink', 'expiryHours'],
       active: true,
+      updated_at: new Date(),
     },
     update: {},
   });
 
   // Password Reset Template
-  await prisma.emailTemplate.upsert({
-    where: { templateKey: 'password_reset' },
+  await prisma.email_templates.upsert({
+    where: { template_key: 'password_reset' },
     create: {
-      templateKey: 'password_reset',
+      id: crypto.randomUUID(),
+      template_key: 'password_reset',
       name: 'Password Reset',
       description: 'Email sent when user requests password reset. Includes 1-hour expiry reset link and security info.',
       subject: {
@@ -376,7 +379,7 @@ Se non hai creato un account, ignora questa email.`,
         el: 'Επαναφορά κωδικού πρόσβασης',
         it: 'Reimposta la tua password',
       },
-      bodyHtml: {
+      body_html: {
         en: `
           <h2 style="margin: 0 0 16px; font-family: 'Montserrat', Arial, sans-serif; font-size: 22px; font-weight: 600; color: #2C3E50;">
             Password Reset Request
@@ -728,7 +731,7 @@ Se non hai creato un account, ignora questa email.`,
           </p>
         `,
       },
-      bodyText: {
+      body_text: {
         en: `Password Reset Request
 
 Hi {{userName}},
@@ -882,6 +885,7 @@ Se non hai richiesto la reimpostazione della password, ignora questa email e con
       },
       variables: ['userName', 'resetLink', 'expiryMinutes', 'ipAddress', 'timestamp'],
       active: true,
+      updated_at: new Date(),
     },
     update: {},
   });

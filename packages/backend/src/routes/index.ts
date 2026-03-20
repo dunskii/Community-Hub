@@ -20,6 +20,7 @@ import claimRouter from './claim.js';
 import analyticsRouter from './analytics.js';
 import { eventRouter } from './events.js';
 import { conversationsRouter } from './conversations.js';
+import { dealRouter, businessDealRouter } from './deals.js';
 
 export function setupRoutes(app: Express): void {
   // API v1
@@ -41,6 +42,8 @@ export function setupRoutes(app: Express): void {
   v1.use('/', analyticsRouter);
   v1.use('/events', eventRouter);
   v1.use('/', conversationsRouter);
+  v1.use('/deals', dealRouter);
+  v1.use('/businesses/:businessId/deals', businessDealRouter);
 
   app.use('/api/v1', v1);
 

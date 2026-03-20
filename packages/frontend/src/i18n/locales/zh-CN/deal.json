@@ -1,0 +1,80 @@
+{
+  "deal": {
+    "title": "促销与优惠",
+    "description": "特别优惠和折扣",
+    "discountOff": "立减 {{value}}",
+    "bogo": "买一送一",
+    "freeItem": "免费赠品",
+    "featured": "精选",
+    "endingSoon": "{{days}} 天后结束",
+    "expired": "已过期",
+    "validUntil": "有效期至 {{date}}",
+    "revealCode": "获取优惠码",
+    "copyCode": "复制代码",
+    "hasVoucherCode": "可用优惠码",
+    "activeDeals": "进行中的优惠",
+    "limitReached": "已达到最大优惠数量",
+    "confirmDelete": "您确定要删除此促销活动吗？",
+    "editDeal": "编辑 {{title}}",
+    "deleteDeal": "删除 {{title}}",
+    "status": {
+      "active": "进行中",
+      "expired": "已过期",
+      "cancelled": "已取消"
+    },
+    "discountType": {
+      "none": "无折扣类型",
+      "percentage": "百分比折扣",
+      "fixed": "固定金额折扣",
+      "bogo": "买一送一",
+      "freeItem": "含免费赠品"
+    },
+    "empty": {
+      "title": "暂无促销活动",
+      "description": "创建您的第一个促销活动来吸引更多客户"
+    },
+    "form": {
+      "basicInfo": "基本信息",
+      "title": "标题",
+      "description": "描述",
+      "descriptionHint": "最少 {{min}} 个字符，最多 {{max}} 个字符",
+      "duration": "服务时长",
+      "durationPlaceholder": "例如：30分钟体验，1小时护理",
+      "pricing": "定价",
+      "promoPrice": "促销价",
+      "originalPrice": "原价",
+      "discountType": "折扣类型",
+      "discountValue": "折扣值",
+      "validity": "有效期",
+      "validFrom": "开始日期",
+      "validUntil": "结束日期",
+      "additionalDetails": "附加详情",
+      "voucherCode": "优惠码",
+      "voucherCodeHint": "可选的客户兑换代码",
+      "imageUrl": "图片链接",
+      "terms": "条款与条件",
+      "termsHint": "适用于此优惠的可选条款",
+      "featured": "标记为精选优惠",
+      "create": "创建促销",
+      "update": "更新促销"
+    },
+    "validation": {
+      "titleRequired": "标题为必填项",
+      "titleTooLong": "标题过长",
+      "descriptionRequired": "描述为必填项",
+      "descriptionTooShort": "描述过短",
+      "descriptionTooLong": "描述过长",
+      "invalidPrice": "请输入有效价格",
+      "priceNegative": "价格不能为负数",
+      "priceMustBeLower": "促销价必须低于原价",
+      "percentageRange": "百分比必须在 0 到 100 之间",
+      "startDateRequired": "开始日期为必填项",
+      "endDateRequired": "结束日期为必填项",
+      "endAfterStart": "结束日期必须晚于开始日期",
+      "invalidUrl": "请输入有效的链接"
+    },
+    "error": {
+      "submitFailed": "保存促销失败，请重试。"
+    }
+  }
+}

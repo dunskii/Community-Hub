@@ -19,6 +19,7 @@ import { NewBusinessesSection } from '../components/home/NewBusinessesSection.js
 import { CategoryShowcase } from '../components/home/CategoryShowcase.js';
 import { QuickFilters } from '../components/home/QuickFilters.js';
 import { UpcomingEventsSection } from '../components/home/UpcomingEventsSection.js';
+import { TodayDealsSection } from '../components/home/TodayDealsSection.js';
 
 export function HomePage() {
   const { t } = useTranslation('home');
@@ -95,6 +96,9 @@ export function HomePage() {
 
         {/* Upcoming Events Section */}
         <UpcomingEventsSection />
+
+        {/* Today's Deals Section */}
+        <TodayDealsSection />
 
         {/* Highly Rated Section */}
         <HighlyRatedSection />

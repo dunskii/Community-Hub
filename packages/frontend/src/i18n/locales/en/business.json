@@ -9,6 +9,7 @@
   "openNowOnly": "Open Now",
   "openNow": "Open Now",
   "closed": "Closed",
+  "opensAt": "Opens at",
   "byAppointment": "By Appointment",
   "callForAppointment": "Call to make an appointment",
   "priceRange": "Price Range",
@@ -28,6 +29,8 @@
   "email": "Email",
   "website": "Website",
   "address": "Address",
+  "directions": "Directions",
+  "getDirections": "Get directions",
   "openingHours": "Opening Hours",
   "noHoursAvailable": "Hours not available",
   "accessibility": "Accessibility",
@@ -52,5 +55,10 @@
     "ratingDesc": "Rating (High to Low)",
     "newestFirst": "Newest First",
     "oldestFirst": "Oldest First"
+  },
+  "deals": {
+    "noDeals": "No Deals Available",
+    "noDealsDescription": "This business has no active promotions at the moment.",
+    "viewAllDeals": "View the Deals tab for all promotions"
   }
 }

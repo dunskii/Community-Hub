@@ -1,0 +1,80 @@
+{
+  "deal": {
+    "title": "Khuyến mãi & Ưu đãi",
+    "description": "Ưu đãi đặc biệt và giảm giá",
+    "discountOff": "Giảm {{value}}",
+    "bogo": "Mua 1 Tặng 1",
+    "freeItem": "Quà tặng miễn phí",
+    "featured": "Nổi bật",
+    "endingSoon": "Kết thúc sau {{days}} ngày",
+    "expired": "Đã hết hạn",
+    "validUntil": "Có hiệu lực đến {{date}}",
+    "revealCode": "Nhận mã voucher",
+    "copyCode": "Sao chép mã",
+    "hasVoucherCode": "Có mã voucher",
+    "activeDeals": "ưu đãi đang hoạt động",
+    "limitReached": "Đã đạt giới hạn ưu đãi tối đa",
+    "confirmDelete": "Bạn có chắc chắn muốn xóa khuyến mãi này không?",
+    "editDeal": "Chỉnh sửa {{title}}",
+    "deleteDeal": "Xóa {{title}}",
+    "status": {
+      "active": "Đang hoạt động",
+      "expired": "Đã hết hạn",
+      "cancelled": "Đã hủy"
+    },
+    "discountType": {
+      "none": "Không có loại giảm giá",
+      "percentage": "Giảm theo phần trăm",
+      "fixed": "Giảm số tiền cố định",
+      "bogo": "Mua một tặng một",
+      "freeItem": "Bao gồm quà tặng miễn phí"
+    },
+    "empty": {
+      "title": "Chưa có khuyến mãi nào",
+      "description": "Tạo khuyến mãi đầu tiên để thu hút thêm khách hàng"
+    },
+    "form": {
+      "basicInfo": "Thông tin cơ bản",
+      "title": "Tiêu đề",
+      "description": "Mô tả",
+      "descriptionHint": "Tối thiểu {{min}} ký tự, tối đa {{max}} ký tự",
+      "duration": "Thời lượng dịch vụ",
+      "durationPlaceholder": "Ví dụ: buổi 30 phút, liệu trình 1 giờ",
+      "pricing": "Định giá",
+      "promoPrice": "Giá khuyến mãi",
+      "originalPrice": "Giá gốc",
+      "discountType": "Loại giảm giá",
+      "discountValue": "Giá trị giảm",
+      "validity": "Thời hạn hiệu lực",
+      "validFrom": "Ngày bắt đầu",
+      "validUntil": "Ngày kết thúc",
+      "additionalDetails": "Chi tiết bổ sung",
+      "voucherCode": "Mã voucher",
+      "voucherCodeHint": "Mã tùy chọn để khách hàng sử dụng khi đổi thưởng",
+      "imageUrl": "URL hình ảnh",
+      "terms": "Điều khoản & Điều kiện",
+      "termsHint": "Điều khoản tùy chọn áp dụng cho ưu đãi này",
+      "featured": "Đánh dấu là ưu đãi nổi bật",
+      "create": "Tạo khuyến mãi",
+      "update": "Cập nhật khuyến mãi"
+    },
+    "validation": {
+      "titleRequired": "Tiêu đề là bắt buộc",
+      "titleTooLong": "Tiêu đề quá dài",
+      "descriptionRequired": "Mô tả là bắt buộc",
+      "descriptionTooShort": "Mô tả quá ngắn",
+      "descriptionTooLong": "Mô tả quá dài",
+      "invalidPrice": "Vui lòng nhập giá hợp lệ",
+      "priceNegative": "Giá không được âm",
+      "priceMustBeLower": "Giá khuyến mãi phải thấp hơn giá gốc",
+      "percentageRange": "Phần trăm phải từ 0 đến 100",
+      "startDateRequired": "Ngày bắt đầu là bắt buộc",
+      "endDateRequired": "Ngày kết thúc là bắt buộc",
+      "endAfterStart": "Ngày kết thúc phải sau ngày bắt đầu",
+      "invalidUrl": "Vui lòng nhập URL hợp lệ"
+    },
+    "error": {
+      "submitFailed": "Không thể lưu khuyến mãi. Vui lòng thử lại."
+    }
+  }
+}

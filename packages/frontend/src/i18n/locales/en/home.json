@@ -57,6 +57,11 @@
     "subtitle": "Community events happening soon",
     "viewAll": "View All"
   },
+  "todaysDeals": {
+    "title": "Today's Deals",
+    "subtitle": "Special offers from local businesses",
+    "viewAll": "View All"
+  },
   "categories": {
     "title": "Popular Categories",
     "subtitle": "Explore businesses by type",

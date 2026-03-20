@@ -7,7 +7,735 @@ datasource db {
   provider = "postgresql"
 }
 
-// ─── Enums ───────────────────────────────────────────────
+model appeals {
+  id                               String       @id
+  user_id                          String
+  content_type                     String       @db.VarChar(50)
+  content_id                       String
+  original_action                  String       @db.VarChar(100)
+  reason                           String
+  supporting_evidence              String[]
+  status                           AppealStatus @default(PENDING)
+  reviewer_id                      String?
+  reviewer_notes                   String?
+  created_at                       DateTime     @default(now())
+  reviewed_at                      DateTime?
+  users_appeals_reviewer_idTousers users?       @relation("appeals_reviewer_idTousers", fields: [reviewer_id], references: [id])
+  users_appeals_user_idTousers     users        @relation("appeals_user_idTousers", fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([reviewer_id])
+  @@index([status])
+  @@index([user_id])
+}
+
+model audit_logs {
+  id             String    @id
+  actor_id       String?
+  actor_role     ActorRole
+  action         String
+  target_type    String
+  target_id      String
+  previous_value Json?
+  new_value      Json?
+  reason         String?
+  ip_address     String
+  user_agent     String
+  created_at     DateTime  @default(now())
+  users          users?    @relation(fields: [actor_id], references: [id])
+
+  @@index([actor_id])
+  @@index([created_at])
+  @@index([target_type, target_id])
+}
+
+model business_analytics_daily {
+  id                 String     @id
+  business_id        String
+  date               DateTime   @db.Date
+  profile_views      Int        @default(0)
+  unique_views       Int        @default(0)
+  search_appearances Int        @default(0)
+  website_clicks     Int        @default(0)
+  phone_clicks       Int        @default(0)
+  directions_clicks  Int        @default(0)
+  photo_views        Int        @default(0)
+  saves              Int        @default(0)
+  follows            Int        @default(0)
+  reviews            Int        @default(0)
+  messages           Int        @default(0)
+  businesses         businesses @relation(fields: [business_id], references: [id], onDelete: Cascade)
+
+  @@unique([business_id, date])
+  @@index([business_id])
+  @@index([date])
+}
+
+model business_analytics_events {
+  id              String             @id
+  business_id     String
+  event_type      AnalyticsEventType
+  user_id         String?
+  session_id      String?            @db.VarChar(100)
+  referral_source String?            @db.VarChar(50)
+  search_term     String?            @db.VarChar(200)
+  ip_address_hash String?            @db.VarChar(100)
+  user_agent      String?            @db.VarChar(500)
+  metadata        Json?
+  event_date      DateTime           @default(now())
+  businesses      businesses         @relation(fields: [business_id], references: [id], onDelete: Cascade)
+  users           users?             @relation(fields: [user_id], references: [id])
+
+  @@index([business_id, event_date])
+  @@index([business_id, event_type])
+  @@index([event_date])
+  @@index([user_id])
+}
+
+model business_claim_requests {
+  id                                                String                  @id
+  business_id                                       String
+  user_id                                           String
+  verification_method                               VerificationMethod
+  verification_status                               ClaimVerificationStatus @default(PENDING)
+  claim_status                                      ClaimStatus             @default(PENDING)
+  verification_code                                 String?
+  verification_attempts                             Int                     @default(0)
+  verification_expires_at                           DateTime?
+  verification_token                                String?
+  token_expires_at                                  DateTime?
+  document_type                                     String?                 @db.VarChar(50)
+  document_urls                                     String[]
+  google_business_id                                String?
+  google_access_token                               String?
+  moderator_id                                      String?
+  moderator_notes                                   String?
+  decision_at                                       DateTime?
+  rejection_reason                                  String?                 @db.VarChar(500)
+  appealed_at                                       DateTime?
+  appeal_reason                                     String?
+  ip_address                                        String?                 @db.VarChar(45)
+  user_agent                                        String?                 @db.VarChar(500)
+  created_at                                        DateTime                @default(now())
+  updated_at                                        DateTime
+  businesses                                        businesses              @relation(fields: [business_id], references: [id], onDelete: Cascade)
+  users_business_claim_requests_moderator_idTousers users?                  @relation("business_claim_requests_moderator_idTousers", fields: [moderator_id], references: [id])
+  users_business_claim_requests_user_idTousers      users                   @relation("business_claim_requests_user_idTousers", fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([business_id, user_id])
+  @@index([business_id])
+  @@index([claim_status])
+  @@index([created_at])
+  @@index([user_id])
+  @@index([verification_status])
+}
+
+model business_follows {
+  id          String     @id
+  user_id     String
+  business_id String
+  created_at  DateTime   @default(now())
+  businesses  businesses @relation(fields: [business_id], references: [id], onDelete: Cascade)
+  users       users      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, business_id])
+  @@index([business_id])
+  @@index([user_id])
+}
+
+model business_owner_staff {
+  id                                         String     @id
+  business_id                                String
+  user_id                                    String
+  role                                       String     @db.VarChar(50)
+  permissions                                String[]
+  added_by                                   String
+  created_at                                 DateTime   @default(now())
+  updated_at                                 DateTime
+  users_business_owner_staff_added_byTousers users      @relation("business_owner_staff_added_byTousers", fields: [added_by], references: [id], onDelete: Cascade)
+  businesses                                 businesses @relation(fields: [business_id], references: [id], onDelete: Cascade)
+  users_business_owner_staff_user_idTousers  users      @relation("business_owner_staff_user_idTousers", fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([business_id, user_id])
+  @@index([business_id])
+  @@index([user_id])
+}
+
+model businesses {
+  id                        String                      @id
+  name                      String                      @db.VarChar(100)
+  slug                      String                      @unique
+  description               Json
+  category_primary_id       String
+  categories_secondary      String[]
+  address                   Json
+  phone                     String
+  email                     String?
+  website                   String?
+  secondary_phone           String?
+  operating_hours           Json?
+  logo                      String?
+  cover_photo               String?
+  gallery                   Json?
+  social_links              Json?
+  languages_spoken          String[]                    @default([])
+  certifications            String[]                    @default([])
+  payment_methods           String[]                    @default([])
+  accessibility_features    String[]                    @default([])
+  price_range               PriceRange?
+  parking_information       String?
+  year_established          Int?
+  status                    BusinessStatus              @default(PENDING)
+  claimed                   Boolean                     @default(false)
+  claimed_by                String?
+  verified_at               DateTime?
+  created_at                DateTime                    @default(now())
+  updated_at                DateTime
+  display_order             Int                         @default(0)
+  featured                  Boolean                     @default(false)
+  timezone                  String                      @default("Australia/Sydney") @db.VarChar(50)
+  detailed_description      Json?
+  menu_pdf_url              String?                     @db.VarChar(500)
+  business_analytics_daily  business_analytics_daily[]
+  business_analytics_events business_analytics_events[]
+  business_claim_requests   business_claim_requests[]
+  business_follows          business_follows[]
+  business_owner_staff      business_owner_staff[]
+  categories                categories                  @relation(fields: [category_primary_id], references: [id])
+  users                     users?                      @relation(fields: [claimed_by], references: [id])
+  conversations             conversations[]
+  deals                     deals[]
+  events                    events[]
+  quick_reply_templates     quick_reply_templates[]
+  reviews                   reviews[]
+  saved_businesses          saved_businesses[]
+
+  @@index([category_primary_id])
+  @@index([claimed])
+  @@index([created_at(sort: Desc)])
+  @@index([featured, display_order])
+  @@index([status, created_at])
+}
+
+model categories {
+  id               String       @id
+  type             CategoryType
+  name             Json
+  slug             String
+  icon             String       @default("default")
+  parent_id        String?
+  display_order    Int          @default(0)
+  active           Boolean      @default(true)
+  created_at       DateTime     @default(now())
+  updated_at       DateTime
+  businesses       businesses[]
+  categories       categories?  @relation("categoriesTocategories", fields: [parent_id], references: [id])
+  other_categories categories[] @relation("categoriesTocategories")
+  events           events[]
+
+  @@unique([type, slug])
+  @@index([type, active])
+}
+
+model deals {
+  id             String       @id @default(uuid())
+  business_id    String
+  title          String       @db.VarChar(100)
+  description    String       @db.VarChar(500)
+  price          Decimal?     @db.Decimal(10, 2)
+  original_price Decimal?     @db.Decimal(10, 2)
+  discount_type  DiscountType?
+  discount_value Decimal?     @db.Decimal(10, 2)
+  duration       String?      @db.VarChar(100)
+  voucher_code   String?      @db.VarChar(50)
+  image          String?      @db.VarChar(500)
+  terms          String?      @db.VarChar(500)
+  valid_from     DateTime
+  valid_until    DateTime
+  featured       Boolean      @default(false)
+  status         DealStatus   @default(ACTIVE)
+  views          Int          @default(0)
+  created_at     DateTime     @default(now())
+  updated_at     DateTime     @updatedAt
+
+  businesses     businesses   @relation(fields: [business_id], references: [id], onDelete: Cascade)
+
+  @@index([business_id])
+  @@index([status, valid_until])
+  @@index([featured, status])
+}
+
+model conversations {
+  id                    String             @id
+  business_id           String
+  user_id               String
+  subject               String             @db.VarChar(200)
+  subject_category      SubjectCategory
+  status                ConversationStatus @default(ACTIVE)
+  last_message_at       DateTime?
+  unread_count_business Int                @default(0)
+  unread_count_user     Int                @default(0)
+  created_at            DateTime           @default(now())
+  updated_at            DateTime
+  businesses            businesses         @relation(fields: [business_id], references: [id], onDelete: Cascade)
+  users                 users              @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  messages              messages[]
+
+  @@unique([business_id, user_id])
+  @@index([business_id])
+  @@index([last_message_at])
+  @@index([status])
+  @@index([user_id])
+}
+
+model email_templates {
+  id           String   @id
+  template_key String   @unique
+  name         String
+  description  String
+  subject      Json
+  body_html    Json
+  body_text    Json
+  variables    String[]
+  active       Boolean  @default(true)
+  created_at   DateTime @default(now())
+  updated_at   DateTime
+}
+
+model event_rsvps {
+  id          String     @id
+  event_id    String
+  user_id     String
+  status      RSVPStatus
+  guest_count Int        @default(1)
+  notes       String?    @db.VarChar(200)
+  rsvp_date   DateTime   @default(now())
+  created_at  DateTime   @default(now())
+  updated_at  DateTime
+  events      events     @relation(fields: [event_id], references: [id], onDelete: Cascade)
+  users       users      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([event_id, user_id])
+  @@index([event_id])
+  @@index([event_id, status])
+  @@index([user_id])
+}
+
+model events {
+  id                 String        @id
+  title              String        @db.VarChar(100)
+  description        String
+  category_id        String
+  start_time         DateTime
+  end_time           DateTime
+  timezone           String        @default("Australia/Sydney") @db.VarChar(50)
+  location_type      LocationType
+  venue              Json?
+  online_url         String?       @db.VarChar(500)
+  linked_business_id String?
+  image_url          String?       @db.VarChar(500)
+  ticket_url         String?       @db.VarChar(500)
+  cost               String?       @db.VarChar(100)
+  capacity           Int?
+  age_restriction    String?       @db.VarChar(20)
+  accessibility      String[]      @default([])
+  recurrence         Json?
+  created_by_id      String
+  status             EventStatus   @default(PENDING)
+  slug               String?       @db.VarChar(150)
+  created_at         DateTime      @default(now())
+  updated_at         DateTime
+  event_rsvps        event_rsvps[]
+  categories         categories    @relation(fields: [category_id], references: [id])
+  users              users         @relation(fields: [created_by_id], references: [id], onDelete: Cascade)
+  businesses         businesses?   @relation(fields: [linked_business_id], references: [id])
+
+  @@index([category_id])
+  @@index([created_by_id])
+  @@index([linked_business_id])
+  @@index([location_type, start_time])
+  @@index([slug])
+  @@index([start_time])
+  @@index([status, start_time])
+}
+
+model message_attachments {
+  id         String   @id
+  message_id String
+  url        String   @db.VarChar(500)
+  alt_text   String?  @db.VarChar(200)
+  size_bytes Int
+  mime_type  String   @db.VarChar(50)
+  created_at DateTime @default(now())
+  messages   messages @relation(fields: [message_id], references: [id], onDelete: Cascade)
+
+  @@index([message_id])
+}
+
+model messages {
+  id                  String                @id
+  conversation_id     String
+  sender_type         SenderType
+  sender_id           String
+  content             String
+  read_at             DateTime?
+  deleted_at          DateTime?
+  created_at          DateTime              @default(now())
+  message_attachments message_attachments[]
+  conversations       conversations         @relation(fields: [conversation_id], references: [id], onDelete: Cascade)
+
+  @@index([conversation_id])
+  @@index([created_at])
+  @@index([sender_id])
+}
+
+model moderation_reports {
+  id                                           String            @id
+  reporter_id                                  String
+  content_type                                 ContentType
+  content_id                                   String
+  reason                                       ReportReason
+  details                                      String?           @db.VarChar(500)
+  status                                       ModerationStatus  @default(PENDING)
+  moderator_id                                 String?
+  moderator_notes                              String?
+  action_taken                                 ModerationAction?
+  created_at                                   DateTime          @default(now())
+  reviewed_at                                  DateTime?
+  reviews                                      reviews           @relation(fields: [content_id], references: [id], onDelete: Cascade)
+  users_moderation_reports_moderator_idTousers users?            @relation("moderation_reports_moderator_idTousers", fields: [moderator_id], references: [id])
+  users_moderation_reports_reporter_idTousers  users             @relation("moderation_reports_reporter_idTousers", fields: [reporter_id], references: [id], onDelete: Cascade)
+
+  @@index([content_type, content_id])
+  @@index([moderator_id])
+  @@index([reporter_id])
+  @@index([status])
+}
+
+model quick_reply_templates {
+  id          String     @id
+  business_id String
+  name        String     @db.VarChar(50)
+  content     String
+  order       Int        @default(0)
+  created_at  DateTime   @default(now())
+  updated_at  DateTime
+  businesses  businesses @relation(fields: [business_id], references: [id], onDelete: Cascade)
+
+  @@index([business_id])
+}
+
+model review_helpful {
+  id         String   @id
+  review_id  String
+  user_id    String
+  created_at DateTime @default(now())
+  reviews    reviews  @relation(fields: [review_id], references: [id], onDelete: Cascade)
+  users      users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([review_id, user_id])
+  @@index([review_id])
+  @@index([user_id])
+}
+
+model review_photos {
+  id         String   @id
+  review_id  String
+  url        String   @db.VarChar(500)
+  alt_text   String   @db.VarChar(200)
+  order      Int      @default(0)
+  created_at DateTime @default(now())
+  reviews    reviews  @relation(fields: [review_id], references: [id], onDelete: Cascade)
+
+  @@index([review_id])
+}
+
+model reviews {
+  id                   String               @id
+  business_id          String
+  user_id              String
+  rating               Int                  @db.SmallInt
+  title                String?              @db.VarChar(100)
+  content              String
+  language             String               @default("en") @db.VarChar(10)
+  helpful_count        Int                  @default(0)
+  status               ReviewStatus         @default(PENDING)
+  moderation_notes     String?
+  business_response    String?              @db.VarChar(500)
+  business_response_at DateTime?
+  created_at           DateTime             @default(now())
+  updated_at           DateTime
+  published_at         DateTime?
+  moderation_reports   moderation_reports[]
+  review_helpful       review_helpful[]
+  review_photos        review_photos[]
+  businesses           businesses           @relation(fields: [business_id], references: [id], onDelete: Cascade)
+  users                users                @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, business_id])
+  @@index([business_id])
+  @@index([created_at])
+  @@index([helpful_count])
+  @@index([status])
+  @@index([user_id])
+}
+
+model saved_businesses {
+  id          String       @id
+  user_id     String
+  business_id String
+  list_id     String?
+  notes       String?      @db.VarChar(500)
+  created_at  DateTime     @default(now())
+  businesses  businesses   @relation(fields: [business_id], references: [id], onDelete: Cascade)
+  saved_lists saved_lists? @relation(fields: [list_id], references: [id])
+  users       users        @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, business_id])
+  @@index([business_id])
+  @@index([list_id])
+  @@index([user_id])
+}
+
+model saved_lists {
+  id               String             @id
+  user_id          String
+  name             String             @db.VarChar(50)
+  is_default       Boolean            @default(false)
+  created_at       DateTime           @default(now())
+  updated_at       DateTime
+  saved_businesses saved_businesses[]
+  users            users              @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@index([user_id, is_default])
+}
+
+model system_settings {
+  key         String   @id
+  value       Json
+  description String
+  updated_by  String?
+  updated_at  DateTime
+}
+
+model user_sessions {
+  id             String   @id
+  user_id        String
+  token_hash     String   @unique
+  device_info    Json
+  ip_address     String
+  location       String?
+  is_current     Boolean  @default(false)
+  last_active_at DateTime
+  expires_at     DateTime
+  created_at     DateTime @default(now())
+  users          users    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([expires_at])
+  @@index([user_id])
+}
+
+model users {
+  id                                                                  String                      @id
+  email                                                               String                      @unique
+  password_hash                                                       String
+  display_name                                                        String
+  profile_photo                                                       String?
+  language_preference                                                 String                      @default("en")
+  suburb                                                              String?
+  bio                                                                 String?                     @db.VarChar(500)
+  interests                                                           String[]
+  notification_preferences                                            Json?
+  role                                                                UserRole                    @default(COMMUNITY)
+  status                                                              UserStatus                  @default(PENDING)
+  email_verified                                                      Boolean                     @default(false)
+  pending_email                                                       String?
+  deletion_requested_at                                               DateTime?
+  created_at                                                          DateTime                    @default(now())
+  updated_at                                                          DateTime
+  last_login                                                          DateTime?
+  appeals_appeals_reviewer_idTousers                                  appeals[]                   @relation("appeals_reviewer_idTousers")
+  appeals_appeals_user_idTousers                                      appeals[]                   @relation("appeals_user_idTousers")
+  audit_logs                                                          audit_logs[]
+  business_analytics_events                                           business_analytics_events[]
+  business_claim_requests_business_claim_requests_moderator_idTousers business_claim_requests[]   @relation("business_claim_requests_moderator_idTousers")
+  business_claim_requests_business_claim_requests_user_idTousers      business_claim_requests[]   @relation("business_claim_requests_user_idTousers")
+  business_follows                                                    business_follows[]
+  business_owner_staff_business_owner_staff_added_byTousers           business_owner_staff[]      @relation("business_owner_staff_added_byTousers")
+  business_owner_staff_business_owner_staff_user_idTousers            business_owner_staff[]      @relation("business_owner_staff_user_idTousers")
+  businesses                                                          businesses[]
+  conversations                                                       conversations[]
+  event_rsvps                                                         event_rsvps[]
+  events                                                              events[]
+  moderation_reports_moderation_reports_moderator_idTousers           moderation_reports[]        @relation("moderation_reports_moderator_idTousers")
+  moderation_reports_moderation_reports_reporter_idTousers            moderation_reports[]        @relation("moderation_reports_reporter_idTousers")
+  review_helpful                                                      review_helpful[]
+  reviews                                                             reviews[]
+  saved_businesses                                                    saved_businesses[]
+  saved_lists                                                         saved_lists[]
+  user_sessions                                                       user_sessions[]
+}
+
+enum ActorRole {
+  USER
+  BUSINESS_OWNER
+  MODERATOR
+  ADMIN
+  SYSTEM
+}
+
+enum AnalyticsEventType {
+  PROFILE_VIEW
+  SEARCH_APPEARANCE
+  WEBSITE_CLICK
+  PHONE_CLICK
+  DIRECTIONS_CLICK
+  PHOTO_VIEW
+  SAVE
+  UNSAVE
+  FOLLOW
+  UNFOLLOW
+  REVIEW_CREATED
+  MESSAGE_SENT
+}
+
+enum AppealStatus {
+  PENDING
+  UPHELD
+  REJECTED
+}
+
+enum BusinessStatus {
+  ACTIVE
+  PENDING
+  SUSPENDED
+  DELETED
+}
+
+enum CategoryType {
+  BUSINESS
+  EVENT
+  DEAL
+  NOTICE
+  GROUP
+}
+
+enum ClaimStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  APPEALED
+}
+
+enum ClaimVerificationStatus {
+  PENDING
+  VERIFIED
+  FAILED
+  EXPIRED
+}
+
+enum ContentType {
+  REVIEW
+  NOTICE
+  MESSAGE
+  BUSINESS
+  EVENT
+}
+
+enum DealStatus {
+  ACTIVE
+  EXPIRED
+  CANCELLED
+}
+
+enum DiscountType {
+  PERCENTAGE
+  FIXED
+  BOGO
+  FREE_ITEM
+}
+
+enum ConversationStatus {
+  ACTIVE
+  ARCHIVED
+  BLOCKED
+}
+
+enum EventStatus {
+  PENDING
+  ACTIVE
+  CANCELLED
+  PAST
+}
+
+enum LocationType {
+  PHYSICAL
+  ONLINE
+  HYBRID
+}
+
+enum ModerationAction {
+  NONE
+  WARNING
+  CONTENT_REMOVED
+  USER_SUSPENDED
+}
+
+enum ModerationStatus {
+  PENDING
+  REVIEWED
+  ACTIONED
+  DISMISSED
+}
+
+enum PriceRange {
+  BUDGET
+  MODERATE
+  PREMIUM
+  LUXURY
+}
+
+enum RSVPStatus {
+  GOING
+  INTERESTED
+  NOT_GOING
+}
+
+enum RecurrenceFrequency {
+  NONE
+  DAILY
+  WEEKLY
+  MONTHLY
+  YEARLY
+}
+
+enum ReportReason {
+  SPAM
+  INAPPROPRIATE
+  FAKE
+  HARASSMENT
+  OTHER
+}
+
+enum ReviewStatus {
+  PENDING
+  PUBLISHED
+  HIDDEN
+  DELETED
+}
+
+enum SenderType {
+  USER
+  BUSINESS
+}
+
+enum SubjectCategory {
+  GENERAL
+  PRODUCT_QUESTION
+  BOOKING
+  FEEDBACK
+  OTHER
+}
 
 enum UserRole {
   COMMUNITY
@@ -24,886 +752,9 @@ enum UserStatus {
   DELETED
 }
 
-enum CategoryType {
-  BUSINESS
-  EVENT
-  DEAL
-  NOTICE
-  GROUP
-}
-
-enum ActorRole {
-  USER
-  BUSINESS_OWNER
-  MODERATOR
-  ADMIN
-  SYSTEM
-}
-
-enum BusinessStatus {
-  ACTIVE
-  PENDING
-  SUSPENDED
-  DELETED
-}
-
-enum PriceRange {
-  BUDGET
-  MODERATE
-  PREMIUM
-  LUXURY
-}
-
-/// Phase 6: Review status enum
-enum ReviewStatus {
-  PENDING
-  PUBLISHED
-  HIDDEN
-  DELETED
-}
-
-/// Phase 6: Content type for moderation
-enum ContentType {
-  REVIEW
-  NOTICE
-  MESSAGE
-  BUSINESS
-  EVENT
-}
-
-/// Phase 6: Moderation report reason
-enum ReportReason {
-  SPAM
-  INAPPROPRIATE
-  FAKE
-  HARASSMENT
-  OTHER
-}
-
-/// Phase 6: Moderation status
-enum ModerationStatus {
-  PENDING
-  REVIEWED
-  ACTIONED
-  DISMISSED
-}
-
-/// Phase 6: Moderation action taken
-enum ModerationAction {
-  NONE
-  WARNING
-  CONTENT_REMOVED
-  USER_SUSPENDED
-}
-
-/// Phase 6: Appeal status
-enum AppealStatus {
-  PENDING
-  UPHELD
-  REJECTED
-}
-
-// ─── Phase 7 Enums ──────────────────────────────────────────
-
-/// Phase 7: Verification method for business claims
 enum VerificationMethod {
   PHONE
   EMAIL
   DOCUMENT
   GOOGLE_BUSINESS
-}
-
-/// Phase 7: Status of claim verification step
-enum ClaimVerificationStatus {
-  PENDING
-  VERIFIED
-  FAILED
-  EXPIRED
-}
-
-/// Phase 7: Overall claim status
-enum ClaimStatus {
-  PENDING
-  APPROVED
-  REJECTED
-  APPEALED
-}
-
-/// Phase 7: Analytics event types
-enum AnalyticsEventType {
-  PROFILE_VIEW
-  SEARCH_APPEARANCE
-  WEBSITE_CLICK
-  PHONE_CLICK
-  DIRECTIONS_CLICK
-  PHOTO_VIEW
-  SAVE
-  UNSAVE
-  FOLLOW
-  UNFOLLOW
-  REVIEW_CREATED
-  MESSAGE_SENT
-}
-
-// ─── Phase 8 Enums ──────────────────────────────────────────
-
-/// Phase 8: Event status for lifecycle management
-enum EventStatus {
-  PENDING // Awaiting moderation
-  ACTIVE // Published and visible
-  CANCELLED // Cancelled by owner
-  PAST // Automatically set after end time
-}
-
-/// Phase 8: Event location type
-enum LocationType {
-  PHYSICAL // In-person event with venue
-  ONLINE // Virtual event with URL
-  HYBRID // Both in-person and online
-}
-
-/// Phase 8: RSVP status options
-enum RSVPStatus {
-  GOING // Confirmed attendance
-  INTERESTED // Might attend
-  NOT_GOING // Declined
-}
-
-/// Phase 8: Recurrence frequency for repeating events
-enum RecurrenceFrequency {
-  NONE // Single occurrence
-  DAILY // Every day
-  WEEKLY // Same day each week
-  MONTHLY // Same date or day each month
-  YEARLY // Annual event
-}
-
-// ─── Phase 9 Enums ──────────────────────────────────────────
-
-/// Phase 9: Subject category for enquiries (Spec §16.1)
-enum SubjectCategory {
-  GENERAL // General Enquiry
-  PRODUCT_QUESTION // Product/Service Question
-  BOOKING // Booking/Reservation
-  FEEDBACK // Feedback
-  OTHER // Other
-}
-
-/// Phase 9: Conversation status (Spec §16.2)
-enum ConversationStatus {
-  ACTIVE // Active conversation
-  ARCHIVED // Archived by user
-  BLOCKED // Blocked by business owner
-}
-
-/// Phase 9: Message sender type (Spec A.5)
-enum SenderType {
-  USER // Community user sending message
-  BUSINESS // Business owner responding
-}
-
-// ─── Models ──────────────────────────────────────────────
-
-/// Spec A.2 - Platform user accounts
-/// Note: `status` defaults to PENDING (not ACTIVE) intentionally -- new users must
-/// verify their email before becoming active. This is a security-driven deviation
-/// from the spec's enumeration order. See Spec Section 4.5 (email verification).
-model User {
-  id                      String     @id @default(uuid())
-  email                   String     @unique
-  passwordHash            String     @map("password_hash")
-  displayName             String     @map("display_name")
-  profilePhoto            String?    @map("profile_photo")
-  languagePreference      String     @default("en") @map("language_preference")
-  suburb                  String?
-  bio                     String?    @db.VarChar(500)
-  interests               String[]
-  notificationPreferences Json?      @map("notification_preferences")
-  role                    UserRole   @default(COMMUNITY)
-  status                  UserStatus @default(PENDING)
-  emailVerified           Boolean    @default(false) @map("email_verified")
-  pendingEmail            String?    @map("pending_email")
-  deletionRequestedAt     DateTime?  @map("deletion_requested_at")
-  createdAt               DateTime   @default(now()) @map("created_at")
-  updatedAt               DateTime   @updatedAt @map("updated_at")
-  lastLogin               DateTime?  @map("last_login")
-
-  sessions        UserSession[]
-  auditLogs       AuditLog[]
-  ownedBusinesses Business[]
-
-  // Phase 6: User Engagement Features
-  savedBusinesses  SavedBusiness[]
-  savedLists       SavedList[]
-  reviews          Review[]
-  reviewsHelpful   ReviewHelpful[]
-  following        BusinessFollow[]
-  reportsSubmitted ModerationReport[] @relation("ReportedBy")
-  reportsModerated ModerationReport[] @relation("ModeratedBy")
-  appealsSubmitted Appeal[]           @relation("AppealedBy")
-  appealsReviewed  Appeal[]           @relation("AppealReviewedBy")
-
-  // Phase 7: Business Owner Features
-  claimRequests     BusinessClaimRequest[]   @relation("ClaimRequests")
-  claimsModeratored BusinessClaimRequest[]   @relation("ClaimModerator")
-  analyticsEvents   BusinessAnalyticsEvent[] @relation("AnalyticsEvents")
-  staffMemberships  BusinessOwnerStaff[]     @relation("StaffMember")
-  staffAdded        BusinessOwnerStaff[]     @relation("StaffAddedBy")
-
-  // Phase 8: Events & Calendar
-  createdEvents Event[]     @relation("CreatedEvents")
-  eventRsvps    EventRSVP[] @relation("EventRSVPs")
-
-  // Phase 9: Messaging System
-  conversations Conversation[] @relation("UserConversations")
-
-  @@map("users")
-}
-
-/// Spec A.14 - Hierarchical taxonomy for businesses, events, deals, etc.
-model Category {
-  id           String       @id @default(uuid())
-  type         CategoryType
-  name         Json // Multilingual: {"en": "Restaurant", "ar": "مطعم"}
-  slug         String
-  icon         String       @default("default")
-  parentId     String?      @map("parent_id")
-  parent       Category?    @relation("CategoryHierarchy", fields: [parentId], references: [id])
-  children     Category[]   @relation("CategoryHierarchy")
-  displayOrder Int          @default(0) @map("display_order")
-  active       Boolean      @default(true)
-  createdAt    DateTime     @default(now()) @map("created_at")
-  updatedAt    DateTime     @updatedAt @map("updated_at")
-
-  businesses Business[] @relation("BusinessPrimaryCategory")
-  events     Event[]
-
-  @@unique([type, slug])
-  @@index([type, active])
-  @@map("categories")
-}
-
-/// Spec A.1 - Business entity for directory
-model Business {
-  id                  String  @id @default(uuid())
-  name                String  @db.VarChar(100)
-  slug                String  @unique
-  description         Json // Multilingual: {"en": "...", "ar": "..."} (short, 500 chars)
-  detailedDescription Json?   @map("detailed_description") // Multilingual: rich text, 2000 chars
-  menuPdfUrl          String? @map("menu_pdf_url") @db.VarChar(500) // Menu/price list PDF
-
-  // Categories
-  categoryPrimaryId   String   @map("category_primary_id")
-  categoryPrimary     Category @relation("BusinessPrimaryCategory", fields: [categoryPrimaryId], references: [id], onDelete: Restrict)
-  categoriesSecondary String[] @map("categories_secondary") // Array of category IDs (max 3)
-
-  // Location (embedded as JSON)
-  address Json // {street, suburb, state, postcode, country, latitude, longitude}
-
-  // Contact
-  phone          String
-  email          String?
-  website        String?
-  secondaryPhone String? @map("secondary_phone")
-
-  // Hours (embedded as JSON)
-  operatingHours Json? @map("operating_hours") // {monday: {open, close, closed, byAppointment}, ...}
-
-  // Media
-  logo       String?
-  coverPhoto String? @map("cover_photo")
-  gallery    Json? // Array of {url, alt, category, order}
-
-  // Social (embedded as JSON)
-  socialLinks Json? @map("social_links") // {facebook, instagram, twitter, tiktok, linkedin, youtube, googleBusiness}
-
-  // Business Info
-  languagesSpoken       String[] @default([]) @map("languages_spoken")
-  certifications        String[] @default([])
-  paymentMethods        String[] @default([]) @map("payment_methods")
-  accessibilityFeatures String[] @default([]) @map("accessibility_features")
-
-  // Optional Fields
-  priceRange         PriceRange? @map("price_range")
-  parkingInformation String?     @map("parking_information")
-  yearEstablished    Int?        @map("year_established")
-
-  // Status & Ownership
-  status        BusinessStatus @default(PENDING)
-  claimed       Boolean        @default(false)
-  claimedBy     String?        @map("claimed_by")
-  claimedByUser User?          @relation(fields: [claimedBy], references: [id], onDelete: SetNull)
-  verifiedAt    DateTime?      @map("verified_at")
-
-  // Phase 5: Search & Discovery Fields
-  timezone     String  @default("Australia/Sydney") @db.VarChar(50)
-  featured     Boolean @default(false)
-  displayOrder Int     @default(0) @map("display_order")
-
-  // Timestamps
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  // Phase 6: User Engagement Features
-  savedBy   SavedBusiness[]
-  reviews   Review[]
-  followers BusinessFollow[]
-
-  // Phase 7: Business Owner Features
-  claimRequests   BusinessClaimRequest[]
-  analyticsEvents BusinessAnalyticsEvent[]
-  analyticsDaily  BusinessAnalyticsDaily[]
-  staff           BusinessOwnerStaff[]
-
-  // Phase 8: Events & Calendar
-  events Event[]
-
-  // Phase 9: Messaging System
-  conversations       Conversation[]
-  quickReplyTemplates QuickReplyTemplate[]
-
-  @@index([status, createdAt])
-  @@index([categoryPrimaryId])
-  @@index([claimed])
-  @@index([featured, displayOrder])
-  @@index([createdAt(sort: Desc)])
-  @@map("businesses")
-}
-
-/// Spec A.17 - Active user sessions for security audit
-model UserSession {
-  id           String   @id @default(uuid())
-  userId       String   @map("user_id")
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tokenHash    String   @unique @map("token_hash")
-  deviceInfo   Json     @map("device_info") // {user_agent, device_type, os, browser}
-  ipAddress    String   @map("ip_address")
-  location     String? // city/country from IP geolocation
-  isCurrent    Boolean  @default(false) @map("is_current")
-  lastActiveAt DateTime @map("last_active_at")
-  expiresAt    DateTime @map("expires_at")
-  createdAt    DateTime @default(now()) @map("created_at")
-
-  @@index([userId])
-  @@index([expiresAt])
-  @@map("user_sessions")
-}
-
-/// Spec A.18 - Immutable audit trail (7-year retention)
-model AuditLog {
-  id            String    @id @default(uuid())
-  actorId       String?   @map("actor_id")
-  actor         User?     @relation(fields: [actorId], references: [id], onDelete: SetNull)
-  actorRole     ActorRole @map("actor_role")
-  action        String // e.g. "review.delete", "user.suspend"
-  targetType    String    @map("target_type") // e.g. "Review", "User"
-  targetId      String    @map("target_id")
-  previousValue Json?     @map("previous_value")
-  newValue      Json?     @map("new_value")
-  reason        String?
-  ipAddress     String    @map("ip_address")
-  userAgent     String    @map("user_agent")
-  createdAt     DateTime  @default(now()) @map("created_at")
-
-  @@index([actorId])
-  @@index([targetType, targetId])
-  @@index([createdAt])
-  @@map("audit_logs")
-}
-
-/// Spec A.19 - Multilingual email templates (runtime-editable)
-model EmailTemplate {
-  id          String   @id @default(uuid())
-  templateKey String   @unique @map("template_key") // e.g. "welcome", "password_reset"
-  name        String
-  description String
-  subject     Json // Multilingual: {"en": "Welcome!", "ar": "..."}
-  bodyHtml    Json     @map("body_html") // Multilingual HTML
-  bodyText    Json     @map("body_text") // Multilingual plain text
-  variables   String[] // ["userName", "verificationLink"]
-  active      Boolean  @default(true)
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-
-  @@map("email_templates")
-}
-
-/// Spec A.24 - Runtime-editable platform settings
-model SystemSetting {
-  key         String   @id
-  value       Json
-  description String
-  updatedBy   String?  @map("updated_by")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-
-  @@map("system_settings")
-}
-
-// ─── Phase 6: User Engagement Features ────────────────────
-
-/// Spec A.16 - User's saved businesses
-model SavedBusiness {
-  id         String   @id @default(uuid())
-  userId     String   @map("user_id")
-  businessId String   @map("business_id")
-  listId     String?  @map("list_id")
-  notes      String?  @db.VarChar(500)
-  createdAt  DateTime @default(now()) @map("created_at")
-
-  user     User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  business Business   @relation(fields: [businessId], references: [id], onDelete: Cascade)
-  list     SavedList? @relation(fields: [listId], references: [id], onDelete: SetNull)
-
-  @@unique([userId, businessId])
-  @@index([userId])
-  @@index([businessId])
-  @@index([listId])
-  @@map("saved_businesses")
-}
-
-/// Spec A.16 - User's custom lists for organizing saved businesses
-model SavedList {
-  id        String   @id @default(uuid())
-  userId    String   @map("user_id")
-  name      String   @db.VarChar(50)
-  isDefault Boolean  @default(false) @map("is_default")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  savedBusinesses SavedBusiness[]
-
-  @@index([userId])
-  @@index([userId, isDefault])
-  @@map("saved_lists")
-}
-
-/// Spec A.4 - Business reviews with ratings and photos
-model Review {
-  id                 String       @id @default(uuid())
-  businessId         String       @map("business_id")
-  userId             String       @map("user_id")
-  rating             Int          @db.SmallInt // 1-5
-  title              String?      @db.VarChar(100)
-  content            String       @db.Text // 50-1000 chars (validated in code)
-  language           String       @default("en") @db.VarChar(10) // ISO 639-1
-  helpfulCount       Int          @default(0) @map("helpful_count")
-  status             ReviewStatus @default(PENDING)
-  moderationNotes    String?      @map("moderation_notes") @db.Text
-  businessResponse   String?      @map("business_response") @db.VarChar(500)
-  businessResponseAt DateTime?    @map("business_response_at")
-  createdAt          DateTime     @default(now()) @map("created_at")
-  updatedAt          DateTime     @updatedAt @map("updated_at")
-  publishedAt        DateTime?    @map("published_at")
-
-  business Business           @relation(fields: [businessId], references: [id], onDelete: Cascade)
-  user     User               @relation(fields: [userId], references: [id], onDelete: Cascade)
-  photos   ReviewPhoto[]
-  helpful  ReviewHelpful[]
-  reports  ModerationReport[]
-
-  @@unique([userId, businessId])
-  @@index([businessId])
-  @@index([userId])
-  @@index([status])
-  @@index([createdAt])
-  @@index([helpfulCount])
-  @@map("reviews")
-}
-
-/// Spec A.4 - Photos attached to reviews
-model ReviewPhoto {
-  id        String   @id @default(uuid())
-  reviewId  String   @map("review_id")
-  url       String   @db.VarChar(500)
-  altText   String   @map("alt_text") @db.VarChar(200)
-  order     Int      @default(0)
-  createdAt DateTime @default(now()) @map("created_at")
-
-  review Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
-
-  @@index([reviewId])
-  @@map("review_photos")
-}
-
-/// Spec A.4 - Track helpful votes on reviews
-model ReviewHelpful {
-  id        String   @id @default(uuid())
-  reviewId  String   @map("review_id")
-  userId    String   @map("user_id")
-  createdAt DateTime @default(now()) @map("created_at")
-
-  review Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([reviewId, userId])
-  @@index([reviewId])
-  @@index([userId])
-  @@map("review_helpful")
-}
-
-/// Spec A.23 - Users following businesses
-model BusinessFollow {
-  id         String   @id @default(uuid())
-  userId     String   @map("user_id")
-  businessId String   @map("business_id")
-  createdAt  DateTime @default(now()) @map("created_at")
-
-  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, businessId])
-  @@index([userId])
-  @@index([businessId])
-  @@map("business_follows")
-}
-
-/// Spec A.22 - Content moderation reports
-model ModerationReport {
-  id             String            @id @default(uuid())
-  reporterId     String            @map("reporter_id")
-  contentType    ContentType       @map("content_type")
-  contentId      String            @map("content_id")
-  reason         ReportReason
-  details        String?           @db.VarChar(500)
-  status         ModerationStatus  @default(PENDING)
-  moderatorId    String?           @map("moderator_id")
-  moderatorNotes String?           @map("moderator_notes") @db.Text
-  actionTaken    ModerationAction? @map("action_taken")
-  createdAt      DateTime          @default(now()) @map("created_at")
-  reviewedAt     DateTime?         @map("reviewed_at")
-
-  reporter  User    @relation("ReportedBy", fields: [reporterId], references: [id], onDelete: Cascade)
-  moderator User?   @relation("ModeratedBy", fields: [moderatorId], references: [id], onDelete: SetNull)
-  review    Review? @relation(fields: [contentId], references: [id], onDelete: Cascade)
-
-  @@index([status])
-  @@index([contentType, contentId])
-  @@index([reporterId])
-  @@index([moderatorId])
-  @@map("moderation_reports")
-}
-
-/// Spec A.22 - Appeals for moderation decisions
-model Appeal {
-  id                 String       @id @default(uuid())
-  userId             String       @map("user_id")
-  contentType        String       @map("content_type") @db.VarChar(50)
-  contentId          String       @map("content_id")
-  originalAction     String       @map("original_action") @db.VarChar(100)
-  reason             String       @db.Text // max 1000 chars
-  supportingEvidence String[]     @map("supporting_evidence") // Array of file URLs
-  status             AppealStatus @default(PENDING)
-  reviewerId         String?      @map("reviewer_id")
-  reviewerNotes      String?      @map("reviewer_notes") @db.Text
-  createdAt          DateTime     @default(now()) @map("created_at")
-  reviewedAt         DateTime?    @map("reviewed_at")
-
-  user     User  @relation("AppealedBy", fields: [userId], references: [id], onDelete: Cascade)
-  reviewer User? @relation("AppealReviewedBy", fields: [reviewerId], references: [id], onDelete: SetNull)
-
-  @@index([userId])
-  @@index([status])
-  @@index([reviewerId])
-  @@map("appeals")
-}
-
-// ─── Phase 7: Business Owner Features ────────────────────────
-
-/// Spec §13.1 - Business claim requests and verification tracking
-model BusinessClaimRequest {
-  id                 String                  @id @default(uuid())
-  businessId         String                  @map("business_id")
-  userId             String                  @map("user_id")
-  verificationMethod VerificationMethod      @map("verification_method")
-  verificationStatus ClaimVerificationStatus @default(PENDING) @map("verification_status")
-  claimStatus        ClaimStatus             @default(PENDING) @map("claim_status")
-
-  // Phone verification
-  verificationCode      String?   @map("verification_code") // bcrypt hashed PIN
-  verificationAttempts  Int       @default(0) @map("verification_attempts")
-  verificationExpiresAt DateTime? @map("verification_expires_at")
-
-  // Email verification
-  verificationToken String?   @map("verification_token") // JWT token
-  tokenExpiresAt    DateTime? @map("token_expires_at")
-
-  // Document verification
-  documentType String?  @map("document_type") @db.VarChar(50) // 'abn' | 'utility_bill' | 'business_registration'
-  documentUrls String[] @map("document_urls")
-
-  // Google Business verification
-  googleBusinessId  String? @map("google_business_id")
-  googleAccessToken String? @map("google_access_token") // Encrypted
-
-  // Moderation
-  moderatorId     String?   @map("moderator_id")
-  moderatorNotes  String?   @map("moderator_notes") @db.Text
-  decisionAt      DateTime? @map("decision_at")
-  rejectionReason String?   @map("rejection_reason") @db.VarChar(500)
-
-  // Appeal tracking
-  appealedAt   DateTime? @map("appealed_at")
-  appealReason String?   @map("appeal_reason") @db.Text
-
-  // Audit fields
-  ipAddress String?  @map("ip_address") @db.VarChar(45)
-  userAgent String?  @map("user_agent") @db.VarChar(500)
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  // Relations
-  business  Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
-  user      User     @relation("ClaimRequests", fields: [userId], references: [id], onDelete: Cascade)
-  moderator User?    @relation("ClaimModerator", fields: [moderatorId], references: [id], onDelete: SetNull)
-
-  @@unique([businessId, userId])
-  @@index([businessId])
-  @@index([userId])
-  @@index([claimStatus])
-  @@index([verificationStatus])
-  @@index([createdAt])
-  @@map("business_claim_requests")
-}
-
-/// Spec §13.4 - Analytics event tracking for business performance metrics
-model BusinessAnalyticsEvent {
-  id             String             @id @default(uuid())
-  businessId     String             @map("business_id")
-  eventType      AnalyticsEventType @map("event_type")
-  userId         String?            @map("user_id") // null for anonymous
-  sessionId      String?            @map("session_id") @db.VarChar(100) // for unique view tracking
-  referralSource String?            @map("referral_source") @db.VarChar(50) // 'search' | 'homepage' | 'saved_list' | 'direct' | 'external'
-  searchTerm     String?            @map("search_term") @db.VarChar(200) // if from search
-  ipAddressHash  String?            @map("ip_address_hash") @db.VarChar(100) // bcrypt hashed, anonymized after 90 days
-  userAgent      String?            @map("user_agent") @db.VarChar(500)
-  metadata       Json? // Additional event-specific data
-  eventDate      DateTime           @default(now()) @map("event_date")
-
-  // Relations
-  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
-  user     User?    @relation("AnalyticsEvents", fields: [userId], references: [id], onDelete: SetNull)
-
-  @@index([businessId, eventDate])
-  @@index([businessId, eventType])
-  @@index([eventDate])
-  @@index([userId])
-  @@map("business_analytics_events")
-}
-
-/// Spec §13.4 - Aggregated daily analytics for faster queries
-model BusinessAnalyticsDaily {
-  id                String   @id @default(uuid())
-  businessId        String   @map("business_id")
-  date              DateTime @db.Date
-  profileViews      Int      @default(0) @map("profile_views")
-  uniqueViews       Int      @default(0) @map("unique_views")
-  searchAppearances Int      @default(0) @map("search_appearances")
-  websiteClicks     Int      @default(0) @map("website_clicks")
-  phoneClicks       Int      @default(0) @map("phone_clicks")
-  directionsClicks  Int      @default(0) @map("directions_clicks")
-  photoViews        Int      @default(0) @map("photo_views")
-  saves             Int      @default(0)
-  follows           Int      @default(0)
-  reviews           Int      @default(0)
-  messages          Int      @default(0)
-
-  // Relations
-  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
-
-  @@unique([businessId, date])
-  @@index([businessId])
-  @@index([date])
-  @@map("business_analytics_daily")
-}
-
-/// Spec §13 - Staff accounts for business owners (future feature)
-model BusinessOwnerStaff {
-  id          String   @id @default(uuid())
-  businessId  String   @map("business_id")
-  userId      String   @map("user_id")
-  role        String   @db.VarChar(50) // 'manager' | 'staff' | 'viewer'
-  permissions String[] // Array of permission flags
-  addedBy     String   @map("added_by")
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-
-  // Relations
-  business    Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
-  user        User     @relation("StaffMember", fields: [userId], references: [id], onDelete: Cascade)
-  addedByUser User     @relation("StaffAddedBy", fields: [addedBy], references: [id], onDelete: Cascade)
-
-  @@unique([businessId, userId])
-  @@index([businessId])
-  @@index([userId])
-  @@map("business_owner_staff")
-}
-
-// ─── Phase 8: Events & Calendar System ────────────────────────
-
-/// Spec A.3 - Community events with calendar support
-model Event {
-  id          String   @id @default(uuid())
-  title       String   @db.VarChar(100)
-  description String   @db.Text // 50-5000 chars (validated in code)
-  categoryId  String   @map("category_id")
-  startTime   DateTime @map("start_time")
-  endTime     DateTime @map("end_time")
-  timezone    String   @default("Australia/Sydney") @db.VarChar(50)
-
-  // Location
-  locationType LocationType @map("location_type")
-  venue        Json? // {street, suburb, state, postcode, latitude, longitude}
-  onlineUrl    String?      @map("online_url") @db.VarChar(500)
-
-  // Business link (optional - for business-hosted events)
-  linkedBusinessId String?   @map("linked_business_id")
-  linkedBusiness   Business? @relation(fields: [linkedBusinessId], references: [id], onDelete: SetNull)
-
-  // Media
-  imageUrl String? @map("image_url") @db.VarChar(500)
-
-  // Event details
-  ticketUrl      String?  @map("ticket_url") @db.VarChar(500)
-  cost           String?  @db.VarChar(100) // "Free", "$50", "Variable", etc.
-  capacity       Int? // Max attendees (null = unlimited)
-  ageRestriction String?  @map("age_restriction") @db.VarChar(20) // "18+", "All ages"
-  accessibility  String[] @default([]) // ["wheelchair_access", "hearing_loop"]
-
-  // Recurrence (optional - for repeating events)
-  recurrence Json? // RecurrenceRule: {frequency, interval, daysOfWeek, endDate, exceptions}
-
-  // Ownership
-  createdById String @map("created_by_id")
-  createdBy   User   @relation("CreatedEvents", fields: [createdById], references: [id], onDelete: Cascade)
-
-  // Status
-  status EventStatus @default(PENDING)
-
-  // SEO
-  slug String? @db.VarChar(150)
-
-  // Timestamps
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  // Relations
-  category Category    @relation(fields: [categoryId], references: [id], onDelete: Restrict)
-  rsvps    EventRSVP[]
-
-  @@index([status, startTime])
-  @@index([locationType, startTime])
-  @@index([linkedBusinessId])
-  @@index([createdById])
-  @@index([categoryId])
-  @@index([startTime])
-  @@index([slug])
-  @@map("events")
-}
-
-/// Spec §15.4 - RSVP tracking for event attendance
-model EventRSVP {
-  id         String     @id @default(uuid())
-  eventId    String     @map("event_id")
-  userId     String     @map("user_id")
-  status     RSVPStatus
-  guestCount Int        @default(1) @map("guest_count") // Including self
-  notes      String?    @db.VarChar(200) // Optional attendee notes
-  rsvpDate   DateTime   @default(now()) @map("rsvp_date")
-  createdAt  DateTime   @default(now()) @map("created_at")
-  updatedAt  DateTime   @updatedAt @map("updated_at")
-
-  // Relations
-  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  user  User  @relation("EventRSVPs", fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([eventId, userId])
-  @@index([eventId])
-  @@index([userId])
-  @@index([eventId, status])
-  @@map("event_rsvps")
-}
-
-// ─── Phase 9: Messaging System ────────────────────────────────
-
-/// Spec A.5 - User-to-business conversations
-model Conversation {
-  id                  String             @id @default(uuid())
-  businessId          String             @map("business_id")
-  userId              String             @map("user_id")
-  subject             String             @db.VarChar(200)
-  subjectCategory     SubjectCategory    @map("subject_category")
-  status              ConversationStatus @default(ACTIVE)
-  lastMessageAt       DateTime?          @map("last_message_at")
-  unreadCountBusiness Int                @default(0) @map("unread_count_business")
-  unreadCountUser     Int                @default(0) @map("unread_count_user")
-  createdAt           DateTime           @default(now()) @map("created_at")
-  updatedAt           DateTime           @updatedAt @map("updated_at")
-
-  // Relations
-  business Business  @relation(fields: [businessId], references: [id], onDelete: Cascade)
-  user     User      @relation("UserConversations", fields: [userId], references: [id], onDelete: Cascade)
-  messages Message[]
-
-  @@unique([businessId, userId])
-  @@index([businessId])
-  @@index([userId])
-  @@index([status])
-  @@index([lastMessageAt])
-  @@map("conversations")
-}
-
-/// Spec A.5 - Individual messages within conversations
-model Message {
-  id             String     @id @default(uuid())
-  conversationId String     @map("conversation_id")
-  senderType     SenderType @map("sender_type")
-  senderId       String     @map("sender_id")
-  content        String     @db.Text // max 1000 chars (validated in code)
-  readAt         DateTime?  @map("read_at")
-  deletedAt      DateTime?  @map("deleted_at") // Soft delete
-  createdAt      DateTime   @default(now()) @map("created_at")
-
-  // Relations
-  conversation Conversation        @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  attachments  MessageAttachment[]
-
-  @@index([conversationId])
-  @@index([senderId])
-  @@index([createdAt])
-  @@map("messages")
-}
-
-/// Spec A.5 - Attachments for messages (images only)
-model MessageAttachment {
-  id        String   @id @default(uuid())
-  messageId String   @map("message_id")
-  url       String   @db.VarChar(500)
-  altText   String?  @map("alt_text") @db.VarChar(200)
-  sizeBytes Int      @map("size_bytes")
-  mimeType  String   @map("mime_type") @db.VarChar(50)
-  createdAt DateTime @default(now()) @map("created_at")
-
-  // Relations
-  message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
-
-  @@index([messageId])
-  @@map("message_attachments")
-}
-
-/// Spec §16.2 - Business quick reply templates
-model QuickReplyTemplate {
-  id         String   @id @default(uuid())
-  businessId String   @map("business_id")
-  name       String   @db.VarChar(50)
-  content    String   @db.Text // max 1000 chars (validated in code)
-  order      Int      @default(0)
-  createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @updatedAt @map("updated_at")
-
-  // Relations
-  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
-
-  @@index([businessId])
-  @@map("quick_reply_templates")
 }

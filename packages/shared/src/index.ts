@@ -223,3 +223,22 @@ export type {
   BusinessInboxFilterInput,
   MessagingStatsQueryInput,
 } from './schemas/messaging-schemas.js';
+
+// Deals (Phase 10)
+export {
+  DISCOUNT_TYPES,
+  DEAL_STATUSES,
+  DEAL_LIMITS,
+  dealCreateSchema,
+  dealUpdateSchema,
+  dealFilterSchema,
+} from './schemas/deal-schemas.js';
+
+export type {
+  DiscountType,
+  DealStatus,
+  DealCreateInput,
+  DealUpdateInput,
+  DealFilterInput,
+  Deal,
+} from './schemas/deal-schemas.js';

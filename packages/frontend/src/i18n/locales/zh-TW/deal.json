@@ -1,0 +1,80 @@
+{
+  "deal": {
+    "title": "促銷與優惠",
+    "description": "特別優惠和折扣",
+    "discountOff": "折扣 {{value}}",
+    "bogo": "買一送一",
+    "freeItem": "免費贈品",
+    "featured": "精選",
+    "endingSoon": "{{days}} 天後結束",
+    "expired": "已過期",
+    "validUntil": "有效期至 {{date}}",
+    "revealCode": "取得優惠碼",
+    "copyCode": "複製代碼",
+    "hasVoucherCode": "可用優惠碼",
+    "activeDeals": "進行中的優惠",
+    "limitReached": "已達到最大優惠數量",
+    "confirmDelete": "您確定要刪除此促銷活動嗎？",
+    "editDeal": "編輯 {{title}}",
+    "deleteDeal": "刪除 {{title}}",
+    "status": {
+      "active": "進行中",
+      "expired": "已過期",
+      "cancelled": "已取消"
+    },
+    "discountType": {
+      "none": "無折扣類型",
+      "percentage": "百分比折扣",
+      "fixed": "固定金額折扣",
+      "bogo": "買一送一",
+      "freeItem": "含免費贈品"
+    },
+    "empty": {
+      "title": "尚無促銷活動",
+      "description": "建立您的第一個促銷活動來吸引更多客戶"
+    },
+    "form": {
+      "basicInfo": "基本資訊",
+      "title": "標題",
+      "description": "描述",
+      "descriptionHint": "最少 {{min}} 個字元，最多 {{max}} 個字元",
+      "duration": "服務時長",
+      "durationPlaceholder": "例如：30分鐘體驗，1小時護理",
+      "pricing": "定價",
+      "promoPrice": "促銷價",
+      "originalPrice": "原價",
+      "discountType": "折扣類型",
+      "discountValue": "折扣值",
+      "validity": "有效期",
+      "validFrom": "開始日期",
+      "validUntil": "結束日期",
+      "additionalDetails": "附加詳情",
+      "voucherCode": "優惠碼",
+      "voucherCodeHint": "可選的客戶兌換代碼",
+      "imageUrl": "圖片連結",
+      "terms": "條款與條件",
+      "termsHint": "適用於此優惠的可選條款",
+      "featured": "標記為精選優惠",
+      "create": "建立促銷",
+      "update": "更新促銷"
+    },
+    "validation": {
+      "titleRequired": "標題為必填項",
+      "titleTooLong": "標題過長",
+      "descriptionRequired": "描述為必填項",
+      "descriptionTooShort": "描述過短",
+      "descriptionTooLong": "描述過長",
+      "invalidPrice": "請輸入有效價格",
+      "priceNegative": "價格不能為負數",
+      "priceMustBeLower": "促銷價必須低於原價",
+      "percentageRange": "百分比必須在 0 到 100 之間",
+      "startDateRequired": "開始日期為必填項",
+      "endDateRequired": "結束日期為必填項",
+      "endAfterStart": "結束日期必須晚於開始日期",
+      "invalidUrl": "請輸入有效的連結"
+    },
+    "error": {
+      "submitFailed": "儲存促銷失敗，請重試。"
+    }
+  }
+}

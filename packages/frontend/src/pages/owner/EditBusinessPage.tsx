@@ -21,7 +21,11 @@ import {
   PhoneIcon,
   GlobeAltIcon,
   CheckCircleIcon,
+  TagIcon,
 } from '@heroicons/react/24/outline';
+import { DealForm, DealList } from '../../components/deals';
+import { dealApi } from '../../services/deal-api';
+import type { Deal, DealCreateInput, DealUpdateInput } from '@community-hub/shared';
 import type { Business as SharedBusiness } from '@community-hub/shared';
 
 // Extended Business type with additional fields that may come from API
@@ -43,13 +47,13 @@ const DAYS_OF_WEEK = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 's
 const PRICE_RANGES = ['BUDGET', 'MODERATE', 'PREMIUM', 'LUXURY'];
 
 const PAYMENT_METHODS = [
-  'CASH', 'CREDIT_CARD', 'DEBIT_CARD', 'EFTPOS', 'PAYPAL',
-  'AFTERPAY', 'APPLE_PAY', 'GOOGLE_PAY', 'BANK_TRANSFER'
+  'CASH', 'CARD', 'EFTPOS', 'PAYPAL',
+  'AFTERPAY', 'APPLE_PAY', 'GOOGLE_PAY'
 ];
 
 const ACCESSIBILITY_FEATURES = [
-  'WHEELCHAIR_ACCESSIBLE', 'ACCESSIBLE_PARKING', 'ACCESSIBLE_BATHROOM',
-  'HEARING_LOOP', 'BRAILLE_SIGNAGE', 'SERVICE_ANIMALS_WELCOME'
+  'WHEELCHAIR_ACCESS', 'ACCESSIBLE_BATHROOM', 'HEARING_LOOP',
+  'RAMP', 'ELEVATOR', 'BRAILLE'
 ];
 
 const LANGUAGES = [
@@ -77,7 +81,16 @@ export function EditBusinessPage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
-  const [activeTab, setActiveTab] = useState<'basic' | 'contact' | 'hours' | 'details'>('basic');
+  const [activeTab, setActiveTab] = useState<'basic' | 'contact' | 'hours' | 'details' | 'promotions'>('basic');
+
+  // Deals state
+  const [deals, setDeals] = useState<Deal[]>([]);
+  const [dealsLoading, setDealsLoading] = useState(false);
+  const [activeDealsCount, setActiveDealsCount] = useState(0);
+  const [maxDeals, setMaxDeals] = useState(5);
+  const [showDealForm, setShowDealForm] = useState(false);
+  const [editingDeal, setEditingDeal] = useState<Deal | null>(null);
+  const [dealFormLoading, setDealFormLoading] = useState(false);
 
   // Quick set hours state
   const [quickSetOpen, setQuickSetOpen] = useState('09:00');
@@ -102,7 +115,9 @@ export function EditBusinessPage() {
     languagesSpoken: [] as string[],
     paymentMethods: [] as string[],
     accessibilityFeatures: [] as string[],
-    operatingHours: {} as Record<string, { open: string; close: string; closed: boolean }>,
+    operatingHours: {} as Record<string, { open: string; close: string; closed: boolean; byAppointment: boolean }>,
+    publicHolidays: { open: '09:00', close: '17:00', closed: true, byAppointment: false },
+    specialNotes: '',
     socialLinks: {
       facebook: '',
       instagram: '',
@@ -115,7 +130,7 @@ export function EditBusinessPage() {
   // Redirect if not authenticated
   useEffect(() => {
     if (!isAuthenticated) {
-      navigate('/login', { state: { from: `/owner/business/${businessId}/edit` } });
+      navigate('/login', { state: { from: `/business/manage/${businessId}/edit` } });
     }
   }, [isAuthenticated, navigate, businessId]);
 
@@ -158,17 +173,42 @@ export function EditBusinessPage() {
           yearEstablished: biz.yearEstablished?.toString() || '',
           parkingInformation: biz.parkingInformation || '',
           languagesSpoken: biz.languagesSpoken || [],
-          paymentMethods: biz.paymentMethods || [],
-          accessibilityFeatures: biz.accessibilityFeatures || [],
+          // Transform old payment method values to new schema values
+          paymentMethods: (biz.paymentMethods || []).map(pm => {
+            const mapping: Record<string, string> = {
+              'CREDIT_CARD': 'CARD',
+              'DEBIT_CARD': 'CARD',
+              'BANK_TRANSFER': 'EFTPOS', // Closest equivalent
+            };
+            return mapping[pm] || pm;
+          }).filter((pm, index, self) => PAYMENT_METHODS.includes(pm) && self.indexOf(pm) === index),
+          // Transform old accessibility values to new schema values
+          accessibilityFeatures: (biz.accessibilityFeatures || []).map(af => {
+            const mapping: Record<string, string> = {
+              'WHEELCHAIR_ACCESSIBLE': 'WHEELCHAIR_ACCESS',
+              'ACCESSIBLE_PARKING': 'WHEELCHAIR_ACCESS', // Closest equivalent
+              'BRAILLE_SIGNAGE': 'BRAILLE',
+              'SERVICE_ANIMALS_WELCOME': 'WHEELCHAIR_ACCESS', // No direct equivalent
+            };
+            return mapping[af] || af;
+          }).filter((af, index, self) => ACCESSIBILITY_FEATURES.includes(af) && self.indexOf(af) === index),
           operatingHours: DAYS_OF_WEEK.reduce((acc, day) => {
             const hours = biz.operatingHours?.[day];
             acc[day] = {
               open: hours?.open || '09:00',
               close: hours?.close || '17:00',
               closed: hours?.closed || false,
+              byAppointment: hours?.byAppointment || false,
             };
             return acc;
-          }, {} as Record<string, { open: string; close: string; closed: boolean }>),
+          }, {} as Record<string, { open: string; close: string; closed: boolean; byAppointment: boolean }>),
+          publicHolidays: {
+            open: biz.operatingHours?.publicHolidays?.open || '09:00',
+            close: biz.operatingHours?.publicHolidays?.close || '17:00',
+            closed: biz.operatingHours?.publicHolidays?.closed ?? true,
+            byAppointment: biz.operatingHours?.publicHolidays?.byAppointment || false,
+          },
+          specialNotes: biz.operatingHours?.specialNotes || '',
           socialLinks: {
             facebook: (biz as Business).socialLinks?.facebook || '',
             instagram: (biz as Business).socialLinks?.instagram || '',
@@ -187,6 +227,71 @@ export function EditBusinessPage() {
     fetchData();
   }, [businessId]);
 
+  // Fetch deals when promotions tab is active
+  useEffect(() => {
+    async function fetchDeals() {
+      if (!businessId || activeTab !== 'promotions') return;
+
+      try {
+        setDealsLoading(true);
+        const response = await dealApi.getBusinessDeals(businessId, { includeExpired: true });
+        setDeals(response.deals);
+        setActiveDealsCount(response.activeCount);
+        setMaxDeals(response.maxDeals);
+      } catch (err) {
+        console.error('Failed to load deals:', err);
+      } finally {
+        setDealsLoading(false);
+      }
+    }
+
+    fetchDeals();
+  }, [businessId, activeTab]);
+
+  // Deal handlers
+  const handleCreateDeal = async (data: DealCreateInput | DealUpdateInput) => {
+    if (!businessId) return;
+
+    setDealFormLoading(true);
+    try {
+      const newDeal = await dealApi.createDeal(businessId, data as DealCreateInput);
+      setDeals(prev => [newDeal, ...prev]);
+      setActiveDealsCount(prev => prev + 1);
+      setShowDealForm(false);
+    } finally {
+      setDealFormLoading(false);
+    }
+  };
+
+  const handleUpdateDeal = async (data: DealCreateInput | DealUpdateInput) => {
+    if (!businessId || !editingDeal) return;
+
+    setDealFormLoading(true);
+    try {
+      const updatedDeal = await dealApi.updateDeal(businessId, editingDeal.id, data as DealUpdateInput);
+      setDeals(prev => prev.map(d => d.id === updatedDeal.id ? updatedDeal : d));
+      setEditingDeal(null);
+    } finally {
+      setDealFormLoading(false);
+    }
+  };
+
+  const handleDeleteDeal = async (dealId: string) => {
+    if (!businessId) return;
+    if (!window.confirm(t('deal.confirmDelete', 'Are you sure you want to delete this promotion?'))) return;
+
+    try {
+      await dealApi.deleteDeal(businessId, dealId);
+      const deletedDeal = deals.find(d => d.id === dealId);
+      setDeals(prev => prev.filter(d => d.id !== dealId));
+      if (deletedDeal?.status === 'ACTIVE') {
+        setActiveDealsCount(prev => prev - 1);
+      }
+    } catch (err) {
+      console.error('Failed to delete deal:', err);
+    }
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -204,13 +309,16 @@ export function EditBusinessPage() {
     setSuccess(false);
   };
 
-  const handleHoursChange = (day: string, field: 'open' | 'close' | 'closed', value: string | boolean) => {
+  const handleHoursChange = (day: string, field: 'open' | 'close' | 'closed' | 'byAppointment', value: string | boolean) => {
     setFormData(prev => ({
       ...prev,
       operatingHours: {
         ...prev.operatingHours,
         [day]: {
-          ...prev.operatingHours[day],
+          open: prev.operatingHours[day]?.open || '09:00',
+          close: prev.operatingHours[day]?.close || '17:00',
+          closed: prev.operatingHours[day]?.closed || false,
+          byAppointment: prev.operatingHours[day]?.byAppointment || false,
           [field]: value,
         },
       },
@@ -236,12 +344,12 @@ export function EditBusinessPage() {
       ...prev,
       operatingHours: DAYS_OF_WEEK.reduce((acc, day) => {
         if (targetDays.includes(day)) {
-          acc[day] = { open: openTime, close: closeTime, closed: false };
+          acc[day] = { open: openTime, close: closeTime, closed: false, byAppointment: false };
         } else {
-          acc[day] = prev.operatingHours[day] || { open: '09:00', close: '17:00', closed: false };
+          acc[day] = prev.operatingHours[day] || { open: '09:00', close: '17:00', closed: false, byAppointment: false };
         }
         return acc;
-      }, {} as Record<string, { open: string; close: string; closed: boolean }>),
+      }, {} as Record<string, { open: string; close: string; closed: boolean; byAppointment: boolean }>),
     }));
     setSuccess(false);
   };
@@ -265,10 +373,27 @@ export function EditBusinessPage() {
       setSaving(true);
       setError(null);
 
+      // Build complete operatingHours structure with all required fields
+      const operatingHours = {
+        ...DAYS_OF_WEEK.reduce((acc, day) => {
+          const hours = formData.operatingHours[day];
+          acc[day] = {
+            open: hours?.open || '09:00',
+            close: hours?.close || '17:00',
+            closed: hours?.closed || false,
+            byAppointment: hours?.byAppointment || false,
+          };
+          return acc;
+        }, {} as Record<string, { open: string; close: string; closed: boolean; byAppointment: boolean }>),
+        publicHolidays: formData.publicHolidays,
+        specialNotes: formData.specialNotes || undefined,
+      };
+
+      // Note: detailedDescription is not in the schema yet
+      // Build update data matching businessUpdateSchema
       const updateData = {
         name: formData.name,
         description: { en: formData.description },
-        detailedDescription: formData.detailedDescription ? { en: formData.detailedDescription } : undefined,
         phone: formData.phone,
         secondaryPhone: formData.secondaryPhone || undefined,
         email: formData.email || undefined,
@@ -286,17 +411,37 @@ export function EditBusinessPage() {
         languagesSpoken: formData.languagesSpoken,
         paymentMethods: formData.paymentMethods,
         accessibilityFeatures: formData.accessibilityFeatures,
-        operatingHours: formData.operatingHours,
-        socialLinks: Object.fromEntries(
-          Object.entries(formData.socialLinks).filter(([_, v]) => v)
-        ),
+        operatingHours,
+        socialLinks: (() => {
+          const links = Object.fromEntries(
+            Object.entries(formData.socialLinks).filter(([_, v]) => v)
+          );
+          return Object.keys(links).length > 0 ? links : undefined;
+        })(),
       };
+
+      // Debug: log update data in development
+      if (import.meta.env.DEV) {
+        console.log('[EditBusiness] Sending update data:', JSON.stringify(updateData, null, 2));
+      }
 
       await businessApi.updateBusiness(businessId, updateData);
       setSuccess(true);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update business');
+      let message = err instanceof Error ? err.message : 'Failed to update business';
+      // If authentication failed, suggest re-logging in
+      if (message.includes('Authentication') || message.includes('Unauthorized')) {
+        setError('Your session has expired. Please refresh the page and log in again.');
+      } else {
+        // Check for validation error details
+        const httpErr = err as { details?: Array<{ field: string; message: string }> };
+        if (httpErr.details && Array.isArray(httpErr.details)) {
+          const validationErrors = httpErr.details.map(d => `${d.field}: ${d.message}`).join(', ');
+          message = `${message} (${validationErrors})`;
+        }
+        setError(message);
+      }
     } finally {
       setSaving(false);
     }
@@ -325,7 +470,7 @@ export function EditBusinessPage() {
             {error || "The business you're looking for doesn't exist or you don't have permission to edit it."}
           </p>
           <Link
-            to="/owner/dashboard"
+            to="/business/dashboard"
             className="inline-flex items-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90"
           >
             Back to Dashboard
@@ -340,6 +485,7 @@ export function EditBusinessPage() {
     { id: 'contact', label: t('editBusiness.tabs.contact', 'Contact & Location'), icon: PhoneIcon },
     { id: 'hours', label: t('editBusiness.tabs.hours', 'Operating Hours'), icon: ClockIcon },
     { id: 'details', label: t('editBusiness.tabs.details', 'Details & Features'), icon: GlobeAltIcon },
+    { id: 'promotions', label: t('editBusiness.tabs.promotions', 'Promotions'), icon: TagIcon },
   ];
 
   return (
@@ -353,7 +499,7 @@ export function EditBusinessPage() {
           {/* Header */}
           <div className="mb-8">
             <Link
-              to="/owner/dashboard"
+              to="/business/dashboard"
               className="inline-flex items-center text-sm text-slate-600 dark:text-slate-400 hover:text-primary mb-4"
             >
               <ArrowLeftIcon className="w-4 h-4 mr-1" />
@@ -902,6 +1048,67 @@ export function EditBusinessPage() {
               </div>
             )}
 
+            {/* Promotions Tab */}
+            {activeTab === 'promotions' && (
+              <div className="space-y-6">
+                <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
+                  <div className="flex items-center justify-between mb-6">
+                    <div>
+                      <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
+                        {t('editBusiness.promotions.title', 'Promotions & Deals')}
+                      </h2>
+                      <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+                        {t('editBusiness.promotions.description', 'Create special offers to attract customers')}
+                      </p>
+                    </div>
+                    {!showDealForm && !editingDeal && activeDealsCount < maxDeals && (
+                      <button
+                        type="button"
+                        onClick={() => setShowDealForm(true)}
+                        className="inline-flex items-center px-4 py-2 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors"
+                      >
+                        <TagIcon className="w-5 h-5 mr-2" />
+                        {t('editBusiness.promotions.addPromotion', 'Add Promotion')}
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Deal Form (Create/Edit) */}
+                  {(showDealForm || editingDeal) && (
+                    <div className="mb-6 pb-6 border-b border-slate-200 dark:border-slate-700">
+                      <h3 className="text-md font-semibold text-slate-900 dark:text-white mb-4">
+                        {editingDeal
+                          ? t('editBusiness.promotions.editPromotion', 'Edit Promotion')
+                          : t('editBusiness.promotions.newPromotion', 'New Promotion')}
+                      </h3>
+                      <DealForm
+                        deal={editingDeal || undefined}
+                        onSubmit={editingDeal ? handleUpdateDeal : handleCreateDeal}
+                        onCancel={() => {
+                          setShowDealForm(false);
+                          setEditingDeal(null);
+                        }}
+                        loading={dealFormLoading}
+                      />
+                    </div>
+                  )}
+
+                  {/* Deals List */}
+                  {!showDealForm && !editingDeal && (
+                    <DealList
+                      deals={deals}
+                      activeCount={activeDealsCount}
+                      maxDeals={maxDeals}
+                      onEdit={(deal) => setEditingDeal(deal)}
+                      onDelete={handleDeleteDeal}
+                      loading={dealsLoading}
+                      showActions={true}
+                    />
+                  )}
+                </div>
+              </div>
+            )}
+
             {/* Submit Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 mt-8 pt-6 border-t border-slate-200 dark:border-slate-700">
               <button
@@ -912,7 +1119,7 @@ export function EditBusinessPage() {
                 {saving ? t('common.saving', 'Saving...') : t('common.saveChanges', 'Save Changes')}
               </button>
               <Link
-                to="/owner/dashboard"
+                to="/business/dashboard"
                 className="flex-1 sm:flex-none inline-flex items-center justify-center px-6 py-3 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-medium rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors"
               >
                 {t('common.cancel', 'Cancel')}

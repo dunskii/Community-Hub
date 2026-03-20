@@ -1,0 +1,80 @@
+{
+  "deal": {
+    "title": "پروموشنز اور آفرز",
+    "description": "خصوصی آفرز اور چھوٹ",
+    "discountOff": "{{value}} کی چھوٹ",
+    "bogo": "1 خریدیں 1 پائیں",
+    "freeItem": "مفت آئٹم",
+    "featured": "نمایاں",
+    "endingSoon": "{{days}} دنوں میں ختم",
+    "expired": "ختم ہو گیا",
+    "validUntil": "{{date}} تک درست",
+    "revealCode": "واؤچر کوڈ حاصل کریں",
+    "copyCode": "کوڈ کاپی کریں",
+    "hasVoucherCode": "واؤچر کوڈ دستیاب ہے",
+    "activeDeals": "فعال آفرز",
+    "limitReached": "زیادہ سے زیادہ آفرز کی حد پوری ہوگئی",
+    "confirmDelete": "کیا آپ واقعی اس پروموشن کو حذف کرنا چاہتے ہیں؟",
+    "editDeal": "{{title}} میں ترمیم کریں",
+    "deleteDeal": "{{title}} حذف کریں",
+    "status": {
+      "active": "فعال",
+      "expired": "ختم شدہ",
+      "cancelled": "منسوخ"
+    },
+    "discountType": {
+      "none": "کوئی چھوٹ کی قسم نہیں",
+      "percentage": "فیصد چھوٹ",
+      "fixed": "مقررہ رقم کی چھوٹ",
+      "bogo": "ایک خریدیں ایک پائیں",
+      "freeItem": "مفت آئٹم شامل"
+    },
+    "empty": {
+      "title": "ابھی کوئی پروموشن نہیں",
+      "description": "مزید گاہکوں کو راغب کرنے کے لیے اپنا پہلا پروموشن بنائیں"
+    },
+    "form": {
+      "basicInfo": "بنیادی معلومات",
+      "title": "عنوان",
+      "description": "تفصیل",
+      "descriptionHint": "کم از کم {{min}} حروف، زیادہ سے زیادہ {{max}} حروف",
+      "duration": "سروس کا دورانیہ",
+      "durationPlaceholder": "مثال: 30 منٹ کا سیشن، 1 گھنٹے کا علاج",
+      "pricing": "قیمت",
+      "promoPrice": "پروموشنل قیمت",
+      "originalPrice": "اصل قیمت",
+      "discountType": "چھوٹ کی قسم",
+      "discountValue": "چھوٹ کی قدر",
+      "validity": "درستگی کی مدت",
+      "validFrom": "شروع کی تاریخ",
+      "validUntil": "اختتام کی تاریخ",
+      "additionalDetails": "اضافی تفصیلات",
+      "voucherCode": "واؤچر کوڈ",
+      "voucherCodeHint": "صارفین کے لیے اختیاری ریڈیمپشن کوڈ",
+      "imageUrl": "تصویر URL",
+      "terms": "شرائط و ضوابط",
+      "termsHint": "اس آفر پر لاگو اختیاری شرائط",
+      "featured": "نمایاں آفر کے طور پر نشان زد کریں",
+      "create": "پروموشن بنائیں",
+      "update": "پروموشن اپ ڈیٹ کریں"
+    },
+    "validation": {
+      "titleRequired": "عنوان ضروری ہے",
+      "titleTooLong": "عنوان بہت لمبا ہے",
+      "descriptionRequired": "تفصیل ضروری ہے",
+      "descriptionTooShort": "تفصیل بہت مختصر ہے",
+      "descriptionTooLong": "تفصیل بہت لمبی ہے",
+      "invalidPrice": "براہ کرم درست قیمت درج کریں",
+      "priceNegative": "قیمت منفی نہیں ہو سکتی",
+      "priceMustBeLower": "پروموشنل قیمت اصل قیمت سے کم ہونی چاہیے",
+      "percentageRange": "فیصد 0 سے 100 کے درمیان ہونی چاہیے",
+      "startDateRequired": "شروع کی تاریخ ضروری ہے",
+      "endDateRequired": "اختتام کی تاریخ ضروری ہے",
+      "endAfterStart": "اختتام کی تاریخ شروع کی تاریخ کے بعد ہونی چاہیے",
+      "invalidUrl": "براہ کرم درست URL درج کریں"
+    },
+    "error": {
+      "submitFailed": "پروموشن محفوظ کرنے میں ناکامی۔ براہ کرم دوبارہ کوشش کریں۔"
+    }
+  }
+}

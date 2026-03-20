@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { PrismaPg } from '@prisma/adapter-pg';
 import bcrypt from 'bcrypt';
 
-import { PrismaClient, UserRole, UserStatus, VerificationMethod, ClaimVerificationStatus, ClaimStatus } from '../generated/prisma/client.js';
+import { PrismaClient, UserRole, UserStatus, VerificationMethod, ClaimVerificationStatus, ClaimStatus, DealStatus, DiscountType } from '../generated/prisma/client.js';
 import { logger } from '../utils/logger.js';
 import { seedEmailTemplates } from './seeds/email-templates.js';
 
@@ -533,16 +533,18 @@ async function main(): Promise<void> {
   const categoryMap = new Map<string, string>();
 
   for (const [i, cat] of businessCategories.entries()) {
-    const category = await prisma.category.upsert({
+    const category = await prisma.categories.upsert({
       where: { type_slug: { type: 'BUSINESS', slug: cat.slug } },
       update: {},
       create: {
+        id: crypto.randomUUID(),
         slug: cat.slug,
         name: cat.name,
         icon: cat.icon,
         type: 'BUSINESS',
-        displayOrder: i,
-        parentId: cat.parentSlug ? categoryMap.get(cat.parentSlug) : null,
+        display_order: i,
+        parent_id: cat.parentSlug ? categoryMap.get(cat.parentSlug) : null,
+        updated_at: new Date(),
       },
     });
     categoryMap.set(cat.slug, category.id);
@@ -557,10 +559,10 @@ async function main(): Promise<void> {
   ];
 
   for (const [i, cat] of eventCategories.entries()) {
-    await prisma.category.upsert({
+    await prisma.categories.upsert({
       where: { type_slug: { type: 'EVENT', slug: cat.slug } },
       update: {},
-      create: { ...cat, type: 'EVENT', displayOrder: i },
+      create: { id: crypto.randomUUID(), ...cat, type: 'EVENT', display_order: i, updated_at: new Date() },
     });
   }
 
@@ -590,13 +592,14 @@ async function main(): Promise<void> {
   ];
 
   for (const setting of settings) {
-    await prisma.systemSetting.upsert({
+    await prisma.system_settings.upsert({
       where: { key: setting.key },
       update: {},
       create: {
         key: setting.key,
         value: setting.value,
         description: setting.description,
+        updated_at: new Date(),
       },
     });
   }
@@ -614,35 +617,35 @@ async function main(): Promise<void> {
   const testUsers = [
     {
       email: 'user@test.com',
-      passwordHash: testPassword,
-      displayName: 'Test User',
+      password_hash: testPassword,
+      display_name: 'Test User',
       role: UserRole.COMMUNITY,
       status: UserStatus.ACTIVE,
-      emailVerified: true,
+      email_verified: true,
     },
     {
       email: 'owner@test.com',
-      passwordHash: testPassword,
-      displayName: 'Business Owner',
+      password_hash: testPassword,
+      display_name: 'Business Owner',
       role: UserRole.BUSINESS_OWNER,
       status: UserStatus.ACTIVE,
-      emailVerified: true,
+      email_verified: true,
     },
     {
       email: 'admin@test.com',
-      passwordHash: testPassword,
-      displayName: 'Admin User',
+      password_hash: testPassword,
+      display_name: 'Admin User',
       role: UserRole.ADMIN,
       status: UserStatus.ACTIVE,
-      emailVerified: true,
+      email_verified: true,
     },
   ];
 
   for (const user of testUsers) {
-    await prisma.user.upsert({
+    await prisma.users.upsert({
       where: { email: user.email },
       update: {},
-      create: user,
+      create: { id: crypto.randomUUID(), ...user, updated_at: new Date() },
     });
   }
 
@@ -921,28 +924,30 @@ async function main(): Promise<void> {
       continue;
     }
 
-    await prisma.business.upsert({
+    await prisma.businesses.upsert({
       where: { slug: business.slug },
       update: {},
       create: {
+        id: crypto.randomUUID(),
         name: business.name,
         slug: business.slug,
         description: business.description,
-        categoryPrimaryId: categoryId,
+        category_primary_id: categoryId,
         address: business.address as any,
         phone: business.phone,
         email: business.email,
         website: business.website,
-        operatingHours: business.operatingHours as any,
-        priceRange: business.priceRange,
-        languagesSpoken: business.languagesSpoken || [],
-        paymentMethods: business.paymentMethods || [],
-        accessibilityFeatures: business.accessibilityFeatures || [],
+        operating_hours: business.operatingHours as any,
+        price_range: business.priceRange,
+        languages_spoken: business.languagesSpoken || [],
+        payment_methods: business.paymentMethods || [],
+        accessibility_features: business.accessibilityFeatures || [],
         certifications: business.certifications || [],
-        yearEstablished: business.yearEstablished,
+        year_established: business.yearEstablished,
         status: "ACTIVE", // Active and ready for display
         claimed: false,
-        verifiedAt: new Date(), // Verified for demo purposes
+        verified_at: new Date(), // Verified for demo purposes
+        updated_at: new Date(),
       },
     });
   }
@@ -952,43 +957,246 @@ async function main(): Promise<void> {
   // ── Link Business Owner to a Business ────────────────────
 
   // Get the business owner user
-  const businessOwner = await prisma.user.findUnique({
+  const businessOwner = await prisma.users.findUnique({
     where: { email: 'owner@test.com' },
   });
 
   // Get the first business (Guildford Grill House)
-  const firstBusiness = await prisma.business.findUnique({
+  const firstBusiness = await prisma.businesses.findUnique({
     where: { slug: 'guildford-grill-house' },
   });
 
   if (businessOwner && firstBusiness) {
     // Create an approved claim request
-    await prisma.businessClaimRequest.upsert({
+    await prisma.business_claim_requests.upsert({
       where: {
-        businessId_userId: {
-          businessId: firstBusiness.id,
-          userId: businessOwner.id,
+        business_id_user_id: {
+          business_id: firstBusiness.id,
+          user_id: businessOwner.id,
         },
       },
       update: {},
       create: {
-        businessId: firstBusiness.id,
-        userId: businessOwner.id,
-        verificationMethod: VerificationMethod.EMAIL,
-        verificationStatus: ClaimVerificationStatus.VERIFIED,
-        claimStatus: ClaimStatus.APPROVED,
-        decisionAt: new Date(),
+        id: crypto.randomUUID(),
+        business_id: firstBusiness.id,
+        user_id: businessOwner.id,
+        verification_method: VerificationMethod.EMAIL,
+        verification_status: ClaimVerificationStatus.VERIFIED,
+        claim_status: ClaimStatus.APPROVED,
+        decision_at: new Date(),
+        updated_at: new Date(),
       },
     });
 
-    // Mark the business as claimed
-    await prisma.business.update({
+    // Mark the business as claimed by the owner
+    await prisma.businesses.update({
       where: { id: firstBusiness.id },
-      data: { claimed: true },
+      data: {
+        claimed: true,
+        claimed_by: businessOwner.id,
+      },
     });
 
     logger.info('Business owner linked to Guildford Grill House');
   }
+
+  // ── Sample Deals/Promotions ────────────────────────────
+
+  // Get businesses for creating deals
+  const grillHouse = await prisma.businesses.findUnique({ where: { slug: 'guildford-grill-house' } });
+  const dailyGrind = await prisma.businesses.findUnique({ where: { slug: 'daily-grind-cafe' } });
+  const goldenCrust = await prisma.businesses.findUnique({ where: { slug: 'golden-crust-bakery' } });
+  const fitnessFirst = await prisma.businesses.findUnique({ where: { slug: 'fitness-first-guildford' } });
+  const pharmacy = await prisma.businesses.findUnique({ where: { slug: 'guildford-pharmacy-plus' } });
+  const hairSalon = await prisma.businesses.findUnique({ where: { slug: 'styles-hair-salon' } });
+  const techHub = await prisma.businesses.findUnique({ where: { slug: 'tech-hub-electronics' } });
+
+  const now = new Date();
+  const thirtyDaysFromNow = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+  const sixtyDaysFromNow = new Date(now.getTime() + 60 * 24 * 60 * 60 * 1000);
+  const sevenDaysFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+  const sampleDeals = [
+    // Guildford Grill House - 2 deals
+    {
+      business_id: grillHouse?.id,
+      title: 'Weekday Lunch Special',
+      description: 'Enjoy 20% off all lunch mains Monday to Thursday. Includes complimentary Turkish bread and dips. Perfect for a quick business lunch or catching up with friends.',
+      discount_type: DiscountType.PERCENTAGE,
+      discount_value: 20,
+      valid_from: now,
+      valid_until: thirtyDaysFromNow,
+      featured: true,
+      status: DealStatus.ACTIVE,
+      terms: 'Valid Mon-Thu 11am-3pm only. Not valid with other offers.',
+      voucher_code: 'LUNCH20',
+    },
+    {
+      business_id: grillHouse?.id,
+      title: 'Family Feast Bundle',
+      description: 'Feed the whole family with our special bundle: Mixed grill platter, 4 sides, garlic bread, and a large salad. Save $25 on regular price.',
+      price: 79.99,
+      original_price: 104.99,
+      discount_type: DiscountType.FIXED,
+      discount_value: 25,
+      valid_from: now,
+      valid_until: sixtyDaysFromNow,
+      featured: false,
+      status: DealStatus.ACTIVE,
+      terms: 'Dine-in only. Serves 4-5 people.',
+    },
+    // Daily Grind Cafe - 2 deals
+    {
+      business_id: dailyGrind?.id,
+      title: 'Morning Coffee Deal',
+      description: 'Buy any large coffee and get a pastry of your choice absolutely free! Start your day right with our freshly roasted beans and homemade pastries.',
+      discount_type: DiscountType.FREE_ITEM,
+      valid_from: now,
+      valid_until: thirtyDaysFromNow,
+      featured: true,
+      status: DealStatus.ACTIVE,
+      terms: 'Valid 6am-9am. One per customer per day.',
+      voucher_code: 'FREEBIE',
+    },
+    {
+      business_id: dailyGrind?.id,
+      title: 'Loyalty Bonus',
+      description: 'Bring a friend who is new to our cafe and you both get 15% off your entire order. Share the love of great coffee!',
+      discount_type: DiscountType.PERCENTAGE,
+      discount_value: 15,
+      valid_from: now,
+      valid_until: sixtyDaysFromNow,
+      featured: false,
+      status: DealStatus.ACTIVE,
+      terms: 'New customer must not have visited before.',
+    },
+    // Golden Crust Bakery - 1 deal
+    {
+      business_id: goldenCrust?.id,
+      title: 'Buy 6 Get 2 Free',
+      description: 'Stock up on our famous spinach pies or meat pastries! Buy any 6 and get 2 more free. Perfect for parties or weekly meal prep.',
+      discount_type: DiscountType.BOGO,
+      valid_from: now,
+      valid_until: thirtyDaysFromNow,
+      featured: true,
+      status: DealStatus.ACTIVE,
+      terms: 'Must be same item type. While stocks last.',
+    },
+    // Fitness First - 2 deals
+    {
+      business_id: fitnessFirst?.id,
+      title: 'New Member Special',
+      description: 'Join now and get your first month at just $29.99! Full access to gym equipment, group classes, and personal training consultation included.',
+      price: 29.99,
+      original_price: 59.99,
+      discount_type: DiscountType.PERCENTAGE,
+      discount_value: 50,
+      duration: '1 month membership',
+      valid_from: now,
+      valid_until: sevenDaysFromNow,
+      featured: true,
+      status: DealStatus.ACTIVE,
+      terms: 'New members only. 12-month commitment required after trial.',
+      voucher_code: 'FIT50',
+    },
+    {
+      business_id: fitnessFirst?.id,
+      title: 'Personal Training Package',
+      description: 'Get 5 personal training sessions for the price of 4. Kickstart your fitness journey with expert guidance and customized workouts.',
+      price: 200,
+      original_price: 250,
+      discount_type: DiscountType.FIXED,
+      discount_value: 50,
+      duration: '5 x 1-hour sessions',
+      valid_from: now,
+      valid_until: sixtyDaysFromNow,
+      featured: false,
+      status: DealStatus.ACTIVE,
+      terms: 'Sessions valid for 3 months from purchase.',
+    },
+    // Pharmacy - 1 deal
+    {
+      business_id: pharmacy?.id,
+      title: 'Senior Discount Day',
+      description: 'Every Tuesday, seniors (65+) receive 10% off all non-prescription items. Stock up on vitamins, health products, and personal care items.',
+      discount_type: DiscountType.PERCENTAGE,
+      discount_value: 10,
+      valid_from: now,
+      valid_until: sixtyDaysFromNow,
+      featured: false,
+      status: DealStatus.ACTIVE,
+      terms: 'Valid Tuesdays only. ID required. Excludes prescriptions.',
+    },
+    // Hair Salon - 1 deal
+    {
+      business_id: hairSalon?.id,
+      title: 'Colour & Cut Package',
+      description: 'Full colour treatment plus precision cut and blow-dry for just $99. Normally $140! Includes consultation and aftercare advice.',
+      price: 99,
+      original_price: 140,
+      discount_type: DiscountType.FIXED,
+      discount_value: 41,
+      duration: 'Approximately 2.5 hours',
+      valid_from: now,
+      valid_until: thirtyDaysFromNow,
+      featured: true,
+      status: DealStatus.ACTIVE,
+      terms: 'Book in advance. Tuesday to Thursday only.',
+      voucher_code: 'COLOUR99',
+    },
+    // Tech Hub - 1 deal
+    {
+      business_id: techHub?.id,
+      title: 'PC Health Check',
+      description: 'Comprehensive computer diagnostic, virus scan, and performance optimization. Get your PC running like new with our expert service.',
+      price: 49,
+      original_price: 79,
+      discount_type: DiscountType.PERCENTAGE,
+      discount_value: 38,
+      duration: 'Same-day service',
+      valid_from: now,
+      valid_until: thirtyDaysFromNow,
+      featured: false,
+      status: DealStatus.ACTIVE,
+      terms: 'Drop-off service. Additional repairs quoted separately.',
+      voucher_code: 'CHECKUP49',
+    },
+  ];
+
+  for (const deal of sampleDeals) {
+    if (!deal.business_id) continue;
+
+    // Use a combination of business_id and title to check for existing deal
+    const existingDeal = await prisma.deals.findFirst({
+      where: {
+        business_id: deal.business_id,
+        title: deal.title,
+      },
+    });
+
+    if (!existingDeal) {
+      await prisma.deals.create({
+        data: {
+          business_id: deal.business_id,
+          title: deal.title,
+          description: deal.description,
+          price: deal.price,
+          original_price: deal.original_price,
+          discount_type: deal.discount_type,
+          discount_value: deal.discount_value,
+          duration: deal.duration,
+          voucher_code: deal.voucher_code,
+          terms: deal.terms,
+          valid_from: deal.valid_from,
+          valid_until: deal.valid_until,
+          featured: deal.featured,
+          status: deal.status,
+        },
+      });
+    }
+  }
+
+  logger.info('Sample deals seeded');
 
   logger.info('Database seeded successfully.');
 }

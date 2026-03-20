@@ -1,0 +1,80 @@
+{
+  "deal": {
+    "title": "العروض والخصومات",
+    "description": "عروض وخصومات خاصة",
+    "discountOff": "خصم {{value}}",
+    "bogo": "اشترِ 1 واحصل على 1",
+    "freeItem": "عنصر مجاني",
+    "featured": "مميز",
+    "endingSoon": "ينتهي خلال {{days}} أيام",
+    "expired": "منتهي الصلاحية",
+    "validUntil": "صالح حتى {{date}}",
+    "revealCode": "احصل على رمز القسيمة",
+    "copyCode": "نسخ الرمز",
+    "hasVoucherCode": "رمز القسيمة متاح",
+    "activeDeals": "عروض نشطة",
+    "limitReached": "تم الوصول للحد الأقصى من العروض",
+    "confirmDelete": "هل أنت متأكد من حذف هذا العرض؟",
+    "editDeal": "تعديل {{title}}",
+    "deleteDeal": "حذف {{title}}",
+    "status": {
+      "active": "نشط",
+      "expired": "منتهي",
+      "cancelled": "ملغي"
+    },
+    "discountType": {
+      "none": "لا يوجد نوع خصم",
+      "percentage": "نسبة مئوية",
+      "fixed": "مبلغ ثابت",
+      "bogo": "اشترِ واحد واحصل على واحد",
+      "freeItem": "عنصر مجاني مضمن"
+    },
+    "empty": {
+      "title": "لا توجد عروض بعد",
+      "description": "أنشئ عرضك الأول لجذب المزيد من العملاء"
+    },
+    "form": {
+      "basicInfo": "المعلومات الأساسية",
+      "title": "العنوان",
+      "description": "الوصف",
+      "descriptionHint": "الحد الأدنى {{min}} حرفًا، الحد الأقصى {{max}} حرفًا",
+      "duration": "مدة الخدمة",
+      "durationPlaceholder": "مثال: جلسة 30 دقيقة، علاج ساعة واحدة",
+      "pricing": "التسعير",
+      "promoPrice": "السعر الترويجي",
+      "originalPrice": "السعر الأصلي",
+      "discountType": "نوع الخصم",
+      "discountValue": "قيمة الخصم",
+      "validity": "فترة الصلاحية",
+      "validFrom": "تاريخ البدء",
+      "validUntil": "تاريخ الانتهاء",
+      "additionalDetails": "تفاصيل إضافية",
+      "voucherCode": "رمز القسيمة",
+      "voucherCodeHint": "رمز اختياري يمكن للعملاء استخدامه للاستبدال",
+      "imageUrl": "رابط الصورة",
+      "terms": "الشروط والأحكام",
+      "termsHint": "شروط اختيارية تنطبق على هذا العرض",
+      "featured": "وضع علامة كعرض مميز",
+      "create": "إنشاء عرض",
+      "update": "تحديث العرض"
+    },
+    "validation": {
+      "titleRequired": "العنوان مطلوب",
+      "titleTooLong": "العنوان طويل جدًا",
+      "descriptionRequired": "الوصف مطلوب",
+      "descriptionTooShort": "الوصف قصير جدًا",
+      "descriptionTooLong": "الوصف طويل جدًا",
+      "invalidPrice": "الرجاء إدخال سعر صالح",
+      "priceNegative": "لا يمكن أن يكون السعر سالبًا",
+      "priceMustBeLower": "يجب أن يكون السعر الترويجي أقل من السعر الأصلي",
+      "percentageRange": "يجب أن تكون النسبة بين 0 و 100",
+      "startDateRequired": "تاريخ البدء مطلوب",
+      "endDateRequired": "تاريخ الانتهاء مطلوب",
+      "endAfterStart": "يجب أن يكون تاريخ الانتهاء بعد تاريخ البدء",
+      "invalidUrl": "الرجاء إدخال رابط صالح"
+    },
+    "error": {
+      "submitFailed": "فشل حفظ العرض. يرجى المحاولة مرة أخرى."
+    }
+  }
+}
