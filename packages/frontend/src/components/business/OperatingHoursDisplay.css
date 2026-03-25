@@ -39,10 +39,12 @@
 }
 
 .operating-hours__row--current {
-  background: rgba(0, 0, 0, 0.05);
-  padding: 8px 12px;
-  margin: 0 -12px;
+  background: var(--color-primary-tint-90, rgba(37, 99, 235, 0.15));
+  padding: 10px 12px;
+  margin: 2px -12px;
   border-radius: 8px;
+  border-left: 4px solid var(--color-primary, #2563eb);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 .operating-hours__day {
@@ -52,8 +54,24 @@
 }
 
 .operating-hours__day--current {
-  font-weight: 600;
+  font-weight: 700;
   color: var(--color-primary, #2563eb);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.operating-hours__today-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: var(--color-primary, #2563eb);
+  color: white;
+  padding: 1px 6px;
+  border-radius: 4px;
+  line-height: 1.6;
 }
 
 .operating-hours__time {
@@ -62,6 +80,11 @@
   font-size: 14px;
   text-align: right;
   flex-shrink: 0;
+}
+
+.operating-hours__time--current {
+  color: var(--color-primary, #2563eb);
+  font-weight: 600;
 }
 
 /* Tablet and up */
@@ -79,7 +102,8 @@
 /* Dark mode */
 @media (prefers-color-scheme: dark) {
   .operating-hours__row--current {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(37, 99, 235, 0.15);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
   }
 
   .operating-hours__time {
@@ -88,11 +112,16 @@
 }
 
 .dark .operating-hours__row--current {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(37, 99, 235, 0.15);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .dark .operating-hours__time {
   color: #94a3b8;
+}
+
+.dark .operating-hours__time--current {
+  color: var(--color-primary, #60a5fa);
 }
 
 /* RTL support */

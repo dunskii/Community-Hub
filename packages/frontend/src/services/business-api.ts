@@ -86,6 +86,35 @@ interface ApiResponse<T> {
   data: T;
 }
 
+/**
+ * Normalize business data from API (snake_case) to frontend (camelCase)
+ * The backend returns raw Prisma records with snake_case fields
+ */
+function normalizeBusiness(data: Record<string, unknown>): Business {
+  const biz = data as Record<string, unknown>;
+  // Map gallery (Json field) to photos array
+  let photos: string[] = [];
+  if (biz.gallery && Array.isArray(biz.gallery)) {
+    photos = (biz.gallery as Array<string | Record<string, unknown>>).map(item =>
+      typeof item === 'string' ? item : (item as Record<string, string>).url
+    ).filter((url): url is string => Boolean(url));
+  } else if (biz.photos && Array.isArray(biz.photos)) {
+    photos = biz.photos as string[];
+  }
+
+  return {
+    ...data,
+    coverPhoto: (biz.cover_photo || biz.coverPhoto) as string | undefined,
+    photos,
+    claimedBy: (biz.claimed_by || biz.claimedBy) as string | undefined,
+    operatingHours: biz.operating_hours || biz.operatingHours,
+    socialLinks: biz.social_links || biz.socialLinks,
+    languagesSpoken: biz.languages_spoken || biz.languagesSpoken || [],
+    accessibilityFeatures: biz.accessibility_features || biz.accessibilityFeatures || [],
+    paymentMethods: biz.payment_methods || biz.paymentMethods || [],
+  } as unknown as Business;
+}
+
 class BusinessApiClient {
   /**
    * List businesses with filtering and pagination
@@ -103,6 +132,9 @@ class BusinessApiClient {
 
     const endpoint = `/businesses${queryParams.toString() ? `?${queryParams}` : ''}`;
     const response = await get<ApiResponse<BusinessListResponse>>(endpoint);
+    if (response.data.businesses) {
+      response.data.businesses = response.data.businesses.map(b => normalizeBusiness(b as unknown as Record<string, unknown>));
+    }
     return response.data;
   }
 
@@ -111,7 +143,7 @@ class BusinessApiClient {
    */
   async getBusinessById(id: string): Promise<Business> {
     const response = await get<ApiResponse<Business>>(`/businesses/${id}`);
-    return response.data;
+    return normalizeBusiness(response.data as unknown as Record<string, unknown>);
   }
 
   /**
@@ -119,7 +151,7 @@ class BusinessApiClient {
    */
   async getBusinessBySlug(slug: string): Promise<Business> {
     const response = await get<ApiResponse<Business>>(`/businesses/slug/${slug}`);
-    return response.data;
+    return normalizeBusiness(response.data as unknown as Record<string, unknown>);
   }
 
   /**

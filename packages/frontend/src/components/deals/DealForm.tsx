@@ -5,15 +5,23 @@
  * WCAG 2.1 AA compliant with accessible form fields
  */
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Input } from '../form/Input';
 import { Textarea } from '../form/Textarea';
 import { Select } from '../form/Select';
 import { DatePicker } from '../form/DatePicker';
 import { Alert } from '../display/Alert';
+import { Skeleton } from '../display/Skeleton';
 import type { Deal, DealCreateInput, DealUpdateInput, DiscountType } from '@community-hub/shared';
 import { DEAL_LIMITS } from '@community-hub/shared';
+import {
+  PhotoIcon,
+  XMarkIcon,
+  MagnifyingGlassIcon,
+  ArrowUpTrayIcon,
+  CheckCircleIcon,
+} from '@heroicons/react/24/outline';
 
 // ─── Types ────────────────────────────────────────────────────
 
@@ -183,6 +191,314 @@ function isValidUrl(string: string): boolean {
   }
 }
 
+// ─── Pixabay Types ────────────────────────────────────────────
+
+interface PixabayImage {
+  id: number;
+  webformatURL: string;
+  largeImageURL: string;
+  tags: string;
+  user: string;
+}
+
+// ─── Deal Image Picker ────────────────────────────────────────
+
+interface DealImagePickerProps {
+  image: string;
+  onChange: (url: string) => void;
+  error?: string;
+  disabled?: boolean;
+}
+
+function DealImagePicker({ image, onChange, error, disabled }: DealImagePickerProps) {
+  const { t } = useTranslation();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [showUrlInput, setShowUrlInput] = useState(false);
+  const [stockModalOpen, setStockModalOpen] = useState(false);
+  const [stockQuery, setStockQuery] = useState('');
+  const [stockPhotos, setStockPhotos] = useState<PixabayImage[]>([]);
+  const [stockLoading, setStockLoading] = useState(false);
+  const [stockError, setStockError] = useState<string | null>(null);
+
+  const PIXABAY_API_KEY = import.meta.env.VITE_PIXABAY_API_KEY || '';
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) return;
+    if (file.size > 5 * 1024 * 1024) return;
+    const url = URL.createObjectURL(file as Blob);
+    onChange(url);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  const searchStock = async (query: string) => {
+    if (!query.trim() || !PIXABAY_API_KEY) return;
+    setStockLoading(true);
+    setStockError(null);
+    try {
+      const response = await fetch(
+        `https://pixabay.com/api/?key=${PIXABAY_API_KEY}&q=${encodeURIComponent(query)}&image_type=photo&per_page=12&safesearch=true`
+      );
+      if (!response.ok) throw new Error('Failed to fetch');
+      const data = await response.json();
+      setStockPhotos(data.hits || []);
+    } catch {
+      setStockError(t('deal.form.stockSearchError', 'Failed to search stock photos'));
+      setStockPhotos([]);
+    } finally {
+      setStockLoading(false);
+    }
+  };
+
+  const handleStockSearch = (e?: React.SyntheticEvent) => {
+    e?.preventDefault();
+    searchStock(stockQuery);
+  };
+
+  const selectStockPhoto = (photo: PixabayImage) => {
+    onChange(photo.largeImageURL);
+    setStockModalOpen(false);
+    setStockPhotos([]);
+    setStockQuery('');
+  };
+
+  return (
+    <>
+      <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+        <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white flex items-center gap-2">
+          <PhotoIcon className="w-5 h-5" />
+          {t('deal.form.dealImage', 'Deal Image')}
+        </h3>
+
+        {/* Current Image Preview */}
+        {image ? (
+          <div className="mb-4">
+            <div className="relative inline-block">
+              <img
+                src={image}
+                alt={t('deal.form.imagePreview', 'Deal image preview')}
+                className="w-full max-w-md h-48 object-cover rounded-lg border border-gray-200 dark:border-gray-600"
+              />
+              <button
+                type="button"
+                onClick={() => onChange('')}
+                disabled={disabled}
+                className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors disabled:opacity-50"
+                title={t('deal.form.removeImage', 'Remove image')}
+              >
+                <XMarkIcon className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="mb-4 w-full max-w-md h-48 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg flex flex-col items-center justify-center text-gray-400 dark:text-gray-500">
+            <PhotoIcon className="w-12 h-12 mb-2" />
+            <p className="text-sm">{t('deal.form.noImage', 'No image added')}</p>
+          </div>
+        )}
+
+        {error && (
+          <p className="mb-3 text-sm text-red-600 dark:text-red-400">{error}</p>
+        )}
+
+        {/* Image Source Options */}
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={disabled}
+            className="inline-flex items-center gap-1.5 px-3 py-2 text-sm bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600 disabled:opacity-50 transition-colors"
+          >
+            <ArrowUpTrayIcon className="w-4 h-4" />
+            {t('deal.form.uploadImage', 'Upload')}
+          </button>
+
+          {PIXABAY_API_KEY && (
+            <button
+              type="button"
+              onClick={() => setStockModalOpen(true)}
+              disabled={disabled}
+              className="inline-flex items-center gap-1.5 px-3 py-2 text-sm bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600 disabled:opacity-50 transition-colors"
+            >
+              <MagnifyingGlassIcon className="w-4 h-4" />
+              {t('deal.form.stockPhotos', 'Stock Photos')}
+            </button>
+          )}
+
+          <button
+            type="button"
+            onClick={() => setShowUrlInput(!showUrlInput)}
+            disabled={disabled}
+            className="inline-flex items-center gap-1.5 px-3 py-2 text-sm bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-600 disabled:opacity-50 transition-colors"
+          >
+            {t('deal.form.pasteUrl', 'Paste URL')}
+          </button>
+
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleFileSelect}
+            className="hidden"
+          />
+        </div>
+
+        {/* URL Input (toggled) */}
+        {showUrlInput && (
+          <div className="mt-3">
+            <Input
+              id="image-url"
+              label={t('deal.form.imageUrl', 'Image URL')}
+              type="url"
+              value={image}
+              onChange={(e) => onChange(e.target.value)}
+              disabled={disabled}
+              placeholder="https://..."
+            />
+          </div>
+        )}
+      </div>
+
+      {/* Stock Photo Modal */}
+      {stockModalOpen && (
+        <div className="fixed inset-0 z-50 overflow-y-auto">
+          <div className="flex min-h-full items-center justify-center p-4">
+            <div
+              className="fixed inset-0 bg-black/50 transition-opacity"
+              onClick={() => setStockModalOpen(false)}
+            />
+            <div className="relative bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-3xl max-h-[80vh] flex flex-col">
+              {/* Header */}
+              <div className="flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-700">
+                <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
+                  {t('deal.form.searchStockPhotos', 'Search Stock Photos')}
+                </h2>
+                <button
+                  type="button"
+                  onClick={() => setStockModalOpen(false)}
+                  className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
+                >
+                  <XMarkIcon className="w-5 h-5 text-slate-500" />
+                </button>
+              </div>
+
+              {/* Search */}
+              <div className="p-4 border-b border-slate-200 dark:border-slate-700">
+                <div className="flex gap-2">
+                  <div className="flex-1 relative">
+                    <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                    <input
+                      type="text"
+                      value={stockQuery}
+                      onChange={(e) => setStockQuery(e.target.value)}
+                      onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleStockSearch(e); } }}
+                      placeholder={t('deal.form.searchPlaceholder', 'Search for images (e.g., food, sale, discount)')}
+                      className="w-full pl-10 pr-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleStockSearch}
+                    disabled={stockLoading || !stockQuery.trim()}
+                    className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 disabled:opacity-50 transition-colors"
+                  >
+                    {t('common.search', 'Search')}
+                  </button>
+                </div>
+
+                <div className="mt-2 flex flex-wrap gap-2">
+                  <span className="text-xs text-slate-500 dark:text-slate-400">
+                    {t('deal.form.suggestions', 'Try:')}
+                  </span>
+                  {['sale', 'discount', 'food', 'deal', 'offer', 'promotion'].map(term => (
+                    <button
+                      key={term}
+                      type="button"
+                      onClick={() => { setStockQuery(term); searchStock(term); }}
+                      className="px-2 py-0.5 text-xs bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-full hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors"
+                    >
+                      {term}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Results */}
+              <div className="flex-1 overflow-y-auto p-4">
+                {stockError && (
+                  <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-700 dark:text-red-300 text-sm">
+                    {stockError}
+                  </div>
+                )}
+
+                {stockLoading ? (
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    {[1, 2, 3, 4, 5, 6].map(i => (
+                      <Skeleton key={i} variant="rectangular" width="100%" height="120px" className="rounded-lg" />
+                    ))}
+                  </div>
+                ) : stockPhotos.length === 0 ? (
+                  <div className="text-center py-12">
+                    <PhotoIcon className="w-12 h-12 mx-auto text-slate-400 mb-3" />
+                    <p className="text-slate-600 dark:text-slate-400">
+                      {stockQuery
+                        ? t('deal.form.noResults', 'No photos found. Try a different search term.')
+                        : t('deal.form.searchPrompt', 'Search for photos to get started')}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    {stockPhotos.map(photo => (
+                      <button
+                        key={photo.id}
+                        type="button"
+                        onClick={() => selectStockPhoto(photo)}
+                        className="relative aspect-[4/3] rounded-lg overflow-hidden border-2 border-transparent hover:border-primary transition-all focus:outline-none focus:ring-2 focus:ring-primary"
+                      >
+                        <img
+                          src={photo.webformatURL}
+                          alt={photo.tags}
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-black/0 hover:bg-black/20 transition-colors flex items-center justify-center">
+                          <CheckCircleIcon className="w-8 h-8 text-white opacity-0 hover:opacity-100 drop-shadow-lg" />
+                        </div>
+                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-1.5">
+                          <p className="text-xs text-white truncate">
+                            {t('deal.form.by', 'by')} {photo.user}
+                          </p>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Footer */}
+              <div className="flex items-center justify-between p-4 border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
+                <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+                  <span>{t('deal.form.poweredBy', 'Powered by')}</span>
+                  <a href="https://pixabay.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                    Pixabay
+                  </a>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setStockModalOpen(false)}
+                  className="px-4 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
+                >
+                  {t('common.cancel', 'Cancel')}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
 // ─── Component ────────────────────────────────────────────────
 
 export function DealForm({
@@ -224,8 +540,7 @@ export function DealForm({
 
   // Handle form submission
   const handleSubmit = useCallback(
-    async (e: React.FormEvent) => {
-      e.preventDefault();
+    async () => {
       setSubmitError(null);
 
       // Validate form
@@ -266,11 +581,9 @@ export function DealForm({
   );
 
   return (
-    <form
-      onSubmit={handleSubmit}
+    <div
       className={`deal-form space-y-6 ${className}`}
       dir={isRtl ? 'rtl' : 'ltr'}
-      noValidate
     >
       {/* Submit error */}
       {submitError && (
@@ -411,6 +724,14 @@ export function DealForm({
         </div>
       </div>
 
+      {/* Deal Image Section */}
+      <DealImagePicker
+        image={formData.image}
+        onChange={(url) => handleChange('image', url)}
+        error={errors.image}
+        disabled={loading}
+      />
+
       {/* Additional Details Section */}
       <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
         <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
@@ -426,17 +747,6 @@ export function DealForm({
             maxLength={DEAL_LIMITS.maxVoucherCodeLength}
             disabled={loading}
             helperText={t('deal.form.voucherCodeHint')}
-          />
-
-          <Input
-            id="image"
-            label={t('deal.form.imageUrl')}
-            type="url"
-            value={formData.image}
-            onChange={(e) => handleChange('image', e.target.value)}
-            error={errors.image}
-            disabled={loading}
-            placeholder="https://..."
           />
 
           <Textarea
@@ -479,7 +789,8 @@ export function DealForm({
           </button>
         )}
         <button
-          type="submit"
+          type="button"
+          onClick={handleSubmit}
           disabled={loading}
           className="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
         >
@@ -508,6 +819,6 @@ export function DealForm({
           {isEditing ? t('deal.form.update') : t('deal.form.create')}
         </button>
       </div>
-    </form>
+    </div>
   );
 }

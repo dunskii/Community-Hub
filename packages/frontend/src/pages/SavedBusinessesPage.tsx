@@ -12,7 +12,6 @@ import { PageContainer } from '../components/layout/PageContainer';
 import { Tabs } from '../components/display/Tabs';
 import { EmptyState } from '../components/display/EmptyState';
 import { Skeleton } from '../components/display/Skeleton';
-import { Badge } from '../components/display/Badge';
 import { Modal } from '../components/display/Modal';
 import { Input } from '../components/form/Input';
 import { Alert } from '../components/display/Alert';
@@ -22,7 +21,7 @@ import './SavedBusinessesPage.css';
 
 export function SavedBusinessesPage() {
   const { t } = useTranslation();
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   const [savedBusinesses, setSavedBusinesses] = useState<SavedBusiness[]>([]);
   const [lists, setLists] = useState<SavedList[]>([]);
@@ -109,10 +108,9 @@ export function SavedBusinessesPage() {
           title={t('saved.loginRequired')}
           description={t('saved.loginRequiredDescription')}
           icon="🔒"
-          action={{
-            label: t('auth.login'),
-            href: '/login',
-          }}
+          action={
+            <a href="/login">{t('auth.login')}</a>
+          }
         />
       </PageContainer>
     );
@@ -197,16 +195,20 @@ export function SavedBusinessesPage() {
     ...lists.map((list) => ({
       id: list.id,
       label: `${list.name} (${list.businessCount})`,
-      content: renderListTab(list),
-      actions: (
-        <button
-          type="button"
-          className="saved-businesses-page__delete-list"
-          onClick={() => handleDeleteList(list.id)}
-          aria-label={t('saved.deleteList')}
-        >
-          🗑️
-        </button>
+      content: (
+        <>
+          <div className="saved-businesses-page__list-actions">
+            <button
+              type="button"
+              className="saved-businesses-page__delete-list"
+              onClick={() => handleDeleteList(list.id)}
+              aria-label={t('saved.deleteList')}
+            >
+              🗑️
+            </button>
+          </div>
+          {renderListTab(list)}
+        </>
       ),
     })),
   ];
@@ -231,7 +233,7 @@ export function SavedBusinessesPage() {
             </button>
           </header>
 
-          {error && <Alert variant="error" message={error} />}
+          {error && <Alert type="critical" message={error} />}
 
           <Tabs tabs={tabs} onTabChange={(tabId) => setActiveList(tabId === 'all' ? null : tabId)} />
         </div>
@@ -247,7 +249,7 @@ export function SavedBusinessesPage() {
           title={t('saved.createNewList')}
         >
           <div className="saved-businesses-page__create-list-form">
-            {createListError && <Alert variant="error" message={createListError} />}
+            {createListError && <Alert type="critical" message={createListError} />}
             <Input
               id="list-name"
               label={t('saved.listName')}

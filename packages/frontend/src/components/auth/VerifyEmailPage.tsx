@@ -14,6 +14,7 @@ export const VerifyEmailPage: React.FC = () => {
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const token = searchParams.get('token');
+  const userId = searchParams.get('userId') || searchParams.get('user_id') || '';
 
   const [isVerifying, setIsVerifying] = useState(true);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -28,7 +29,7 @@ export const VerifyEmailPage: React.FC = () => {
       }
 
       try {
-        await verifyEmail(token);
+        await verifyEmail(userId, token);
         setIsSuccess(true);
       } catch (err) {
         if (err instanceof HttpError) {

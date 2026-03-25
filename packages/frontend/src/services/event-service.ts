@@ -234,6 +234,13 @@ export const eventService = {
   },
 
   /**
+   * Approve a pending event (admin/moderator)
+   */
+  async approveEvent(eventId: string): Promise<EventResponse> {
+    return apiClient.post<EventResponse>(`/events/${eventId}/approve`);
+  },
+
+  /**
    * Delete (cancel) event
    */
   async deleteEvent(eventId: string): Promise<{ success: boolean }> {

@@ -8,6 +8,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DealCard } from '../deals/DealCard';
+import { DealDetailModal } from '../deals/DealDetailModal';
 import { Skeleton } from '../display/Skeleton';
 import { EmptyState } from '../display/EmptyState';
 import { dealApi } from '../../services/deal-api';
@@ -30,6 +31,7 @@ export function DealsSection({ businessId, businessName: _businessName, maxDeals
   const [deals, setDeals] = useState<Deal[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedDeal, setSelectedDeal] = useState<Deal | null>(null);
 
   useEffect(() => {
     async function fetchDeals() {
@@ -101,7 +103,7 @@ export function DealsSection({ businessId, businessName: _businessName, maxDeals
             key={deal.id}
             deal={deal}
             showVoucherCode={true}
-            onClick={undefined} // Don't navigate since we're already on the business page
+            onClick={() => setSelectedDeal(deal)}
           />
         ))}
       </div>
@@ -111,6 +113,14 @@ export function DealsSection({ businessId, businessName: _businessName, maxDeals
         <p className="text-center text-sm text-slate-500 dark:text-slate-400">
           {t('deals.viewAllDeals', 'View the Deals tab for all promotions')}
         </p>
+      )}
+
+      {/* Deal Detail Modal */}
+      {selectedDeal && (
+        <DealDetailModal
+          deal={selectedDeal}
+          onClose={() => setSelectedDeal(null)}
+        />
       )}
     </div>
   );

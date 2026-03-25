@@ -5,7 +5,6 @@
  * Displays active filters as removable chips
  */
 
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import type { SearchParams } from '@community-hub/shared';
 
@@ -74,7 +73,7 @@ export function FilterChips({
 
   // Array filters
   if (filters.languages && filters.languages.length > 0) {
-    filters.languages.forEach((lang, index) => {
+    filters.languages.forEach((lang) => {
       chips.push({ key: 'languages' as keyof SearchParams, label: `${t('languages')}: ${lang}` });
     });
   }
@@ -105,30 +104,34 @@ export function FilterChips({
     <div className={`flex flex-wrap items-center gap-2 ${className}`} role="group" aria-label="Active filters">
       {/* Filter Chips */}
       {chips.map((chip, index) => (
-        <button
+        <span
           key={`${chip.key}-${index}`}
-          onClick={() => onRemoveFilter(chip.key)}
-          className="inline-flex items-center gap-1 px-3 py-1 text-sm rounded-full bg-primary-tint-90 text-primary hover:bg-primary-tint-80 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-colors"
-          aria-label={`Remove filter: ${chip.label}`}
+          className="inline-flex items-center gap-1 rounded-full bg-primary/10 text-primary text-sm pl-3 pr-1.5 py-1"
         >
-          <span>{chip.label}</span>
-          <svg
-            className="h-4 w-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            aria-hidden="true"
+          {chip.label}
+          <button
+            onClick={() => onRemoveFilter(chip.key)}
+            className="inline-flex items-center justify-center w-5 h-5 rounded-full hover:bg-primary/20 focus:outline-none focus:ring-2 focus:ring-primary transition-colors"
+            aria-label={`Remove filter: ${chip.label}`}
           >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
+            <svg
+              className="w-3 h-3"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </span>
       ))}
 
       {/* Clear All Button */}
       {chips.length > 1 && onClearAll && (
         <button
           onClick={onClearAll}
-          className="text-sm text-neutral-dark hover:text-dark underline focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
+          className="text-sm text-primary hover:text-primary/80 underline underline-offset-2 focus:outline-none focus:ring-2 focus:ring-primary rounded px-1"
           aria-label="Clear all filters"
         >
           {t('clearFilters')}

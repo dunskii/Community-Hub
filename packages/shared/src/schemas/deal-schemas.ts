@@ -207,6 +207,8 @@ export interface Deal {
   featured: boolean;
   status: DealStatus;
   views: number;
+  clicks: number;
+  voucherReveals: number;
   createdAt: string;
   updatedAt: string;
   business?: {

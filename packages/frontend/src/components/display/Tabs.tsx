@@ -68,11 +68,12 @@ export function Tabs({
     }
 
     e.preventDefault();
-    handleTabClick(tabs[newIndex].id, tabs[newIndex].disabled);
-    document.getElementById(`tab-${tabs[newIndex].id}`)?.focus();
+    const targetTab = tabs[newIndex];
+    if (targetTab) {
+      handleTabClick(targetTab.id, targetTab.disabled);
+      document.getElementById(`tab-${targetTab.id}`)?.focus();
+    }
   };
-
-  const activeTabContent = tabs.find(tab => tab.id === activeTab)?.content;
 
   return (
     <div className="w-full">

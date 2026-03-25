@@ -52,7 +52,7 @@ class ErrorBoundaryInner extends Component<
     this.setState({ errorInfo });
 
     // Log error to console in development only
-    if (process.env.NODE_ENV === 'development') {
+    if (import.meta.env.DEV) {
       console.error('ErrorBoundary caught an error:', error);
       console.error('Component stack:', errorInfo.componentStack);
     }
@@ -64,7 +64,7 @@ class ErrorBoundaryInner extends Component<
     this.reportError(error, errorInfo);
   }
 
-  componentDidUpdate(prevProps: ErrorBoundaryProps & { location: string }): void {
+  componentDidUpdate(_prevProps: ErrorBoundaryProps & { location: string }): void {
     // Reset on route change if enabled
     if (
       this.props.resetOnRouteChange &&
@@ -89,7 +89,7 @@ class ErrorBoundaryInner extends Component<
     };
 
     // Log structured error for debugging
-    if (process.env.NODE_ENV === 'development') {
+    if (import.meta.env.DEV) {
       console.group('Error Report');
       console.log('Error:', errorReport);
       console.groupEnd();
@@ -171,7 +171,7 @@ function ErrorFallback({ error, onRetry }: ErrorFallbackProps) {
         </p>
 
         {/* Error details (development only) */}
-        {process.env.NODE_ENV === 'development' && error && (
+        {import.meta.env.DEV && error && (
           <details className="mb-6 text-left bg-gray-100 dark:bg-gray-800 rounded-lg p-4">
             <summary className="cursor-pointer text-sm font-medium text-gray-700 dark:text-gray-300">
               {t('errorBoundary.details', 'Error details')}

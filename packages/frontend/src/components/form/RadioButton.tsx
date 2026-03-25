@@ -1,4 +1,4 @@
-import React, { forwardRef, InputHTMLAttributes } from 'react';
+import { forwardRef, InputHTMLAttributes } from 'react';
 
 interface RadioButtonProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> {
   /** Radio button label */

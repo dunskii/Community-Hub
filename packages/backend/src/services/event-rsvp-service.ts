@@ -10,17 +10,19 @@ import crypto from 'crypto';
 import { prisma } from '../db/index.js';
 import { logger } from '../utils/logger.js';
 import { ApiError } from '../utils/api-error.js';
-import { getRedis } from '../cache/redis-client.js';
+import { createAuditLog } from '../utils/audit-logger.js';
+import { makeCacheKey, invalidateCacheByPattern } from '../cache/cache-helpers.js';
 import type { EventRSVPInput, AttendeeFilterInput } from '@community-hub/shared';
 import { EventStatus, RSVPStatus } from '../generated/prisma/index.js';
-import type { AuditContext, AttendeeInfo, PaginatedAttendees, EventWithDetails } from './event-service.js';
+import type { AuditContext } from '../types/service-types.js';
+import type { AttendeeInfo, PaginatedAttendees, EventWithDetails } from './event-service.js';
 
 // ─── Cache Keys ───────────────────────────────────────────────
 
 const CACHE_PREFIX = 'events';
 
 function getCacheKey(type: string, ...args: string[]): string {
-  return `${CACHE_PREFIX}:${type}:${args.join(':')}`;
+  return makeCacheKey(CACHE_PREFIX, type, ...args);
 }
 
 // ─── Service ──────────────────────────────────────────────────
@@ -126,7 +128,7 @@ export class EventRSVPService {
     });
 
     // Log audit
-    await this.logAudit('event.rsvp', eventId, null, rsvp, auditContext);
+    await createAuditLog({ context: auditContext, action: 'event.rsvp', targetType: 'EventRSVP', targetId: eventId, newValue: rsvp });
 
     logger.info(
       { eventId, userId, status: data.status, guestCount: data.guestCount },
@@ -180,7 +182,7 @@ export class EventRSVPService {
     });
 
     // Log audit
-    await this.logAudit('event.rsvp.cancel', eventId, rsvp, null, auditContext);
+    await createAuditLog({ context: auditContext, action: 'event.rsvp.cancel', targetType: 'EventRSVP', targetId: eventId, previousValue: rsvp });
 
     logger.info({ eventId, userId }, 'Event RSVP cancelled');
 
@@ -393,54 +395,14 @@ export class EventRSVPService {
   }
 
   /**
-   * Logs an audit entry
-   */
-  private async logAudit(
-    action: string,
-    targetId: string,
-    previousValue: unknown,
-    newValue: unknown,
-    context: AuditContext
-  ): Promise<void> {
-    try {
-      await prisma.audit_logs.create({
-        data: {
-          id: crypto.randomUUID(),
-          actor_id: context.actorId,
-          actor_role: context.actorRole as 'USER' | 'BUSINESS_OWNER' | 'MODERATOR' | 'ADMIN' | 'SYSTEM',
-          action,
-          target_type: 'EventRSVP',
-          target_id: targetId,
-          previous_value: previousValue ? JSON.parse(JSON.stringify(previousValue)) : null,
-          new_value: newValue ? JSON.parse(JSON.stringify(newValue)) : null,
-          ip_address: context.ipAddress || 'unknown',
-          user_agent: context.userAgent || 'unknown',
-        },
-      });
-    } catch (error) {
-      logger.error({ error, action, targetId }, 'Failed to create audit log');
-    }
-  }
-
-  /**
    * Invalidates event cache
    */
   private async invalidateCache(eventId?: string): Promise<void> {
-    try {
-      const redis = getRedis();
-      if (!redis) return;
-
-      if (eventId) {
-        await redis.del(getCacheKey('event', eventId));
-      }
-      // Also invalidate list caches
-      const keys = await redis.keys(`${CACHE_PREFIX}:list:*`);
-      if (keys.length > 0) {
-        await redis.del(...keys);
-      }
-    } catch (error) {
-      logger.error({ error }, 'Failed to invalidate event cache');
-    }
+    await invalidateCacheByPattern(
+      CACHE_PREFIX,
+      eventId ? getCacheKey('event', eventId) : undefined,
+      ['list:*']
+    );
   }
 }
 

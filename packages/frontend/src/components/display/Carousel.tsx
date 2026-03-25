@@ -57,7 +57,7 @@ export function Carousel({
         {children.map((child, index) => (
           <div
             key={index}
-            className="min-w-full"
+            className="min-w-full px-1 py-2"
             aria-hidden={index !== currentIndex}
           >
             {child}

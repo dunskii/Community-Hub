@@ -242,3 +242,75 @@ export type {
   DealFilterInput,
   Deal,
 } from './schemas/deal-schemas.js';
+
+// Social Media (Phase 10+)
+export {
+  SOCIAL_PLATFORMS,
+  SOCIAL_POST_STATUSES,
+  SOCIAL_CONTENT_TYPES,
+  CAPTION_LIMITS,
+  PLATFORM_META,
+} from './types/social.js';
+
+export type {
+  SocialPlatform,
+  SocialPostStatus,
+  SocialContentType,
+  SocialAccount,
+  SocialPost,
+  CaptionPreview,
+  PlatformApprovals,
+  GbpSyncField,
+  GbpProfileData,
+  GbpSyncResult,
+  GbpSyncStatus,
+} from './types/social.js';
+
+export { GBP_SYNC_FIELDS } from './types/social.js';
+
+export {
+  socialPlatformSchema,
+  socialContentTypeSchema,
+  socialPostCreateSchema,
+  socialAccountToggleSchema,
+  captionPreviewSchema,
+  socialPostFilterSchema,
+  gbpSyncApplySchema,
+  gbpProfileDataSchema,
+} from './schemas/social-schemas.js';
+
+export type {
+  SocialPostCreateInput,
+  SocialAccountToggleInput,
+  CaptionPreviewInput,
+  SocialPostFilterInput,
+  GbpSyncApplyInput,
+} from './schemas/social-schemas.js';
+
+// Admin schemas
+export {
+  USER_ROLES,
+  USER_STATUSES,
+  BUSINESS_STATUSES,
+  updateUserRoleSchema,
+  suspendUserSchema,
+  adminUsersQuerySchema,
+  updateBusinessStatusSchema,
+  adminBusinessesQuerySchema,
+  adminAnalyticsQuerySchema,
+  adminEventsQuerySchema,
+  createUserSchema,
+  assignBusinessOwnerSchema,
+} from './schemas/admin-schemas.js';
+
+export type {
+  UpdateUserRoleInput,
+  SuspendUserInput,
+  AdminUsersQuery,
+  UpdateBusinessStatusInput,
+  AdminBusinessesQuery,
+  AdminAnalyticsQuery,
+  AdminEventsQuery,
+  CreateUserInput,
+  AssignBusinessOwnerInput,
+} from './schemas/admin-schemas.js';

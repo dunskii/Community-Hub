@@ -1,4 +1,4 @@
-import React, { forwardRef, InputHTMLAttributes } from 'react';
+import { forwardRef, InputHTMLAttributes } from 'react';
 
 interface DatePickerProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> {
   /** DatePicker label */
@@ -47,6 +47,12 @@ export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(function
           aria-describedby={[errorId, helperId].filter(Boolean).join(' ') || undefined}
           className={`
             w-full px-4 py-2 rounded-md border transition-colors
+            [&::-webkit-calendar-picker-indicator]:opacity-0
+            [&::-webkit-calendar-picker-indicator]:absolute
+            [&::-webkit-calendar-picker-indicator]:right-0
+            [&::-webkit-calendar-picker-indicator]:w-10
+            [&::-webkit-calendar-picker-indicator]:h-full
+            [&::-webkit-calendar-picker-indicator]:cursor-pointer
             ${
               error
                 ? 'border-error text-error focus:border-error focus:ring-error'

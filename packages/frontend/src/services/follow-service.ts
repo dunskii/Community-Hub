@@ -87,7 +87,15 @@ export const followService = {
     if (options?.page) params.append('page', options.page.toString());
     if (options?.limit) params.append('limit', options.limit.toString());
 
-    const response = await apiClient.get(`/users/me/following?${params.toString()}`);
+    const response = await apiClient.get<{
+      success: boolean;
+      data: {
+        businesses: any[];
+        total: number;
+        page: number;
+        limit: number;
+      };
+    }>(`/users/me/following?${params.toString()}`);
     return response;
   },
 };

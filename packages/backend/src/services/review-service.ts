@@ -29,17 +29,10 @@ export interface ReviewFilters {
   rating?: number; // Filter by specific rating (1-5)
 }
 
-export interface PaginationOptions {
-  page: number;
-  limit: number;
-}
+import { createAuditLog } from '../utils/audit-logger.js';
+import type { AuditContext, PaginationOptions } from '../types/service-types.js';
 
-export interface AuditContext {
-  actorId: string;
-  actorRole: string;
-  ipAddress?: string;
-  userAgent?: string;
-}
+export type { AuditContext, PaginationOptions };
 
 export class ReviewService {
   /**
@@ -157,21 +150,15 @@ export class ReviewService {
     });
 
     // Audit log
-    await prisma.audit_logs.create({
-      data: {
-        id: crypto.randomUUID(),
-        actor_id: auditContext.actorId,
-        actor_role: auditContext.actorRole as any,
-        action: 'review.create',
-        target_type: 'Review',
-        target_id: review.id,
-        new_value: {
-          businessId: data.businessId,
-          rating: data.rating,
-          status: 'PENDING',
-        },
-        ip_address: auditContext.ipAddress || 'unknown',
-        user_agent: auditContext.userAgent || 'unknown',
+    await createAuditLog({
+      context: auditContext,
+      action: 'review.create',
+      targetType: 'Review',
+      targetId: review.id,
+      newValue: {
+        businessId: data.businessId,
+        rating: data.rating,
+        status: 'PENDING',
       },
     });
 
@@ -287,22 +274,13 @@ export class ReviewService {
     });
 
     // Audit log
-    await prisma.audit_logs.create({
-      data: {
-        id: crypto.randomUUID(),
-        actor_id: auditContext.actorId,
-        actor_role: auditContext.actorRole as any,
-        action: 'review.update',
-        target_type: 'Review',
-        target_id: reviewId,
-        previous_value: previousValue,
-        new_value: JSON.parse(JSON.stringify({
-          changes: data,
-          status: 'PENDING',
-        })),
-        ip_address: auditContext.ipAddress || 'unknown',
-        user_agent: auditContext.userAgent || 'unknown',
-      },
+    await createAuditLog({
+      context: auditContext,
+      action: 'review.update',
+      targetType: 'Review',
+      targetId: reviewId,
+      previousValue,
+      newValue: { changes: data, status: 'PENDING' },
     });
 
     logger.info({ reviewId, userId }, 'Review updated');
@@ -342,20 +320,14 @@ export class ReviewService {
     });
 
     // Audit log
-    await prisma.audit_logs.create({
-      data: {
-        id: crypto.randomUUID(),
-        actor_id: auditContext.actorId,
-        actor_role: auditContext.actorRole as any,
-        action: 'review.delete',
-        target_type: 'Review',
-        target_id: reviewId,
-        previous_value: {
-          businessId: review.business_id,
-          status: review.status,
-        },
-        ip_address: auditContext.ipAddress || 'unknown',
-        user_agent: auditContext.userAgent || 'unknown',
+    await createAuditLog({
+      context: auditContext,
+      action: 'review.delete',
+      targetType: 'Review',
+      targetId: reviewId,
+      previousValue: {
+        businessId: review.business_id,
+        status: review.status,
       },
     });
 
@@ -693,20 +665,12 @@ export class ReviewService {
     });
 
     // Audit log
-    await prisma.audit_logs.create({
-      data: {
-        id: crypto.randomUUID(),
-        actor_id: auditContext.actorId,
-        actor_role: auditContext.actorRole as any,
-        action: 'review.respond',
-        target_type: 'Review',
-        target_id: reviewId,
-        new_value: {
-          responseLength: response.length,
-        },
-        ip_address: auditContext.ipAddress || 'unknown',
-        user_agent: auditContext.userAgent || 'unknown',
-      },
+    await createAuditLog({
+      context: auditContext,
+      action: 'review.respond',
+      targetType: 'Review',
+      targetId: reviewId,
+      newValue: { responseLength: response.length },
     });
 
     logger.info({ reviewId, businessOwnerId }, 'Business owner responded to review');

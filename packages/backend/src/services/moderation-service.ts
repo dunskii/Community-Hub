@@ -8,20 +8,13 @@ import { prisma } from '../db/index.js';
 import { logger } from '../utils/logger.js';
 import { ApiError } from '../utils/api-error.js';
 
-export interface AuditContext {
-  actorId: string;
-  actorRole: string;
-  ipAddress?: string;
-  userAgent?: string;
-}
+import { createAuditLog } from '../utils/audit-logger.js';
+import type { AuditContext, PaginationOptions } from '../types/service-types.js';
+
+export type { AuditContext, PaginationOptions };
 
 export interface ModerationQueueFilters {
   status?: 'PENDING' | 'REVIEWED' | 'ACTIONED' | 'DISMISSED';
-}
-
-export interface PaginationOptions {
-  page: number;
-  limit: number;
 }
 
 export class ModerationService {
@@ -72,21 +65,12 @@ export class ModerationService {
     });
 
     // Audit log
-    await prisma.audit_logs.create({
-      data: {
-        id: crypto.randomUUID(),
-        actor_id: auditContext.actorId,
-        actor_role: auditContext.actorRole as any,
-        action: 'review.approve',
-        target_type: 'Review',
-        target_id: reviewId,
-        new_value: {
-          moderatorId,
-          notes,
-        },
-        ip_address: auditContext.ipAddress || 'unknown',
-        user_agent: auditContext.userAgent || 'unknown',
-      },
+    await createAuditLog({
+      context: auditContext,
+      action: 'review.approve',
+      targetType: 'Review',
+      targetId: reviewId,
+      newValue: { moderatorId, notes },
     });
 
     logger.info({ reviewId, moderatorId }, 'Review approved');
@@ -127,22 +111,12 @@ export class ModerationService {
     });
 
     // Audit log
-    await prisma.audit_logs.create({
-      data: {
-        id: crypto.randomUUID(),
-        actor_id: auditContext.actorId,
-        actor_role: auditContext.actorRole as any,
-        action: 'review.reject',
-        target_type: 'Review',
-        target_id: reviewId,
-        new_value: {
-          moderatorId,
-          reason,
-          notes,
-        },
-        ip_address: auditContext.ipAddress || 'unknown',
-        user_agent: auditContext.userAgent || 'unknown',
-      },
+    await createAuditLog({
+      context: auditContext,
+      action: 'review.reject',
+      targetType: 'Review',
+      targetId: reviewId,
+      newValue: { moderatorId, reason, notes },
     });
 
     logger.info({ reviewId, moderatorId, reason }, 'Review rejected');
@@ -343,21 +317,12 @@ export class ModerationService {
     });
 
     // Audit log
-    await prisma.audit_logs.create({
-      data: {
-        id: crypto.randomUUID(),
-        actor_id: auditContext.actorId,
-        actor_role: auditContext.actorRole as any,
-        action: 'appeal.review',
-        target_type: 'Appeal',
-        target_id: appealId,
-        new_value: {
-          decision,
-          reviewerId,
-        },
-        ip_address: auditContext.ipAddress || 'unknown',
-        user_agent: auditContext.userAgent || 'unknown',
-      },
+    await createAuditLog({
+      context: auditContext,
+      action: 'appeal.review',
+      targetType: 'Appeal',
+      targetId: appealId,
+      newValue: { decision, reviewerId },
     });
 
     logger.info({ appealId, decision, reviewerId }, 'Appeal reviewed');

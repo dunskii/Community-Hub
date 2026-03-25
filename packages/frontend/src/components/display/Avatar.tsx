@@ -1,4 +1,3 @@
-import React from 'react';
 
 interface AvatarProps {
   /** User name for initials fallback */
@@ -28,9 +27,9 @@ export function Avatar({
   const getInitials = (name: string): string => {
     const parts = name.trim().split(' ');
     if (parts.length === 1) {
-      return parts[0].charAt(0).toUpperCase();
+      return (parts[0] ?? '').charAt(0).toUpperCase();
     }
-    return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+    return ((parts[0] ?? '').charAt(0) + (parts[parts.length - 1] ?? '').charAt(0)).toUpperCase();
   };
 
   // Generate background color from name (consistent color for same name)
@@ -46,7 +45,7 @@ export function Avatar({
       'bg-teal-500',
     ];
     const index = name.charCodeAt(0) % colors.length;
-    return colors[index];
+    return colors[index] ?? 'bg-blue-500';
   };
 
   if (src) {

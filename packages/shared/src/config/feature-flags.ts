@@ -20,6 +20,7 @@ export const FEATURE_FLAGS = [
   'pwaInstallation',
   'smsAlerts',
   'whatsappAlerts',
+  'socialPosting',
 ] as const satisfies readonly FeatureFlag[];
 
 /**

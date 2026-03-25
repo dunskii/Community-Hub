@@ -437,7 +437,7 @@ interface WeekViewProps {
 }
 
 function WeekView({ currentDate, events, onEventClick }: WeekViewProps) {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const isRtl = i18n.dir() === 'rtl';
   const locale = i18n.language === 'en' ? 'en-AU' : i18n.language;
   const hours = getHourSlots();

@@ -514,7 +514,7 @@ interface MetricCardProps {
 }
 
 function MetricCard({ label, metric, icon, size = 'normal' }: MetricCardProps) {
-  const { value, trend, trendClass } = formatMetricWithTrend(metric);
+  const { value, trend } = formatMetricWithTrend(metric);
 
   const TrendIcon = metric.trend === 'up' ? ArrowTrendingUpIcon : metric.trend === 'down' ? ArrowTrendingDownIcon : MinusIcon;
   const trendColor = metric.trend === 'up' ? 'text-emerald-500' : metric.trend === 'down' ? 'text-red-500' : 'text-slate-400';

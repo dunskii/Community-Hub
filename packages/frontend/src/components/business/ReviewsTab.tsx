@@ -22,7 +22,7 @@ export interface ReviewsTabProps {
 
 export const ReviewsTab: React.FC<ReviewsTabProps> = ({ businessId, businessName }) => {
   const { t } = useTranslation('reviews');
-  const { user, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   const {
     reviews,
@@ -137,12 +137,12 @@ export const ReviewsTab: React.FC<ReviewsTabProps> = ({ businessId, businessName
     }
   };
 
-  const getRatingDistribution = () => {
+  const getRatingDistribution = (): number[] => {
     // Calculate distribution of ratings (1-5 stars)
-    const distribution = [0, 0, 0, 0, 0];
+    const distribution: number[] = [0, 0, 0, 0, 0];
     reviews.forEach((review) => {
       if (review.rating >= 1 && review.rating <= 5) {
-        distribution[review.rating - 1]++;
+        distribution[review.rating - 1] = (distribution[review.rating - 1] ?? 0) + 1;
       }
     });
     return distribution;
@@ -164,7 +164,7 @@ export const ReviewsTab: React.FC<ReviewsTabProps> = ({ businessId, businessName
 
         <div className="reviews-tab__distribution">
           {[5, 4, 3, 2, 1].map((stars) => {
-            const count = ratingDistribution[stars - 1];
+            const count = ratingDistribution[stars - 1] ?? 0;
             const percentage = total > 0 ? (count / total) * 100 : 0;
 
             return (
@@ -198,16 +198,23 @@ export const ReviewsTab: React.FC<ReviewsTabProps> = ({ businessId, businessName
           </button>
         )}
         {hasUserReviewed && userReview && (
-          <Alert variant="info" message={t('reviews.alreadyReviewed', 'You have already reviewed this business.')} />
+          <Alert type="info" message={t('reviews.alreadyReviewed', 'You have already reviewed this business.')} />
         )}
       </div>
 
       {/* Error Display */}
-      {error && <Alert variant="error" message={error} />}
+      {error && <Alert type="critical" message={error} />}
 
       {/* Review List */}
       <ReviewList
-        reviews={reviews}
+        reviews={reviews.map((r) => ({
+          ...r,
+          createdAt: new Date(r.createdAt),
+          updatedAt: r.updatedAt ? new Date(r.updatedAt) : undefined,
+          businessResponse: r.businessResponse
+            ? { content: r.businessResponse.content, respondedAt: new Date(r.businessResponse.respondedAt) }
+            : undefined,
+        }))}
         total={total}
         page={page}
         limit={limit}
@@ -230,7 +237,7 @@ export const ReviewsTab: React.FC<ReviewsTabProps> = ({ businessId, businessName
             ? t('reviews.editReview', 'Edit Review')
             : t('reviews.writeReviewFor', { business: businessName, defaultValue: `Write a Review for ${businessName}` })
         }
-        size="large"
+        size="lg"
       >
         <ReviewForm
           initialData={

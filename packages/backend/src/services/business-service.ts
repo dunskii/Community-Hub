@@ -8,7 +8,7 @@ import type {
   BusinessUpdateInput,
   BusinessStatus,
 } from '@community-hub/shared';
-import { Prisma, ActorRole } from '../generated/prisma/index.js';
+import { Prisma } from '../generated/prisma/index.js';
 import { prisma } from '../db/index.js';
 import { geocodeAddress } from './maps/geocoding-service.js';
 import { indexBusiness, deindexBusiness } from '../search/indexing-service.js';
@@ -31,12 +31,10 @@ export interface BusinessListOptions {
   sortOrder?: 'asc' | 'desc';
 }
 
-export interface AuditContext {
-  actorId: string;
-  actorRole: string;
-  ipAddress?: string;
-  userAgent?: string;
-}
+import { createAuditLog } from '../utils/audit-logger.js';
+import type { AuditContext } from '../types/service-types.js';
+
+export type { AuditContext };
 
 export class BusinessService {
   /**
@@ -131,7 +129,7 @@ export class BusinessService {
     });
 
     // Log audit trail
-    await this.logBusinessChange(auditContext, 'create', business.id, null, business);
+    await createAuditLog({ context: auditContext, action: 'business.create', targetType: 'Business', targetId: business.id, newValue: business as unknown as Record<string, unknown> });
 
     return business;
   }
@@ -344,6 +342,8 @@ export class BusinessService {
         price_range: data.priceRange,
         parking_information: data.parkingInformation,
         year_established: data.yearEstablished,
+        cover_photo: data.coverPhoto,
+        gallery: data.photos as unknown as Prisma.InputJsonValue,
         updated_at: new Date(),
       },
       include: {
@@ -364,7 +364,7 @@ export class BusinessService {
     });
 
     // Log audit trail
-    await this.logBusinessChange(auditContext, 'update', id, existingBusiness, business);
+    await createAuditLog({ context: auditContext, action: 'business.update', targetType: 'Business', targetId: id, previousValue: existingBusiness as unknown as Record<string, unknown>, newValue: business as unknown as Record<string, unknown> });
 
     return business;
   }
@@ -397,39 +397,9 @@ export class BusinessService {
     });
 
     // Log audit trail
-    await this.logBusinessChange(auditContext, 'delete', id, existingBusiness, null);
+    await createAuditLog({ context: auditContext, action: 'business.delete', targetType: 'Business', targetId: id, previousValue: existingBusiness as unknown as Record<string, unknown> });
   }
 
-  /**
-   * Logs business changes to audit trail
-   */
-  private async logBusinessChange(
-    auditContext: AuditContext,
-    action: 'create' | 'update' | 'delete',
-    businessId: string,
-    previousValue: Record<string, unknown> | null,
-    newValue: Record<string, unknown> | null
-  ): Promise<void> {
-    try {
-      await prisma.audit_logs.create({
-        data: {
-          id: crypto.randomUUID(),
-          actor_id: auditContext.actorId,
-          actor_role: auditContext.actorRole as ActorRole,
-          action: `business.${action}`,
-          target_type: 'Business',
-          target_id: businessId,
-          previous_value: previousValue as Prisma.InputJsonValue ?? Prisma.DbNull,
-          new_value: newValue as Prisma.InputJsonValue ?? Prisma.DbNull,
-          ip_address: auditContext.ipAddress || '0.0.0.0',
-          user_agent: auditContext.userAgent || 'unknown',
-        },
-      });
-    } catch (error) {
-      // Log error but don't fail the operation
-      logger.error({ error, businessId, action }, 'Failed to create audit log entry');
-    }
-  }
 }
 
 export const businessService = new BusinessService();

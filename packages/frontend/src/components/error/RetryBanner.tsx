@@ -7,7 +7,6 @@
  * Shows "Unable to load. Check your connection." with retry button.
  */
 
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 export interface RetryBannerProps {

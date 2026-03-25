@@ -155,6 +155,8 @@ export const businessCreateSchema = z.object({
     .min(1800)
     .max(new Date().getFullYear())
     .optional(),
+  coverPhoto: z.string().url('Invalid cover photo URL').optional(),
+  photos: z.array(z.string().url('Invalid photo URL')).max(50, 'Maximum 50 photos').optional(),
 });
 
 // Business update schema (all fields optional except protected ones)

@@ -10,6 +10,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { App } from './App';
 import { initializeMapbox } from './services/maps/mapbox-config.js';
 import { loadAndInjectDesignTokens } from './utils/design-tokens';
+import { loadPlatformConfig } from './config/platform-loader';
 import { initializeTheme } from './hooks/useTheme';
 
 // Initialize theme BEFORE React renders to prevent flash of unstyled content
@@ -27,8 +28,26 @@ if (!root) {
   throw new Error('Root element #root not found in document');
 }
 
-// Load design tokens before rendering
-loadAndInjectDesignTokens().then(() => {
+// Load platform config with retries (backend may still be starting)
+async function loadConfigWithRetry(retries = 5, delayMs = 1000): Promise<void> {
+  for (let i = 0; i < retries; i++) {
+    try {
+      await loadPlatformConfig();
+      return;
+    } catch {
+      if (i < retries - 1) {
+        await new Promise(r => setTimeout(r, delayMs));
+      }
+    }
+  }
+  console.error('Failed to load platform config after retries — backend may be down');
+}
+
+// Load platform config and design tokens before rendering
+Promise.all([
+  loadConfigWithRetry(),
+  loadAndInjectDesignTokens(),
+]).then(() => {
   createRoot(root).render(
     <StrictMode>
       <HelmetProvider>

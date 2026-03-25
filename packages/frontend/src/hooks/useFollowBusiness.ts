@@ -23,6 +23,7 @@ export function useFollowBusiness(businessId: string): UseFollowBusinessReturn {
   const [error, setError] = useState<string | null>(null);
 
   const fetchFollowData = useCallback(async () => {
+    if (!businessId) return;
     setIsLoading(true);
     try {
       const [followStatus, count] = await Promise.all([

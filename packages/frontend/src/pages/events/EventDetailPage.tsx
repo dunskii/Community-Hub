@@ -19,6 +19,8 @@ import { RSVPButton } from '../../components/events/RSVPButton';
 import { useAuth } from '../../hooks/useAuth';
 import { eventService, formatEventDate, getLocationTypeBadgeVariant } from '../../services/event-service';
 import type { Event, RSVPStatus } from '../../services/event-service';
+import { BusinessMap } from '../../components/maps/BusinessMap';
+import { post } from '../../services/api-client';
 
 export function EventDetailPage() {
   const { idOrSlug } = useParams<{ idOrSlug: string }>();
@@ -31,6 +33,7 @@ export function EventDetailPage() {
   const [error, setError] = useState<string | null>(null);
   const [rsvpLoading, setRsvpLoading] = useState(false);
   const [showCalendarModal, setShowCalendarModal] = useState(false);
+  const [mapCoords, setMapCoords] = useState<{ lat: number; lng: number } | null>(null);
 
   // Fetch event
   const fetchEvent = useCallback(async () => {
@@ -59,6 +62,37 @@ export function EventDetailPage() {
   useEffect(() => {
     fetchEvent();
   }, [fetchEvent]);
+
+  // Geocode venue address for map
+  useEffect(() => {
+    if (!event?.venue || event.locationType === 'ONLINE') return;
+
+    // Use existing coordinates if available
+    if (event.venue.latitude && event.venue.longitude) {
+      setMapCoords({ lat: event.venue.latitude, lng: event.venue.longitude });
+      return;
+    }
+
+    // Geocode the address
+    let cancelled = false;
+    async function geocode() {
+      try {
+        const result = await post<{ success: boolean; data: { latitude: number; longitude: number } }>('/geocode', {
+          street: event!.venue!.street,
+          suburb: event!.venue!.suburb,
+          postcode: event!.venue!.postcode,
+          country: event!.venue!.country || 'Australia',
+        });
+        if (!cancelled && result.data) {
+          setMapCoords({ lat: result.data.latitude, lng: result.data.longitude });
+        }
+      } catch {
+        // Silently fail - map just won't show
+      }
+    }
+    geocode();
+    return () => { cancelled = true; };
+  }, [event?.venue, event?.locationType]);
 
   // Handle RSVP
   const handleRSVP = async (status: RSVPStatus, guestCount: number = 1) => {
@@ -256,151 +290,131 @@ export function EventDetailPage() {
           </div>
 
           {/* Content */}
-          <div className="max-w-4xl mx-auto px-4 py-6">
+          <div className="max-w-5xl mx-auto px-4 py-6 space-y-6">
             {/* Back link */}
             <Link
               to="/events"
-              className="inline-flex items-center text-sm text-gray-600 hover:text-primary mb-4"
+              className="inline-flex items-center text-sm text-gray-500 dark:text-gray-400 hover:text-primary transition-colors"
             >
-              <svg
-                className="w-4 h-4 mr-1"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 19l-7-7 7-7"
-                />
+              <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
               {t('events.backToEvents')}
             </Link>
 
-            {/* Category and badges */}
-            <div className="flex flex-wrap items-center gap-2 mb-3">
-              {categoryName && (
-                <Badge variant="default" size="sm">
-                  {categoryName}
+            {/* Main Card: Title, Details & Map */}
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
+              {/* Badges */}
+              <div className="flex flex-wrap items-center gap-2 mb-4">
+                {categoryName && (
+                  <Badge variant="default" size="sm">{categoryName}</Badge>
+                )}
+                <Badge variant={getLocationTypeBadgeVariant(event.locationType)} size="sm">
+                  {locationTypeLabels[event.locationType]}
                 </Badge>
-              )}
-              <Badge variant={getLocationTypeBadgeVariant(event.locationType)} size="sm">
-                {locationTypeLabels[event.locationType]}
-              </Badge>
-              {(event.cost === null || event.cost === '' || event.cost === '0' || event.cost?.toLowerCase() === 'free') && (
-                <Badge variant="success" size="sm">
-                  {t('events.free')}
-                </Badge>
-              )}
-              {event.status === 'PENDING' && (
-                <Badge variant="warning" size="sm">
-                  {t('events.status.pending')}
-                </Badge>
-              )}
-            </div>
-
-            {/* Title */}
-            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              {event.title}
-            </h1>
-
-            {/* Date and Time */}
-            <div className="flex items-start gap-3 mb-4">
-              <div className="flex-shrink-0 w-12 h-12 bg-primary/10 rounded-lg flex flex-col items-center justify-center">
-                <span className="text-xs font-semibold text-primary uppercase">
-                  {new Date(event.startTime).toLocaleDateString(i18n.language, { month: 'short' })}
-                </span>
-                <span className="text-lg font-bold text-primary">
-                  {new Date(event.startTime).getDate()}
-                </span>
+                {(event.cost === null || event.cost === '' || event.cost === '0' || event.cost?.toLowerCase() === 'free') && (
+                  <Badge variant="success" size="sm">{t('events.free')}</Badge>
+                )}
+                {event.status === 'PENDING' && (
+                  <Badge variant="warning" size="sm">{t('events.status.pending')}</Badge>
+                )}
               </div>
-              <div>
-                <p className="font-semibold text-gray-900">{dateInfo.date}</p>
-                <p className="text-gray-600">{dateInfo.time}</p>
-                {dateInfo.duration && (
-                  <p className="text-sm text-gray-500">{dateInfo.duration}</p>
+
+              {/* Title + Details + Map */}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem' }}>
+                {/* Left: Title + details */}
+                <div style={{ flex: '1 1 300px' }}>
+                  <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-4">
+                    {event.title}
+                  </h1>
+                  <div className="space-y-4">
+                    {/* Date and Time */}
+                    <div className="flex items-start gap-3">
+                      <div className="flex-shrink-0 w-12 h-12 bg-primary/10 rounded-xl flex flex-col items-center justify-center">
+                        <span className="text-[10px] font-semibold text-primary uppercase leading-none">
+                          {new Date(event.startTime).toLocaleDateString(i18n.language, { month: 'short' })}
+                        </span>
+                        <span className="text-lg font-bold text-primary leading-tight">
+                          {new Date(event.startTime).getDate()}
+                        </span>
+                      </div>
+                      <div>
+                        <p className="font-semibold text-slate-900 dark:text-white">{dateInfo.date}</p>
+                        <p className="text-slate-600 dark:text-slate-300">{dateInfo.time}</p>
+                        {dateInfo.duration && (
+                          <p className="text-sm text-slate-400">{dateInfo.duration}</p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Location */}
+                    {event.locationType === 'PHYSICAL' && event.venue && (
+                      <div className="flex items-start gap-3">
+                        <div className="flex-shrink-0 w-12 h-12 bg-slate-100 dark:bg-slate-700 rounded-xl flex items-center justify-center">
+                          <svg className="w-5 h-5 text-slate-500 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                          </svg>
+                        </div>
+                        <div>
+                          {event.venue.name && <p className="font-semibold text-slate-900 dark:text-white">{event.venue.name}</p>}
+                          <address className="not-italic text-slate-600 dark:text-slate-300">
+                            {event.venue.street}<br />
+                            {event.venue.suburb}, {event.venue.state} {event.venue.postcode}
+                          </address>
+                          <a
+                            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${event.venue.street}, ${event.venue.suburb}, ${event.venue.state} ${event.venue.postcode}`)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-sm text-primary hover:underline mt-1 inline-block"
+                          >
+                            {t('events.getDirections', 'Get Directions')}
+                          </a>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Online URL */}
+                    {(event.locationType === 'ONLINE' || event.locationType === 'HYBRID') && event.onlineUrl && (
+                      <div className="flex items-start gap-3">
+                        <div className="flex-shrink-0 w-12 h-12 bg-green-50 dark:bg-green-900/20 rounded-xl flex items-center justify-center">
+                          <svg className="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                          </svg>
+                        </div>
+                        <div>
+                          <p className="font-semibold text-slate-900 dark:text-white">{t('events.onlineEvent')}</p>
+                          <a href={event.onlineUrl} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                            {t('events.joinOnline')}
+                          </a>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Right: Map */}
+                {event.locationType === 'PHYSICAL' && event.venue && mapCoords && (
+                  <div style={{ flex: '0 0 50%', maxWidth: '50%' }}>
+                    <BusinessMap
+                      latitude={mapCoords.lat}
+                      longitude={mapCoords.lng}
+                      businessName={event.venue.name || event.title}
+                      address={`${event.venue.street}, ${event.venue.suburb}, ${event.venue.state} ${event.venue.postcode}`}
+                      className="h-56 rounded-xl"
+                    />
+                  </div>
                 )}
               </div>
             </div>
 
-            {/* Location */}
-            {event.locationType === 'PHYSICAL' && event.venue && (
-              <div className="flex items-start gap-3 mb-4">
-                <div className="flex-shrink-0 w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
-                  <svg
-                    className="w-6 h-6 text-gray-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                  </svg>
-                </div>
-                <div>
-                  {event.venue.name && <p className="font-semibold text-gray-900">{event.venue.name}</p>}
-                  <address className="not-italic text-gray-600">
-                    {event.venue.street}
-                    <br />
-                    {event.venue.suburb}, {event.venue.state} {event.venue.postcode}
-                  </address>
-                </div>
-              </div>
-            )}
-
-            {/* Online URL */}
-            {(event.locationType === 'ONLINE' || event.locationType === 'HYBRID') && event.onlineUrl && (
-              <div className="flex items-start gap-3 mb-4">
-                <div className="flex-shrink-0 w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                  <svg
-                    className="w-6 h-6 text-green-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
-                    />
-                  </svg>
-                </div>
-                <div>
-                  <p className="font-semibold text-gray-900">{t('events.onlineEvent')}</p>
-                  <a
-                    href={event.onlineUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary hover:underline"
-                  >
-                    {t('events.joinOnline')}
-                  </a>
-                </div>
-              </div>
-            )}
-
-            {/* RSVP Section */}
+            {/* RSVP Card */}
             {!isPast && event.status !== 'CANCELLED' && (
-              <div className="bg-gray-50 rounded-lg p-4 mb-6">
+              <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                   <div>
-                    <h2 className="font-semibold text-gray-900 mb-1">{t('events.rsvp.title')}</h2>
-                    <div className="flex items-center gap-4 text-sm text-gray-600">
+                    <h2 className="font-semibold text-slate-900 dark:text-white mb-1">{t('events.rsvp.title')}</h2>
+                    <div className="flex items-center gap-4 text-sm text-slate-500 dark:text-slate-400">
                       {event.rsvpCount.going > 0 && (
                         <span>{t('events.rsvp.goingCount', { count: event.rsvpCount.going })}</span>
                       )}
@@ -430,7 +444,7 @@ export function EventDetailPage() {
                   ) : (
                     <Link
                       to={`/login?redirect=/events/${event.slug || event.id}`}
-                      className="inline-flex items-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90"
+                      className="inline-flex items-center px-5 py-2.5 bg-primary text-white rounded-xl hover:bg-primary/90 font-medium transition-colors"
                     >
                       {t('events.loginToRsvp')}
                     </Link>
@@ -439,139 +453,136 @@ export function EventDetailPage() {
               </div>
             )}
 
-            {/* Calendar Actions */}
-            <div className="flex flex-wrap gap-2 mb-6">
-              <button
-                onClick={() => setShowCalendarModal(true)}
-                className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 text-gray-700"
-              >
-                <svg
-                  className="w-5 h-5 mr-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
+            {/* Actions Card */}
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-4">
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={() => setShowCalendarModal(true)}
+                  className="inline-flex items-center px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-sm font-medium transition-colors"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                  />
-                </svg>
-                {t('events.addToCalendar')}
-              </button>
-
-              {/* Owner actions */}
-              {isOwner && (
-                <Link
-                  to={`/events/${event.id}/edit`}
-                  className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 text-gray-700"
-                >
-                  <svg
-                    className="w-5 h-5 mr-2"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                    />
+                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
-                  {t('events.editEvent')}
-                </Link>
-              )}
+                  {t('events.addToCalendar')}
+                </button>
+
+                {isOwner && (
+                  <Link
+                    to={`/events/${event.id}/edit`}
+                    className="inline-flex items-center px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-sm font-medium transition-colors"
+                  >
+                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                    {t('events.editEvent')}
+                  </Link>
+                )}
+              </div>
             </div>
 
-            {/* Description */}
-            <section className="mb-8">
-              <h2 className="text-xl font-semibold text-gray-900 mb-3">
+            {/* About Card */}
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
+              <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-3">
                 {t('events.about')}
               </h2>
-              <div className="prose prose-gray max-w-none">
-                <p className="whitespace-pre-wrap">{event.description}</p>
+              <div className="prose prose-slate dark:prose-invert max-w-none">
+                <p className="whitespace-pre-wrap text-slate-600 dark:text-slate-300">{event.description}</p>
               </div>
-            </section>
+            </div>
 
-            {/* Additional Info */}
-            <section className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-              {/* Cost */}
-              {event.cost && event.cost !== 'free' && event.cost !== '0' && (
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-1">{t('events.cost')}</h3>
-                  <p className="text-gray-600">{event.cost}</p>
+            {/* Details Card (cost, age, accessibility, tickets) */}
+            {(
+              (event.cost && event.cost !== 'free' && event.cost !== '0') ||
+              event.ageRestriction ||
+              (event.accessibility && event.accessibility.length > 0) ||
+              event.ticketUrl
+            ) && (
+              <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
+                <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
+                  {t('events.details', 'Details')}
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  {event.cost && event.cost !== 'free' && event.cost !== '0' && (
+                    <div className="flex items-start gap-3">
+                      <div className="flex-shrink-0 w-10 h-10 bg-amber-50 dark:bg-amber-900/20 rounded-xl flex items-center justify-center">
+                        <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                      </div>
+                      <div>
+                        <p className="text-xs font-medium text-slate-400 dark:text-slate-500 uppercase tracking-wide">{t('events.cost')}</p>
+                        <p className="text-slate-900 dark:text-white font-medium">{event.cost}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {event.ageRestriction && (
+                    <div className="flex items-start gap-3">
+                      <div className="flex-shrink-0 w-10 h-10 bg-purple-50 dark:bg-purple-900/20 rounded-xl flex items-center justify-center">
+                        <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                      </div>
+                      <div>
+                        <p className="text-xs font-medium text-slate-400 dark:text-slate-500 uppercase tracking-wide">{t('events.ageRestriction')}</p>
+                        <p className="text-slate-900 dark:text-white font-medium">{event.ageRestriction}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {event.accessibility && event.accessibility.length > 0 && (
+                    <div className="flex items-start gap-3">
+                      <div className="flex-shrink-0 w-10 h-10 bg-blue-50 dark:bg-blue-900/20 rounded-xl flex items-center justify-center">
+                        <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+                      </div>
+                      <div>
+                        <p className="text-xs font-medium text-slate-400 dark:text-slate-500 uppercase tracking-wide">{t('events.accessibility')}</p>
+                        <ul className="text-slate-700 dark:text-slate-300 space-y-0.5">
+                          {event.accessibility.map((item, index) => (
+                            <li key={index} className="text-sm">{t(`events.accessibilityOptions.${item}`, item)}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  )}
+
+                  {event.ticketUrl && (
+                    <div className="flex items-start gap-3">
+                      <div className="flex-shrink-0 w-10 h-10 bg-rose-50 dark:bg-rose-900/20 rounded-xl flex items-center justify-center">
+                        <svg className="w-5 h-5 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" /></svg>
+                      </div>
+                      <div>
+                        <p className="text-xs font-medium text-slate-400 dark:text-slate-500 uppercase tracking-wide">{t('events.tickets')}</p>
+                        <a href={event.ticketUrl} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-medium">
+                          {t('events.buyTickets')}
+                        </a>
+                      </div>
+                    </div>
+                  )}
                 </div>
-              )}
+              </div>
+            )}
 
-              {/* Age Restriction */}
-              {event.ageRestriction && (
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-1">{t('events.ageRestriction')}</h3>
-                  <p className="text-gray-600">{event.ageRestriction}</p>
-                </div>
-              )}
-
-              {/* Accessibility */}
-              {event.accessibility && event.accessibility.length > 0 && (
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-1">{t('events.accessibility')}</h3>
-                  <ul className="text-gray-600">
-                    {event.accessibility.map((item, index) => (
-                      <li key={index}>{item}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {/* Ticket URL */}
-              {event.ticketUrl && (
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-1">{t('events.tickets')}</h3>
-                  <a
-                    href={event.ticketUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary hover:underline"
-                  >
-                    {t('events.buyTickets')}
-                  </a>
-                </div>
-              )}
-            </section>
-
-            {/* Organizer */}
-            <section className="border-t pt-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-3">
+            {/* Organizer Card */}
+            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
+              <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
                 {t('events.organizer')}
               </h2>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-4">
                 <Avatar
                   name={event.createdBy.displayName}
                   src={event.createdBy.profilePhoto || undefined}
                   size="md"
                 />
                 <div>
-                  <p className="font-medium text-gray-900">{event.createdBy.displayName}</p>
+                  <p className="font-medium text-slate-900 dark:text-white">{event.createdBy.displayName}</p>
+                  {event.linkedBusiness && (
+                    <Link
+                      to={`/businesses/${event.linkedBusiness.slug}`}
+                      className="text-sm text-primary hover:underline"
+                    >
+                      {event.linkedBusiness.name}
+                    </Link>
+                  )}
                 </div>
               </div>
-
-              {/* Linked Business */}
-              {event.linkedBusiness && (
-                <div className="mt-4">
-                  <p className="text-sm text-gray-600 mb-2">{t('events.hostedBy')}</p>
-                  <Link
-                    to={`/businesses/${event.linkedBusiness.slug}`}
-                    className="inline-flex items-center text-primary hover:underline"
-                  >
-                    {event.linkedBusiness.name}
-                  </Link>
-                </div>
-              )}
-            </section>
+            </div>
           </div>
 
           {/* Add to Calendar Modal */}

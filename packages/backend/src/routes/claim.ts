@@ -252,7 +252,7 @@ router.post(
 router.get(
   '/claims/pending',
   requireAuth,
-  requireRole(['MODERATOR', 'ADMIN', 'SUPER_ADMIN']),
+  requireRole(['MODERATOR', 'CURATOR', 'ADMIN', 'SUPER_ADMIN']),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const page = parseInt(req.query.page as string) || 1;
@@ -274,7 +274,7 @@ router.get(
 router.post(
   '/claims/:claimId/approve',
   requireAuth,
-  requireRole(['MODERATOR', 'ADMIN', 'SUPER_ADMIN']),
+  requireRole(['MODERATOR', 'CURATOR', 'ADMIN', 'SUPER_ADMIN']),
   validate({ body: claimApproveSchema }),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -300,7 +300,7 @@ router.post(
 router.post(
   '/claims/:claimId/reject',
   requireAuth,
-  requireRole(['MODERATOR', 'ADMIN', 'SUPER_ADMIN']),
+  requireRole(['MODERATOR', 'CURATOR', 'ADMIN', 'SUPER_ADMIN']),
   validate({ body: claimRejectSchema }),
   async (req: Request, res: Response, next: NextFunction) => {
     try {

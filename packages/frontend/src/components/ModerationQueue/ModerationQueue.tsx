@@ -143,13 +143,13 @@ export const ModerationQueue: React.FC<ModerationQueueProps> = ({
   };
 
   const getPriorityBadge = (priority: string) => {
-    const variants: Record<string, 'error' | 'warning' | 'info'> = {
+    const variants: Record<string, 'error' | 'warning' | 'primary'> = {
       HIGH: 'error',
       MEDIUM: 'warning',
-      LOW: 'info',
+      LOW: 'primary',
     };
     return (
-      <Badge variant={variants[priority] || 'info'}>
+      <Badge variant={variants[priority] || 'primary'}>
         {t(`moderation.priority.${priority.toLowerCase()}`)}
       </Badge>
     );
@@ -214,8 +214,9 @@ export const ModerationQueue: React.FC<ModerationQueueProps> = ({
               <div className="moderation-queue__item-user">
                 <Avatar
                   src={item.review.user.avatarUrl}
+                  name={item.review.user.name}
                   alt={item.review.user.name}
-                  size="small"
+                  size="sm"
                 />
                 <span>{item.review.user.name}</span>
                 <StarRating value={item.review.rating} readOnly size="small" />

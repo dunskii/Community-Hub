@@ -22,6 +22,7 @@ export const allEnabledFeatures: FeaturesConfig = {
   pwaInstallation: true,
   smsAlerts: true,
   whatsappAlerts: true,
+  socialPosting: false,
 };
 
 export function createValidPlatformConfig(): PlatformConfig {

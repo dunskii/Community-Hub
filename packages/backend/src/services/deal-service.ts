@@ -21,14 +21,10 @@ const MAX_ACTIVE_DEALS_PER_BUSINESS = 5;
 const CACHE_PREFIX = 'deals';
 const CACHE_TTL = 300; // 5 minutes
 
-// ─── Types ────────────────────────────────────────────────────
+import { makeCacheKey } from '../cache/cache-helpers.js';
+import type { AuditContext } from '../types/service-types.js';
 
-export interface AuditContext {
-  actorId: string;
-  actorRole: string;
-  ipAddress?: string;
-  userAgent?: string;
-}
+export type { AuditContext };
 
 export interface DealWithBusiness {
   id: string;
@@ -48,6 +44,8 @@ export interface DealWithBusiness {
   featured: boolean;
   status: DealStatus;
   views: number;
+  clicks: number;
+  voucher_reveals: number;
   created_at: Date;
   updated_at: Date;
   businesses?: {
@@ -72,7 +70,7 @@ export interface PaginatedDeals {
 // ─── Cache Keys ───────────────────────────────────────────────
 
 function getCacheKey(type: string, ...args: string[]): string {
-  return `${CACHE_PREFIX}:${type}:${args.join(':')}`;
+  return makeCacheKey(CACHE_PREFIX, type, ...args);
 }
 
 // ─── Helper Functions ─────────────────────────────────────────
@@ -101,6 +99,8 @@ function formatDealResponse(deal: DealWithBusiness): Deal {
     featured: deal.featured,
     status: deal.status as Deal['status'],
     views: deal.views,
+    clicks: deal.clicks,
+    voucherReveals: deal.voucher_reveals,
     createdAt: deal.created_at.toISOString(),
     updatedAt: deal.updated_at.toISOString(),
     business: deal.businesses
@@ -567,6 +567,62 @@ export class DealService {
       // Don't throw for view count failures
       logger.warn({ dealId, error }, 'Failed to increment deal views');
     }
+  }
+
+  /**
+   * Increment click count for a deal (modal opened)
+   */
+  async incrementClicks(dealId: string): Promise<void> {
+    try {
+      await prisma.deals.update({
+        where: { id: dealId },
+        data: { clicks: { increment: 1 } },
+      });
+    } catch (error) {
+      logger.warn({ dealId, error }, 'Failed to increment deal clicks');
+    }
+  }
+
+  /**
+   * Increment voucher reveal count for a deal
+   */
+  async incrementVoucherReveals(dealId: string): Promise<void> {
+    try {
+      await prisma.deals.update({
+        where: { id: dealId },
+        data: { voucher_reveals: { increment: 1 } },
+      });
+    } catch (error) {
+      logger.warn({ dealId, error }, 'Failed to increment voucher reveals');
+    }
+  }
+
+  /**
+   * Get promotion stats for a business
+   */
+  async getPromotionStats(businessId: string): Promise<{
+    totalViews: number;
+    totalClicks: number;
+    totalVoucherReveals: number;
+    activeDeals: number;
+  }> {
+    const aggregates = await prisma.deals.aggregate({
+      where: { business_id: businessId },
+      _sum: {
+        views: true,
+        clicks: true,
+        voucher_reveals: true,
+      },
+    });
+
+    const activeCount = await this.getActiveDealsCount(businessId);
+
+    return {
+      totalViews: aggregates._sum.views || 0,
+      totalClicks: aggregates._sum.clicks || 0,
+      totalVoucherReveals: aggregates._sum.voucher_reveals || 0,
+      activeDeals: activeCount,
+    };
   }
 
   /**

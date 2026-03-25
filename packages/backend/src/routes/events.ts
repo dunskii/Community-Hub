@@ -164,7 +164,7 @@ router.get(
 router.post(
   '/:id/approve',
   requireAuth,
-  requireRole(['MODERATOR', 'ADMIN', 'SUPER_ADMIN']),
+  requireRole(['MODERATOR', 'CURATOR', 'ADMIN', 'SUPER_ADMIN']),
   eventController.approveEvent.bind(eventController)
 );
 

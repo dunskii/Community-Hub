@@ -7,9 +7,13 @@
 
 import { eventReminderScheduler } from './event-reminder-scheduler.js';
 import { dataRetentionScheduler } from './data-retention-scheduler.js';
+import { socialPostScheduler } from './social-post-scheduler.js';
+import { initializeAdapters } from '../social/adapter-registry.js';
+import { getPlatformConfig } from '../config/platform-loader.js';
 
 export { eventReminderScheduler, EventReminderScheduler } from './event-reminder-scheduler.js';
 export { dataRetentionScheduler, DataRetentionScheduler } from './data-retention-scheduler.js';
+export { socialPostScheduler, SocialPostScheduler } from './social-post-scheduler.js';
 
 /**
  * Starts all schedulers
@@ -17,6 +21,13 @@ export { dataRetentionScheduler, DataRetentionScheduler } from './data-retention
 export function startSchedulers(): void {
   eventReminderScheduler.start();
   dataRetentionScheduler.start();
+
+  // Initialize social media adapters and start post scheduler (if enabled)
+  const config = getPlatformConfig();
+  if (config.features.socialPosting) {
+    initializeAdapters();
+    socialPostScheduler.start();
+  }
 }
 
 /**
@@ -25,4 +36,5 @@ export function startSchedulers(): void {
 export function stopSchedulers(): void {
   eventReminderScheduler.stop();
   dataRetentionScheduler.stop();
+  socialPostScheduler.stop();
 }

@@ -28,7 +28,7 @@ interface PlatformColors {
  */
 function hexToRgb(hex: string): { r: number; g: number; b: number } {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  if (!result) throw new Error(`Invalid hex colour: ${hex}`);
+  if (!result || !result[1] || !result[2] || !result[3]) throw new Error(`Invalid hex colour: ${hex}`);
   return {
     r: parseInt(result[1], 16),
     g: parseInt(result[2], 16),

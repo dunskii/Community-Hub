@@ -6,7 +6,7 @@
  */
 
 import { useState, useEffect, useRef } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, useLocation, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet-async';
 import { PageContainer } from '../../components/layout/PageContainer';
@@ -56,13 +56,15 @@ interface Business {
   photos?: string[];
   gallery?: Photo[];
   logoUrl?: string;
-  coverImageUrl?: string;
+  coverPhoto?: string;
 }
 
 export function PhotosManagementPage() {
   const { businessId } = useParams<{ businessId: string }>();
   const { t } = useTranslation();
   const { isAuthenticated } = useAuth();
+  const location = useLocation();
+  const isAdminContext = location.pathname.startsWith('/admin');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [business, setBusiness] = useState<Business | null>(null);
@@ -75,6 +77,8 @@ export function PhotosManagementPage() {
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [selectedPhotos, setSelectedPhotos] = useState<Set<string>>(new Set());
   const [draggedPhoto, setDraggedPhoto] = useState<string | null>(null);
+  const [featuredPhotoUrl, setFeaturedPhotoUrl] = useState<string | null>(null);
+  const [settingFeatured, setSettingFeatured] = useState(false);
 
   // Stock photo modal state
   const [stockModalOpen, setStockModalOpen] = useState(false);
@@ -98,29 +102,47 @@ export function PhotosManagementPage() {
         setLoading(true);
         const biz = await businessApi.getBusinessById(businessId);
         setBusiness(biz as Business);
+        // API returns snake_case fields from Prisma (normalized by business-api)
+        const bizData = biz as unknown as Record<string, unknown>;
+        const coverPhoto = (bizData.coverPhoto as string) || (bizData.cover_photo as string) || null;
+        setFeaturedPhotoUrl(coverPhoto);
 
         // Build photos array from various sources
         const photoList: Photo[] = [];
 
-        // Add gallery photos if available
-        if ((biz as Business).gallery && Array.isArray((biz as Business).gallery)) {
-          (biz as Business).gallery!.forEach((photo, index) => {
-            photoList.push({
-              id: photo.id || `gallery-${index}`,
-              url: photo.url,
-              caption: photo.caption,
-              isPrimary: photo.isPrimary || index === 0,
-              order: photo.order || index,
-            });
+        // Gallery from API (snake_case: gallery is a Json field)
+        const gallery = (bizData.gallery || (biz as Business).gallery) as Photo[] | string[] | null;
+        if (gallery && Array.isArray(gallery)) {
+          gallery.forEach((item, index) => {
+            if (typeof item === 'string') {
+              // Simple URL string array
+              photoList.push({
+                id: `photo-${index}`,
+                url: item,
+                isPrimary: index === 0,
+                order: index,
+              });
+            } else if (item && typeof item === 'object') {
+              // Gallery photo object
+              const photo = item as Photo;
+              photoList.push({
+                id: photo.id || `gallery-${index}`,
+                url: photo.url,
+                caption: photo.caption,
+                isPrimary: photo.isPrimary || index === 0,
+                order: photo.order ?? index,
+              });
+            }
           });
         }
 
-        // Add simple photos array if available
-        if ((biz as Business).photos && Array.isArray((biz as Business).photos)) {
-          (biz as Business).photos!.forEach((url, index) => {
+        // Also check photos array (frontend type)
+        const photosArr = (biz as Business).photos;
+        if (photosArr && Array.isArray(photosArr)) {
+          photosArr.forEach((url, index) => {
             if (!photoList.some(p => p.url === url)) {
               photoList.push({
-                id: `photo-${index}`,
+                id: `photo-${photoList.length + index}`,
                 url,
                 isPrimary: photoList.length === 0 && index === 0,
                 order: photoList.length + index,
@@ -156,6 +178,7 @@ export function PhotosManagementPage() {
 
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
+        if (!file) continue;
 
         // Validate file type
         if (!file.type.startsWith('image/')) {
@@ -170,7 +193,7 @@ export function PhotosManagementPage() {
         }
 
         // Create preview URL
-        const url = URL.createObjectURL(file);
+        const url = URL.createObjectURL(file as Blob);
         newPhotos.push({
           id: `new-${Date.now()}-${i}`,
           url,
@@ -204,6 +227,24 @@ export function PhotosManagementPage() {
     );
     setSuccess(t('photos.primarySet', 'Primary photo updated'));
     setTimeout(() => setSuccess(null), 3000);
+  };
+
+  const handleSetFeatured = async (photoUrl: string) => {
+    if (!businessId) return;
+
+    setSettingFeatured(true);
+    setError(null);
+
+    try {
+      await businessApi.updateBusiness(businessId, { coverPhoto: photoUrl });
+      setFeaturedPhotoUrl(photoUrl);
+      setSuccess(t('photos.featuredSet', 'Featured image updated'));
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t('photos.featuredError', 'Failed to set featured image'));
+    } finally {
+      setSettingFeatured(false);
+    }
   };
 
   const handleDelete = (photoId: string) => {
@@ -256,6 +297,7 @@ export function PhotosManagementPage() {
 
       const newPhotos = [...prev];
       const [draggedItem] = newPhotos.splice(draggedIndex, 1);
+      if (!draggedItem) return prev;
       newPhotos.splice(targetIndex, 0, draggedItem);
 
       return newPhotos.map((p, i) => ({ ...p, order: i }));
@@ -349,9 +391,8 @@ export function PhotosManagementPage() {
     setError(null);
 
     try {
-      // In production, this would save to the server
-      // For now, just show success
-      await new Promise(resolve => setTimeout(resolve, 500));
+      const photoUrls = photos.map(p => p.url);
+      await businessApi.updateBusiness(businessId, { photos: photoUrls });
       setSuccess(t('photos.saveSuccess', 'Photos saved successfully'));
       setTimeout(() => setSuccess(null), 3000);
     } catch (err) {
@@ -388,10 +429,12 @@ export function PhotosManagementPage() {
             {error || t('photos.notFoundDesc', "The business you're looking for doesn't exist.")}
           </p>
           <Link
-            to="/business/dashboard"
+            to={isAdminContext ? '/admin/businesses' : '/business/dashboard'}
             className="inline-flex items-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90"
           >
-            {t('common.backToDashboard', 'Back to Dashboard')}
+            {isAdminContext
+              ? t('admin.businesses.backToBusinesses', 'Back to Businesses')
+              : t('common.backToDashboard', 'Back to Dashboard')}
           </Link>
         </div>
       </PageContainer>
@@ -409,11 +452,13 @@ export function PhotosManagementPage() {
           {/* Header */}
           <div className="mb-6">
             <Link
-              to="/business/dashboard"
+              to={isAdminContext ? '/admin/businesses' : '/business/dashboard'}
               className="inline-flex items-center text-sm text-slate-600 dark:text-slate-400 hover:text-primary mb-4"
             >
               <ArrowLeftIcon className="w-4 h-4 mr-1" />
-              {t('common.backToDashboard', 'Back to Dashboard')}
+              {isAdminContext
+                ? t('admin.businesses.backToBusinesses', 'Back to Businesses')
+                : t('common.backToDashboard', 'Back to Dashboard')}
             </Link>
 
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -467,6 +512,26 @@ export function PhotosManagementPage() {
             <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg flex items-start gap-3">
               <CheckCircleIcon className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
               <p className="text-green-700 dark:text-green-300">{success}</p>
+            </div>
+          )}
+
+          {/* Current Featured Image */}
+          {featuredPhotoUrl && (
+            <div className="mb-6 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+              <h3 className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
+                <PhotoIcon className="w-4 h-4" />
+                {t('photos.currentFeatured', 'Current Featured Image')}
+              </h3>
+              <div className="flex items-center gap-4">
+                <img
+                  src={featuredPhotoUrl}
+                  alt={t('photos.featuredImage', 'Featured image')}
+                  className="w-32 h-20 object-cover rounded-lg border-2 border-primary"
+                />
+                <p className="text-sm text-slate-500 dark:text-slate-400">
+                  {t('photos.featuredDesc', 'This image is displayed as the cover on your business profile page.')}
+                </p>
+              </div>
             </div>
           )}
 
@@ -548,8 +613,16 @@ export function PhotosManagementPage() {
                     className="w-full h-full object-cover"
                   />
 
+                  {/* Featured Badge */}
+                  {featuredPhotoUrl === photo.url && (
+                    <div className="absolute top-2 left-2 px-2 py-1 bg-primary text-white text-xs font-medium rounded-full flex items-center gap-1">
+                      <StarSolidIcon className="w-3 h-3" />
+                      {t('photos.featured', 'Featured')}
+                    </div>
+                  )}
+
                   {/* Primary Badge */}
-                  {photo.isPrimary && (
+                  {photo.isPrimary && featuredPhotoUrl !== photo.url && (
                     <div className="absolute top-2 left-2 px-2 py-1 bg-yellow-500 text-white text-xs font-medium rounded-full flex items-center gap-1">
                       <StarSolidIcon className="w-3 h-3" />
                       {t('photos.primary', 'Primary')}
@@ -569,6 +642,16 @@ export function PhotosManagementPage() {
 
                   {/* Hover Actions */}
                   <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                    {featuredPhotoUrl !== photo.url && (
+                      <button
+                        onClick={() => handleSetFeatured(photo.url)}
+                        disabled={settingFeatured}
+                        className="p-2 bg-white rounded-full hover:bg-blue-100 transition-colors disabled:opacity-50"
+                        title={t('photos.setAsFeatured', 'Set as featured image')}
+                      >
+                        <PhotoIcon className="w-5 h-5 text-primary" />
+                      </button>
+                    )}
                     {!photo.isPrimary && (
                       <button
                         onClick={() => handleSetPrimary(photo.id)}
@@ -625,6 +708,7 @@ export function PhotosManagementPage() {
             <ul className="text-sm text-slate-600 dark:text-slate-400 space-y-1">
               <li>{t('photos.tip1', 'Use high-quality images (at least 800x600 pixels)')}</li>
               <li>{t('photos.tip2', 'The primary photo appears first in search results')}</li>
+              <li>{t('photos.tip6', 'Set a featured image to display as the cover on your business profile')}</li>
               <li>{t('photos.tip3', 'Drag and drop to reorder your photos')}</li>
               <li>{t('photos.tip4', 'Maximum file size: 5MB per image')}</li>
               <li>{t('photos.tip5', 'Stock photos from Pixabay are free for commercial use')}</li>

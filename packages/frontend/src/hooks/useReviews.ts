@@ -42,7 +42,7 @@ export function useReviews({
   initialLimit = 10,
   initialSortBy = 'recent',
 }: UseReviewsOptions): UseReviewsReturn {
-  const { user } = useAuth();
+  useAuth();
 
   const [reviews, setReviews] = useState<Review[]>([]);
   const [total, setTotal] = useState(0);

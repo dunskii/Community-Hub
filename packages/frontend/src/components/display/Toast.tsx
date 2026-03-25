@@ -35,7 +35,7 @@
  * ```
  */
 
-import React, { useEffect, useCallback } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export type ToastType = 'success' | 'error' | 'warning' | 'info';

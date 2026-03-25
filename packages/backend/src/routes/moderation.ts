@@ -18,7 +18,7 @@ const router: ReturnType<typeof Router> = Router();
 router.get(
   '/admin/moderation/reviews',
   requireAuth,
-  requireRole(['ADMIN', 'SUPER_ADMIN']),
+  requireRole(['CURATOR', 'ADMIN', 'SUPER_ADMIN']),
   moderationController.getModerationQueue.bind(moderationController)
 );
 
@@ -30,7 +30,7 @@ router.get(
 router.post(
   '/admin/moderation/reviews/:id/approve',
   requireAuth,
-  requireRole(['ADMIN', 'SUPER_ADMIN']),
+  requireRole(['CURATOR', 'ADMIN', 'SUPER_ADMIN']),
   moderationController.approveReview.bind(moderationController)
 );
 
@@ -42,7 +42,7 @@ router.post(
 router.post(
   '/admin/moderation/reviews/:id/reject',
   requireAuth,
-  requireRole(['ADMIN', 'SUPER_ADMIN']),
+  requireRole(['CURATOR', 'ADMIN', 'SUPER_ADMIN']),
   moderationController.rejectReview.bind(moderationController)
 );
 

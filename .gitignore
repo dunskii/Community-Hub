@@ -16,8 +16,11 @@ build/
 # Coverage
 coverage/
 
-# Uploads & media
-uploads/
+# Uploads & media (keep directory structure via .gitkeep)
+uploads/**
+!uploads/.gitkeep
+!uploads/**/
+!uploads/**/.gitkeep
 storage/
 backups/
 

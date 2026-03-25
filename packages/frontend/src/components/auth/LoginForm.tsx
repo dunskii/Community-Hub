@@ -7,6 +7,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import { useAuth } from '../../hooks/useAuth';
 
 export const LoginForm: React.FC = () => {
@@ -21,6 +22,7 @@ export const LoginForm: React.FC = () => {
     rememberMe: false,
   });
 
+  const [showPassword, setShowPassword] = useState(false);
   const [validationErrors, setValidationErrors] = useState<{
     email?: string;
     password?: string;
@@ -80,6 +82,12 @@ export const LoginForm: React.FC = () => {
       // If there's a specific redirect path (not the generic dashboard), use it
       if (from && from !== '/dashboard') {
         navigate(from, { replace: true });
+      } else if (user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN') {
+        // Admins go to admin dashboard
+        navigate('/admin', { replace: true });
+      } else if (user?.role === 'CURATOR') {
+        // Curators go to curator dashboard
+        navigate('/curator', { replace: true });
       } else if (user?.role === 'BUSINESS_OWNER') {
         // Business owners go to business dashboard
         navigate('/business/dashboard', { replace: true });
@@ -155,25 +163,39 @@ export const LoginForm: React.FC = () => {
             >
               {t('auth.password')}
             </label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              value={formData.password}
-              onChange={handleChange}
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 ${
-                validationErrors.password
-                  ? 'border-red-500'
-                  : 'border-gray-300'
-              }`}
-              placeholder={t('auth.passwordPlaceholder')}
-              aria-invalid={!!validationErrors.password}
-              aria-describedby={
-                validationErrors.password ? 'password-error' : undefined
-              }
-              disabled={isLoading}
-              autoComplete="current-password"
-            />
+            <div className="relative">
+              <input
+                id="password"
+                name="password"
+                type={showPassword ? 'text' : 'password'}
+                value={formData.password}
+                onChange={handleChange}
+                className={`w-full px-3 py-2 pr-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 ${
+                  validationErrors.password
+                    ? 'border-red-500'
+                    : 'border-gray-300'
+                }`}
+                placeholder={t('auth.passwordPlaceholder')}
+                aria-invalid={!!validationErrors.password}
+                aria-describedby={
+                  validationErrors.password ? 'password-error' : undefined
+                }
+                disabled={isLoading}
+                autoComplete="current-password"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600"
+                aria-label={showPassword ? t('auth.hidePassword', 'Hide password') : t('auth.showPassword', 'Show password')}
+              >
+                {showPassword ? (
+                  <EyeSlashIcon className="h-5 w-5" />
+                ) : (
+                  <EyeIcon className="h-5 w-5" />
+                )}
+              </button>
+            </div>
             {validationErrors.password && (
               <p
                 id="password-error"

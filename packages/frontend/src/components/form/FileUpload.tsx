@@ -68,6 +68,7 @@ export const FileUpload = forwardRef<HTMLInputElement, FileUploadProps>(function
 
   const handleFiles = (files: FileList) => {
     const file = files[0];
+    if (!file) return;
     setFileName(file.name);
 
     // Show preview for images

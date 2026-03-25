@@ -6,6 +6,8 @@
 
 import { Router } from 'express';
 import { dealController } from '../controllers/deal-controller.js';
+import { dealService } from '../services/deal-service.js';
+import { sendSuccess } from '../utils/api-response.js';
 import { validate } from '../middleware/validate.js';
 import { requireAuth } from '../middleware/auth-middleware.js';
 import {
@@ -55,6 +57,36 @@ router.get(
   '/:id',
   getDealLimiter,
   dealController.getDeal.bind(dealController)
+);
+
+/**
+ * POST /deals/:id/click
+ * Track a deal click (modal opened) - public
+ */
+router.post(
+  '/:id/click',
+  getDealLimiter,
+  async (req, res) => {
+    try {
+      await dealService.incrementClicks(req.params.id as string);
+      sendSuccess(res, { tracked: true });
+    } catch { sendSuccess(res, { tracked: false }); }
+  }
+);
+
+/**
+ * POST /deals/:id/voucher-reveal
+ * Track a voucher code reveal - public
+ */
+router.post(
+  '/:id/voucher-reveal',
+  getDealLimiter,
+  async (req, res) => {
+    try {
+      await dealService.incrementVoucherReveals(req.params.id as string);
+      sendSuccess(res, { tracked: true });
+    } catch { sendSuccess(res, { tracked: false }); }
+  }
 );
 
 export { router as dealRouter };
@@ -125,6 +157,24 @@ businessDealRouter.delete(
   requireAuth,
   deleteDealLimiter,
   dealController.deleteDeal.bind(dealController)
+);
+
+/**
+ * GET /businesses/:businessId/deals/stats
+ * Get promotion stats for a business (owner)
+ */
+businessDealRouter.get(
+  '/stats',
+  requireAuth,
+  getDealLimiter,
+  async (req, res) => {
+    try {
+      const stats = await dealService.getPromotionStats(req.params.businessId as string);
+      sendSuccess(res, stats);
+    } catch {
+      sendSuccess(res, { totalViews: 0, totalClicks: 0, totalVoucherReveals: 0, activeDeals: 0 });
+    }
+  }
 );
 
 export { businessDealRouter };

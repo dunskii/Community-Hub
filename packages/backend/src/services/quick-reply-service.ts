@@ -8,20 +8,13 @@
 
 import crypto from 'crypto';
 import { prisma } from '../db/index.js';
-import { Prisma } from '../generated/prisma/index.js';
 import { logger } from '../utils/logger.js';
 import { ApiError } from '../utils/api-error.js';
+import { createAuditLog } from '../utils/audit-logger.js';
 import type { QuickReplyTemplateInput, ReorderTemplatesInput } from '@community-hub/shared';
-import { ActorRole } from '../generated/prisma/index.js';
+import type { AuditContext } from '../types/service-types.js';
 
-// ─── Types ────────────────────────────────────────────────────
-
-export interface AuditContext {
-  actorId: string;
-  actorRole: string;
-  ipAddress?: string;
-  userAgent?: string;
-}
+export type { AuditContext };
 
 export interface QuickReplyTemplate {
   id: string;
@@ -40,40 +33,6 @@ const MAX_TEMPLATES_PER_BUSINESS = 10;
 // ─── Service Implementation ───────────────────────────────────
 
 class QuickReplyService {
-  /**
-   * Create audit log entry
-   */
-  private async createAuditLog(params: {
-    actorId: string;
-    actorRole: string;
-    action: string;
-    targetType: string;
-    targetId: string;
-    previousValue?: Record<string, unknown>;
-    newValue?: Record<string, unknown>;
-    ipAddress: string;
-    userAgent: string;
-  }): Promise<void> {
-    try {
-      await prisma.audit_logs.create({
-        data: {
-          id: crypto.randomUUID(),
-          actor_id: params.actorId,
-          actor_role: params.actorRole as ActorRole,
-          action: params.action,
-          target_type: params.targetType,
-          target_id: params.targetId,
-          previous_value: params.previousValue ? JSON.stringify(params.previousValue) : Prisma.DbNull,
-          new_value: params.newValue ? JSON.stringify(params.newValue) : Prisma.DbNull,
-          ip_address: params.ipAddress,
-          user_agent: params.userAgent,
-        },
-      });
-    } catch (error) {
-      logger.error({ error, params }, 'Failed to create audit log');
-    }
-  }
-
   /**
    * Create a new quick reply template
    */
@@ -132,15 +91,12 @@ class QuickReplyService {
     });
 
     // Log audit
-    await this.createAuditLog({
-      actorId: auditContext.actorId,
-      actorRole: auditContext.actorRole,
+    await createAuditLog({
+      context: auditContext,
       action: 'quickReply.create',
       targetType: 'QuickReplyTemplate',
       targetId: template.id,
       newValue: { name: input.name, businessId },
-      ipAddress: auditContext.ipAddress || '',
-      userAgent: auditContext.userAgent || '',
     });
 
     return {
@@ -260,16 +216,13 @@ class QuickReplyService {
     });
 
     // Log audit
-    await this.createAuditLog({
-      actorId: auditContext.actorId,
-      actorRole: auditContext.actorRole,
+    await createAuditLog({
+      context: auditContext,
       action: 'quickReply.update',
       targetType: 'QuickReplyTemplate',
       targetId: templateId,
       previousValue,
       newValue: { name: input.name, content: input.content },
-      ipAddress: auditContext.ipAddress || '',
-      userAgent: auditContext.userAgent || '',
     });
 
     return {
@@ -315,15 +268,12 @@ class QuickReplyService {
     });
 
     // Log audit
-    await this.createAuditLog({
-      actorId: auditContext.actorId,
-      actorRole: auditContext.actorRole,
+    await createAuditLog({
+      context: auditContext,
       action: 'quickReply.delete',
       targetType: 'QuickReplyTemplate',
       targetId: templateId,
       previousValue: { name: template.name, businessId: template.business_id },
-      ipAddress: auditContext.ipAddress || '',
-      userAgent: auditContext.userAgent || '',
     });
   }
 
@@ -376,15 +326,12 @@ class QuickReplyService {
     );
 
     // Log audit
-    await this.createAuditLog({
-      actorId: auditContext.actorId,
-      actorRole: auditContext.actorRole,
+    await createAuditLog({
+      context: auditContext,
       action: 'quickReply.reorder',
       targetType: 'Business',
       targetId: businessId,
       newValue: { templateIds: input.templateIds },
-      ipAddress: auditContext.ipAddress || '',
-      userAgent: auditContext.userAgent || '',
     });
 
     // Return updated templates

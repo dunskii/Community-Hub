@@ -37,7 +37,7 @@ interface FollowedBusiness {
 
 export function FollowingPage() {
   const { t } = useTranslation();
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated } = useAuth();
   const [following, setFollowing] = useState<FollowedBusiness[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -91,10 +91,9 @@ export function FollowingPage() {
           title={t('following.loginRequired')}
           description={t('following.loginDescription')}
           icon="👤"
-          action={{
-            label: t('common.login'),
-            href: '/login',
-          }}
+          action={
+            <a href="/login">{t('common.login')}</a>
+          }
         />
       </PageContainer>
     );
@@ -136,10 +135,9 @@ export function FollowingPage() {
             title={t('following.emptyTitle')}
             description={t('following.emptyDescription')}
             icon="🏪"
-            action={{
-              label: t('following.browseBusinesses'),
-              href: '/businesses',
-            }}
+            action={
+              <a href="/businesses">{t('following.browseBusinesses')}</a>
+            }
           />
         ) : (
           <>
@@ -180,7 +178,7 @@ export function FollowingPage() {
 
                       {item.business.rating && (
                         <div className="following-page__card-rating">
-                          <StarRating rating={item.business.rating} size="sm" readOnly />
+                          <StarRating value={item.business.rating} size="small" readOnly />
                           {item.business.reviewCount && (
                             <span className="following-page__card-reviews">
                               ({item.business.reviewCount})
@@ -201,8 +199,8 @@ export function FollowingPage() {
                     <FollowButton
                       isFollowing={true}
                       onClick={() => handleUnfollow(item.business.id)}
-                      variant="outline"
-                      size="sm"
+                      variant="secondary"
+                      size="small"
                     />
                   </div>
                 </article>

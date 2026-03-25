@@ -52,7 +52,7 @@ export function Header({
 
   const { currentLanguage, availableLanguages, changeLanguage } = useLanguage();
   const { t } = useTranslation();
-  const { user, isAuthenticated, isLoading, logout } = useAuth();
+  const { user, isAuthenticated, logout } = useAuth();
 
   // Close dropdowns when clicking outside
   useEffect(() => {
@@ -83,12 +83,30 @@ export function Header({
     setUserMenuOpen(false);
   };
 
+  // Determine which dashboard link to show based on user role
+  const getDashboardLink = () => {
+    if (!isAuthenticated || !user) return null;
+    switch (user.role) {
+      case 'SUPER_ADMIN':
+      case 'ADMIN':
+        return { href: '/admin', label: t('navigation.adminDashboard', 'Admin Dashboard') };
+      case 'CURATOR':
+        return { href: '/curator', label: t('navigation.curatorDashboard', 'Curator Dashboard') };
+      case 'BUSINESS_OWNER':
+        return { href: '/business/dashboard', label: t('navigation.businessDashboard', 'Business Dashboard') };
+      default:
+        return { href: '/dashboard', label: t('navigation.dashboard', 'Dashboard') };
+    }
+  };
+
+  const dashboardLink = getDashboardLink();
+
   const navLinks = [
     { href: '/', label: t('navigation.home', 'Home') },
     { href: '/businesses', label: t('navigation.businesses', 'Businesses') },
     { href: '/events', label: t('navigation.events', 'Events') },
     { href: '/categories', label: t('navigation.categories', 'Categories') },
-    ...(isAuthenticated ? [{ href: '/dashboard', label: t('navigation.dashboard', 'Dashboard') }] : []),
+    ...(dashboardLink ? [dashboardLink] : []),
   ];
 
   const isActivePath = (path: string) => {
@@ -220,22 +238,16 @@ export function Header({
                       className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 py-1 z-50"
                       role="menu"
                     >
-                      <Link
-                        to="/dashboard"
-                        className="block px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700"
-                        role="menuitem"
-                        onClick={() => setUserMenuOpen(false)}
-                      >
-                        {t('navigation.dashboard', 'Dashboard')}
-                      </Link>
-                      <Link
-                        to="/business/dashboard"
-                        className="block px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700"
-                        role="menuitem"
-                        onClick={() => setUserMenuOpen(false)}
-                      >
-                        {t('navigation.businessDashboard', 'Business Dashboard')}
-                      </Link>
+                      {dashboardLink && (
+                        <Link
+                          to={dashboardLink.href}
+                          className="block px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700"
+                          role="menuitem"
+                          onClick={() => setUserMenuOpen(false)}
+                        >
+                          {dashboardLink.label}
+                        </Link>
+                      )}
                       <Link
                         to="/saved"
                         className="block px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700"
@@ -335,12 +347,6 @@ export function Header({
             {/* Mobile Auth Links */}
             {isAuthenticated && user ? (
               <>
-                <Link
-                  to="/dashboard"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
-                >
-                  {t('navigation.dashboard', 'Dashboard')}
-                </Link>
                 <Link
                   to="/saved"
                   className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"

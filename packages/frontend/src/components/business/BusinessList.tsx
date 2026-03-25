@@ -61,19 +61,26 @@ export function BusinessList({
         {Array.from({ length: skeletonCount }).map((_, index) => (
           <div
             key={index}
-            className={`bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden ${
+            className={`bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden ${
               viewMode === 'list' ? 'flex' : ''
             }`}
           >
             <Skeleton
               variant="rectangular"
-              width={viewMode === 'list' ? '120px' : '100%'}
-              height={viewMode === 'list' ? '120px' : '160px'}
+              width={viewMode === 'list' ? '160px' : '100%'}
+              height={viewMode === 'list' ? '160px' : '176px'}
             />
-            <div className={`p-4 flex-1 ${viewMode === 'list' ? '' : ''}`}>
-              <Skeleton variant="text" width="70%" height="24px" />
-              <Skeleton variant="text" width="100%" height="16px" className="mt-2" />
-              <Skeleton variant="text" width="50%" height="14px" className="mt-2" />
+            <div className="p-4 flex-1 space-y-3">
+              <div className="flex justify-between">
+                <Skeleton variant="text" width="65%" height="22px" />
+                <Skeleton variant="text" width="20%" height="22px" />
+              </div>
+              <Skeleton variant="text" width="90%" height="16px" />
+              <Skeleton variant="text" width="75%" height="16px" />
+              <div className="flex items-center gap-3 pt-1">
+                <Skeleton variant="text" width="25%" height="14px" />
+                <Skeleton variant="text" width="20%" height="14px" />
+              </div>
             </div>
           </div>
         ))}

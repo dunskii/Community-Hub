@@ -148,4 +148,40 @@ export const dealApi = {
   async deleteDeal(businessId: string, dealId: string): Promise<void> {
     await del(`/businesses/${businessId}/deals/${dealId}`);
   },
+
+  /**
+   * Track deal click (modal opened)
+   */
+  async trackClick(dealId: string): Promise<void> {
+    try {
+      await post(`/deals/${dealId}/click`, {});
+    } catch { /* non-critical */ }
+  },
+
+  /**
+   * Track voucher code reveal
+   */
+  async trackVoucherReveal(dealId: string): Promise<void> {
+    try {
+      await post(`/deals/${dealId}/voucher-reveal`, {});
+    } catch { /* non-critical */ }
+  },
+
+  /**
+   * Get promotion stats for a business
+   */
+  async getPromotionStats(businessId: string): Promise<{
+    totalViews: number;
+    totalClicks: number;
+    totalVoucherReveals: number;
+    activeDeals: number;
+  }> {
+    const response = await get<ApiResponse<{
+      totalViews: number;
+      totalClicks: number;
+      totalVoucherReveals: number;
+      activeDeals: number;
+    }>>(`/businesses/${businessId}/deals/stats`);
+    return response.data;
+  },
 };

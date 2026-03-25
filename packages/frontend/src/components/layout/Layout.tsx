@@ -4,7 +4,9 @@
  */
 
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Header } from './Header';
+import { Footer } from './Footer';
 import { getPlatformConfig } from '../../config/platform-loader';
 
 interface LayoutProps {
@@ -13,6 +15,8 @@ interface LayoutProps {
 
 export function Layout({ children }: LayoutProps) {
   const [platformName, setPlatformName] = useState('Guildford South Community Hub');
+  const location = useLocation();
+  const isAdminPage = location.pathname.startsWith('/admin') || location.pathname.startsWith('/curator');
 
   useEffect(() => {
     try {
@@ -28,11 +32,12 @@ export function Layout({ children }: LayoutProps) {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] dark:bg-[#0f172a] text-slate-900 dark:text-slate-100 transition-colors">
+    <div className="min-h-screen bg-[#f8fafc] dark:bg-[#0f172a] text-slate-900 dark:text-slate-100 transition-colors flex flex-col">
       <Header platformName={platformName} />
-      <main id="main-content">
+      <main id="main-content" className="flex-1">
         {children}
       </main>
+      {!isAdminPage && <Footer platformName={platformName} />}
     </div>
   );
 }

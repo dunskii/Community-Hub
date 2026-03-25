@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   Header,
   Footer,
@@ -241,14 +241,7 @@ export function ComponentShowcase() {
         </div>
       </PageContainer>
 
-      <Footer
-        platformName="Community Hub"
-        socialLinks={[
-          { platform: 'Facebook', url: '#' },
-          { platform: 'Twitter', url: '#' },
-          { platform: 'Instagram', url: '#' },
-        ]}
-      />
+      <Footer platformName="Community Hub" />
 
       {/* Modal */}
       <Modal

@@ -152,8 +152,9 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({
         <div className="review-card__user">
           <Avatar
             src={user.avatarUrl}
+            name={user.name}
             alt={user.name}
-            size="medium"
+            size="md"
           />
           <div className="review-card__user-info">
             <h3 className="review-card__user-name">{user.name}</h3>
@@ -209,7 +210,7 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({
 
       {businessResponse && (
         <div className="review-card__response">
-          <Badge variant="info" className="review-card__response-badge">
+          <Badge variant="primary">
             {t('reviews.businessResponse')}
           </Badge>
           <p className="review-card__response-text">{businessResponse.content}</p>

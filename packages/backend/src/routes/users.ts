@@ -30,7 +30,7 @@ import {
   findSessionByJti,
 } from '../services/session-service';
 import { eventController } from '../controllers/event-controller';
-import { getOwnedBusinesses } from '../services/claim-service';
+import { getOwnedBusinesses } from '../services/claim-service.js';
 import { resolveMe } from '../middleware/resolve-me.js';
 import { verifyRefreshToken } from '../services/token-service';
 import { ApiError } from '../utils/api-error';

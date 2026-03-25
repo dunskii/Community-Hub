@@ -1,5 +1,3 @@
-import React from 'react';
-
 interface LiveRegionProps {
   /** Message to announce */
   message: string;

@@ -30,8 +30,8 @@ export async function requireBusinessOwnership(
       return;
     }
 
-    // Admins can access any business
-    if (user.role === 'ADMIN' || user.role === 'SUPER_ADMIN') {
+    // Admins and curators can access any business
+    if (user.role === 'CURATOR' || user.role === 'ADMIN' || user.role === 'SUPER_ADMIN') {
       next();
       return;
     }

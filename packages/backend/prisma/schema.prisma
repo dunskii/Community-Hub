@@ -195,6 +195,8 @@ model businesses {
   timezone                  String                      @default("Australia/Sydney") @db.VarChar(50)
   detailed_description      Json?
   menu_pdf_url              String?                     @db.VarChar(500)
+  gbp_last_sync_at          DateTime?
+  gbp_sync_status           String?                     @db.VarChar(20)
   business_analytics_daily  business_analytics_daily[]
   business_analytics_events business_analytics_events[]
   business_claim_requests   business_claim_requests[]
@@ -208,12 +210,41 @@ model businesses {
   quick_reply_templates     quick_reply_templates[]
   reviews                   reviews[]
   saved_businesses          saved_businesses[]
+  business_enquiries        business_enquiries[]
+  social_accounts           social_accounts[]
+  social_posts              social_posts[]
 
   @@index([category_primary_id])
   @@index([claimed])
   @@index([created_at(sort: Desc)])
   @@index([featured, display_order])
   @@index([status, created_at])
+}
+
+model business_enquiries {
+  id              String    @id @default(uuid())
+  business_id     String
+  name            String    @db.VarChar(100)
+  email           String    @db.VarChar(255)
+  phone           String?   @db.VarChar(20)
+  category        String    @default("GENERAL") @db.VarChar(30)
+  subject         String    @db.VarChar(200)
+  message         String    @db.Text
+  status          String    @default("NEW") @db.VarChar(20)
+  user_id         String?
+  ip_address      String?   @db.VarChar(45)
+  reply_message   String?   @db.Text
+  replied_at      DateTime?
+  call_count      Int       @default(0)
+  last_called_at  DateTime?
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @updatedAt
+
+  businesses      businesses @relation(fields: [business_id], references: [id], onDelete: Cascade)
+  users           users?     @relation(fields: [user_id], references: [id])
+
+  @@index([business_id, created_at(sort: Desc)])
+  @@index([status])
 }
 
 model categories {
@@ -252,9 +283,11 @@ model deals {
   valid_from     DateTime
   valid_until    DateTime
   featured       Boolean      @default(false)
-  status         DealStatus   @default(ACTIVE)
-  views          Int          @default(0)
-  created_at     DateTime     @default(now())
+  status          DealStatus   @default(ACTIVE)
+  views           Int          @default(0)
+  clicks          Int          @default(0)
+  voucher_reveals Int          @default(0)
+  created_at      DateTime     @default(now())
   updated_at     DateTime     @updatedAt
 
   businesses     businesses   @relation(fields: [business_id], references: [id], onDelete: Cascade)
@@ -574,6 +607,9 @@ model users {
   saved_businesses                                                    saved_businesses[]
   saved_lists                                                         saved_lists[]
   user_sessions                                                       user_sessions[]
+  business_enquiries                                                  business_enquiries[]
+  social_accounts                                                     social_accounts[]
+  social_posts_created                                                social_posts[]
 }
 
 enum ActorRole {
@@ -741,6 +777,7 @@ enum UserRole {
   COMMUNITY
   BUSINESS_OWNER
   MODERATOR
+  CURATOR
   ADMIN
   SUPER_ADMIN
 }
@@ -757,4 +794,94 @@ enum VerificationMethod {
   EMAIL
   DOCUMENT
   GOOGLE_BUSINESS
+}
+
+enum SocialPlatform {
+  FACEBOOK
+  INSTAGRAM
+  TWITTER
+  LINKEDIN
+  GOOGLE_BUSINESS
+}
+
+enum SocialPostStatus {
+  PENDING
+  QUEUED
+  PUBLISHING
+  PUBLISHED
+  FAILED
+  CANCELLED
+}
+
+model social_accounts {
+  id                       String              @id @default(uuid())
+  business_id              String
+  platform                 SocialPlatform
+  platform_account_id      String              @db.VarChar(255)
+  platform_account_name    String              @db.VarChar(255)
+  access_token_encrypted   String
+  refresh_token_encrypted  String?
+  token_expires_at         DateTime?
+  scopes                   String[]            @default([])
+  connected_by             String
+  is_active                Boolean             @default(true)
+  last_post_at             DateTime?
+  last_error               String?             @db.VarChar(500)
+  created_at               DateTime            @default(now())
+  updated_at               DateTime            @updatedAt
+
+  businesses               businesses          @relation(fields: [business_id], references: [id], onDelete: Cascade)
+  users                    users               @relation(fields: [connected_by], references: [id])
+  social_posts             social_posts[]
+
+  @@unique([business_id, platform])
+  @@index([business_id])
+  @@index([connected_by])
+  @@index([token_expires_at])
+}
+
+model social_posts {
+  id                  String           @id @default(uuid())
+  business_id         String
+  social_account_id   String
+  content_type        String           @db.VarChar(20)
+  content_id          String
+  platform            SocialPlatform
+  caption             String           @db.VarChar(2200)
+  image_url           String?          @db.VarChar(500)
+  platform_post_id    String?          @db.VarChar(255)
+  platform_post_url   String?          @db.VarChar(500)
+  status              SocialPostStatus @default(PENDING)
+  scheduled_at        DateTime?
+  published_at        DateTime?
+  error_message       String?          @db.VarChar(1000)
+  retry_count         Int              @default(0)
+  max_retries         Int              @default(3)
+  created_by          String
+  created_at          DateTime         @default(now())
+  updated_at          DateTime         @updatedAt
+
+  businesses          businesses       @relation(fields: [business_id], references: [id], onDelete: Cascade)
+  social_accounts     social_accounts  @relation(fields: [social_account_id], references: [id], onDelete: Cascade)
+  users               users            @relation(fields: [created_by], references: [id])
+  social_post_logs    social_post_logs[]
+
+  @@index([business_id])
+  @@index([social_account_id])
+  @@index([content_type, content_id])
+  @@index([status, scheduled_at])
+  @@index([platform, status])
+}
+
+model social_post_logs {
+  id              String       @id @default(uuid())
+  social_post_id  String
+  action          String       @db.VarChar(50)
+  details         Json?
+  created_at      DateTime     @default(now())
+
+  social_posts    social_posts @relation(fields: [social_post_id], references: [id], onDelete: Cascade)
+
+  @@index([social_post_id])
+  @@index([created_at])
 }

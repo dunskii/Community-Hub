@@ -142,10 +142,9 @@ export function ModerationPage() {
           title={t('moderation.loginRequired')}
           description={t('moderation.loginRequiredDescription')}
           icon="🔒"
-          action={{
-            label: t('auth.login'),
-            href: '/login',
-          }}
+          action={
+            <a href="/login">{t('auth.login')}</a>
+          }
         />
       </PageContainer>
     );
@@ -201,7 +200,7 @@ export function ModerationPage() {
             </div>
           </header>
 
-          {error && <Alert variant="error" message={error} />}
+          {error && <Alert type="critical" message={error} />}
 
           <ModerationQueue
             items={items}

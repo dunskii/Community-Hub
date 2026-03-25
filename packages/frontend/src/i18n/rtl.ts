@@ -1,4 +1,4 @@
-import { isRTL as checkRTL } from './utils';
+import { isRTL as _checkRTL } from './utils';
 
 /**
  * RTL-specific utilities for layout and styling

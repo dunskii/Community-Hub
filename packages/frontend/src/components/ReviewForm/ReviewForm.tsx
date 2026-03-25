@@ -118,7 +118,8 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({
     await onSubmit(formData);
   };
 
-  const handlePhotosChange = (files: File[]) => {
+  const handlePhotosChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files ? Array.from(e.target.files) : [];
     setPhotos(files);
     if (files.length > maxPhotos) {
       setValidationErrors({
@@ -142,9 +143,8 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({
     >
       {error && (
         <Alert
-          variant="error"
+          type="critical"
           message={error}
-          className="review-form__error"
         />
       )}
 
@@ -190,7 +190,7 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({
           required
           disabled={isLoading}
           error={validationErrors.content}
-          helpText={t('reviews.characterCount', {
+          helperText={t('reviews.characterCount', {
             current: characterCount,
             min: minLength,
             max: maxLength,
@@ -204,10 +204,9 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({
             label={t('reviews.addPhotos')}
             accept="image/*"
             multiple
-            maxFiles={maxPhotos}
             onChange={handlePhotosChange}
             disabled={isLoading}
-            helpText={t('reviews.photosHelpText', { max: maxPhotos })}
+            helperText={t('reviews.photosHelpText', { max: maxPhotos })}
             error={validationErrors.photos}
           />
         </div>

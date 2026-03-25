@@ -51,11 +51,11 @@ export function generateBusinessSchema(
 ): SchemaOrgLocalBusiness {
   const name = typeof business.name === 'string'
     ? business.name
-    : business.name[language] || business.name.en;
+    : business.name[language] ?? business.name.en ?? '';
 
   const description = typeof business.description === 'string'
     ? business.description
-    : business.description?.[language] || business.description?.en;
+    : business.description?.[language] ?? business.description?.en;
 
   const schema: SchemaOrgLocalBusiness = {
     '@context': 'https://schema.org',
@@ -86,7 +86,7 @@ export function generateBusinessSchema(
   if (business.address) {
     schema.address = {
       '@type': 'PostalAddress',
-      streetAddress: business.address.streetAddress,
+      streetAddress: business.address.streetAddress ?? business.address.street ?? '',
       addressLocality: business.address.suburb,
       addressRegion: business.address.state,
       postalCode: business.address.postcode,
@@ -94,15 +94,20 @@ export function generateBusinessSchema(
     };
   }
 
-  if (business.location?.coordinates) {
+  if (business.location?.latitude != null && business.location?.longitude != null) {
     schema.geo = {
       '@type': 'GeoCoordinates',
-      latitude: business.location.coordinates[1],
-      longitude: business.location.coordinates[0],
+      latitude: business.location.latitude,
+      longitude: business.location.longitude,
     };
   }
 
-  if (business.operatingHours && !business.operatingHours.byAppointment) {
+  const DAYS_OF_WEEK = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'] as const;
+  const anyByAppointment = business.operatingHours
+    ? DAYS_OF_WEEK.some(d => business.operatingHours?.[d]?.byAppointment)
+    : false;
+
+  if (business.operatingHours && !anyByAppointment) {
     const specs: Array<{
       '@type': string;
       dayOfWeek: string[];
@@ -121,16 +126,21 @@ export function generateBusinessSchema(
     };
 
     // Group consecutive days with same hours
-    const days = Object.keys(daysMap) as Array<keyof typeof business.operatingHours>;
+    const days = Object.keys(daysMap) as typeof DAYS_OF_WEEK[number][];
     let currentGroup: string[] = [];
     let currentHours: { open: string; close: string } | null = null;
 
     for (const day of days) {
-      const hours = business.operatingHours[day];
+      const dayHours = business.operatingHours[day];
+      const openTime = dayHours?.open;
+      const closeTime = dayHours?.close;
 
-      if (hours?.open && hours?.close) {
-        if (currentHours?.open === hours.open && currentHours?.close === hours.close) {
-          currentGroup.push(daysMap[day]);
+      if (openTime && closeTime) {
+        const prev = currentHours as { open: string; close: string } | null;
+        const prevOpen = prev?.open;
+        const prevClose = prev?.close;
+        if (prevOpen === openTime && prevClose === closeTime) {
+          currentGroup.push(daysMap[day] ?? day);
         } else {
           if (currentGroup.length > 0 && currentHours) {
             specs.push({
@@ -140,8 +150,8 @@ export function generateBusinessSchema(
               closes: currentHours.close,
             });
           }
-          currentGroup = [daysMap[day]];
-          currentHours = hours;
+          currentGroup = [daysMap[day] ?? day];
+          currentHours = { open: openTime, close: closeTime };
         }
       } else {
         if (currentGroup.length > 0 && currentHours) {
@@ -193,7 +203,7 @@ export function generateBusinessSchema(
 export function generateBusinessTitle(business: Business, language: string = 'en'): string {
   const name = typeof business.name === 'string'
     ? business.name
-    : business.name[language] || business.name.en;
+    : business.name[language] ?? business.name.en ?? '';
 
   const platformName = import.meta.env.VITE_PLATFORM_NAME || 'Community Hub';
   return `${name} | ${platformName}`;
@@ -209,17 +219,17 @@ export function generateBusinessDescription(
 ): string {
   const description = typeof business.description === 'string'
     ? business.description
-    : business.description?.[language] || business.description?.en;
+    : business.description?.[language] ?? business.description?.en;
 
   if (!description) {
     const name = typeof business.name === 'string'
       ? business.name
-      : business.name[language] || business.name.en;
+      : business.name[language] ?? business.name.en ?? '';
 
     const category = business.categoryPrimary
       ? typeof business.categoryPrimary.name === 'string'
         ? business.categoryPrimary.name
-        : business.categoryPrimary.name[language] || business.categoryPrimary.name.en
+        : business.categoryPrimary.name[language] ?? business.categoryPrimary.name.en ?? ''
       : '';
 
     const config = getAppConfig();

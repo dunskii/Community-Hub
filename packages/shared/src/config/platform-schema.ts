@@ -145,6 +145,7 @@ export const platformConfigSchema = z.object({
     pwaInstallation: z.boolean(),
     smsAlerts: z.boolean(),
     whatsappAlerts: z.boolean(),
+    socialPosting: z.boolean().optional().default(false),
   }),
 
   multilingual: z

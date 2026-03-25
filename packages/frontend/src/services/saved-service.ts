@@ -52,7 +52,7 @@ export const savedService = {
       notes?: string;
     }
   ): Promise<{ success: boolean; data: SavedBusiness }> {
-    const response = await apiClient.post(`/users/me/saved`, {
+    const response = await apiClient.post<{ success: boolean; data: SavedBusiness }>(`/users/me/saved`, {
       businessId,
       listId: options?.listId,
       notes: options?.notes,
@@ -64,7 +64,7 @@ export const savedService = {
    * Unsave a business
    */
   async unsaveBusiness(businessId: string): Promise<{ success: boolean }> {
-    const response = await apiClient.delete(`/users/me/saved/${businessId}`);
+    const response = await apiClient.delete<{ success: boolean }>(`/users/me/saved/${businessId}`);
     return response;
   },
 
@@ -103,7 +103,7 @@ export const savedService = {
    * Create a custom list
    */
   async createList(name: string): Promise<{ success: boolean; data: SavedList }> {
-    const response = await apiClient.post('/users/me/lists', { name });
+    const response = await apiClient.post<{ success: boolean; data: SavedList }>('/users/me/lists', { name });
     return response;
   },
 
@@ -111,7 +111,7 @@ export const savedService = {
    * Update a custom list
    */
   async updateList(listId: string, name: string): Promise<{ success: boolean; data: SavedList }> {
-    const response = await apiClient.put(`/users/me/lists/${listId}`, { name });
+    const response = await apiClient.put<{ success: boolean; data: SavedList }>(`/users/me/lists/${listId}`, { name });
     return response;
   },
 
@@ -119,7 +119,7 @@ export const savedService = {
    * Delete a custom list
    */
   async deleteList(listId: string): Promise<{ success: boolean }> {
-    const response = await apiClient.delete(`/users/me/lists/${listId}`);
+    const response = await apiClient.delete<{ success: boolean }>(`/users/me/lists/${listId}`);
     return response;
   },
 };

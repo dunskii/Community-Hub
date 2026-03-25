@@ -55,12 +55,16 @@ export function OperatingHoursDisplay({
     );
   }
 
-  // By appointment
-  if (operatingHours.byAppointment) {
+  // Get current day
+  const currentDay = DAYS[new Date().getDay() === 0 ? 6 : new Date().getDay() - 1];
+
+  // Check if current day is by appointment
+  const todayHoursCheck = currentDay ? operatingHours[currentDay] : undefined;
+  if (todayHoursCheck?.byAppointment) {
     return (
       <div className="operating-hours">
         {showStatus && (
-          <Badge variant="neutral" size="sm">
+          <Badge variant="default" size="sm">
             {t('byAppointment', 'By Appointment')}
           </Badge>
         )}
@@ -69,17 +73,14 @@ export function OperatingHoursDisplay({
     );
   }
 
-  // Get current day
-  const currentDay = DAYS[new Date().getDay() === 0 ? 6 : new Date().getDay() - 1];
-
   // Compact view - show only current day
-  if (compact) {
+  if (compact && currentDay) {
     const todayHours = operatingHours[currentDay];
 
     return (
       <div className="operating-hours operating-hours--compact">
         {showStatus && (
-          <Badge variant={isOpen ? 'success' : 'neutral'} size="sm">
+          <Badge variant={isOpen ? 'success' : 'default'} size="sm">
             {isOpen ? t('openNow', 'Open Now') : t('closed', 'Closed')}
           </Badge>
         )}
@@ -102,7 +103,7 @@ export function OperatingHoursDisplay({
     <div className="operating-hours">
       {showStatus && (
         <div className="operating-hours__status">
-          <Badge variant={isOpen ? 'success' : 'neutral'} size="sm">
+          <Badge variant={isOpen ? 'success' : 'default'} size="sm">
             {isOpen ? t('openNow', 'Open Now') : t('closed', 'Closed')}
           </Badge>
         </div>
@@ -120,8 +121,13 @@ export function OperatingHoursDisplay({
             >
               <span className={`operating-hours__day ${isCurrent ? 'operating-hours__day--current' : ''}`}>
                 {DAY_LABELS[day]}
+                {isCurrent && (
+                  <span className="operating-hours__today-badge">
+                    {t('today', 'Today')}
+                  </span>
+                )}
               </span>
-              <span className="operating-hours__time">
+              <span className={`operating-hours__time ${isCurrent ? 'operating-hours__time--current' : ''}`}>
                 {hours?.open && hours?.close
                   ? `${formatTime(hours.open)} - ${formatTime(hours.close)}`
                   : t('closed', 'Closed')}

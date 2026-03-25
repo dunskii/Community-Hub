@@ -16,8 +16,9 @@ import {
   refreshToken as apiRefreshToken,
 } from '../services/auth-api';
 import { HttpError } from '../services/api-client';
+import { useTranslation } from 'react-i18next';
 
-interface AuthContextValue {
+export interface AuthContextValue {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
@@ -49,6 +50,7 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+  const { t } = useTranslation();
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -165,13 +167,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     } catch (err) {
       setIsLoading(false);
       if (err instanceof HttpError) {
-        setError(err.message);
+        if (err.status === 401) {
+          setError(t('auth.errors.invalidCredentials', 'Invalid email or password. Please try again.'));
+        } else if (err.status === 429) {
+          setError(t('auth.errors.tooManyAttempts', 'Too many login attempts. Please try again later.'));
+        } else {
+          setError(err.message);
+        }
       } else {
-        setError('Login failed. Please try again.');
+        setError(t('auth.errors.loginFailed', 'Login failed. Please try again.'));
       }
       throw err;
     }
-  }, []);
+  }, [t]);
 
   /**
    * Logout user

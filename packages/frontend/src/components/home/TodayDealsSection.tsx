@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { dealApi } from '../../services/deal-api';
 import { Badge } from '../display/Badge';
+import { DealDetailModal } from '../deals/DealDetailModal';
 import type { Deal, DiscountType } from '@community-hub/shared';
 import { TagIcon } from '@heroicons/react/24/outline';
 
@@ -51,26 +52,35 @@ export function TodayDealsSection() {
   const { t, i18n } = useTranslation();
   const [deals, setDeals] = useState<Deal[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedDeal, setSelectedDeal] = useState<Deal | null>(null);
   const locale = i18n.language === 'en' ? 'en-AU' : i18n.language;
 
   useEffect(() => {
     const fetchDeals = async () => {
       try {
-        // First try featured deals, fallback to active deals
-        const featuredDeals = await dealApi.getFeaturedDeals(6);
-        if (featuredDeals.length > 0) {
-          setDeals(featuredDeals);
-        } else {
-          // Get active deals if no featured ones
-          const response = await dealApi.getActiveDeals({
-            validNow: true,
-            limit: 6,
-            sort: 'newest',
-          });
-          setDeals(response.deals);
+        // First try featured deals
+        let loadedDeals: Deal[] = [];
+        try {
+          loadedDeals = await dealApi.getFeaturedDeals(6);
+        } catch {
+          // Featured endpoint may fail, continue to fallback
         }
-      } catch (error) {
-        console.error('Failed to fetch deals:', error);
+
+        // Fallback to active deals if no featured ones
+        if (loadedDeals.length === 0) {
+          try {
+            const response = await dealApi.getActiveDeals({
+              validNow: true,
+              limit: 6,
+              sort: 'newest',
+            });
+            loadedDeals = response.deals;
+          } catch {
+            // Active deals endpoint also failed
+          }
+        }
+
+        setDeals(loadedDeals);
       } finally {
         setIsLoading(false);
       }
@@ -111,7 +121,7 @@ export function TodayDealsSection() {
           {t('home.todaysDeals.title', "Today's Deals")}
         </h2>
         <Link
-          to="/businesses?hasDeals=true"
+          to="/deals"
           className="text-primary hover:text-primary/80 font-medium text-sm transition-colors"
         >
           {t('home.todaysDeals.viewAll', 'View All')} &rarr;
@@ -125,10 +135,11 @@ export function TodayDealsSection() {
           const isEndingSoon = daysRemaining <= 3 && daysRemaining > 0;
 
           return (
-            <Link
+            <button
               key={deal.id}
-              to={deal.business?.slug ? `/business/${deal.business.slug}?tab=deals` : `/business/${deal.businessId}?tab=deals`}
-              className="group block bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 border border-gray-100 dark:border-gray-700"
+              type="button"
+              onClick={() => setSelectedDeal(deal)}
+              className="group block w-full text-start bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 border border-gray-100 dark:border-gray-700"
             >
               {/* Deal Image */}
               <div className="h-40 bg-gray-100 relative overflow-hidden">
@@ -225,10 +236,19 @@ export function TodayDealsSection() {
                   </div>
                 )}
               </div>
-            </Link>
+            </button>
           );
         })}
       </div>
+
+      {/* Deal Detail Modal */}
+      {selectedDeal && (
+        <DealDetailModal
+          deal={selectedDeal}
+          onClose={() => setSelectedDeal(null)}
+          showBusinessLink
+        />
+      )}
     </section>
   );
 }

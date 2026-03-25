@@ -8,10 +8,9 @@ import { prisma } from '../db/index.js';
 import { logger } from '../utils/logger.js';
 import { ApiError } from '../utils/api-error.js';
 
-export interface PaginationOptions {
-  page: number;
-  limit: number;
-}
+import type { PaginationOptions } from '../types/service-types.js';
+
+export type { PaginationOptions };
 
 export class FollowService {
   /**

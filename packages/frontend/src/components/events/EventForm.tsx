@@ -15,6 +15,7 @@ import { TimePicker } from '../form/TimePicker';
 import { Checkbox } from '../form/Checkbox';
 import { RadioButton } from '../form/RadioButton';
 import { Alert } from '../display/Alert';
+import { EventBannerPicker } from './EventBannerPicker';
 import type { Event, EventCategory } from '../../services/event-service';
 import type { LocationType, VenueInput, EventCreateInput, EventUpdateInput } from '@community-hub/shared';
 
@@ -75,13 +76,13 @@ const LOCATION_TYPES: { value: LocationType; labelKey: string }[] = [
 ];
 
 const ACCESSIBILITY_OPTIONS = [
-  { value: 'wheelchair', labelKey: 'events.accessibility.wheelchair' },
-  { value: 'hearing-loop', labelKey: 'events.accessibility.hearingLoop' },
-  { value: 'sign-language', labelKey: 'events.accessibility.signLanguage' },
-  { value: 'accessible-parking', labelKey: 'events.accessibility.accessibleParking' },
-  { value: 'guide-dogs', labelKey: 'events.accessibility.guideDogs' },
-  { value: 'large-print', labelKey: 'events.accessibility.largePrint' },
-  { value: 'seated', labelKey: 'events.accessibility.seated' },
+  { value: 'wheelchair', label: 'Wheelchair accessible' },
+  { value: 'hearing-loop', label: 'Hearing loop available' },
+  { value: 'sign-language', label: 'Sign language interpreter' },
+  { value: 'accessible-parking', label: 'Accessible parking' },
+  { value: 'guide-dogs', label: 'Guide dogs welcome' },
+  { value: 'large-print', label: 'Large print materials' },
+  { value: 'seated', label: 'Seated event' },
 ];
 
 const AUSTRALIAN_STATES = [
@@ -708,17 +709,12 @@ export function EventForm({
             fullWidth
           />
 
-          <Input
-            name="imageUrl"
-            label={t('events.form.fields.imageUrl')}
+          <EventBannerPicker
             value={formData.imageUrl}
-            onChange={handleChange('imageUrl')}
-            onBlur={() => handleBlur('imageUrl')}
+            onChange={(url) => {
+              handleChange('imageUrl')({ target: { name: 'imageUrl', value: url } } as React.ChangeEvent<HTMLInputElement>);
+            }}
             error={touched.imageUrl ? errors.imageUrl : undefined}
-            type="url"
-            placeholder="https://..."
-            fullWidth
-            helperText={t('events.form.helpers.imageUrl')}
           />
         </div>
       </section>
@@ -732,13 +728,13 @@ export function EventForm({
         <fieldset>
           <legend className="sr-only">{t('events.form.fields.accessibilityFeatures')}</legend>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {ACCESSIBILITY_OPTIONS.map(({ value, labelKey }) => (
+            {ACCESSIBILITY_OPTIONS.map(({ value, label }) => (
               <Checkbox
                 key={value}
                 name={`accessibility.${value}`}
                 checked={formData.accessibility.includes(value)}
                 onChange={(e) => handleAccessibilityChange(value, e.target.checked)}
-                label={t(labelKey)}
+                label={label}
               />
             ))}
           </div>

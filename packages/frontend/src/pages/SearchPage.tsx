@@ -2,10 +2,11 @@
  * SearchPage
  * Phase 5: Search & Discovery
  *
- * Main search page with filters, results, and autocomplete
+ * Main search page with horizontal filters, search bar, and responsive card grid
+ * Material 3 inspired layout - WCAG 2.1 AA compliant
  */
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { SearchBar } from '../components/search/SearchBar.js';
@@ -18,7 +19,7 @@ import { logger } from '../utils/logger.js';
 import type { SearchParams, SearchResponse, BusinessSearchResult } from '@community-hub/shared';
 
 export function SearchPage() {
-  const { t } = useTranslation('search');
+  const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
@@ -142,55 +143,59 @@ export function SearchPage() {
   ];
 
   return (
-    <PageContainer
-      title={query ? `Search: ${query}` : 'Search'}
-      description="Search for local businesses, events, and deals"
-    >
-      {/* Search Bar */}
-      <div className="mb-6">
-        <SearchBar
-          value={query}
-          onChange={setQuery}
-          onSubmit={handleSearch}
-          onSuggestionSelect={handleSuggestionSelect}
-          showAutocomplete={true}
-        />
-      </div>
+    <PageContainer>
+      <div className="py-2">
+        {/* Header section */}
+        <header className="mb-6">
+          <div className="text-left mb-5">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+              {t('business.directory', 'Businesses')}
+            </h1>
+            <p className="mt-1 text-gray-600 dark:text-gray-400">
+              {t('business.directoryDescription', 'Discover local businesses in your community')}
+            </p>
+          </div>
 
-      {/* Active Filter Chips */}
-      {Object.keys(filters).length > 0 && filters.q && (
-        <div className="mb-4">
-          <FilterChips
-            filters={filters}
-            onRemoveFilter={handleRemoveFilter}
-            onClearAll={handleClearAllFilters}
-            categories={availableCategories}
-          />
-        </div>
-      )}
+          {/* Search Bar */}
+          <div className="mb-5">
+            <SearchBar
+              value={query}
+              onChange={setQuery}
+              onSubmit={handleSearch}
+              onSuggestionSelect={handleSuggestionSelect}
+              showAutocomplete={true}
+            />
+          </div>
 
-      {/* Main Content */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Filters Sidebar */}
-        <aside className="lg:col-span-1">
+          {/* Horizontal filter bar */}
           <SearchFilters
             filters={filters}
             onChange={handleFilterChange}
             categories={availableCategories}
-            showDistance={false} // TODO: Get user location
+            showDistance={false}
           />
-        </aside>
 
-        {/* Results */}
-        <main className="lg:col-span-3">
-          <SearchResults
-            results={results || undefined}
-            isLoading={isLoading}
-            error={error}
-            page={filters.page || 1}
-            onPageChange={handlePageChange}
-          />
-        </main>
+          {/* Active Filter Chips (from FilterChips component for complex filters) */}
+          {Object.keys(filters).length > 0 && filters.q && (
+            <div className="mt-3">
+              <FilterChips
+                filters={filters}
+                onRemoveFilter={handleRemoveFilter}
+                onClearAll={handleClearAllFilters}
+                categories={availableCategories}
+              />
+            </div>
+          )}
+        </header>
+
+        {/* Results - full width */}
+        <SearchResults
+          results={results || undefined}
+          isLoading={isLoading}
+          error={error}
+          page={filters.page || 1}
+          onPageChange={handlePageChange}
+        />
       </div>
     </PageContainer>
   );

@@ -27,7 +27,7 @@ export function useFocusTrap(
     // Focus first element
     const focusableElements = getFocusableElements();
     if (focusableElements.length > 0) {
-      focusableElements[0].focus();
+      focusableElements[0]!.focus();
     }
 
     // Handle tab key
@@ -40,8 +40,8 @@ export function useFocusTrap(
         return;
       }
 
-      const firstElement = focusableElements[0];
-      const lastElement = focusableElements[focusableElements.length - 1];
+      const firstElement = focusableElements[0]!;
+      const lastElement = focusableElements[focusableElements.length - 1]!;
 
       if (e.shiftKey) {
         // Shift + Tab

@@ -101,11 +101,7 @@ export const reviewService = {
       });
     }
 
-    const response = await apiClient.post<ReviewResponse>('/reviews', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    const response = await apiClient.post<ReviewResponse>('/reviews', formData);
     return response;
   },
 
@@ -124,11 +120,7 @@ export const reviewService = {
       });
     }
 
-    const response = await apiClient.put<ReviewResponse>(`/reviews/${reviewId}`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    const response = await apiClient.put<ReviewResponse>(`/reviews/${reviewId}`, formData);
     return response;
   },
 
@@ -171,5 +163,19 @@ export const reviewService = {
       data
     );
     return response;
+  },
+
+  /**
+   * Respond to a review as business owner
+   */
+  async respondToReview(
+    reviewId: string,
+    response: string
+  ): Promise<ReviewResponse> {
+    const result = await apiClient.post<ReviewResponse>(
+      `/reviews/${reviewId}/respond`,
+      { response }
+    );
+    return result;
   },
 };

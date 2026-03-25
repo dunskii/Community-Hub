@@ -5,10 +5,9 @@
  * Hero section with background image and prominent search bar
  */
 
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { SearchBar } from '../search/SearchBar.js';
-import { getPlatformConfig } from '@community-hub/shared';
+import { getPlatformConfig } from '../../config/platform-loader.js';
 
 export interface HeroSectionProps {
   /** Callback when search is submitted */
@@ -49,12 +48,12 @@ export function HeroSection({ onSearch, onSuggestionSelect }: HeroSectionProps) 
         <div className="text-center max-w-3xl mx-auto">
           {/* Headline */}
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6">
-            {t('hero.title', { platformName: config.platformName })}
+            {t('hero.title', { platformName: config.branding.platformName })}
           </h1>
 
           {/* Subheadline */}
           <p className="text-xl sm:text-2xl mb-8 text-white opacity-95">
-            {t('hero.subtitle', { location: config.location.suburb })}
+            {t('hero.subtitle', { location: config.location.suburbName })}
           </p>
 
           {/* Search Bar */}

@@ -2327,3 +2327,20 @@ Phase 19 (Deployment Infrastructure) ◄── All development phases complete
 _This document should be updated at least weekly, or after significant progress on any phase._
 
 ---
+
+## Known Gaps & Deferred Items
+
+### GBP Reviews/Rating Import (§26.1)
+
+The specification lists Reviews and Rating as daily imports from Google Business Profile. However, Google has deprecated the Reviews API for new third-party applications — new apps can no longer obtain access to read or reply to Google reviews via the GBP API suite. The platform's own review system (Phase 6) serves as the primary review mechanism.
+
+- **Status:** Deferred indefinitely (blocked by Google API policy)
+- **Alternative:** Phase 6 review system is fully operational with 120+ tests
+- **If Google restores access:** Implement a `GbpReviewSyncScheduler` that runs daily and maps GBP reviews to the platform's `reviews` table
+
+### Pre-existing Issues to Address
+
+- `useEditBusinessForm.ts` contains a `console.log` in DEV mode (lines 286-288) — project standard is zero console statements
+- `packages/backend/prisma/schema.prisma` datasource block is missing `url = env("DATABASE_URL")` — requires manual addition for `prisma generate` to work without a `.env` file present
+
+---

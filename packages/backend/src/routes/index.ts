@@ -21,6 +21,9 @@ import analyticsRouter from './analytics.js';
 import { eventRouter } from './events.js';
 import { conversationsRouter } from './conversations.js';
 import { dealRouter, businessDealRouter } from './deals.js';
+import { enquiryRouter } from './enquiry.js';
+import { adminRouter } from './admin.js';
+import { socialRouter } from './social.js';
 
 export function setupRoutes(app: Express): void {
   // API v1
@@ -44,6 +47,9 @@ export function setupRoutes(app: Express): void {
   v1.use('/', conversationsRouter);
   v1.use('/deals', dealRouter);
   v1.use('/businesses/:businessId/deals', businessDealRouter);
+  v1.use('/', enquiryRouter);
+  v1.use('/', adminRouter);
+  v1.use('/businesses/:businessId/social', socialRouter);
 
   app.use('/api/v1', v1);
 

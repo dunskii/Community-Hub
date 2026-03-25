@@ -26,10 +26,10 @@ export function getEnabledLanguages(): LanguageCode[] {
     const config = getPlatformConfig();
     return config.multilingual.supportedLanguages
       .filter((lang) => lang.enabled)
-      .map((lang) => lang.code);
+      .map((lang) => lang.code as LanguageCode);
   } catch (error) {
     // Fallback to English if config cannot be loaded
-    return ['en'];
+    return ['en' as LanguageCode];
   }
 }
 

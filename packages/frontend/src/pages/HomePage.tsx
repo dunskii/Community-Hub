@@ -5,44 +5,15 @@
  * Main landing page with hero, search, and discovery sections
  */
 
-import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { logger } from '../utils/logger.js';
-import { SearchBar } from '../components/search/SearchBar.js';
 import { HeroSection } from '../components/home/HeroSection.js';
-import { StatsStrip } from '../components/home/StatsStrip.js';
 import { FeaturedBusinesses } from '../components/home/FeaturedBusinesses.js';
-import { NearYouSection } from '../components/home/NearYouSection.js';
-import { HighlyRatedSection } from '../components/home/HighlyRatedSection.js';
-import { NewBusinessesSection } from '../components/home/NewBusinessesSection.js';
-import { CategoryShowcase } from '../components/home/CategoryShowcase.js';
 import { QuickFilters } from '../components/home/QuickFilters.js';
 import { UpcomingEventsSection } from '../components/home/UpcomingEventsSection.js';
 import { TodayDealsSection } from '../components/home/TodayDealsSection.js';
 
 export function HomePage() {
-  const { t } = useTranslation('home');
   const navigate = useNavigate();
-  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
-
-  // Get user's location on mount
-  useEffect(() => {
-    if ('geolocation' in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setUserLocation({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          });
-        },
-        (error) => {
-          logger.debug('Geolocation not available', { message: error.message });
-          // Continue without location - Near You section will be hidden
-        }
-      );
-    }
-  }, []);
 
   // Handle search submission
   const handleSearch = (query: string) => {
@@ -78,36 +49,16 @@ export function HomePage() {
       {/* Quick Filter Chips */}
       <QuickFilters onFilterClick={handleQuickFilter} />
 
-      {/* Stats Strip */}
-      <StatsStrip />
-
       {/* Main Content */}
       <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
-        {/* Featured Businesses Carousel */}
+        {/* Featured Businesses */}
         <FeaturedBusinesses />
-
-        {/* Near You Section (conditional on geolocation) */}
-        {userLocation && (
-          <NearYouSection
-            latitude={userLocation.lat}
-            longitude={userLocation.lng}
-          />
-        )}
 
         {/* Upcoming Events Section */}
         <UpcomingEventsSection />
 
         {/* Today's Deals Section */}
         <TodayDealsSection />
-
-        {/* Highly Rated Section */}
-        <HighlyRatedSection />
-
-        {/* New Businesses Section */}
-        <NewBusinessesSection />
-
-        {/* Category Showcase */}
-        <CategoryShowcase />
       </div>
     </div>
   );

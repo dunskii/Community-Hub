@@ -19,7 +19,8 @@
       "Skill(qa)",
       "Bash(powershell.exe -Command \"Get-Service -Name *postgres* | Select-Object Name, Status\")",
       "Bash(npx prisma generate:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "WebFetch(domain:docs.x.com)"
     ]
   }
 }

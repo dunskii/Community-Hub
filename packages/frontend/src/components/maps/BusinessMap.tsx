@@ -43,7 +43,7 @@ export function BusinessMap({
 
   return (
     <div
-      className={`relative w-full h-96 rounded-lg overflow-hidden ${className}`}
+      className={`relative w-full rounded-lg overflow-hidden ${className || 'h-96'}`}
       role="region"
       aria-label={`Map showing location of ${businessName}`}
     >

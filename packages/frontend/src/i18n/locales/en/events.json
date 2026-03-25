@@ -5,6 +5,7 @@
     "createEvent": "Create Event",
     "createFirstEvent": "Create the First Event",
     "browseEvents": "Browse Events",
+    "searchPlaceholder": "Search events...",
     "backToEvents": "Back to Events",
     "about": "About This Event",
     "organizer": "Organizer",
@@ -82,7 +83,9 @@
       "anyLocationType": "Any location type",
       "anyDistance": "Any distance",
       "anyStatus": "Any status",
-      "allCategories": "All categories"
+      "allCategories": "All categories",
+      "activeFilters": "Active filters",
+      "removeFilter": "Remove {{filter}} filter"
     },
     "sort": {
       "upcoming": "Upcoming",
@@ -186,7 +189,7 @@
         "submitFailed": "Failed to save event. Please try again."
       }
     },
-    "accessibility": {
+    "accessibilityOptions": {
       "wheelchair": "Wheelchair accessible",
       "hearingLoop": "Hearing loop available",
       "signLanguage": "Sign language interpreter",

@@ -7,7 +7,7 @@
  * log in again or continue as guest. Preserves current URL for redirect after login.
  */
 
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useLocation } from 'react-router-dom';
 

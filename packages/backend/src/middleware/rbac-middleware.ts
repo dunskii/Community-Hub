@@ -101,8 +101,9 @@ export function requireOwnershipOrAdmin(resourceIdParam: string = 'id') {
       return;
     }
 
-    // Admin can access any resource
+    // Admin or Curator can access any resource
     if (
+      req.user.role === UserRole.CURATOR ||
       req.user.role === UserRole.ADMIN ||
       req.user.role === UserRole.SUPER_ADMIN
     ) {

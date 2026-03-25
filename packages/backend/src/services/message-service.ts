@@ -8,21 +8,16 @@
 
 import crypto from 'crypto';
 import { prisma } from '../db/index.js';
-import { Prisma } from '../generated/prisma/index.js';
 import { logger } from '../utils/logger.js';
 import { ApiError } from '../utils/api-error.js';
 import { getRedis } from '../cache/redis-client.js';
+import { createAuditLog } from '../utils/audit-logger.js';
+import { makeCacheKey } from '../cache/cache-helpers.js';
 import type { SendMessageInput, MessagePaginationInput } from '@community-hub/shared';
-import { SenderType, ConversationStatus, ActorRole } from '../generated/prisma/index.js';
+import { SenderType, ConversationStatus } from '../generated/prisma/index.js';
+import type { AuditContext } from '../types/service-types.js';
 
-// ─── Types ────────────────────────────────────────────────────
-
-export interface AuditContext {
-  actorId: string;
-  actorRole: string;
-  ipAddress?: string;
-  userAgent?: string;
-}
+export type { AuditContext };
 
 export interface MessageWithAttachments {
   id: string;
@@ -63,7 +58,7 @@ export interface PaginatedMessages {
 const CACHE_PREFIX = 'conversations';
 
 function getCacheKey(type: string, ...args: string[]): string {
-  return `${CACHE_PREFIX}:${type}:${args.join(':')}`;
+  return makeCacheKey(CACHE_PREFIX, type, ...args);
 }
 
 // ─── Constants ────────────────────────────────────────────────
@@ -73,40 +68,6 @@ const MESSAGE_DELETE_WINDOW_HOURS = 24;
 // ─── Service Implementation ───────────────────────────────────
 
 class MessageService {
-  /**
-   * Create audit log entry
-   */
-  private async createAuditLog(params: {
-    actorId: string;
-    actorRole: string;
-    action: string;
-    targetType: string;
-    targetId: string;
-    previousValue?: Record<string, unknown>;
-    newValue?: Record<string, unknown>;
-    ipAddress: string;
-    userAgent: string;
-  }): Promise<void> {
-    try {
-      await prisma.audit_logs.create({
-        data: {
-          id: crypto.randomUUID(),
-          actor_id: params.actorId,
-          actor_role: params.actorRole as ActorRole,
-          action: params.action,
-          target_type: params.targetType,
-          target_id: params.targetId,
-          previous_value: params.previousValue ? JSON.stringify(params.previousValue) : Prisma.DbNull,
-          new_value: params.newValue ? JSON.stringify(params.newValue) : Prisma.DbNull,
-          ip_address: params.ipAddress,
-          user_agent: params.userAgent,
-        },
-      });
-    } catch (error) {
-      logger.error({ error, params }, 'Failed to create audit log');
-    }
-  }
-
   /**
    * Send a message in a conversation
    */
@@ -252,9 +213,8 @@ class MessageService {
     await this.invalidateCache(conversation.user_id, conversation.business_id);
 
     // Log audit
-    await this.createAuditLog({
-      actorId: auditContext.actorId,
-      actorRole: auditContext.actorRole,
+    await createAuditLog({
+      context: auditContext,
       action: 'message.send',
       targetType: 'Message',
       targetId: message.id,
@@ -264,8 +224,6 @@ class MessageService {
         contentLength: input.content.length,
         attachmentCount: input.attachments?.length || 0,
       },
-      ipAddress: auditContext.ipAddress || '',
-      userAgent: auditContext.userAgent || '',
     });
 
     return {
@@ -527,16 +485,13 @@ class MessageService {
     });
 
     // Log audit
-    await this.createAuditLog({
-      actorId: auditContext.actorId,
-      actorRole: auditContext.actorRole,
+    await createAuditLog({
+      context: auditContext,
       action: 'message.delete',
       targetType: 'Message',
       targetId: messageId,
       previousValue: { content: message.content.substring(0, 100) },
       newValue: { deletedAt: new Date().toISOString() },
-      ipAddress: auditContext.ipAddress || '',
-      userAgent: auditContext.userAgent || '',
     });
 
     logger.info({ messageId, userId }, 'Message deleted');

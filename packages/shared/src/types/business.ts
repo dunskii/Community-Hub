@@ -7,6 +7,7 @@ import type { BusinessStatus, PriceRange } from '../constants/business.constants
 
 export interface Address {
   street: string;
+  streetAddress?: string;
   suburb: string;
   state: string;
   postcode: string;
@@ -53,9 +54,9 @@ export interface GalleryPhoto {
 
 export interface Business {
   id: string;
-  name: string;
+  name: string | Record<string, string>;
   slug: string;
-  description: Record<string, string>; // Multilingual: {"en": "...", "ar": "..."}
+  description: string | Record<string, string>; // Multilingual: {"en": "...", "ar": "..."}
 
   // Categories
   categoryPrimaryId: string;
@@ -77,6 +78,7 @@ export interface Business {
   logo?: string;
   coverPhoto?: string;
   gallery?: GalleryPhoto[];
+  photos?: string[];
 
   // Social
   socialLinks?: SocialLinks;
@@ -86,6 +88,28 @@ export interface Business {
   certifications: string[];
   paymentMethods: string[];
   accessibilityFeatures: string[];
+
+  // Expanded relations (populated by API)
+  categoryPrimary?: {
+    id: string;
+    name: string | Record<string, string>;
+    slug: string;
+    icon?: string;
+  };
+  rating?: number | null;
+  reviewCount?: number;
+
+  // Location coordinates (from address)
+  location?: {
+    latitude: number;
+    longitude: number;
+  };
+
+  // Accessibility summary (computed)
+  accessibility?: {
+    wheelchairAccessible?: boolean;
+    features: string[];
+  };
 
   // Optional Fields
   priceRange?: PriceRange;
@@ -152,4 +176,6 @@ export interface BusinessUpdateInput {
   timezone?: string;
   featured?: boolean;
   displayOrder?: number;
+  coverPhoto?: string;
+  photos?: string[];
 }

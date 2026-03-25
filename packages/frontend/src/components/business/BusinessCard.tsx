@@ -5,7 +5,7 @@
  */
 
 import { Link } from 'react-router-dom';
-import type { Business } from '@community-hub/shared';
+import type { Business as BaseBusiness } from '@community-hub/shared';
 import { useIsOpenNow } from '../../hooks/useIsOpenNow';
 import { Badge } from '../display/Badge';
 import { Avatar } from '../display/Avatar';
@@ -15,7 +15,7 @@ import { StarIcon } from '@heroicons/react/24/solid';
 import type { ViewMode } from '../ui/ViewToggle';
 
 interface BusinessCardProps {
-  business: Business;
+  business: BaseBusiness;
   /** Show distance if available */
   distance?: number;
   /** Custom click handler (overrides default link) */
@@ -27,25 +27,24 @@ interface BusinessCardProps {
 export function BusinessCard({ business, distance, onClick, viewMode = 'grid' }: BusinessCardProps) {
   const { t, i18n } = useTranslation('business');
   const { isOpen } = useIsOpenNow(business.operatingHours);
-  const isRtl = i18n.dir() === 'rtl';
 
   const name = typeof business.name === 'string'
     ? business.name
-    : business.name[i18n.language] || business.name.en;
+    : business.name[i18n.language] || (business.name as Record<string, string>).en || '';
 
   const description = typeof business.description === 'string'
     ? business.description
-    : business.description[i18n.language] || business.description.en;
+    : business.description[i18n.language] || (business.description as Record<string, string>).en || '';
 
   // View-specific styling
   const isListView = viewMode === 'list';
   const cardClasses = isListView
-    ? 'flex flex-row bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden hover:shadow-md transition-shadow'
-    : 'flex flex-col bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden hover:shadow-md transition-shadow';
+    ? 'flex flex-row bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden hover:shadow-md transition-all duration-200'
+    : 'group flex flex-col bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden hover:shadow-md transition-all duration-200';
 
   const imageClasses = isListView
     ? 'w-32 h-32 sm:w-40 sm:h-40 flex-shrink-0'
-    : 'w-full h-40';
+    : 'w-full h-44';
 
   const content = (
     <div className={cardClasses}>
@@ -53,7 +52,7 @@ export function BusinessCard({ business, distance, onClick, viewMode = 'grid' }:
       <div className={imageClasses}>
         {business.photos && business.photos.length > 0 ? (
           <ResponsiveImage
-            src={business.photos[0]}
+            src={business.photos[0] ?? ''}
             alt=""
             decorative
             aspectRatio={isListView ? '1:1' : '16:9'}
@@ -70,8 +69,8 @@ export function BusinessCard({ business, distance, onClick, viewMode = 'grid' }:
 
       {/* Business Info */}
       <div className={`p-4 flex-1 ${isListView ? 'flex flex-col justify-center' : ''}`}>
-        <div className="flex items-start justify-between gap-2 mb-2">
-          <h3 className="text-lg font-semibold text-slate-900 dark:text-white line-clamp-1">{name}</h3>
+        <div className="flex items-start justify-between gap-2 mb-1">
+          <h3 className="text-base font-semibold text-slate-900 dark:text-white line-clamp-1 group-hover:text-primary transition-colors leading-snug">{name}</h3>
 
           {/* Status Badge */}
           <div className="flex-shrink-0">
@@ -105,7 +104,7 @@ export function BusinessCard({ business, distance, onClick, viewMode = 'grid' }:
             <span className="text-primary">
               {typeof business.categoryPrimary.name === 'string'
                 ? business.categoryPrimary.name
-                : business.categoryPrimary.name[i18n.language] || business.categoryPrimary.name.en}
+                : (business.categoryPrimary.name as Record<string, string>)[i18n.language] || (business.categoryPrimary.name as Record<string, string>).en}
             </span>
           )}
 
@@ -142,14 +141,14 @@ export function BusinessCard({ business, distance, onClick, viewMode = 'grid' }:
         {/* Address */}
         {business.address && (
           <address className="text-sm text-slate-500 dark:text-slate-400 mt-2 not-italic">
-            {business.address.streetAddress}, {business.address.suburb}
+            {business.address.street}, {business.address.suburb}
           </address>
         )}
       </div>
     </div>
   );
 
-  const wrapperClasses = 'block focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-lg';
+  const wrapperClasses = 'block focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-2xl';
 
   if (onClick) {
     return (

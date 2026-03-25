@@ -112,8 +112,9 @@ export class EventController {
     try {
       const id = req.params.id as string;
       const userId = req.user?.id;
+      const userRole = req.user?.role;
 
-      const event = await eventService.getEvent(id, userId);
+      const event = await eventService.getEvent(id, userId, userRole);
       sendSuccess(res, event);
     } catch (error) {
       logger.error({ error, eventId: req.params.id }, 'Failed to get event');
@@ -129,8 +130,9 @@ export class EventController {
     try {
       const slug = req.params.slug as string;
       const userId = req.user?.id;
+      const userRole = req.user?.role;
 
-      const event = await eventService.getEventBySlug(slug, userId);
+      const event = await eventService.getEventBySlug(slug, userId, userRole);
       sendSuccess(res, event);
     } catch (error) {
       logger.error({ error, slug: req.params.slug }, 'Failed to get event by slug');

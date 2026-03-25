@@ -49,7 +49,7 @@ export function SearchBar({
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const debounceTimerRef = useRef<number>();
+  const debounceTimerRef = useRef<number | undefined>(undefined);
 
   // Update local state when value prop changes
   useEffect(() => {
@@ -155,12 +155,14 @@ export function SearchBar({
         e.preventDefault();
         setSelectedIndex(prev => (prev > 0 ? prev - 1 : -1));
         break;
-      case 'Enter':
-        if (selectedIndex >= 0) {
+      case 'Enter': {
+        const selected = allSuggestions[selectedIndex];
+        if (selectedIndex >= 0 && selected) {
           e.preventDefault();
-          handleSuggestionClick(allSuggestions[selectedIndex]);
+          handleSuggestionClick(selected);
         }
         break;
+      }
       case 'Escape':
         setIsOpen(false);
         setSelectedIndex(-1);
@@ -173,22 +175,20 @@ export function SearchBar({
       <form onSubmit={handleSubmit} role="search">
         <div className="relative">
           {/* Search Icon */}
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <svg
-              className="h-5 w-5 text-neutral-dark"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-          </div>
+          <svg
+            className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
+          </svg>
 
           {/* Input */}
           <input
@@ -209,14 +209,14 @@ export function SearchBar({
             aria-controls="search-suggestions"
             aria-expanded={isOpen}
             aria-activedescendant={selectedIndex >= 0 ? `suggestion-${selectedIndex}` : undefined}
-            className="block w-full pl-10 pr-3 py-2 border border-neutral-medium rounded-md leading-5 bg-white placeholder-neutral-dark text-dark focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm"
+            className="block w-full pl-12 pr-12 py-3 min-h-[48px] border border-gray-300 dark:border-gray-600 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary shadow-sm hover:shadow-md transition-shadow"
           />
 
           {/* Loading Spinner */}
           {isLoading && (
-            <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
               <svg
-                className="animate-spin h-5 w-5 text-neutral-dark"
+                className="animate-spin h-5 w-5 text-gray-400"
                 fill="none"
                 viewBox="0 0 24 24"
                 aria-hidden="true"
@@ -246,12 +246,12 @@ export function SearchBar({
           ref={dropdownRef}
           id="search-suggestions"
           role="listbox"
-          className="absolute z-50 mt-1 w-full bg-white shadow-lg max-h-96 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm"
+          className="absolute z-50 mt-2 w-full bg-white dark:bg-gray-800 shadow-lg max-h-96 rounded-2xl py-2 text-base ring-1 ring-gray-200 dark:ring-gray-700 overflow-auto focus:outline-none sm:text-sm"
         >
           {/* Recent Searches */}
           {suggestions.recentSearches.length > 0 && (
             <div>
-              <div className="px-3 py-2 text-xs font-semibold text-neutral-dark bg-neutral-light">
+              <div className="px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/50">
                 {t('search.recentSearches')}
               </div>
               {suggestions.recentSearches.map((name, index) => {
@@ -263,11 +263,11 @@ export function SearchBar({
                     role="option"
                     aria-selected={selectedIndex === flatIndex}
                     onClick={() => handleSuggestionClick({ type: 'recent', name })}
-                    className={`w-full text-left px-3 py-2 hover:bg-neutral-light flex items-center ${
-                      selectedIndex === flatIndex ? 'bg-neutral-light' : ''
+                    className={`w-full text-left px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center transition-colors ${
+                      selectedIndex === flatIndex ? 'bg-gray-100 dark:bg-gray-700' : ''
                     }`}
                   >
-                    <svg className="h-4 w-4 text-neutral-dark mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="h-4 w-4 text-gray-400 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     {name}
@@ -280,7 +280,7 @@ export function SearchBar({
           {/* Popular Searches */}
           {suggestions.popularSearches.length > 0 && (
             <div>
-              <div className="px-3 py-2 text-xs font-semibold text-neutral-dark bg-neutral-light">
+              <div className="px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/50">
                 {t('search.popularSearches')}
               </div>
               {suggestions.popularSearches.map((name, index) => {
@@ -292,11 +292,11 @@ export function SearchBar({
                     role="option"
                     aria-selected={selectedIndex === flatIndex}
                     onClick={() => handleSuggestionClick({ type: 'popular', name })}
-                    className={`w-full text-left px-3 py-2 hover:bg-neutral-light flex items-center ${
-                      selectedIndex === flatIndex ? 'bg-neutral-light' : ''
+                    className={`w-full text-left px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center transition-colors ${
+                      selectedIndex === flatIndex ? 'bg-gray-100 dark:bg-gray-700' : ''
                     }`}
                   >
-                    <svg className="h-4 w-4 text-neutral-dark mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="h-4 w-4 text-gray-400 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                     </svg>
                     {name}
@@ -309,7 +309,7 @@ export function SearchBar({
           {/* Business Suggestions */}
           {suggestions.suggestions.length > 0 && (
             <div>
-              <div className="px-3 py-2 text-xs font-semibold text-neutral-dark bg-neutral-light">
+              <div className="px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/50">
                 {t('search.businesses')}
               </div>
               {suggestions.suggestions.map((suggestion, index) => {
@@ -321,12 +321,12 @@ export function SearchBar({
                     role="option"
                     aria-selected={selectedIndex === flatIndex}
                     onClick={() => handleSuggestionClick({ type: 'business', id: suggestion.id, name: suggestion.name })}
-                    className={`w-full text-left px-3 py-2 hover:bg-neutral-light ${
-                      selectedIndex === flatIndex ? 'bg-neutral-light' : ''
+                    className={`w-full text-left px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
+                      selectedIndex === flatIndex ? 'bg-gray-100 dark:bg-gray-700' : ''
                     }`}
                   >
-                    <div className="font-medium text-dark">{suggestion.name}</div>
-                    <div className="text-xs text-neutral-dark">{suggestion.categoryName}</div>
+                    <div className="font-medium text-gray-900 dark:text-white">{suggestion.name}</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">{suggestion.categoryName}</div>
                   </button>
                 );
               })}
@@ -337,7 +337,7 @@ export function SearchBar({
           {suggestions.recentSearches.length === 0 &&
             suggestions.popularSearches.length === 0 &&
             suggestions.suggestions.length === 0 && (
-              <div className="px-3 py-4 text-center text-sm text-neutral-dark">
+              <div className="px-4 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
                 {t('search.noSuggestions')}
               </div>
             )}

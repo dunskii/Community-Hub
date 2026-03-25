@@ -74,7 +74,7 @@ router.get(
 router.post(
   '/businesses',
   requireAuth,
-  requireRole(['ADMIN', 'SUPER_ADMIN']),
+  requireRole(['CURATOR', 'ADMIN', 'SUPER_ADMIN']),
   createBusinessLimiter,
   validate({ body: businessCreateSchema }),
   businessController.createBusiness.bind(businessController)
@@ -89,7 +89,7 @@ router.post(
 router.delete(
   '/businesses/:id',
   requireAuth,
-  requireRole(['ADMIN', 'SUPER_ADMIN']),
+  requireRole(['CURATOR', 'ADMIN', 'SUPER_ADMIN']),
   deleteBusinessLimiter,
   businessController.deleteBusiness.bind(businessController)
 );

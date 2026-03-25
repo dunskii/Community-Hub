@@ -1,4 +1,4 @@
-import React, { forwardRef, InputHTMLAttributes } from 'react';
+import { forwardRef, InputHTMLAttributes } from 'react';
 
 interface ToggleProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> {
   /** Toggle label */

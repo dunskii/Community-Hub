@@ -5,7 +5,7 @@
  * Displays platform statistics (businesses, users, categories)
  */
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { get } from '../../services/api-client.js';
 import { logger } from '../../utils/logger.js';

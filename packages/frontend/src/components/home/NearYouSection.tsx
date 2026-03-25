@@ -5,7 +5,7 @@
  * Displays businesses near user's location
  */
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { searchBusinesses } from '../../services/search-api.js';
 import { logger } from '../../utils/logger.js';

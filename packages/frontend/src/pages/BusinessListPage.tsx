@@ -1,6 +1,7 @@
 /**
  * BusinessListPage
- * Main business directory listing page with filtering
+ * Main business directory listing page with horizontal filters
+ * Material 3 inspired layout matching EventsListingPage
  * WCAG 2.1 AA compliant
  */
 
@@ -94,25 +95,33 @@ export function BusinessListPage() {
       </Helmet>
 
       <PageContainer>
-        <div className="business-list-page">
-          <header className="business-list-page__header">
-            <h1>{t('directoryTitle')}</h1>
-            <p className="business-list-page__description">
-              {t('directoryDescription')}
-            </p>
+        <div className="py-2 pb-16">
+          {/* Header section */}
+          <header className="mb-6">
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-5">
+              <div className="text-left">
+                <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+                  {t('directoryTitle')}
+                </h1>
+                <p className="mt-1 text-gray-600 dark:text-gray-400">
+                  {t('directoryDescription')}
+                </p>
+              </div>
+            </div>
+
+            {/* Filters - search bar + horizontal filter chips */}
+            <BusinessFilters
+              filters={filters}
+              onChange={handleFiltersChange}
+              categories={categories}
+              loading={loading || categoriesLoading}
+            />
           </header>
 
-        <BusinessFilters
-          filters={filters}
-          onChange={handleFiltersChange}
-          categories={categories}
-          loading={loading || categoriesLoading}
-        />
-
-        <div className="business-list-page__results">
+          {/* Results header with count and view toggle */}
           <div className="flex items-center justify-between mb-4">
             {!loading && !error && (
-              <p className="business-list-page__count text-gray-600 dark:text-gray-400">
+              <p className="text-sm text-gray-500 dark:text-gray-400">
                 {t('resultsCount', { count: pagination.total })}
               </p>
             )}
@@ -124,6 +133,7 @@ export function BusinessListPage() {
             />
           </div>
 
+          {/* Business cards grid */}
           <BusinessList
             viewMode={viewMode}
             businesses={businesses}
@@ -136,14 +146,16 @@ export function BusinessListPage() {
             }
           />
 
+          {/* Pagination */}
           {pagination.totalPages > 1 && (
-            <Pagination
-              currentPage={pagination.page}
-              totalPages={pagination.totalPages}
-              onPageChange={handlePageChange}
-            />
+            <div className="mt-8">
+              <Pagination
+                currentPage={pagination.page}
+                totalPages={pagination.totalPages}
+                onPageChange={handlePageChange}
+              />
+            </div>
           )}
-        </div>
         </div>
       </PageContainer>
     </>

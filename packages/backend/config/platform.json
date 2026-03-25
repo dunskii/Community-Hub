@@ -5,9 +5,9 @@
   },
 
   "location": {
-    "suburbName": "Guilford",
-    "suburbNameShort": "Guilford",
-    "region": "Guilford South",
+    "suburbName": "Guildford",
+    "suburbNameShort": "Guildford",
+    "region": "Guildford South",
     "city": "Sydney",
     "state": "NSW",
     "stateFullName": "New South Wales",
@@ -35,10 +35,10 @@
   },
 
   "branding": {
-    "platformName": "Guilford Community Hub",
-    "platformNameShort": "Guilford Hub",
+    "platformName": "Guildford Community Hub",
+    "platformNameShort": "Guildford Hub",
     "tagline": "Connecting locals with local business",
-    "description": "Your digital guide to local businesses and community in Guilford",
+    "description": "Your digital guide to local businesses and community in Guildford",
     "legalEntityName": "Guildford Community Digital Platform",
     "copyrightHolder": "Greater Cumberland Chamber of Commerce",
     "colors": {
@@ -58,8 +58,8 @@
       "appleTouchIcon": "/assets/branding/apple-touch-icon.png"
     },
     "socialHashtags": {
-      "primary": "#MyGuilford",
-      "secondary": ["#Guilford", "#GuilfordNSW", "#GuilfordSydney", "#ShopGuilford"]
+      "primary": "#MyGuildford",
+      "secondary": ["#Guildford", "#GuildfordNSW", "#GuildfordSydney", "#ShopGuildford"]
     }
   },
 
@@ -139,18 +139,18 @@
 
   "seo": {
     "titleTemplate": "{page} | {platformName}",
-    "defaultTitle": "Guilford Community Hub - Local Business Directory",
-    "defaultDescription": "Discover local businesses, events, and community in Guilford South, Sydney. Connect with your neighbourhood.",
+    "defaultTitle": "Guildford Community Hub - Local Business Directory",
+    "defaultDescription": "Discover local businesses, events, and community in Guildford South, Sydney. Connect with your neighbourhood.",
     "defaultKeywords": [
-      "Guilford",
+      "Guildford",
       "local business",
       "Sydney",
       "community",
       "NSW",
-      "Guilford South"
+      "Guildford South"
     ],
     "ogImage": "/assets/branding/og-image.jpg",
-    "twitterHandle": "@GuilfordHub"
+    "twitterHandle": "@GuildfordHub"
   },
 
   "contact": {

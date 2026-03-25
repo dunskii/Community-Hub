@@ -21,7 +21,7 @@ export function useSavedBusiness(businessId: string): UseSavedBusinessReturn {
   const [error, setError] = useState<string | null>(null);
 
   const checkSavedStatus = useCallback(async () => {
-    if (!isAuthenticated) {
+    if (!businessId || !isAuthenticated) {
       setIsSaved(false);
       return;
     }
