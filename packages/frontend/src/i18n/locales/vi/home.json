@@ -72,5 +72,15 @@
     "entertainment": "Giải trí",
     "automotive": "Ô tô",
     "home": "Nhà & Vườn"
+  },
+  "upcomingEvents": {
+    "title": "Sự kiện sắp tới",
+    "subtitle": "Sự kiện cộng đồng sắp diễn ra",
+    "viewAll": "Xem tất cả"
+  },
+  "todaysDeals": {
+    "title": "Ưu đãi hôm nay",
+    "subtitle": "Ưu đãi đặc biệt từ doanh nghiệp địa phương",
+    "viewAll": "Xem tất cả"
   }
 }

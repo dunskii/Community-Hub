@@ -64,7 +64,7 @@ export function HighlyRatedSection() {
           <p className="text-neutral-dark">{t('highlyRated.subtitle')}</p>
         </div>
         <a
-          href="/search?rating=4.5&sort=rating"
+          href="/businesses?rating=4.5&sort=rating"
           className="text-primary hover:text-primary-shade-10 font-medium text-sm transition-colors"
         >
           {t('highlyRated.viewAll')} →

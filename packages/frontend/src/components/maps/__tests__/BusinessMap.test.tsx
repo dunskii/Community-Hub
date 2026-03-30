@@ -1,35 +1,32 @@
 import { describe, test, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, cleanup } from '@testing-library/react';
+import { render, screen, cleanup, fireEvent } from '@testing-library/react';
 import { BusinessMap } from '../BusinessMap';
 
-// Mock react-map-gl components
-vi.mock('react-map-gl', () => ({
-  default: ({ children, onError, initialViewState }: any) => {
-    // Store onError for test manipulation
-    (global as any).__mapOnError = onError;
-    return (
-      <div data-testid="mock-map" data-initial-view={JSON.stringify(initialViewState)}>
-        {children}
-      </div>
-    );
-  },
-  Marker: ({ children, latitude, longitude }: any) => (
-    <div data-testid="mock-marker" data-latitude={latitude} data-longitude={longitude}>
-      {children}
-    </div>
-  ),
-  NavigationControl: () => <div data-testid="mock-navigation-control">Navigation</div>,
+// Mock react-i18next
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key: string, params?: Record<string, string>) => {
+      const translations: Record<string, string> = {
+        mapShowingLocation: `Map showing location of ${params?.name ?? ''}`,
+        mapAlt: `Map showing ${params?.name ?? ''} at ${params?.address ?? ''}`,
+        mapUnavailable: 'Business location (map unavailable)',
+      };
+      return translations[key] ?? key;
+    },
+    i18n: { language: 'en', dir: () => 'ltr' },
+  }),
 }));
 
-// Mock child components
-vi.mock('../MapMarker', () => ({
-  MapMarker: ({ businessName }: { businessName: string }) => (
-    <div data-testid="map-marker" aria-label={`Location marker for ${businessName}`}>
-      Marker
-    </div>
-  ),
+// Mock platform config
+vi.mock('../../../config/platform-loader', () => ({
+  getPlatformConfig: () => ({
+    branding: {
+      colors: { primary: '#2C5F7C' },
+    },
+  }),
 }));
 
+// Mock MapFallback
 vi.mock('../MapFallback', () => ({
   MapFallback: ({ address }: { address: string }) => (
     <div data-testid="map-fallback" role="region" aria-label="Business location (map unavailable)">
@@ -38,23 +35,17 @@ vi.mock('../MapFallback', () => ({
   ),
 }));
 
-// Mock mapbox config
-vi.mock('../../../services/maps/mapbox-config', () => ({
-  DEFAULT_MAP_STYLE: 'mapbox://styles/mapbox/streets-v12',
-  DEFAULT_ZOOM: 15,
-}));
-
 describe('BusinessMap', () => {
   const defaultProps = {
     latitude: -33.8567,
     longitude: 150.9876,
     businessName: 'Test Business',
-    address: '123 Test Street, Guildford NSW 2161',
+    address: '123 Test Street, Sydney NSW 2000',
   };
 
   beforeEach(() => {
     vi.clearAllMocks();
-    delete (global as any).__mapOnError;
+    import.meta.env.VITE_MAPBOX_ACCESS_TOKEN = 'pk.test_token';
   });
 
   afterEach(() => {
@@ -71,36 +62,43 @@ describe('BusinessMap', () => {
       expect(container).toBeInTheDocument();
     });
 
-    test('renders map component', () => {
+    test('renders static map image', () => {
       render(<BusinessMap {...defaultProps} />);
 
-      const map = screen.getByTestId('mock-map');
-      expect(map).toBeInTheDocument();
+      const img = screen.getByRole('img');
+      expect(img).toBeInTheDocument();
+      expect(img).toHaveAttribute('alt', 'Map showing Test Business at 123 Test Street, Sydney NSW 2000');
     });
 
-    test('renders marker at correct coordinates', () => {
+    test('image src contains correct coordinates', () => {
       render(<BusinessMap {...defaultProps} />);
 
-      const marker = screen.getByTestId('mock-marker');
-      expect(marker).toHaveAttribute('data-latitude', String(defaultProps.latitude));
-      expect(marker).toHaveAttribute('data-longitude', String(defaultProps.longitude));
+      const img = screen.getByRole('img');
+      const src = img.getAttribute('src') || '';
+      expect(src).toContain('150.9876,-33.8567');
     });
 
-    test('renders MapMarker component with business name', () => {
+    test('image src contains marker pin with config color', () => {
       render(<BusinessMap {...defaultProps} />);
 
-      const mapMarker = screen.getByTestId('map-marker');
-      expect(mapMarker).toHaveAttribute(
-        'aria-label',
-        'Location marker for Test Business'
-      );
+      const img = screen.getByRole('img');
+      const src = img.getAttribute('src') || '';
+      expect(src).toContain('pin-l+2C5F7C');
     });
 
-    test('renders navigation control', () => {
+    test('image uses lazy loading', () => {
       render(<BusinessMap {...defaultProps} />);
 
-      const navControl = screen.getByTestId('mock-navigation-control');
-      expect(navControl).toBeInTheDocument();
+      const img = screen.getByRole('img');
+      expect(img).toHaveAttribute('loading', 'lazy');
+    });
+
+    test('image src uses retina @2x', () => {
+      render(<BusinessMap {...defaultProps} />);
+
+      const img = screen.getByRole('img');
+      const src = img.getAttribute('src') || '';
+      expect(src).toContain('@2x');
     });
 
     test('applies custom className', () => {
@@ -110,55 +108,58 @@ describe('BusinessMap', () => {
       expect(mapContainer).toBeInTheDocument();
     });
 
-    test('sets initial view state with correct coordinates and zoom', () => {
-      render(<BusinessMap {...defaultProps} />);
+    test('applies responsive height classes when no className provided', () => {
+      const { container } = render(<BusinessMap {...defaultProps} />);
 
-      const map = screen.getByTestId('mock-map');
-      const initialView = JSON.parse(map.getAttribute('data-initial-view') || '{}');
-
-      expect(initialView.latitude).toBe(defaultProps.latitude);
-      expect(initialView.longitude).toBe(defaultProps.longitude);
-      expect(initialView.zoom).toBe(15);
+      const mapContainer = container.querySelector('[role="region"]');
+      expect(mapContainer?.className).toContain('h-64');
+      expect(mapContainer?.className).toContain('sm:h-80');
+      expect(mapContainer?.className).toContain('md:h-96');
     });
   });
 
   describe('error handling', () => {
-    test('shows MapFallback when map error occurs', () => {
+    test('shows MapFallback when image fails to load', () => {
       render(<BusinessMap {...defaultProps} />);
 
-      // Trigger map error
-      const onError = (global as any).__mapOnError;
-      expect(onError).toBeDefined();
+      const img = screen.getByRole('img');
+      fireEvent.error(img);
 
-      // Re-render to simulate error state
-      const { rerender } = render(<BusinessMap {...defaultProps} />);
-      onError();
-      rerender(<BusinessMap {...defaultProps} />);
-
-      // Map should be replaced with fallback
       const fallback = screen.getByTestId('map-fallback');
       expect(fallback).toBeInTheDocument();
       expect(fallback).toHaveTextContent(defaultProps.address);
     });
 
-    test('MapFallback displays correct address', () => {
-      // Render and immediately trigger error
-      const { rerender } = render(<BusinessMap {...defaultProps} />);
-      const onError = (global as any).__mapOnError;
-      onError();
-      rerender(<BusinessMap {...defaultProps} />);
+    test('shows MapFallback when no token is configured', () => {
+      import.meta.env.VITE_MAPBOX_ACCESS_TOKEN = '';
+
+      render(<BusinessMap {...defaultProps} />);
 
       const fallback = screen.getByTestId('map-fallback');
-      expect(fallback).toHaveTextContent('123 Test Street, Guildford NSW 2161');
+      expect(fallback).toBeInTheDocument();
     });
 
-    test('does not render map when showing fallback', () => {
-      const { rerender } = render(<BusinessMap {...defaultProps} />);
-      const onError = (global as any).__mapOnError;
-      onError();
-      rerender(<BusinessMap {...defaultProps} />);
+    test('does not render image when showing fallback', () => {
+      render(<BusinessMap {...defaultProps} />);
 
-      expect(screen.queryByTestId('mock-map')).not.toBeInTheDocument();
+      const img = screen.getByRole('img');
+      fireEvent.error(img);
+
+      expect(screen.queryByRole('img')).not.toBeInTheDocument();
+    });
+
+    test('shows MapFallback for NaN latitude', () => {
+      render(<BusinessMap {...defaultProps} latitude={NaN} />);
+
+      const fallback = screen.getByTestId('map-fallback');
+      expect(fallback).toBeInTheDocument();
+    });
+
+    test('shows MapFallback for Infinity longitude', () => {
+      render(<BusinessMap {...defaultProps} longitude={Infinity} />);
+
+      const fallback = screen.getByTestId('map-fallback');
+      expect(fallback).toBeInTheDocument();
     });
   });
 
@@ -172,18 +173,17 @@ describe('BusinessMap', () => {
       expect(region).toBeInTheDocument();
     });
 
-    test('marker has accessible label', () => {
+    test('image has descriptive alt text', () => {
       render(<BusinessMap {...defaultProps} />);
 
-      const marker = screen.getByLabelText('Location marker for Test Business');
-      expect(marker).toBeInTheDocument();
+      const img = screen.getByAltText('Map showing Test Business at 123 Test Street, Sydney NSW 2000');
+      expect(img).toBeInTheDocument();
     });
 
     test('fallback has accessible region role', () => {
-      const { rerender } = render(<BusinessMap {...defaultProps} />);
-      const onError = (global as any).__mapOnError;
-      onError();
-      rerender(<BusinessMap {...defaultProps} />);
+      import.meta.env.VITE_MAPBOX_ACCESS_TOKEN = '';
+
+      render(<BusinessMap {...defaultProps} />);
 
       const fallbackRegion = screen.getByRole('region', {
         name: 'Business location (map unavailable)',
@@ -192,52 +192,8 @@ describe('BusinessMap', () => {
     });
   });
 
-  describe('coordinate handling', () => {
-    test('handles different coordinate values', () => {
-      const props = {
-        ...defaultProps,
-        latitude: -37.8136,
-        longitude: 144.9631,
-      };
-
-      render(<BusinessMap {...props} />);
-
-      const marker = screen.getByTestId('mock-marker');
-      expect(marker).toHaveAttribute('data-latitude', '-37.8136');
-      expect(marker).toHaveAttribute('data-longitude', '144.9631');
-    });
-
-    test('handles edge coordinates (near equator)', () => {
-      const props = {
-        ...defaultProps,
-        latitude: 0.1,
-        longitude: 100.5,
-      };
-
-      render(<BusinessMap {...props} />);
-
-      const marker = screen.getByTestId('mock-marker');
-      expect(marker).toHaveAttribute('data-latitude', '0.1');
-      expect(marker).toHaveAttribute('data-longitude', '100.5');
-    });
-
-    test('handles negative coordinates', () => {
-      const props = {
-        ...defaultProps,
-        latitude: -45.0,
-        longitude: -75.0,
-      };
-
-      render(<BusinessMap {...props} />);
-
-      const marker = screen.getByTestId('mock-marker');
-      expect(marker).toHaveAttribute('data-latitude', '-45');
-      expect(marker).toHaveAttribute('data-longitude', '-75');
-    });
-  });
-
   describe('prop updates', () => {
-    test('updates map when coordinates change', () => {
+    test('updates image when coordinates change', () => {
       const { rerender } = render(<BusinessMap {...defaultProps} />);
 
       const newProps = {
@@ -248,20 +204,15 @@ describe('BusinessMap', () => {
 
       rerender(<BusinessMap {...newProps} />);
 
-      const marker = screen.getByTestId('mock-marker');
-      expect(marker).toHaveAttribute('data-latitude', '-34');
-      expect(marker).toHaveAttribute('data-longitude', '151');
+      const img = screen.getByRole('img');
+      const src = img.getAttribute('src') || '';
+      expect(src).toContain('151,-34');
     });
 
     test('updates aria-label when business name changes', () => {
       const { rerender } = render(<BusinessMap {...defaultProps} />);
 
-      const newProps = {
-        ...defaultProps,
-        businessName: 'New Business Name',
-      };
-
-      rerender(<BusinessMap {...newProps} />);
+      rerender(<BusinessMap {...defaultProps} businessName="New Business Name" />);
 
       const region = screen.getByRole('region', {
         name: 'Map showing location of New Business Name',

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { openDirections } from './utils/directions';
 
 interface DirectionsButtonProps {
@@ -22,15 +23,14 @@ export function DirectionsButton({
   variant = 'primary',
   fullWidth = false,
 }: DirectionsButtonProps) {
+  const { t } = useTranslation('business');
+
   const handleClick = () => {
     const opened = openDirections({ latitude, longitude }, address);
 
     if (!opened) {
       // Popup was blocked - show user-friendly message
-      alert(
-        'Please allow popups for this site to open directions in your maps app.\n\n' +
-          `Address: ${address}`
-      );
+      alert(t('popupBlockedDirections', { address }));
     }
 
     // TODO: Track analytics event (Phase 7.3)
@@ -52,7 +52,7 @@ export function DirectionsButton({
       type="button"
       onClick={handleClick}
       className={`${baseClasses} ${variantClasses} ${widthClasses} min-h-[44px]`}
-      aria-label={`Get directions to ${businessName}`}
+      aria-label={t('getDirectionsTo', { name: businessName })}
     >
       <svg
         className="w-5 h-5"
@@ -74,7 +74,7 @@ export function DirectionsButton({
           d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
         />
       </svg>
-      <span>Get Directions</span>
+      <span>{t('getDirections')}</span>
     </button>
   );
 }

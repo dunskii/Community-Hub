@@ -4,6 +4,5 @@
  */
 
 export { BusinessMap } from './BusinessMap';
-export { MapMarker } from './MapMarker';
 export { MapFallback } from './MapFallback';
 export { DirectionsButton } from './DirectionsButton';

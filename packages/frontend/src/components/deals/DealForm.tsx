@@ -22,6 +22,8 @@ import {
   ArrowUpTrayIcon,
   CheckCircleIcon,
 } from '@heroicons/react/24/outline';
+import { proxyStockImage, searchStockPhotos } from '../../services/image-proxy';
+import type { StockPhotoHit } from '../../services/image-proxy';
 
 // ─── Types ────────────────────────────────────────────────────
 
@@ -175,30 +177,25 @@ function validateForm(data: DealFormData, t: (key: string) => string): FormError
   }
 
   // Image URL validation
-  if (data.image && !isValidUrl(data.image)) {
+  if (data.image && !isValidImagePath(data.image)) {
     errors.image = t('deal.validation.invalidUrl');
   }
 
   return errors;
 }
 
-function isValidUrl(string: string): boolean {
+function isValidImagePath(string: string): boolean {
+  // Accept local upload paths (from proxied stock images or file uploads)
+  if (string.startsWith('/uploads/') || string.startsWith('blob:')) {
+    return true;
+  }
+  // Accept valid URLs
   try {
     new URL(string);
     return true;
   } catch {
     return false;
   }
-}
-
-// ─── Pixabay Types ────────────────────────────────────────────
-
-interface PixabayImage {
-  id: number;
-  webformatURL: string;
-  largeImageURL: string;
-  tags: string;
-  user: string;
 }
 
 // ─── Deal Image Picker ────────────────────────────────────────
@@ -216,11 +213,10 @@ function DealImagePicker({ image, onChange, error, disabled }: DealImagePickerPr
   const [showUrlInput, setShowUrlInput] = useState(false);
   const [stockModalOpen, setStockModalOpen] = useState(false);
   const [stockQuery, setStockQuery] = useState('');
-  const [stockPhotos, setStockPhotos] = useState<PixabayImage[]>([]);
+  const [stockPhotos, setStockPhotos] = useState<StockPhotoHit[]>([]);
   const [stockLoading, setStockLoading] = useState(false);
   const [stockError, setStockError] = useState<string | null>(null);
-
-  const PIXABAY_API_KEY = import.meta.env.VITE_PIXABAY_API_KEY || '';
+  const [stockDownloading, setStockDownloading] = useState(false);
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -233,16 +229,12 @@ function DealImagePicker({ image, onChange, error, disabled }: DealImagePickerPr
   };
 
   const searchStock = async (query: string) => {
-    if (!query.trim() || !PIXABAY_API_KEY) return;
+    if (!query.trim()) return;
     setStockLoading(true);
     setStockError(null);
     try {
-      const response = await fetch(
-        `https://pixabay.com/api/?key=${PIXABAY_API_KEY}&q=${encodeURIComponent(query)}&image_type=photo&per_page=12&safesearch=true`
-      );
-      if (!response.ok) throw new Error('Failed to fetch');
-      const data = await response.json();
-      setStockPhotos(data.hits || []);
+      const data = await searchStockPhotos(query, { perPage: 12 });
+      setStockPhotos(data.hits);
     } catch {
       setStockError(t('deal.form.stockSearchError', 'Failed to search stock photos'));
       setStockPhotos([]);
@@ -256,11 +248,21 @@ function DealImagePicker({ image, onChange, error, disabled }: DealImagePickerPr
     searchStock(stockQuery);
   };
 
-  const selectStockPhoto = (photo: PixabayImage) => {
-    onChange(photo.largeImageURL);
-    setStockModalOpen(false);
-    setStockPhotos([]);
-    setStockQuery('');
+  const selectStockPhoto = async (photo: StockPhotoHit) => {
+    setStockDownloading(true);
+    setStockError(null);
+
+    try {
+      const localPath = await proxyStockImage(photo.largeImageURL, 'deal');
+      onChange(localPath);
+      setStockModalOpen(false);
+      setStockPhotos([]);
+      setStockQuery('');
+    } catch (err) {
+      setStockError(err instanceof Error ? err.message : t('deal.form.stockDownloadError', 'Failed to download stock photo'));
+    } finally {
+      setStockDownloading(false);
+    }
   };
 
   return (
@@ -314,8 +316,7 @@ function DealImagePicker({ image, onChange, error, disabled }: DealImagePickerPr
             {t('deal.form.uploadImage', 'Upload')}
           </button>
 
-          {PIXABAY_API_KEY && (
-            <button
+          <button
               type="button"
               onClick={() => setStockModalOpen(true)}
               disabled={disabled}
@@ -324,7 +325,6 @@ function DealImagePicker({ image, onChange, error, disabled }: DealImagePickerPr
               <MagnifyingGlassIcon className="w-4 h-4" />
               {t('deal.form.stockPhotos', 'Stock Photos')}
             </button>
-          )}
 
           <button
             type="button"
@@ -454,7 +454,8 @@ function DealImagePicker({ image, onChange, error, disabled }: DealImagePickerPr
                         key={photo.id}
                         type="button"
                         onClick={() => selectStockPhoto(photo)}
-                        className="relative aspect-[4/3] rounded-lg overflow-hidden border-2 border-transparent hover:border-primary transition-all focus:outline-none focus:ring-2 focus:ring-primary"
+                        disabled={stockDownloading}
+                        className="relative aspect-[4/3] rounded-lg overflow-hidden border-2 border-transparent hover:border-primary transition-all focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
                       >
                         <img
                           src={photo.webformatURL}

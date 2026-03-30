@@ -1,9 +1,13 @@
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 
-export default defineConfig({
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), '');
+  const backendUrl = env.VITE_BACKEND_URL || 'http://localhost:6000';
+
+  return {
   plugins: [
     tailwindcss(),
     react(),
@@ -83,13 +87,8 @@ export default defineConfig({
     port: 4002,
     proxy: {
       '/api': {
-        target: 'http://localhost:3000',
+        target: backendUrl,
         changeOrigin: true,
-        // Rewrite cookie domain from backend to frontend
-        cookieDomainRewrite: {
-          'localhost:3000': 'localhost',
-          'localhost': 'localhost',
-        },
         // Suppress connection errors during backend startup
         configure: (proxy) => {
           proxy.on('error', (err, _req, res) => {
@@ -100,6 +99,10 @@ export default defineConfig({
             }
           });
         },
+      },
+      '/uploads': {
+        target: backendUrl,
+        changeOrigin: true,
       },
     },
   },
@@ -115,4 +118,5 @@ export default defineConfig({
     reportCompressedSize: true,
     assetsInlineLimit: 4096,
   },
+};
 });

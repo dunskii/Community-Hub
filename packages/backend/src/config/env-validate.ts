@@ -3,7 +3,8 @@ import { z } from 'zod';
 
 export const envSchema = z.object({
   // Server
-  PORT: z.string().transform(Number).pipe(z.number().int().min(1).max(65535)).default('3002'),
+  HOST: z.string().default('0.0.0.0'),
+  PORT: z.string().transform(Number).pipe(z.number().int().min(1).max(65535)).default('6000'),
 
   // Environment
   NODE_ENV: z.enum(['development', 'staging', 'production']).default('development'),
@@ -76,6 +77,9 @@ export const envSchema = z.object({
     .string()
     .transform((v) => v === 'true')
     .default('false'),
+
+  // Stock Photos (Pixabay)
+  PIXABAY_API_KEY: z.string().optional(),
 
   // Storage
   STORAGE_PATH: z.string().default('./uploads'),

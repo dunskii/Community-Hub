@@ -76,13 +76,8 @@ export const LoginForm: React.FC = () => {
     try {
       const user = await login(formData);
 
-      // Redirect to intended page, or role-appropriate dashboard
-      const from = (location.state as any)?.from?.pathname;
-
-      // If there's a specific redirect path (not the generic dashboard), use it
-      if (from && from !== '/dashboard') {
-        navigate(from, { replace: true });
-      } else if (user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN') {
+      // Redirect to role-appropriate dashboard (ignore stale redirects from previous sessions)
+      if (user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN') {
         // Admins go to admin dashboard
         navigate('/admin', { replace: true });
       } else if (user?.role === 'CURATOR') {

@@ -72,5 +72,15 @@
     "entertainment": "تفریح",
     "automotive": "آٹوموٹیو",
     "home": "گھر اور باغ"
+  },
+  "upcomingEvents": {
+    "title": "آنے والے ایونٹس",
+    "subtitle": "جلد ہونے والے کمیونٹی ایونٹس",
+    "viewAll": "سب دیکھیں"
+  },
+  "todaysDeals": {
+    "title": "آج کی ڈیلز",
+    "subtitle": "مقامی کاروباروں کی خصوصی پیشکشیں",
+    "viewAll": "سب دیکھیں"
   }
 }

@@ -46,8 +46,12 @@ import {
   ChatBubbleLeftRightIcon,
   XMarkIcon,
   ArrowLeftIcon,
+  CreditCardIcon,
+  InformationCircleIcon,
 } from '@heroicons/react/24/outline';
 import { BusinessMap } from '../components/maps/BusinessMap';
+import { getLanguageNativeName } from '../i18n/utils';
+import { useLanguage } from '../hooks/useLanguage';
 import { StarIcon as StarSolidIcon } from '@heroicons/react/24/solid';
 
 const ENQUIRY_CATEGORIES = [
@@ -342,6 +346,7 @@ export function BusinessDetailPage() {
   const { user } = useAuth();
   const { isSaved, toggleSaved } = useSavedBusiness(business?.id || '');
   const { isFollowing, followerCount, toggleFollow } = useFollowBusiness(business?.id || '');
+  const { currentLanguage, changeLanguage } = useLanguage();
 
   const [showEnquiry, setShowEnquiry] = useState(false);
   const [featuredDeal, setFeaturedDeal] = useState<Deal | null>(null);
@@ -476,9 +481,41 @@ export function BusinessDetailPage() {
             {/* Title Row */}
             <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
               <div className="flex-1">
-                <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white">
-                  {name}
-                </h1>
+                <div className="flex flex-wrap items-baseline gap-3">
+                  <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white">
+                    {name}
+                  </h1>
+                  {business.yearEstablished && (
+                    <span className="text-sm text-slate-500 dark:text-slate-400">
+                      Est. {business.yearEstablished}
+                    </span>
+                  )}
+                  {business.priceRange && (
+                    <span className="text-sm text-slate-500 dark:text-slate-400" title={business.priceRange}>
+                      {{ BUDGET: '$', MODERATE: '$$', PREMIUM: '$$$', LUXURY: '$$$$' }[business.priceRange] || business.priceRange}
+                    </span>
+                  )}
+                </div>
+
+                {/* Languages Spoken - click to switch platform language */}
+                {business.languagesSpoken && business.languagesSpoken.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 mt-2">
+                    {business.languagesSpoken.map((lang, index) => (
+                      <button
+                        key={index}
+                        type="button"
+                        onClick={() => changeLanguage(lang)}
+                        className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium transition-colors ${
+                          currentLanguage === lang
+                            ? 'bg-primary text-white'
+                            : 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/50'
+                        }`}
+                      >
+                        {getLanguageNativeName(lang)}
+                      </button>
+                    ))}
+                  </div>
+                )}
 
                 {/* Meta Info */}
                 <div className="flex flex-wrap items-center gap-3 mt-3 text-sm text-slate-600 dark:text-slate-400">
@@ -487,12 +524,6 @@ export function BusinessDetailPage() {
                       {typeof business.categoryPrimary.name === 'string'
                         ? business.categoryPrimary.name
                         : business.categoryPrimary.name[i18n.language] || business.categoryPrimary.name.en}
-                    </span>
-                  )}
-
-                  {business.priceRange && (
-                    <span className="text-slate-500 dark:text-slate-400">
-                      {business.priceRange}
                     </span>
                   )}
 
@@ -704,13 +735,23 @@ export function BusinessDetailPage() {
 
                               {/* Location Map */}
                               {business.address.latitude && business.address.longitude && (
-                                <BusinessMap
-                                  latitude={business.address.latitude}
-                                  longitude={business.address.longitude}
-                                  businessName={name ?? ''}
-                                  address={`${business.address.street}, ${business.address.suburb}, ${business.address.state} ${business.address.postcode}`}
-                                  className="h-64 rounded-xl"
-                                />
+                                <a
+                                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                                    `${business.address.street}, ${business.address.suburb}, ${business.address.state} ${business.address.postcode}`
+                                  )}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="block cursor-pointer"
+                                  aria-label={t('getDirectionsTo', 'Get directions to {{name}}', { name: name ?? '' })}
+                                >
+                                  <BusinessMap
+                                    latitude={business.address.latitude}
+                                    longitude={business.address.longitude}
+                                    businessName={name ?? ''}
+                                    address={`${business.address.street}, ${business.address.suburb}, ${business.address.state} ${business.address.postcode}`}
+                                    className="h-64 rounded-xl"
+                                  />
+                                </a>
                               )}
                             </div>
                           )}
@@ -738,20 +779,20 @@ export function BusinessDetailPage() {
                       </section>
 
                       {/* Accessibility Features */}
-                      {business.accessibility && business.accessibility.features.length > 0 && (
+                      {business.accessibilityFeatures && business.accessibilityFeatures.length > 0 && (
                         <section>
                           <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
                             <CheckBadgeIcon className="w-5 h-5 text-primary" />
                             {t('accessibility', 'Accessibility')}
                           </h2>
                           <div className="flex flex-wrap gap-2">
-                            {business.accessibility.features.map((feature: string, index: number) => (
+                            {business.accessibilityFeatures.map((feature: string, index: number) => (
                               <span
                                 key={index}
                                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-sm font-medium"
                               >
                                 <CheckBadgeIcon className="w-4 h-4" />
-                                {feature}
+                                {t(`accessibilityFeature.${feature}`, feature.replace(/_/g, ' '))}
                               </span>
                             ))}
                           </div>
@@ -774,6 +815,114 @@ export function BusinessDetailPage() {
                           </div>
                         </section>
                       )}
+
+                      {/* Payment Methods */}
+                      {business.paymentMethods && business.paymentMethods.length > 0 && (
+                        <section>
+                          <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                            <CreditCardIcon className="w-5 h-5 text-primary" />
+                            {t('paymentMethods', 'Payment Methods')}
+                          </h2>
+                          <div className="flex flex-wrap gap-2">
+                            {business.paymentMethods.map((method, index) => (
+                              <span
+                                key={index}
+                                className="inline-flex items-center px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-sm font-medium"
+                              >
+                                {t(`paymentMethod.${method}`, method.replace(/_/g, ' '))}
+                              </span>
+                            ))}
+                          </div>
+                        </section>
+                      )}
+
+
+                      {/* Social Links */}
+                      {business.socialLinks && Object.values(business.socialLinks).some(Boolean) && (
+                        <section>
+                          <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                            <GlobeAltIcon className="w-5 h-5 text-primary" />
+                            {t('socialLinks', 'Social Media')}
+                          </h2>
+                          <div className="flex flex-wrap gap-3">
+                            {business.socialLinks.facebook && (
+                              <a href={business.socialLinks.facebook} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-700/50 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors text-sm font-medium text-slate-700 dark:text-slate-300">
+                                {t('social.facebook', 'Facebook')}
+                                <ArrowTopRightOnSquareIcon className="w-3.5 h-3.5" />
+                              </a>
+                            )}
+                            {business.socialLinks.instagram && (
+                              <a href={business.socialLinks.instagram} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-700/50 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors text-sm font-medium text-slate-700 dark:text-slate-300">
+                                {t('social.instagram', 'Instagram')}
+                                <ArrowTopRightOnSquareIcon className="w-3.5 h-3.5" />
+                              </a>
+                            )}
+                            {business.socialLinks.twitter && (
+                              <a href={business.socialLinks.twitter} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-700/50 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors text-sm font-medium text-slate-700 dark:text-slate-300">
+                                {t('social.twitter', 'Twitter / X')}
+                                <ArrowTopRightOnSquareIcon className="w-3.5 h-3.5" />
+                              </a>
+                            )}
+                            {business.socialLinks.tiktok && (
+                              <a href={business.socialLinks.tiktok} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-700/50 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors text-sm font-medium text-slate-700 dark:text-slate-300">
+                                {t('social.tiktok', 'TikTok')}
+                                <ArrowTopRightOnSquareIcon className="w-3.5 h-3.5" />
+                              </a>
+                            )}
+                            {business.socialLinks.linkedin && (
+                              <a href={business.socialLinks.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-700/50 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors text-sm font-medium text-slate-700 dark:text-slate-300">
+                                {t('social.linkedin', 'LinkedIn')}
+                                <ArrowTopRightOnSquareIcon className="w-3.5 h-3.5" />
+                              </a>
+                            )}
+                            {business.socialLinks.youtube && (
+                              <a href={business.socialLinks.youtube} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-700/50 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors text-sm font-medium text-slate-700 dark:text-slate-300">
+                                {t('social.youtube', 'YouTube')}
+                                <ArrowTopRightOnSquareIcon className="w-3.5 h-3.5" />
+                              </a>
+                            )}
+                            {business.socialLinks.googleBusiness && (
+                              <a href={business.socialLinks.googleBusiness} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-700/50 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors text-sm font-medium text-slate-700 dark:text-slate-300">
+                                {t('social.googleBusiness', 'Google Business')}
+                                <ArrowTopRightOnSquareIcon className="w-3.5 h-3.5" />
+                              </a>
+                            )}
+                          </div>
+                        </section>
+                      )}
+
+                      {/* Parking Information */}
+                      {business.parkingInformation && (
+                        <section>
+                          <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                            <InformationCircleIcon className="w-5 h-5 text-primary" />
+                            {t('parking', 'Parking')}
+                          </h2>
+                          <div className="flex items-start gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-700/50">
+                            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                              <MapPinIcon className="w-5 h-5 text-primary" />
+                            </div>
+                            <p className="font-medium text-slate-900 dark:text-white self-center">{business.parkingInformation}</p>
+                          </div>
+                        </section>
+                      )}
+                    </div>
+                  ),
+                },
+                {
+                  id: 'deals',
+                  label: t('tabs.deals', 'Deals'),
+                  content: (
+                    <div className="p-6 md:p-8">
+                      {isOwner && (
+                        <div className="flex justify-end mb-4">
+                          <OwnerEditLink
+                            to={`/business/manage/${business.id}/edit?tab=promotions`}
+                            label={t('manageDeals', 'Manage Deals')}
+                          />
+                        </div>
+                      )}
+                      <DealsSection businessId={business.id} businessName={name ?? ''} />
                     </div>
                   ),
                 },
@@ -830,23 +979,6 @@ export function BusinessDetailPage() {
                         </div>
                       )}
                       <ReviewsTab businessId={business.id} businessName={name ?? ''} />
-                    </div>
-                  ),
-                },
-                {
-                  id: 'deals',
-                  label: t('tabs.deals', 'Deals'),
-                  content: (
-                    <div className="p-6 md:p-8">
-                      {isOwner && (
-                        <div className="flex justify-end mb-4">
-                          <OwnerEditLink
-                            to={`/business/manage/${business.id}/edit?tab=promotions`}
-                            label={t('manageDeals', 'Manage Deals')}
-                          />
-                        </div>
-                      )}
-                      <DealsSection businessId={business.id} businessName={name ?? ''} />
                     </div>
                   ),
                 },

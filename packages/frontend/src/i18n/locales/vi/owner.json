@@ -34,8 +34,29 @@
       "reviewsDesc": "Trả lời đánh giá của khách hàng",
       "photos": "Cập nhật ảnh",
       "photosDesc": "Thêm hoặc quản lý ảnh doanh nghiệp",
+      "events": "Sự kiện",
+      "eventsDesc": "Tạo và quản lý sự kiện",
       "settings": "Cài đặt",
       "settingsDesc": "Cập nhật thông tin doanh nghiệp"
+    },
+    "events": {
+      "title": "Sự kiện",
+      "description": "Tạo và quản lý sự kiện cho doanh nghiệp của bạn",
+      "createEvent": "Tạo sự kiện",
+      "editEvent": "Chỉnh sửa sự kiện",
+      "backToEvents": "Quay lại sự kiện",
+      "noEventsTitle": "Chưa có sự kiện",
+      "noEventsDescription": "Tạo sự kiện để thu hút cộng đồng và khách hàng.",
+      "pendingNotice": "Sự kiện bạn tạo sẽ được quản trị viên xem xét trước khi đăng trên nền tảng.",
+      "status": {
+        "pending": "Đang chờ duyệt",
+        "active": "Đang hoạt động",
+        "past": "Đã kết thúc",
+        "cancelled": "Đã hủy"
+      },
+      "eventNotFound": "Không tìm thấy sự kiện",
+      "createSuccess": "Sự kiện đã được gửi để duyệt",
+      "updateSuccess": "Cập nhật sự kiện thành công"
     }
   },
   "analytics": {

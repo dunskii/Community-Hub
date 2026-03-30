@@ -72,5 +72,15 @@
     "entertainment": "娛樂",
     "automotive": "汽車",
     "home": "居家園藝"
+  },
+  "upcomingEvents": {
+    "title": "即將舉行的活動",
+    "subtitle": "即將舉辦的社區活動",
+    "viewAll": "查看全部"
+  },
+  "todaysDeals": {
+    "title": "今日優惠",
+    "subtitle": "本地商家特別優惠",
+    "viewAll": "查看全部"
   }
 }

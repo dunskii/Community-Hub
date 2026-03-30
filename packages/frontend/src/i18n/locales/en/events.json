@@ -116,6 +116,12 @@
       "allDay": "All day",
       "timeSlot": "{{time}} time slot"
     },
+    "share": {
+      "title": "Share",
+      "email": "Email",
+      "sms": "SMS",
+      "copyLink": "Copy link"
+    },
     "shareEvent": "Share Event",
     "getDirections": "Get Directions",
     "cancelEvent": "Cancel Event",

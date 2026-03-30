@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 import { AuthProvider } from './contexts/AuthContext';
@@ -34,6 +34,9 @@ import { ClaimBusinessPage } from './pages/owner/ClaimBusinessPage';
 import { EditBusinessPage } from './pages/owner/EditBusinessPage';
 import { PhotosManagementPage } from './pages/owner/PhotosManagementPage';
 import { ReviewsManagementPage } from './pages/owner/ReviewsManagementPage';
+import { OwnerEventsPage } from './pages/owner/OwnerEventsPage';
+import { OwnerEventCreatePage } from './pages/owner/OwnerEventCreatePage';
+import { OwnerEventEditPage } from './pages/owner/OwnerEventEditPage';
 import { EventsListingPage } from './pages/events/EventsListingPage';
 import { DealsListingPage } from './pages/DealsListingPage';
 import { EventDetailPage } from './pages/events/EventDetailPage';
@@ -149,9 +152,18 @@ const DashboardPage: React.FC = () => {
   );
 };
 
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+}
+
 export function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <ThemeProvider>
         <ToastProvider position="top-right" maxVisible={3}>
           <AuthProvider>
@@ -254,6 +266,30 @@ export function App() {
               element={
                 <ProtectedRoute>
                   <BusinessInboxPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/business/manage/:businessId/events"
+              element={
+                <ProtectedRoute>
+                  <OwnerEventsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/business/manage/:businessId/events/create"
+              element={
+                <ProtectedRoute>
+                  <OwnerEventCreatePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/business/manage/:businessId/events/:eventId/edit"
+              element={
+                <ProtectedRoute>
+                  <OwnerEventEditPage />
                 </ProtectedRoute>
               }
             />

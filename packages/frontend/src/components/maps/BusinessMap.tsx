@@ -1,8 +1,7 @@
-import { useMemo, useState } from 'react';
-import Map, { Marker, NavigationControl } from 'react-map-gl';
-import { DEFAULT_MAP_STYLE, DEFAULT_ZOOM } from '../../services/maps/mapbox-config';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { getPlatformConfig } from '../../config/platform-loader';
 import { MapFallback } from './MapFallback';
-import { MapMarker } from './MapMarker';
 
 interface BusinessMapProps {
   latitude: number;
@@ -12,10 +11,14 @@ interface BusinessMapProps {
   className?: string;
 }
 
+const MAP_STYLE = 'streets-v12';
+const DEFAULT_ZOOM = 15;
+
 /**
- * Interactive map showing single business location
+ * Static map image showing single business location
+ * Uses Mapbox Static Images API for fast, lightweight rendering
  * Spec §4.3 Business Profile - Location & Map
- * WCAG 2.1 AA: Keyboard navigable, ARIA labeled
+ * WCAG 2.1 AA: Alt text, fallback for load failure
  */
 export function BusinessMap({
   latitude,
@@ -24,42 +27,37 @@ export function BusinessMap({
   address,
   className = '',
 }: BusinessMapProps) {
-  const [mapError, setMapError] = useState(false);
+  const { t } = useTranslation('business');
+  const [imgError, setImgError] = useState(false);
+  const token = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
 
-  // Initial viewport centered on business
-  const initialViewState = useMemo(
-    () => ({
-      latitude,
-      longitude,
-      zoom: DEFAULT_ZOOM,
-    }),
-    [latitude, longitude]
-  );
-
-  // Fallback to static address if Mapbox fails
-  if (mapError) {
+  // Validate coordinates are finite numbers
+  if (!token || imgError || !Number.isFinite(latitude) || !Number.isFinite(longitude)) {
     return <MapFallback address={address} />;
   }
 
+  // Read primary color from platform config (strip leading #)
+  const config = getPlatformConfig();
+  const markerColor = config.branding.colors.primary.replace('#', '');
+
+  // Mapbox Static Images API with pin marker
+  // Use responsive sizes: 600x300 base, @2x for retina
+  const marker = `pin-l+${markerColor}(${longitude},${latitude})`;
+  const staticUrl = `https://api.mapbox.com/styles/v1/mapbox/${MAP_STYLE}/static/${marker}/${longitude},${latitude},${DEFAULT_ZOOM},0/600x300@2x?access_token=${token}`;
+
   return (
     <div
-      className={`relative w-full rounded-lg overflow-hidden ${className || 'h-96'}`}
+      className={`relative w-full rounded-lg overflow-hidden ${className || 'h-64 sm:h-80 md:h-96'}`}
       role="region"
-      aria-label={`Map showing location of ${businessName}`}
+      aria-label={t('mapShowingLocation', { name: businessName })}
     >
-      <Map
-        initialViewState={initialViewState}
-        style={{ width: '100%', height: '100%' }}
-        mapStyle={DEFAULT_MAP_STYLE}
-        onError={() => setMapError(true)}
-        cooperativeGestures // Requires Ctrl+scroll to zoom (accessibility)
-        attributionControl={true}
-      >
-        <NavigationControl position="top-right" visualizePitch={false} />
-        <Marker longitude={longitude} latitude={latitude} anchor="bottom">
-          <MapMarker businessName={businessName} />
-        </Marker>
-      </Map>
+      <img
+        src={staticUrl}
+        alt={t('mapAlt', { name: businessName, address })}
+        className="w-full h-full object-cover"
+        loading="lazy"
+        onError={() => setImgError(true)}
+      />
     </div>
   );
 }

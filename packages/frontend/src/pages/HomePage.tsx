@@ -5,19 +5,22 @@
  * Main landing page with hero, search, and discovery sections
  */
 
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { HeroSection } from '../components/home/HeroSection.js';
 import { FeaturedBusinesses } from '../components/home/FeaturedBusinesses.js';
 import { QuickFilters } from '../components/home/QuickFilters.js';
+import { SearchBar } from '../components/search/SearchBar.js';
 import { UpcomingEventsSection } from '../components/home/UpcomingEventsSection.js';
 import { TodayDealsSection } from '../components/home/TodayDealsSection.js';
 
 export function HomePage() {
+  const { t } = useTranslation('home');
   const navigate = useNavigate();
 
   // Handle search submission
   const handleSearch = (query: string) => {
-    navigate(`/search?q=${encodeURIComponent(query)}`);
+    navigate(`/businesses?search=${encodeURIComponent(query)}`);
   };
 
   // Handle suggestion selection
@@ -35,19 +38,26 @@ export function HomePage() {
     if (filter.category) params.set('category', filter.category);
     if (filter.openNow) params.set('openNow', 'true');
     if (filter.verifiedOnly) params.set('verifiedOnly', 'true');
-    navigate(`/search?${params.toString()}`);
+    navigate(`/businesses?${params.toString()}`);
   };
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section with Search */}
-      <HeroSection
-        onSearch={handleSearch}
-        onSuggestionSelect={handleSuggestionSelect}
-      />
+      {/* Hero Section */}
+      <HeroSection />
 
-      {/* Quick Filter Chips */}
-      <QuickFilters onFilterClick={handleQuickFilter} />
+      {/* Quick Filters with Search Bar */}
+      <QuickFilters
+        onFilterClick={handleQuickFilter}
+        searchBar={
+          <SearchBar
+            onSubmit={handleSearch}
+            onSuggestionSelect={handleSuggestionSelect}
+            placeholder={t('hero.searchPlaceholder')}
+            showAutocomplete={true}
+          />
+        }
+      />
 
       {/* Main Content */}
       <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">

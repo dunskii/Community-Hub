@@ -35,8 +35,29 @@
       "reviewsDesc": "Respond to customer reviews",
       "photos": "Update Photos",
       "photosDesc": "Add or manage business photos",
+      "events": "Events",
+      "eventsDesc": "Create & manage events",
       "settings": "Settings",
       "settingsDesc": "Update business information"
+    },
+    "events": {
+      "title": "Events",
+      "description": "Create and manage events for your business",
+      "createEvent": "Create Event",
+      "editEvent": "Edit Event",
+      "backToEvents": "Back to Events",
+      "noEventsTitle": "No Events Yet",
+      "noEventsDescription": "Create an event to engage your community and attract customers.",
+      "pendingNotice": "Events you create will be reviewed by an admin before being published on the platform.",
+      "status": {
+        "pending": "Pending Approval",
+        "active": "Active",
+        "past": "Past",
+        "cancelled": "Cancelled"
+      },
+      "eventNotFound": "Event not found",
+      "createSuccess": "Event submitted for approval",
+      "updateSuccess": "Event updated successfully"
     }
   },
   "analytics": {

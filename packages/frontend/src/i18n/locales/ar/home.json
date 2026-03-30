@@ -72,5 +72,15 @@
     "entertainment": "ترفيه",
     "automotive": "سيارات",
     "home": "المنزل والحديقة"
+  },
+  "upcomingEvents": {
+    "title": "الأحداث القادمة",
+    "subtitle": "أحداث مجتمعية قريبة",
+    "viewAll": "عرض الكل"
+  },
+  "todaysDeals": {
+    "title": "عروض اليوم",
+    "subtitle": "عروض خاصة من الأنشطة التجارية المحلية",
+    "viewAll": "عرض الكل"
   }
 }

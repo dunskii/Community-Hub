@@ -24,6 +24,7 @@ import { dealRouter, businessDealRouter } from './deals.js';
 import { enquiryRouter } from './enquiry.js';
 import { adminRouter } from './admin.js';
 import { socialRouter } from './social.js';
+import { imageProxyRouter } from './image-proxy.js';
 
 export function setupRoutes(app: Express): void {
   // API v1
@@ -50,6 +51,7 @@ export function setupRoutes(app: Express): void {
   v1.use('/', enquiryRouter);
   v1.use('/', adminRouter);
   v1.use('/businesses/:businessId/social', socialRouter);
+  v1.use('/images', imageProxyRouter);
 
   app.use('/api/v1', v1);
 

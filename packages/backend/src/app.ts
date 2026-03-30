@@ -25,8 +25,8 @@ export function createApp(): express.Express {
         directives: {
           defaultSrc: ["'self'"],
           scriptSrc: ["'self'"],
-          styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
-          imgSrc: ["'self'", 'data:', 'https://api.mapbox.com', 'https://*.tiles.mapbox.com'],
+          styleSrc: ["'self'", 'https://fonts.googleapis.com'],
+          imgSrc: ["'self'", 'data:', 'blob:', 'https://api.mapbox.com', 'https://*.tiles.mapbox.com', 'https://pixabay.com', 'https://cdn.pixabay.com'],
           fontSrc: ["'self'", 'https://fonts.gstatic.com'],
           connectSrc: [
             "'self'",
@@ -38,7 +38,6 @@ export function createApp(): express.Express {
           objectSrc: ["'none'"],
           baseUri: ["'self'"],
           formAction: ["'self'"],
-          upgradeInsecureRequests: [],
         },
       },
       strictTransportSecurity: {

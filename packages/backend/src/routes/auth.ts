@@ -43,6 +43,10 @@ import { getClientIp } from '../utils/ip-address';
 
 const router: ReturnType<typeof Router> = Router();
 
+const useSecureCookies =
+  process.env['NODE_ENV'] === 'production' &&
+  process.env['COOKIE_SECURE'] !== 'false';
+
 // ─── Validation Schemas ──────────────────────────────────────────
 
 const registerBodySchema = z.object({
@@ -154,7 +158,7 @@ router.post(
       // Set access token as HttpOnly cookie (15 minutes)
       res.cookie('access_token', accessToken, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
+        secure: useSecureCookies,
         sameSite: 'strict',
         maxAge: 15 * 60 * 1000, // 15 minutes
       });
@@ -162,7 +166,7 @@ router.post(
       // Set refresh token as HttpOnly cookie
       res.cookie('refresh_token', refreshToken, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
+        secure: useSecureCookies,
         sameSite: 'strict',
         maxAge: req.body.rememberMe
           ? 30 * 24 * 60 * 60 * 1000 // 30 days
@@ -484,7 +488,7 @@ router.post('/refresh', async (req: Request, res: Response) => {
     // Set new access token cookie
     res.cookie('access_token', newAccessToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: useSecureCookies,
       sameSite: 'strict',
       maxAge: 15 * 60 * 1000, // 15 minutes
     });
@@ -492,7 +496,7 @@ router.post('/refresh', async (req: Request, res: Response) => {
     // Set new refresh token cookie
     res.cookie('refresh_token', newRefreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: useSecureCookies,
       sameSite: 'strict',
       maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
     });

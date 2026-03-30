@@ -15,7 +15,7 @@ const RATE_LIMIT_MESSAGE = {
 const isDevelopment = process.env.NODE_ENV === 'development';
 
 export const RATE_LIMIT_CONFIG = {
-  global:             { windowMs: 1 * 60 * 1000,      limit: isDevelopment ? 1000 : 30  },  // 30 req / 1 min (anonymous baseline)
+  global:             { windowMs: 1 * 60 * 1000,      limit: isDevelopment ? 1000 : 200 },  // 200 req / 1 min (anonymous baseline)
   auth:               { windowMs: 15 * 60 * 1000,     limit: isDevelopment ? 1000 : 10  },  // 10 req / 15 min
   api:                { windowMs: 1 * 60 * 1000,      limit: isDevelopment ? 1000 : 100 },  // 100 req / 1 min (authenticated)
   upload:             { windowMs: 60 * 60 * 1000,     limit: isDevelopment ? 1000 : 20  },  // 20 req / 1 hr
@@ -23,6 +23,7 @@ export const RATE_LIMIT_CONFIG = {
   resetPassword:      { windowMs: 60 * 60 * 1000,     limit: isDevelopment ? 100 : 5   },  // 5 req / 1 hr
   search:             { windowMs: 1 * 60 * 1000,      limit: isDevelopment ? 1000 : 30  },  // 30 req / 1 min
   review:             { windowMs: 24 * 60 * 60 * 1000, limit: isDevelopment ? 1000 : 5   },  // 5 req / 24 hrs
+  imageProxy:         { windowMs: 60 * 60 * 1000,      limit: isDevelopment ? 1000 : 30  },  // 30 req / 1 hr
 } as const;
 
 function createLimiter(config: { windowMs: number; limit: number }) {
@@ -60,6 +61,9 @@ export const searchRateLimiter = createLimiter(RATE_LIMIT_CONFIG.search);
 
 /** Review submission rate limiter. */
 export const reviewRateLimiter = createLimiter(RATE_LIMIT_CONFIG.review);
+
+/** Image proxy download rate limiter. */
+export const imageProxyRateLimiter = createLimiter(RATE_LIMIT_CONFIG.imageProxy);
 
 // TODO: Add conversationRateLimiter (10/day) in Phase 9 (Messaging)
 // TODO: Add flashDealRateLimiter (2/week) in Phase 10 (Deals)

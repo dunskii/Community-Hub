@@ -3,6 +3,21 @@ import { render, screen, cleanup } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { DirectionsButton } from '../DirectionsButton';
 
+// Mock react-i18next
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key: string, params?: Record<string, string>) => {
+      const translations: Record<string, string> = {
+        getDirections: 'Get Directions',
+        getDirectionsTo: `Get directions to ${params?.name ?? ''}`,
+        popupBlockedDirections: `Please allow popups for this site to open directions in your maps app.\n\nAddress: ${params?.address ?? ''}`,
+      };
+      return translations[key] ?? key;
+    },
+    i18n: { language: 'en', dir: () => 'ltr' },
+  }),
+}));
+
 // Mock the directions utility
 vi.mock('../utils/directions', () => ({
   openDirections: vi.fn(),

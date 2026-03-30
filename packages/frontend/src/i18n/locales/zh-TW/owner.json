@@ -34,8 +34,29 @@
       "reviewsDesc": "回覆客戶評價",
       "photos": "更新照片",
       "photosDesc": "新增或管理商家照片",
+      "events": "活動",
+      "eventsDesc": "建立和管理活動",
       "settings": "設定",
       "settingsDesc": "更新商家資訊"
+    },
+    "events": {
+      "title": "活動",
+      "description": "為您的企業建立和管理活動",
+      "createEvent": "建立活動",
+      "editEvent": "編輯活動",
+      "backToEvents": "返回活動",
+      "noEventsTitle": "尚無活動",
+      "noEventsDescription": "建立活動以吸引社群並招攬客戶。",
+      "pendingNotice": "您建立的活動將在管理員審核後發佈到平台上。",
+      "status": {
+        "pending": "待審批",
+        "active": "進行中",
+        "past": "已結束",
+        "cancelled": "已取消"
+      },
+      "eventNotFound": "未找到活動",
+      "createSuccess": "活動已提交審核",
+      "updateSuccess": "活動更新成功"
     }
   },
   "analytics": {

@@ -2,21 +2,13 @@
  * HeroSection Component
  * Phase 5: Search & Discovery - Homepage Discovery
  *
- * Hero section with background image and prominent search bar
+ * Hero section with background image, headline, and CTA
  */
 
 import { useTranslation } from 'react-i18next';
-import { SearchBar } from '../search/SearchBar.js';
 import { getPlatformConfig } from '../../config/platform-loader.js';
 
-export interface HeroSectionProps {
-  /** Callback when search is submitted */
-  onSearch: (query: string) => void;
-  /** Callback when suggestion is selected */
-  onSuggestionSelect: (suggestion: { type: string; id?: string; name: string }) => void;
-}
-
-export function HeroSection({ onSearch, onSuggestionSelect }: HeroSectionProps) {
+export function HeroSection() {
   const { t } = useTranslation('home');
   const config = getPlatformConfig();
 
@@ -55,17 +47,6 @@ export function HeroSection({ onSearch, onSuggestionSelect }: HeroSectionProps) 
           <p className="text-xl sm:text-2xl mb-8 text-white opacity-95">
             {t('hero.subtitle', { location: config.location.suburbName })}
           </p>
-
-          {/* Search Bar */}
-          <div className="max-w-2xl mx-auto">
-            <SearchBar
-              onSubmit={onSearch}
-              onSuggestionSelect={onSuggestionSelect}
-              placeholder={t('hero.searchPlaceholder')}
-              showAutocomplete={true}
-              className="shadow-2xl"
-            />
-          </div>
 
           {/* CTA Text */}
           <p className="mt-6 text-sm sm:text-base text-white opacity-90">

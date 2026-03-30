@@ -63,7 +63,7 @@ export function NewBusinessesSection() {
           <p className="text-neutral-dark">{t('newBusinesses.subtitle')}</p>
         </div>
         <a
-          href="/search?sort=newest"
+          href="/businesses?sort=newest"
           className="text-primary hover:text-primary-shade-10 font-medium text-sm transition-colors"
         >
           {t('newBusinesses.viewAll')} →

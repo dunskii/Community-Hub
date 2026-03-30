@@ -16,16 +16,8 @@ import {
   XMarkIcon,
   ArrowPathIcon,
 } from '@heroicons/react/24/outline';
-
-interface PixabayHit {
-  id: number;
-  webformatURL: string;
-  largeImageURL: string;
-  tags: string;
-  previewURL: string;
-  webformatWidth: number;
-  webformatHeight: number;
-}
+import { proxyStockImage, searchStockPhotos } from '../../services/image-proxy';
+import type { StockPhotoHit } from '../../services/image-proxy';
 
 interface EventBannerPickerProps {
   value: string;
@@ -35,17 +27,16 @@ interface EventBannerPickerProps {
 
 type PickerMode = 'none' | 'upload' | 'pixabay' | 'url';
 
-const PIXABAY_API_KEY = import.meta.env.VITE_PIXABAY_API_KEY || '';
-
 export function EventBannerPicker({ value, onChange, error }: EventBannerPickerProps) {
   const { t } = useTranslation();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [mode, setMode] = useState<PickerMode>('none');
   const [pixabayQuery, setPixabayQuery] = useState('');
-  const [pixabayResults, setPixabayResults] = useState<PixabayHit[]>([]);
+  const [pixabayResults, setPixabayResults] = useState<StockPhotoHit[]>([]);
   const [pixabayLoading, setPixabayLoading] = useState(false);
   const [pixabayError, setPixabayError] = useState<string | null>(null);
+  const [pixabayDownloading, setPixabayDownloading] = useState(false);
   const [urlInput, setUrlInput] = useState(value || '');
 
   const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -68,32 +59,18 @@ export function EventBannerPicker({ value, onChange, error }: EventBannerPickerP
   const searchPixabay = useCallback(async () => {
     if (!pixabayQuery.trim()) return;
 
-    if (!PIXABAY_API_KEY) {
-      setPixabayError('Pixabay API key not configured. Add VITE_PIXABAY_API_KEY to your .env file.');
-      return;
-    }
-
     setPixabayLoading(true);
     setPixabayError(null);
 
     try {
-      const params = new URLSearchParams({
-        key: PIXABAY_API_KEY,
-        q: pixabayQuery.trim(),
-        image_type: 'photo',
+      const data = await searchStockPhotos(pixabayQuery.trim(), {
+        perPage: 12,
         orientation: 'horizontal',
-        per_page: '12',
-        safesearch: 'true',
-        min_width: '800',
+        minWidth: 800,
       });
+      setPixabayResults(data.hits);
 
-      const response = await fetch(`https://pixabay.com/api/?${params}`);
-      if (!response.ok) throw new Error('Pixabay search failed');
-
-      const data = await response.json();
-      setPixabayResults(data.hits || []);
-
-      if (data.hits?.length === 0) {
+      if (data.hits.length === 0) {
         setPixabayError(t('events.banner.noResults', 'No images found. Try a different search term.'));
       }
     } catch (err) {
@@ -103,12 +80,23 @@ export function EventBannerPicker({ value, onChange, error }: EventBannerPickerP
     }
   }, [pixabayQuery, t]);
 
-  const handlePixabaySelect = useCallback((hit: PixabayHit) => {
-    onChange(hit.webformatURL);
-    setMode('none');
-    setPixabayResults([]);
-    setPixabayQuery('');
-  }, [onChange]);
+  const handlePixabaySelect = useCallback(async (hit: StockPhotoHit) => {
+    setPixabayDownloading(true);
+    setPixabayError(null);
+
+    try {
+      // Use largeImageURL for better quality — backend will process/resize
+      const localPath = await proxyStockImage(hit.largeImageURL, 'event');
+      onChange(localPath);
+      setMode('none');
+      setPixabayResults([]);
+      setPixabayQuery('');
+    } catch (err) {
+      setPixabayError(err instanceof Error ? err.message : t('events.banner.downloadError', 'Failed to download stock image'));
+    } finally {
+      setPixabayDownloading(false);
+    }
+  }, [onChange, t]);
 
   const handleUrlSubmit = useCallback(() => {
     if (urlInput.trim()) {
@@ -272,10 +260,11 @@ export function EventBannerPicker({ value, onChange, error }: EventBannerPickerP
                   key={hit.id}
                   type="button"
                   onClick={() => handlePixabaySelect(hit)}
-                  className="relative aspect-video rounded-md overflow-hidden border-2 border-transparent hover:border-teal-500 focus:border-teal-500 focus:outline-none transition-colors"
+                  disabled={pixabayDownloading}
+                  className="relative aspect-video rounded-md overflow-hidden border-2 border-transparent hover:border-teal-500 focus:border-teal-500 focus:outline-none transition-colors disabled:opacity-50"
                 >
                   <img
-                    src={hit.previewURL}
+                    src={hit.webformatURL}
                     alt={hit.tags}
                     className="w-full h-full object-cover"
                     loading="lazy"

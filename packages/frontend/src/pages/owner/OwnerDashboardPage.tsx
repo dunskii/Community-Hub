@@ -44,6 +44,7 @@ import {
   GlobeAltIcon,
   MapPinIcon,
   TagIcon,
+  CalendarDaysIcon,
 } from '@heroicons/react/24/outline';
 
 interface OwnedBusiness {
@@ -627,12 +628,18 @@ export function OwnerDashboardPage() {
                 <h2 className="text-xl font-semibold text-slate-900 dark:text-white mb-4">
                   {t('owner.quickActions', 'Quick Actions')}
                 </h2>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
                   <ActionCard
                     title={t('owner.actions.analytics', 'Analytics')}
                     description={t('owner.actions.analyticsDesc', 'Performance metrics')}
                     icon={<ChartBarIcon className="w-5 h-5" />}
                     to={`/business/manage/${selectedBusiness.id}/analytics`}
+                  />
+                  <ActionCard
+                    title={t('owner.actions.events', 'Events')}
+                    description={t('owner.actions.eventsDesc', 'Create & manage events')}
+                    icon={<CalendarDaysIcon className="w-5 h-5" />}
+                    to={`/business/manage/${selectedBusiness.id}/events`}
                   />
                   <ActionCard
                     title={t('owner.actions.reviews', 'Reviews')}

@@ -95,7 +95,10 @@ export const socialLinksSchema = z.object({
 
 // Gallery photo schema
 export const galleryPhotoSchema = z.object({
-  url: z.string().url('Invalid photo URL'),
+  url: z.string().refine(
+    (val) => val.startsWith('/uploads/') || /^https?:\/\//.test(val),
+    'Photo must be a local upload path or valid URL',
+  ),
   alt: z.string().min(1).max(200, 'Alt text must be at most 200 characters'),
   category: z.enum(GALLERY_CATEGORIES as unknown as [string, ...string[]]),
   order: z.number().int().min(0),
@@ -155,8 +158,14 @@ export const businessCreateSchema = z.object({
     .min(1800)
     .max(new Date().getFullYear())
     .optional(),
-  coverPhoto: z.string().url('Invalid cover photo URL').optional(),
-  photos: z.array(z.string().url('Invalid photo URL')).max(50, 'Maximum 50 photos').optional(),
+  coverPhoto: z.string().refine(
+    (val) => val.startsWith('/uploads/') || /^https?:\/\//.test(val),
+    'Cover photo must be a local upload path or valid URL',
+  ).optional(),
+  photos: z.array(z.string().refine(
+    (val) => val.startsWith('/uploads/') || /^https?:\/\//.test(val),
+    'Photo must be a local upload path or valid URL',
+  )).max(50, 'Maximum 50 photos').optional(),
 });
 
 // Business update schema (all fields optional except protected ones)

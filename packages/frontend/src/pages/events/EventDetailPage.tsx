@@ -14,7 +14,6 @@ import { Badge } from '../../components/display/Badge';
 import { Skeleton } from '../../components/display/Skeleton';
 import { EmptyState } from '../../components/display/EmptyState';
 import { Avatar } from '../../components/display/Avatar';
-import { Modal } from '../../components/display/Modal';
 import { RSVPButton } from '../../components/events/RSVPButton';
 import { useAuth } from '../../hooks/useAuth';
 import { eventService, formatEventDate, getLocationTypeBadgeVariant } from '../../services/event-service';
@@ -94,14 +93,32 @@ export function EventDetailPage() {
     return () => { cancelled = true; };
   }, [event?.venue, event?.locationType]);
 
-  // Handle RSVP
+  // Anonymous RSVP stored in localStorage
+  const [anonRSVP, setAnonRSVP] = useState<RSVPStatus | null>(() => {
+    if (!idOrSlug) return null;
+    try {
+      const stored = localStorage.getItem(`event-rsvp-${idOrSlug}`);
+      return stored as RSVPStatus | null;
+    } catch {
+      return null;
+    }
+  });
+
+  // Handle RSVP - works for both logged-in and anonymous users
   const handleRSVP = async (status: RSVPStatus, guestCount: number = 1) => {
-    if (!event || !user) return;
+    if (!event) return;
 
     setRsvpLoading(true);
     try {
-      const response = await eventService.rsvpToEvent(event.id, { status, guestCount });
-      setEvent(response.data.event);
+      if (user) {
+        // Authenticated: persist to backend
+        const response = await eventService.rsvpToEvent(event.id, { status, guestCount });
+        setEvent(response.data.event);
+      } else {
+        // Anonymous: store locally
+        localStorage.setItem(`event-rsvp-${idOrSlug}`, status);
+        setAnonRSVP(status);
+      }
     } catch (err) {
       // Show error toast
     } finally {
@@ -111,13 +128,19 @@ export function EventDetailPage() {
 
   // Handle cancel RSVP
   const handleCancelRSVP = async () => {
-    if (!event || !user) return;
+    if (!event) return;
 
     setRsvpLoading(true);
     try {
-      await eventService.cancelRSVP(event.id);
-      // Refetch event to get updated counts
-      fetchEvent();
+      if (user) {
+        // Authenticated: cancel on backend
+        await eventService.cancelRSVP(event.id);
+        fetchEvent();
+      } else {
+        // Anonymous: remove local status
+        localStorage.removeItem(`event-rsvp-${idOrSlug}`);
+        setAnonRSVP(null);
+      }
     } catch (err) {
       // Show error toast
     } finally {
@@ -259,236 +282,240 @@ export function EventDetailPage() {
       </Helmet>
 
       <PageContainer>
-        <div className="event-detail-page">
+        <article className="max-w-4xl mx-auto py-8">
+          {/* Back link */}
+          <Link
+            to="/events"
+            className="inline-flex items-center text-sm text-slate-600 dark:text-slate-400 hover:text-primary mb-4 transition-colors"
+          >
+            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            {t('events.backToEvents')}
+          </Link>
+
           {/* Hero Image */}
-          <div className="relative w-full h-64 md:h-80 lg:h-96 bg-gradient-to-br from-primary/20 to-secondary/20 overflow-hidden">
-            {event.imageUrl ? (
+          {event.imageUrl ? (
+            <div className="relative w-full h-64 md:h-80 lg:h-96 rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-800">
               <img
                 src={event.imageUrl}
                 alt=""
                 className="w-full h-full object-cover"
               />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center">
-                <span className="text-8xl" role="img" aria-hidden="true">
-                  📅
-                </span>
-              </div>
-            )}
-
-            {/* Status overlay for cancelled/past events */}
-            {(event.status === 'CANCELLED' || isPast) && (
-              <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                <Badge
-                  variant={event.status === 'CANCELLED' ? 'error' : 'default'}
-                  size="lg"
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+              {(event.status === 'CANCELLED' || isPast) && (
+                <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                  <Badge
+                    variant={event.status === 'CANCELLED' ? 'error' : 'default'}
+                    size="lg"
+                  >
+                    {event.status === 'CANCELLED' ? t('events.status.cancelled') : t('events.status.past')}
+                  </Badge>
+                </div>
+              )}
+              {(isOwner || user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN' || user?.role === 'CURATOR') && (
+                <Link
+                  to={user?.role === 'CURATOR' ? `/curator/events/${event.id}/edit` : `/admin/events/${event.id}/edit`}
+                  className="absolute top-3 right-3 inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/90 dark:bg-slate-800/90 text-slate-700 dark:text-slate-200 text-xs font-medium rounded-lg hover:bg-white dark:hover:bg-slate-800 transition-colors shadow-sm"
                 >
-                  {event.status === 'CANCELLED' ? t('events.status.cancelled') : t('events.status.past')}
-                </Badge>
-              </div>
-            )}
-          </div>
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                  {t('events.editEvent')}
+                </Link>
+              )}
+            </div>
+          ) : (
+            <div className="relative w-full h-64 md:h-80 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/20 dark:from-primary/20 dark:to-primary/30 flex items-center justify-center">
+              <span className="text-8xl" role="img" aria-hidden="true">📅</span>
+              {(event.status === 'CANCELLED' || isPast) && (
+                <div className="absolute inset-0 bg-black/50 rounded-2xl flex items-center justify-center">
+                  <Badge
+                    variant={event.status === 'CANCELLED' ? 'error' : 'default'}
+                    size="lg"
+                  >
+                    {event.status === 'CANCELLED' ? t('events.status.cancelled') : t('events.status.past')}
+                  </Badge>
+                </div>
+              )}
+              {(isOwner || user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN' || user?.role === 'CURATOR') && (
+                <Link
+                  to={user?.role === 'CURATOR' ? `/curator/events/${event.id}/edit` : `/admin/events/${event.id}/edit`}
+                  className="absolute top-3 right-3 inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/90 dark:bg-slate-800/90 text-slate-700 dark:text-slate-200 text-xs font-medium rounded-lg hover:bg-white dark:hover:bg-slate-800 transition-colors shadow-sm"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                  {t('events.editEvent')}
+                </Link>
+              )}
+            </div>
+          )}
 
-          {/* Content */}
-          <div className="max-w-5xl mx-auto px-4 py-6 space-y-6">
-            {/* Back link */}
-            <Link
-              to="/events"
-              className="inline-flex items-center text-sm text-gray-500 dark:text-gray-400 hover:text-primary transition-colors"
-            >
-              <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-              {t('events.backToEvents')}
-            </Link>
+          {/* Header Card (overlapping hero like business profile) */}
+          <div className="relative -mt-20 mx-4 md:mx-8 bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6 md:p-8">
+            {/* Title Row */}
+            <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+              <div className="flex-1">
+                <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white">
+                  {event.title}
+                </h1>
 
-            {/* Main Card: Title, Details & Map */}
-            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
-              {/* Badges */}
-              <div className="flex flex-wrap items-center gap-2 mb-4">
-                {categoryName && (
-                  <Badge variant="default" size="sm">{categoryName}</Badge>
-                )}
-                <Badge variant={getLocationTypeBadgeVariant(event.locationType)} size="sm">
-                  {locationTypeLabels[event.locationType]}
-                </Badge>
-                {(event.cost === null || event.cost === '' || event.cost === '0' || event.cost?.toLowerCase() === 'free') && (
-                  <Badge variant="success" size="sm">{t('events.free')}</Badge>
-                )}
-                {event.status === 'PENDING' && (
-                  <Badge variant="warning" size="sm">{t('events.status.pending')}</Badge>
-                )}
-              </div>
-
-              {/* Title + Details + Map */}
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem' }}>
-                {/* Left: Title + details */}
-                <div style={{ flex: '1 1 300px' }}>
-                  <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-4">
-                    {event.title}
-                  </h1>
-                  <div className="space-y-4">
-                    {/* Date and Time */}
-                    <div className="flex items-start gap-3">
-                      <div className="flex-shrink-0 w-12 h-12 bg-primary/10 rounded-xl flex flex-col items-center justify-center">
-                        <span className="text-[10px] font-semibold text-primary uppercase leading-none">
-                          {new Date(event.startTime).toLocaleDateString(i18n.language, { month: 'short' })}
-                        </span>
-                        <span className="text-lg font-bold text-primary leading-tight">
-                          {new Date(event.startTime).getDate()}
-                        </span>
-                      </div>
-                      <div>
-                        <p className="font-semibold text-slate-900 dark:text-white">{dateInfo.date}</p>
-                        <p className="text-slate-600 dark:text-slate-300">{dateInfo.time}</p>
-                        {dateInfo.duration && (
-                          <p className="text-sm text-slate-400">{dateInfo.duration}</p>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Location */}
-                    {event.locationType === 'PHYSICAL' && event.venue && (
-                      <div className="flex items-start gap-3">
-                        <div className="flex-shrink-0 w-12 h-12 bg-slate-100 dark:bg-slate-700 rounded-xl flex items-center justify-center">
-                          <svg className="w-5 h-5 text-slate-500 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                          </svg>
-                        </div>
-                        <div>
-                          {event.venue.name && <p className="font-semibold text-slate-900 dark:text-white">{event.venue.name}</p>}
-                          <address className="not-italic text-slate-600 dark:text-slate-300">
-                            {event.venue.street}<br />
-                            {event.venue.suburb}, {event.venue.state} {event.venue.postcode}
-                          </address>
-                          <a
-                            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${event.venue.street}, ${event.venue.suburb}, ${event.venue.state} ${event.venue.postcode}`)}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-sm text-primary hover:underline mt-1 inline-block"
-                          >
-                            {t('events.getDirections', 'Get Directions')}
-                          </a>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Online URL */}
-                    {(event.locationType === 'ONLINE' || event.locationType === 'HYBRID') && event.onlineUrl && (
-                      <div className="flex items-start gap-3">
-                        <div className="flex-shrink-0 w-12 h-12 bg-green-50 dark:bg-green-900/20 rounded-xl flex items-center justify-center">
-                          <svg className="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                          </svg>
-                        </div>
-                        <div>
-                          <p className="font-semibold text-slate-900 dark:text-white">{t('events.onlineEvent')}</p>
-                          <a href={event.onlineUrl} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
-                            {t('events.joinOnline')}
-                          </a>
-                        </div>
-                      </div>
-                    )}
-                  </div>
+                {/* Badges */}
+                <div className="flex flex-wrap items-center gap-2 mt-3">
+                  {categoryName && (
+                    <Badge variant="default" size="sm">{categoryName}</Badge>
+                  )}
+                  <Badge variant={getLocationTypeBadgeVariant(event.locationType)} size="sm">
+                    {locationTypeLabels[event.locationType]}
+                  </Badge>
+                  {(event.cost === null || event.cost === '' || event.cost === '0' || event.cost?.toLowerCase() === 'free') && (
+                    <Badge variant="success" size="sm">{t('events.free')}</Badge>
+                  )}
+                  {event.status === 'PENDING' && (
+                    <Badge variant="warning" size="sm">{t('events.status.pending')}</Badge>
+                  )}
                 </div>
 
-                {/* Right: Map */}
-                {event.locationType === 'PHYSICAL' && event.venue && mapCoords && (
-                  <div style={{ flex: '0 0 50%', maxWidth: '50%' }}>
-                    <BusinessMap
-                      latitude={mapCoords.lat}
-                      longitude={mapCoords.lng}
-                      businessName={event.venue.name || event.title}
-                      address={`${event.venue.street}, ${event.venue.suburb}, ${event.venue.state} ${event.venue.postcode}`}
-                      className="h-56 rounded-xl"
-                    />
+                {/* Date and Time */}
+                <div className="flex items-start gap-3 mt-4">
+                  <div className="flex-shrink-0 w-12 h-12 bg-primary/10 rounded-xl flex flex-col items-center justify-center">
+                    <span className="text-[10px] font-semibold text-primary uppercase leading-none">
+                      {new Date(event.startTime).toLocaleDateString(i18n.language, { month: 'short' })}
+                    </span>
+                    <span className="text-lg font-bold text-primary leading-tight">
+                      {new Date(event.startTime).getDate()}
+                    </span>
                   </div>
-                )}
+                  <div className="flex-1">
+                    <p className="font-semibold text-slate-900 dark:text-white">{dateInfo.date}</p>
+                    <p className="text-slate-600 dark:text-slate-300">{dateInfo.time}</p>
+                    {dateInfo.duration && (
+                      <p className="text-sm text-slate-400">{dateInfo.duration}</p>
+                    )}
+                  </div>
+                  <button
+                    onClick={() => setShowCalendarModal(true)}
+                    className="flex-shrink-0 w-10 h-10 rounded-lg border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 text-slate-500 dark:text-slate-300 flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                    aria-label={t('events.addToCalendar')}
+                    title={t('events.addToCalendar')}
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                  </button>
+                </div>
               </div>
+
             </div>
 
-            {/* RSVP Card */}
-            {!isPast && event.status !== 'CANCELLED' && (
-              <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                  <div>
-                    <h2 className="font-semibold text-slate-900 dark:text-white mb-1">{t('events.rsvp.title')}</h2>
-                    <div className="flex items-center gap-4 text-sm text-slate-500 dark:text-slate-400">
-                      {event.rsvpCount.going > 0 && (
-                        <span>{t('events.rsvp.goingCount', { count: event.rsvpCount.going })}</span>
-                      )}
-                      {event.rsvpCount.interested > 0 && (
-                        <span>{t('events.rsvp.interestedCount', { count: event.rsvpCount.interested })}</span>
-                      )}
-                      {event.capacity && (
-                        <span>
-                          {isFull
-                            ? t('events.capacity.full')
-                            : t('events.capacity.spotsLeft', { count: event.spotsRemaining ?? 0 })}
-                        </span>
-                      )}
-                    </div>
-                  </div>
+            {/* Description */}
+            <div className="mt-4 text-slate-600 dark:text-slate-300 leading-relaxed">
+              <p className="whitespace-pre-wrap">{event.description}</p>
+            </div>
 
-                  {user ? (
-                    <RSVPButton
-                      currentStatus={event.userRSVP?.status || null}
-                      onRSVP={handleRSVP}
-                      onCancel={handleCancelRSVP}
-                      isFull={isFull}
-                      isPast={isPast}
-                      disabled={rsvpLoading || isOwner}
-                      variant="full"
-                    />
-                  ) : (
-                    <Link
-                      to={`/login?redirect=/events/${event.slug || event.id}`}
-                      className="inline-flex items-center px-5 py-2.5 bg-primary text-white rounded-xl hover:bg-primary/90 font-medium transition-colors"
-                    >
-                      {t('events.loginToRsvp')}
-                    </Link>
+            {/* RSVP */}
+            {!isPast && event.status !== 'CANCELLED' && (
+              <div className="flex flex-wrap items-center gap-3 mt-4 pt-4 border-t border-slate-100 dark:border-slate-700">
+                <RSVPButton
+                  currentStatus={user ? (event.userRSVP?.status || null) : anonRSVP}
+                  onRSVP={handleRSVP}
+                  onCancel={handleCancelRSVP}
+                  isFull={isFull}
+                  isPast={isPast}
+                  disabled={rsvpLoading || isOwner}
+                  variant="full"
+                  shareUrl={canonicalUrl}
+                  shareTitle={event.title}
+                />
+                <div className="flex items-center gap-3 text-sm text-slate-500 dark:text-slate-400">
+                  {event.rsvpCount.going > 0 && (
+                    <span>{t('events.rsvp.goingCount', { count: event.rsvpCount.going })}</span>
+                  )}
+                  {event.rsvpCount.interested > 0 && (
+                    <span>{t('events.rsvp.interestedCount', { count: event.rsvpCount.interested })}</span>
+                  )}
+                  {event.capacity && (
+                    <span>
+                      {isFull
+                        ? t('events.capacity.full')
+                        : t('events.capacity.spotsLeft', { count: event.spotsRemaining ?? 0 })}
+                    </span>
                   )}
                 </div>
               </div>
             )}
 
-            {/* Actions Card */}
-            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-4">
-              <div className="flex flex-wrap gap-2">
-                <button
-                  onClick={() => setShowCalendarModal(true)}
-                  className="inline-flex items-center px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-sm font-medium transition-colors"
-                >
-                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                  {t('events.addToCalendar')}
-                </button>
+          </div>
 
-                {isOwner && (
-                  <Link
-                    to={`/events/${event.id}/edit`}
-                    className="inline-flex items-center px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-sm font-medium transition-colors"
-                  >
-                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+          {/* Content Cards */}
+          <div className="mt-6 space-y-6">
+            {/* Location & Map Card */}
+            {event.locationType !== 'ONLINE' && event.venue && (() => {
+              const lat = mapCoords?.lat ?? (event.venue as Record<string, unknown>).latitude as number ?? -33.8535;
+              const lng = mapCoords?.lng ?? (event.venue as Record<string, unknown>).longitude as number ?? 150.987;
+              const fullAddress = [event.venue!.name, event.venue!.street, event.venue!.suburb, event.venue!.state, event.venue!.postcode].filter(Boolean).join(', ');
+              return (
+                <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
+                  <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-6 items-start">
+                    <div>
+                      <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
+                        {t('events.location', 'Location')}
+                      </h2>
+                      {event.venue!.name && <p className="font-semibold text-slate-900 dark:text-white">{event.venue!.name}</p>}
+                      <address className="not-italic text-slate-600 dark:text-slate-300 mt-1">
+                        {event.venue!.street}<br />
+                        {event.venue!.suburb}, {event.venue!.state} {event.venue!.postcode}
+                      </address>
+                      <a
+                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${event.venue!.street}, ${event.venue!.suburb}, ${event.venue!.state} ${event.venue!.postcode}`)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-sm text-primary hover:underline mt-2"
+                      >
+                        {t('events.getDirections', 'Get Directions')}
+                      </a>
+                    </div>
+                    <div>
+                      <a
+                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(fullAddress)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block cursor-pointer"
+                        aria-label={t('events.getDirections', 'Get Directions')}
+                      >
+                        <BusinessMap
+                          latitude={lat}
+                          longitude={lng}
+                          businessName={event.venue!.name || event.title}
+                          address={fullAddress}
+                          className="h-48 rounded-xl"
+                        />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* Online URL Card */}
+            {(event.locationType === 'ONLINE' || event.locationType === 'HYBRID') && event.onlineUrl && (
+              <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 w-12 h-12 bg-green-50 dark:bg-green-900/20 rounded-xl flex items-center justify-center">
+                    <svg className="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                     </svg>
-                    {t('events.editEvent')}
-                  </Link>
-                )}
+                  </div>
+                  <div>
+                    <p className="font-semibold text-slate-900 dark:text-white">{t('events.onlineEvent')}</p>
+                    <a href={event.onlineUrl} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                      {t('events.joinOnline')}
+                    </a>
+                  </div>
+                </div>
               </div>
-            </div>
-
-            {/* About Card */}
-            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
-              <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-3">
-                {t('events.about')}
-              </h2>
-              <div className="prose prose-slate dark:prose-invert max-w-none">
-                <p className="whitespace-pre-wrap text-slate-600 dark:text-slate-300">{event.description}</p>
-              </div>
-            </div>
+            )}
 
             {/* Details Card (cost, age, accessibility, tickets) */}
             {(
@@ -562,16 +589,18 @@ export function EventDetailPage() {
             {/* Organizer Card */}
             <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
               <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
-                {t('events.organizer')}
+                {t('events.hostedBy')}
               </h2>
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3">
                 <Avatar
                   name={event.createdBy.displayName}
                   src={event.createdBy.profilePhoto || undefined}
                   size="md"
                 />
                 <div>
-                  <p className="font-medium text-slate-900 dark:text-white">{event.createdBy.displayName}</p>
+                  <p className="font-medium text-slate-900 dark:text-white">
+                    {event.createdBy.displayName}
+                  </p>
                   {event.linkedBusiness && (
                     <Link
                       to={`/businesses/${event.linkedBusiness.slug}`}
@@ -585,33 +614,52 @@ export function EventDetailPage() {
             </div>
           </div>
 
-          {/* Add to Calendar Modal */}
-          <Modal
-            isOpen={showCalendarModal}
-            onClose={() => setShowCalendarModal(false)}
-            title={t('events.addToCalendar')}
-          >
-            <div className="space-y-4">
-              <a
-                href={eventService.getGoogleCalendarUrl(event)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center px-4 py-3 border rounded-lg hover:bg-gray-50"
+          {/* Add to Calendar Panel */}
+          {showCalendarModal && (
+            <div className="fixed inset-0 z-50" onClick={() => setShowCalendarModal(false)}>
+              <div
+                className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 p-6"
+                onClick={(e) => e.stopPropagation()}
               >
-                <span className="text-2xl mr-3">📅</span>
-                <span>Google Calendar</span>
-              </a>
-              <a
-                href={eventService.getExportUrl(event.id)}
-                download
-                className="flex items-center px-4 py-3 border rounded-lg hover:bg-gray-50"
-              >
-                <span className="text-2xl mr-3">📥</span>
-                <span>{t('events.downloadICS')}</span>
-              </a>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-slate-900 dark:text-white">{t('events.addToCalendar')}</h3>
+                  <button
+                    onClick={() => setShowCalendarModal(false)}
+                    className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+                    aria-label={t('common.close', 'Close')}
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+                <div className="space-y-3">
+                  <a
+                    href={eventService.getGoogleCalendarUrl(event)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center px-4 py-3 border border-slate-200 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+                  >
+                    <svg className="w-5 h-5 mr-3 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <span className="text-slate-900 dark:text-white">Google Calendar</span>
+                  </a>
+                  <a
+                    href={eventService.getExportUrl(event.id)}
+                    download
+                    className="flex items-center px-4 py-3 border border-slate-200 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+                  >
+                    <svg className="w-5 h-5 mr-3 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    <span className="text-slate-900 dark:text-white">{t('events.downloadICS')}</span>
+                  </a>
+                </div>
+              </div>
             </div>
-          </Modal>
-        </div>
+          )}
+        </article>
       </PageContainer>
     </>
   );

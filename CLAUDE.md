@@ -58,7 +58,7 @@ When implementing features, always reference configuration values rather than ha
 
 ### Integrations Configured
 
-- **Maps:** Google Maps API (Google Maps JavaScript API, Google Places API, Google Directions API)
+- **Maps:** Mapbox GL JS (map rendering, geocoding, static images) + deep links (Google Maps, Apple Maps, Waze for directions)
 - **Analytics:** Google Analytics 4 (GA4)
 - **Email:** Mailgun v12.7.0
 - **i18n:** react-i18next v16.5.4 (10 languages, RTL support)
@@ -99,7 +99,7 @@ When implementing features, always reference configuration values rather than ha
 - Redis caching, Elasticsearch search, local media storage (Sharp for images)
 - Security: 5 headers (CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy), CSRF, AES-256-GCM, 7 rate limiters
 - Email service: Mailgun integration, template rendering (10 languages)
-- Maps: Google Maps API integration with geocoding, BusinessMap component, DirectionsButton
+- Maps: Mapbox GL JS integration with geocoding, BusinessMap component, DirectionsButton
 - Analytics: Google Analytics 4 implementation with event tracking
 - i18n: react-i18next, 10 translation files, RTL support, useLanguage hook
 

@@ -66,6 +66,32 @@ export function updateHTMLAttributes(languageCode: string): void {
 }
 
 /**
+ * Native display names for supported languages.
+ * Each language is shown in its own script so users can recognise it
+ * regardless of the current UI language.
+ */
+export const LANGUAGE_NATIVE_NAMES: Record<string, string> = {
+  en: 'English',
+  ar: 'العربية',
+  'zh-CN': '简体中文',
+  'zh-TW': '繁體中文',
+  vi: 'Tiếng Việt',
+  hi: 'हिन्दी',
+  ur: 'اردو',
+  ko: '한국어',
+  el: 'Ελληνικά',
+  it: 'Italiano',
+};
+
+/**
+ * Get the native display name for a language code.
+ * Falls back to the code itself if not found.
+ */
+export function getLanguageNativeName(code: string): string {
+  return LANGUAGE_NATIVE_NAMES[code] || code;
+}
+
+/**
  * Validate and normalize language code
  * Returns normalized code or default language if invalid
  */

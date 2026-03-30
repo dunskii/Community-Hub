@@ -73,7 +73,7 @@ export function NearYouSection({ latitude, longitude }: NearYouSectionProps) {
           <p className="text-neutral-dark">{t('nearYou.subtitle')}</p>
         </div>
         <a
-          href={`/search?lat=${latitude}&lng=${longitude}&distance=5&sort=distance`}
+          href={`/businesses?lat=${latitude}&lng=${longitude}&distance=5&sort=distance`}
           className="text-primary hover:text-primary-shade-10 font-medium text-sm transition-colors"
         >
           {t('nearYou.viewAll')} →

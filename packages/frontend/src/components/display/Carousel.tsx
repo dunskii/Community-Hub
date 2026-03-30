@@ -41,72 +41,80 @@ export function Carousel({
     setCurrentIndex(index);
   };
 
+  const hasNav = showNavigation && totalSlides > 1;
+
   return (
     <div
       role="region"
       aria-label="Carousel"
-      className="relative w-full overflow-hidden"
+      className="relative w-full"
     >
-      {/* Slides */}
-      <div
-        className="flex transition-transform duration-300 ease-in-out"
-        style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-        aria-live="polite"
-        aria-atomic="true"
-      >
-        {children.map((child, index) => (
-          <div
-            key={index}
-            className="min-w-full px-1 py-2"
-            aria-hidden={index !== currentIndex}
-          >
-            {child}
-          </div>
-        ))}
-      </div>
-
-      {/* Navigation arrows */}
-      {showNavigation && totalSlides > 1 && (
-        <>
+      {/* Outer flex: arrows + slides */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        {/* Left arrow */}
+        {hasNav && (
           <button
             onClick={goToPrevious}
             aria-label="Previous slide"
-            className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-900 rounded-full p-2 shadow-lg focus:outline-none focus:ring-2 focus:ring-primary transition-colors"
-            style={{ minWidth: '44px', minHeight: '44px' }}
+            className="hidden sm:flex flex-shrink-0 items-center justify-center bg-white dark:bg-slate-700 hover:bg-slate-50 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300 rounded-full shadow-md border border-slate-200 dark:border-slate-600 focus:outline-none focus:ring-2 focus:ring-primary transition-colors"
+            style={{ width: '44px', height: '44px' }}
           >
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
+        )}
 
+        {/* Slides */}
+        <div className="overflow-hidden flex-1 min-w-0">
+          <div
+            className="flex transition-transform duration-300 ease-in-out"
+            style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            {children.map((child, index) => (
+              <div
+                key={index}
+                className="min-w-full px-1 py-2"
+                aria-hidden={index !== currentIndex}
+              >
+                {child}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Right arrow */}
+        {hasNav && (
           <button
             onClick={goToNext}
             aria-label="Next slide"
-            className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-900 rounded-full p-2 shadow-lg focus:outline-none focus:ring-2 focus:ring-primary transition-colors"
-            style={{ minWidth: '44px', minHeight: '44px' }}
+            className="hidden sm:flex flex-shrink-0 items-center justify-center bg-white dark:bg-slate-700 hover:bg-slate-50 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300 rounded-full shadow-md border border-slate-200 dark:border-slate-600 focus:outline-none focus:ring-2 focus:ring-primary transition-colors"
+            style={{ width: '44px', height: '44px' }}
           >
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
           </button>
-        </>
-      )}
+        )}
+      </div>
 
       {/* Indicators */}
       {showIndicators && totalSlides > 1 && (
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+        <div className="flex justify-center gap-2 mt-4">
           {children.map((_, index) => (
             <button
               key={index}
               onClick={() => goToSlide(index)}
               aria-label={`Go to slide ${index + 1}`}
               aria-current={index === currentIndex ? 'true' : 'false'}
-              className={`w-2 h-2 rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
+              className={`rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
                 index === currentIndex
-                  ? 'bg-white w-8'
-                  : 'bg-white/50 hover:bg-white/75'
+                  ? 'bg-primary'
+                  : 'bg-slate-300 dark:bg-slate-600 hover:bg-slate-400'
               }`}
-              style={{ minWidth: '16px', minHeight: '16px' }}
+              style={{ width: index === currentIndex ? '24px' : '8px', height: '8px' }}
             />
           ))}
         </div>

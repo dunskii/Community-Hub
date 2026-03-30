@@ -45,9 +45,10 @@ async function main(): Promise<void> {
 
   // Start server
   const app = createApp();
-  const server = app.listen(env.PORT, () => {
-    logger.info(`Server listening on http://localhost:${env.PORT}`);
-    logger.info(`API: http://localhost:${env.PORT}/api/v1`);
+  const host = env.HOST;
+  const server = app.listen(env.PORT, host, () => {
+    logger.info(`Server listening on http://${host}:${env.PORT}`);
+    logger.info(`API: http://${host}:${env.PORT}/api/v1`);
   });
 
   // Graceful shutdown

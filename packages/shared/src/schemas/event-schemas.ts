@@ -92,7 +92,10 @@ export const eventCreateSchema = z
     venue: venueSchema.optional(),
     onlineUrl: z.string().url({ message: 'Invalid URL format' }).optional(),
     linkedBusinessId: z.string().uuid({ message: 'Invalid business ID' }).optional(),
-    imageUrl: z.string().url({ message: 'Invalid image URL' }).optional(),
+    imageUrl: z.string().refine(
+      (val) => val.startsWith('/uploads/') || /^https?:\/\//.test(val),
+      { message: 'Image must be a local upload path or valid URL' },
+    ).optional(),
     ticketUrl: z.string().url({ message: 'Invalid ticket URL' }).optional(),
     cost: z
       .string()
@@ -179,7 +182,10 @@ export const eventUpdateSchema = z
     venue: venueSchema.optional().nullable(),
     onlineUrl: z.string().url().optional().nullable(),
     linkedBusinessId: z.string().uuid().optional().nullable(),
-    imageUrl: z.string().url().optional().nullable(),
+    imageUrl: z.string().refine(
+      (val) => val.startsWith('/uploads/') || /^https?:\/\//.test(val),
+      { message: 'Image must be a local upload path or valid URL' },
+    ).optional().nullable(),
     ticketUrl: z.string().url().optional().nullable(),
     cost: z.string().max(LIMITS.maxCostLength).optional().nullable(),
     capacity: z.number().int().positive().optional().nullable(),

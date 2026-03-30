@@ -3,6 +3,7 @@
  * Phase 5: Search & Discovery - Homepage Discovery
  *
  * Grid of category cards for easy browsing
+ * Fetches real categories from the API
  * Uses Heroicons for professional iconography
  */
 
@@ -15,68 +16,40 @@ import {
   PlusCircleIcon,
   AcademicCapIcon,
   TicketIcon,
-  TruckIcon,
-  HomeIcon,
+  HeartIcon,
+  BriefcaseIcon,
   ArrowRightIcon,
 } from '@heroicons/react/24/outline';
+import { useCategories } from '../../hooks/useCategories';
+import { Skeleton } from '../display/Skeleton';
 
-// Category icon component mapping
+// Map category slugs to icons
 const CategoryIcon: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
-  restaurants: BuildingStorefrontIcon,
+  'food-beverage': BuildingStorefrontIcon,
+  restaurant: BuildingStorefrontIcon,
   retail: ShoppingBagIcon,
   services: WrenchScrewdriverIcon,
   health: PlusCircleIcon,
   education: AcademicCapIcon,
   entertainment: TicketIcon,
-  automotive: TruckIcon,
-  home: HomeIcon,
+  fitness: HeartIcon,
+  professional: BriefcaseIcon,
 };
 
 export function CategoryShowcase() {
-  const { t } = useTranslation('home');
+  const { t, i18n } = useTranslation('home');
+  const { categories, loading } = useCategories({ type: 'BUSINESS', active: true });
 
-  const categories = [
-    {
-      slug: 'restaurants',
-      name: t('categories.restaurants', 'Restaurants'),
-      count: 45,
-    },
-    {
-      slug: 'retail',
-      name: t('categories.retail', 'Retail'),
-      count: 32,
-    },
-    {
-      slug: 'services',
-      name: t('categories.services', 'Services'),
-      count: 28,
-    },
-    {
-      slug: 'health',
-      name: t('categories.health', 'Health'),
-      count: 18,
-    },
-    {
-      slug: 'education',
-      name: t('categories.education', 'Education'),
-      count: 15,
-    },
-    {
-      slug: 'entertainment',
-      name: t('categories.entertainment', 'Entertainment'),
-      count: 12,
-    },
-    {
-      slug: 'automotive',
-      name: t('categories.automotive', 'Automotive'),
-      count: 10,
-    },
-    {
-      slug: 'home',
-      name: t('categories.home', 'Home'),
-      count: 14,
-    },
-  ];
+  // Get top-level categories (no parent) that have businesses
+  const topCategories = categories
+    .filter(cat => cat.parentId === null)
+    .sort((a, b) => (b.businessCount ?? 0) - (a.businessCount ?? 0))
+    .slice(0, 8);
+
+  const getCategoryName = (cat: { name: string | Record<string, string> }): string => {
+    if (typeof cat.name === 'string') return cat.name;
+    return cat.name[i18n.language] || cat.name['en'] || Object.values(cat.name)[0] || '';
+  };
 
   return (
     <section>
@@ -89,50 +62,57 @@ export function CategoryShowcase() {
         </p>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {categories.map((category) => {
-          const Icon = CategoryIcon[category.slug] || BuildingStorefrontIcon;
+      {loading ? (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <Skeleton key={i} variant="rectangular" width="100%" height="180px" />
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {topCategories.map((category) => {
+            const Icon = CategoryIcon[category.slug] || BuildingStorefrontIcon;
+            const name = getCategoryName(category);
+            const cleanName = name.replace('[UNTRANSLATED] ', '');
 
-          return (
-            <a
-              key={category.slug}
-              href={`/search?category=${category.slug}`}
-              className="block bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-all overflow-hidden group border border-gray-100 dark:border-gray-700"
-            >
-              {/* Icon Container - Uses primary color with opacity */}
-              <div className="h-32 bg-gradient-to-br from-primary/10 to-primary/20 dark:from-primary/20 dark:to-primary/30 flex items-center justify-center relative overflow-hidden">
-                {/* Background Pattern */}
-                <div className="absolute inset-0 opacity-30">
-                  <div
-                    className="absolute inset-0"
-                    style={{
-                      backgroundImage: `radial-gradient(circle, currentColor 1px, transparent 1px)`,
-                      backgroundSize: '20px 20px',
-                    }}
-                  />
+            return (
+              <a
+                key={category.slug}
+                href={`/businesses?category=${category.slug}`}
+                className="block bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-all overflow-hidden group border border-gray-100 dark:border-gray-700"
+              >
+                {/* Icon Container */}
+                <div className="h-32 bg-gradient-to-br from-primary/10 to-primary/20 dark:from-primary/20 dark:to-primary/30 flex items-center justify-center relative overflow-hidden">
+                  <div className="absolute inset-0 opacity-30">
+                    <div
+                      className="absolute inset-0"
+                      style={{
+                        backgroundImage: `radial-gradient(circle, currentColor 1px, transparent 1px)`,
+                        backgroundSize: '20px 20px',
+                      }}
+                    />
+                  </div>
+                  <Icon className="w-16 h-16 text-primary relative z-10 group-hover:scale-110 transition-transform duration-300" />
                 </div>
 
-                {/* Icon */}
-                <Icon className="w-16 h-16 text-primary relative z-10 group-hover:scale-110 transition-transform duration-300" />
-              </div>
-
-              <div className="p-4">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1 group-hover:text-primary transition-colors">
-                  {category.name}
-                </h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  {category.count} {t('categories.businesses', 'businesses')}
-                </p>
-              </div>
-            </a>
-          );
-        })}
-      </div>
+                <div className="p-4">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1 group-hover:text-primary transition-colors">
+                    {cleanName}
+                  </h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    {category.businessCount ?? 0} {t('categories.businesses', 'businesses')}
+                  </p>
+                </div>
+              </a>
+            );
+          })}
+        </div>
+      )}
 
       {/* View All Categories Link */}
       <div className="mt-8 text-center">
         <a
-          href="/search"
+          href="/businesses"
           className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors font-medium shadow-sm hover:shadow-md"
         >
           {t('categories.viewAll', 'View All Categories')}

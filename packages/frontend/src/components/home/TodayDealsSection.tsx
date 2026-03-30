@@ -5,7 +5,7 @@
  * Displays featured/active deals on the homepage
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { dealApi } from '../../services/deal-api';
@@ -26,13 +26,13 @@ function formatDiscount(
 
   switch (discountType) {
     case 'PERCENTAGE':
-      return t('deal.discountOff', { value: `${discountValue}%` });
+      return t('deal:deal.discountOff', { value: `${discountValue}%` });
     case 'FIXED':
-      return t('deal.discountOff', { value: `$${discountValue}` });
+      return t('deal:deal.discountOff', { value: `$${discountValue}` });
     case 'BOGO':
-      return t('deal.bogo');
+      return t('deal:deal.bogo');
     case 'FREE_ITEM':
-      return t('deal.freeItem');
+      return t('deal:deal.freeItem');
     default:
       return null;
   }
@@ -48,9 +48,26 @@ function getDaysRemaining(validUntil: string): number {
   return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 }
 
+const DISPLAY_COUNT = 4;
+
+/**
+ * Randomly pick `count` items from an array using Fisher-Yates shuffle
+ */
+function pickRandom<T>(items: T[], count: number): T[] {
+  if (items.length <= count) return items;
+  const shuffled = [...items];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const temp = shuffled[i]!;
+    shuffled[i] = shuffled[j]!;
+    shuffled[j] = temp;
+  }
+  return shuffled.slice(0, count);
+}
+
 export function TodayDealsSection() {
-  const { t, i18n } = useTranslation();
-  const [deals, setDeals] = useState<Deal[]>([]);
+  const { t, i18n } = useTranslation('home');
+  const [allDeals, setAllDeals] = useState<Deal[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedDeal, setSelectedDeal] = useState<Deal | null>(null);
   const locale = i18n.language === 'en' ? 'en-AU' : i18n.language;
@@ -61,7 +78,7 @@ export function TodayDealsSection() {
         // First try featured deals
         let loadedDeals: Deal[] = [];
         try {
-          loadedDeals = await dealApi.getFeaturedDeals(6);
+          loadedDeals = await dealApi.getFeaturedDeals(20);
         } catch {
           // Featured endpoint may fail, continue to fallback
         }
@@ -71,7 +88,7 @@ export function TodayDealsSection() {
           try {
             const response = await dealApi.getActiveDeals({
               validNow: true,
-              limit: 6,
+              limit: 20,
               sort: 'newest',
             });
             loadedDeals = response.deals;
@@ -80,7 +97,7 @@ export function TodayDealsSection() {
           }
         }
 
-        setDeals(loadedDeals);
+        setAllDeals(loadedDeals);
       } finally {
         setIsLoading(false);
       }
@@ -89,14 +106,17 @@ export function TodayDealsSection() {
     fetchDeals();
   }, []);
 
+  // Randomly select deals to display when there are more than DISPLAY_COUNT
+  const deals = useMemo(() => pickRandom(allDeals, DISPLAY_COUNT), [allDeals]);
+
   if (isLoading) {
     return (
       <section aria-labelledby="today-deals-heading">
         <h2 id="today-deals-heading" className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
-          {t('home.todaysDeals.title', "Today's Deals")}
+          {t('todaysDeals.title', "Today's Deals")}
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[...Array(3)].map((_, i) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[...Array(4)].map((_, i) => (
             <div key={i} className="animate-pulse">
               <div className="h-40 bg-gray-200 dark:bg-gray-700 rounded-t-lg" />
               <div className="p-4 bg-white dark:bg-gray-800 rounded-b-lg border border-gray-200 dark:border-gray-700">
@@ -118,17 +138,17 @@ export function TodayDealsSection() {
     <section aria-labelledby="today-deals-heading">
       <div className="flex items-center justify-between mb-6">
         <h2 id="today-deals-heading" className="text-3xl font-bold text-gray-900 dark:text-white">
-          {t('home.todaysDeals.title', "Today's Deals")}
+          {t('todaysDeals.title', "Today's Deals")}
         </h2>
         <Link
           to="/deals"
           className="text-primary hover:text-primary/80 font-medium text-sm transition-colors"
         >
-          {t('home.todaysDeals.viewAll', 'View All')} &rarr;
+          {t('todaysDeals.viewAll', 'View All')} &rarr;
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {deals.map((deal) => {
           const discountText = formatDiscount(deal.discountType, deal.discountValue, t);
           const daysRemaining = getDaysRemaining(deal.validUntil);
@@ -168,7 +188,7 @@ export function TodayDealsSection() {
                 {isEndingSoon && (
                   <div className="absolute top-3 right-3">
                     <Badge variant="warning" size="sm">
-                      {t('deal.endingSoon', { days: daysRemaining })}
+                      {t('deal:deal.endingSoon', { days: daysRemaining })}
                     </Badge>
                   </div>
                 )}
@@ -210,7 +230,7 @@ export function TodayDealsSection() {
 
                   {/* Valid until */}
                   <span className="text-xs text-gray-500 dark:text-gray-400">
-                    {t('deal.validUntil', {
+                    {t('deal:deal.validUntil', {
                       date: new Date(deal.validUntil).toLocaleDateString(locale, {
                         month: 'short',
                         day: 'numeric',
@@ -231,7 +251,7 @@ export function TodayDealsSection() {
                           d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
                         />
                       </svg>
-                      {t('deal.hasVoucherCode', 'Voucher code available')}
+                      {t('deal:deal.hasVoucherCode', 'Voucher code available')}
                     </div>
                   </div>
                 )}

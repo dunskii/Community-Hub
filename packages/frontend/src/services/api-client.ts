@@ -45,13 +45,39 @@ class HttpError extends Error {
 }
 
 /**
+ * Track whether a token refresh is already in progress to avoid
+ * multiple concurrent refresh calls when several requests 401 at once.
+ */
+let refreshInProgress: Promise<boolean> | null = null;
+
+async function attemptTokenRefresh(): Promise<boolean> {
+  try {
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    const csrfToken = getCsrfToken();
+    if (csrfToken) {
+      headers['X-CSRF-Token'] = csrfToken;
+    }
+    const res = await fetch(`${API_BASE_URL}/auth/refresh`, {
+      method: 'POST',
+      headers,
+      credentials: 'include',
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Make HTTP request to API
  *
  * Tokens are sent automatically via HttpOnly cookies.
+ * On 401 responses, automatically attempts a token refresh and retries once.
  */
 async function request<T>(
   endpoint: string,
-  options: RequestInit = {}
+  options: RequestInit = {},
+  _isRetry = false
 ): Promise<T> {
   const url = `${API_BASE_URL}${endpoint}`;
 
@@ -102,6 +128,20 @@ async function request<T>(
     const data = await response.json();
 
     if (!response.ok) {
+      // Auto-refresh on 401: if the access token expired but the refresh
+      // token is still valid, refresh and retry the request once.
+      if (response.status === 401 && !_isRetry && !endpoint.startsWith('/auth/')) {
+        if (!refreshInProgress) {
+          refreshInProgress = attemptTokenRefresh().finally(() => {
+            refreshInProgress = null;
+          });
+        }
+        const refreshed = await refreshInProgress;
+        if (refreshed) {
+          return request<T>(endpoint, options, true);
+        }
+      }
+
       throw new HttpError(
         response.status,
         data.error || 'UNKNOWN_ERROR',

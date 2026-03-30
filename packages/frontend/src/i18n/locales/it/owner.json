@@ -34,8 +34,29 @@
       "reviewsDesc": "Rispondi alle recensioni dei clienti",
       "photos": "Aggiorna foto",
       "photosDesc": "Aggiungi o gestisci foto dell'attività",
+      "events": "Eventi",
+      "eventsDesc": "Crea e gestisci eventi",
       "settings": "Impostazioni",
       "settingsDesc": "Aggiorna informazioni attività"
+    },
+    "events": {
+      "title": "Eventi",
+      "description": "Crea e gestisci eventi per la tua attività",
+      "createEvent": "Crea evento",
+      "editEvent": "Modifica evento",
+      "backToEvents": "Torna agli eventi",
+      "noEventsTitle": "Nessun evento",
+      "noEventsDescription": "Crea un evento per coinvolgere la tua comunità e attirare clienti.",
+      "pendingNotice": "Gli eventi che crei verranno esaminati da un amministratore prima di essere pubblicati sulla piattaforma.",
+      "status": {
+        "pending": "In attesa di approvazione",
+        "active": "Attivo",
+        "past": "Passato",
+        "cancelled": "Annullato"
+      },
+      "eventNotFound": "Evento non trovato",
+      "createSuccess": "Evento inviato per approvazione",
+      "updateSuccess": "Evento aggiornato con successo"
     }
   },
   "analytics": {

@@ -34,8 +34,29 @@
       "reviewsDesc": "回复客户评价",
       "photos": "更新照片",
       "photosDesc": "添加或管理商家照片",
+      "events": "活动",
+      "eventsDesc": "创建和管理活动",
       "settings": "设置",
       "settingsDesc": "更新商家信息"
+    },
+    "events": {
+      "title": "活动",
+      "description": "为您的企业创建和管理活动",
+      "createEvent": "创建活动",
+      "editEvent": "编辑活动",
+      "backToEvents": "返回活动",
+      "noEventsTitle": "暂无活动",
+      "noEventsDescription": "创建活动以吸引社区并招揽客户。",
+      "pendingNotice": "您创建的活动将在管理员审核后发布到平台上。",
+      "status": {
+        "pending": "待审批",
+        "active": "活跃",
+        "past": "已结束",
+        "cancelled": "已取消"
+      },
+      "eventNotFound": "未找到活动",
+      "createSuccess": "活动已提交审核",
+      "updateSuccess": "活动更新成功"
     }
   },
   "analytics": {

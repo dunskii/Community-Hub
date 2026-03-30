@@ -348,7 +348,7 @@ export function EventForm({
       }
     }
 
-    if (formData.imageUrl) {
+    if (formData.imageUrl && !formData.imageUrl.startsWith('/uploads/')) {
       try {
         new URL(formData.imageUrl);
       } catch {
@@ -367,10 +367,13 @@ export function EventForm({
       setSubmitError(null);
 
       if (!validate()) {
-        // Focus first error field
-        const firstErrorField = Object.keys(errors)[0];
-        const element = document.querySelector(`[name="${firstErrorField}"]`) as HTMLElement;
-        element?.focus();
+        // Scroll to top so user can see validation errors, then focus first error field
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setTimeout(() => {
+          const form = e.target as HTMLFormElement;
+          const firstInvalid = form.querySelector('[aria-invalid="true"]') as HTMLElement;
+          firstInvalid?.focus();
+        }, 300);
         return;
       }
 

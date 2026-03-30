@@ -8,6 +8,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../hooks/useAuth';
 import { businessApi } from '../../../services/business-api';
+import type { Category } from '../../../services/business-api';
 import { DAYS_OF_WEEK, PAYMENT_METHODS, ACCESSIBILITY_FEATURES } from './constants';
 import type { Business, FormData, CheckboxField } from './types';
 import type { BusinessUpdateInput, DayHours } from '@community-hub/shared';
@@ -16,6 +17,8 @@ const INITIAL_FORM_DATA: FormData = {
   name: '',
   description: '',
   detailedDescription: '',
+  categoryPrimaryId: '',
+  categoriesSecondary: [],
   phone: '',
   secondaryPhone: '',
   email: '',
@@ -47,9 +50,11 @@ export function useEditBusinessForm(businessId: string | undefined) {
   const navigate = useNavigate();
 
   const [business, setBusiness] = useState<Business | null>(null);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [saveError, setSaveError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [formData, setFormData] = useState<FormData>(INITIAL_FORM_DATA);
   const [quickSetOpen, setQuickSetOpen] = useState('09:00');
@@ -69,7 +74,11 @@ export function useEditBusinessForm(businessId: string | undefined) {
 
       try {
         setLoading(true);
-        const biz = await businessApi.getBusinessById(businessId);
+        const [biz, cats] = await Promise.all([
+          businessApi.getBusinessById(businessId),
+          businessApi.listCategories({ active: true }),
+        ]);
+        setCategories(cats);
 
         setBusiness(biz as Business);
 
@@ -87,6 +96,8 @@ export function useEditBusinessForm(businessId: string | undefined) {
           name: typeof biz.name === 'string' ? biz.name : (biz.name as Record<string, string>).en ?? '',
           description: desc,
           detailedDescription: detailedDesc,
+          categoryPrimaryId: biz.categoryPrimaryId || '',
+          categoriesSecondary: biz.categoriesSecondary || [],
           phone: biz.phone || '',
           secondaryPhone: biz.secondaryPhone || '',
           email: biz.email || '',
@@ -171,6 +182,17 @@ export function useEditBusinessForm(businessId: string | undefined) {
     setSuccess(false);
   };
 
+  const handleSecondaryCategoryToggle = (categoryId: string) => {
+    setFormData(prev => {
+      const current = prev.categoriesSecondary;
+      const updated = current.includes(categoryId)
+        ? current.filter(id => id !== categoryId)
+        : [...current, categoryId];
+      return { ...prev, categoriesSecondary: updated };
+    });
+    setSuccess(false);
+  };
+
   const handleHoursChange = (day: string, field: 'open' | 'close' | 'closed' | 'byAppointment', value: string | boolean) => {
     setFormData(prev => ({
       ...prev,
@@ -234,7 +256,7 @@ export function useEditBusinessForm(businessId: string | undefined) {
 
     try {
       setSaving(true);
-      setError(null);
+      setSaveError(null);
 
       // Build complete operatingHours structure with all required fields
       const operatingHours = {
@@ -256,6 +278,8 @@ export function useEditBusinessForm(businessId: string | undefined) {
       const updateData = {
         name: formData.name,
         description: { en: formData.description },
+        categoryPrimaryId: formData.categoryPrimaryId || undefined,
+        categoriesSecondary: formData.categoriesSecondary.length > 0 ? formData.categoriesSecondary : undefined,
         phone: formData.phone,
         secondaryPhone: formData.secondaryPhone || undefined,
         email: formData.email || undefined,
@@ -294,7 +318,7 @@ export function useEditBusinessForm(businessId: string | undefined) {
       let message = err instanceof Error ? err.message : 'Failed to update business';
       // If authentication failed, suggest re-logging in
       if (message.includes('Authentication') || message.includes('Unauthorized')) {
-        setError('Your session has expired. Please refresh the page and log in again.');
+        setSaveError('Your session has expired. Please refresh the page and log in again.');
       } else {
         // Check for validation error details
         const httpErr = err as { details?: Array<{ field: string; message: string }> };
@@ -302,7 +326,7 @@ export function useEditBusinessForm(businessId: string | undefined) {
           const validationErrors = httpErr.details.map(d => `${d.field}: ${d.message}`).join(', ');
           message = `${message} (${validationErrors})`;
         }
-        setError(message);
+        setSaveError(message);
       }
     } finally {
       setSaving(false);
@@ -317,9 +341,11 @@ export function useEditBusinessForm(businessId: string | undefined) {
 
   return {
     business,
+    categories,
     loading,
     saving,
     error,
+    saveError,
     success,
     formData,
     quickSetOpen,
@@ -328,6 +354,7 @@ export function useEditBusinessForm(businessId: string | undefined) {
     setQuickSetClose,
     handleInputChange,
     handleCheckboxChange,
+    handleSecondaryCategoryToggle,
     handleHoursChange,
     applyHoursToAll,
     handleSocialChange,

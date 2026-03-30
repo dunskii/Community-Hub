@@ -80,7 +80,10 @@ export const dealCreateSchema = z
         message: `Voucher code cannot exceed ${LIMITS.maxVoucherCodeLength} characters`,
       })
       .optional(),
-    image: z.string().url({ message: 'Invalid image URL' }).optional(),
+    image: z.string().refine(
+      (val) => val.startsWith('/uploads/') || /^https?:\/\//.test(val),
+      { message: 'Image must be a local upload path or valid URL' },
+    ).optional(),
     terms: z
       .string()
       .max(LIMITS.maxTermsLength, {
@@ -138,7 +141,10 @@ export const dealUpdateSchema = z
     discountValue: z.number().min(0).max(LIMITS.maxPercentageDiscount).optional().nullable(),
     duration: z.string().max(LIMITS.maxDurationLength).optional().nullable(),
     voucherCode: z.string().max(LIMITS.maxVoucherCodeLength).optional().nullable(),
-    image: z.string().url().optional().nullable(),
+    image: z.string().refine(
+      (val) => val.startsWith('/uploads/') || /^https?:\/\//.test(val),
+      { message: 'Image must be a local upload path or valid URL' },
+    ).optional().nullable(),
     terms: z.string().max(LIMITS.maxTermsLength).optional().nullable(),
     validFrom: z.string().datetime().optional(),
     validUntil: z.string().datetime().optional(),

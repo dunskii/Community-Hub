@@ -124,7 +124,7 @@ export function EventCard({ event, onClick, compact = false }: EventCardProps) {
             {event.locationType === 'ONLINE'
               ? t('events.onlineEvent')
               : event.venue
-              ? `${event.venue.suburb}, ${event.venue.state}`
+              ? [event.venue.name, event.venue.street, event.venue.suburb, event.venue.state, event.venue.postcode].filter(Boolean).join(', ')
               : t('events.location', 'Location TBA')}
           </span>
         </div>

@@ -5,7 +5,7 @@
  * Spec §13.2: Business Owner Dashboard - Profile Management
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useSearchParams, useLocation, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet-async';
@@ -53,6 +53,11 @@ export function EditBusinessPage() {
   const form = useEditBusinessForm(businessId);
   const dealsHook = useBusinessDeals(businessId, activeTab);
 
+  // Scroll to top on mount and tab change
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [activeTab]);
+
   const tabs = [
     { id: 'basic' as const, label: t('editBusiness.tabs.basic', 'Basic Info'), icon: BuildingStorefrontIcon },
     { id: 'contact' as const, label: t('editBusiness.tabs.contact', 'Contact & Location'), icon: PhoneIcon },
@@ -73,7 +78,7 @@ export function EditBusinessPage() {
     );
   }
 
-  if (form.error || !form.business) {
+  if ((form.error && !form.business) || !form.business) {
     return (
       <PageContainer>
         <div className="max-w-6xl mx-auto text-center py-12">
@@ -129,10 +134,10 @@ export function EditBusinessPage() {
             </div>
           )}
 
-          {/* Error Message */}
-          {form.error && (
+          {/* Save Error Message */}
+          {form.saveError && (
             <div className="mb-6">
-              <Alert type="warning" message={form.error} />
+              <Alert type="warning" message={form.saveError} />
             </div>
           )}
 
@@ -160,7 +165,13 @@ export function EditBusinessPage() {
           {/* Form */}
           <form onSubmit={(e) => form.handleSubmit(e, activeTab)}>
             {activeTab === 'basic' && (
-              <BasicInfoTab formData={form.formData} handleInputChange={form.handleInputChange} t={t} />
+              <BasicInfoTab
+                formData={form.formData}
+                handleInputChange={form.handleInputChange}
+                t={t}
+                categories={form.categories}
+                onSecondaryCategoryToggle={form.handleSecondaryCategoryToggle}
+              />
             )}
 
             {activeTab === 'contact' && (

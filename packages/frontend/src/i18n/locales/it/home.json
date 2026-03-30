@@ -72,5 +72,15 @@
     "entertainment": "Intrattenimento",
     "automotive": "Automotive",
     "home": "Casa & Giardino"
+  },
+  "upcomingEvents": {
+    "title": "Prossimi Eventi",
+    "subtitle": "Eventi della comunità in arrivo",
+    "viewAll": "Vedi Tutti"
+  },
+  "todaysDeals": {
+    "title": "Offerte di Oggi",
+    "subtitle": "Offerte speciali dalle attività locali",
+    "viewAll": "Vedi Tutti"
   }
 }

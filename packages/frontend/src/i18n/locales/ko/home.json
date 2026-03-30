@@ -72,5 +72,15 @@
     "entertainment": "엔터테인먼트",
     "automotive": "자동차",
     "home": "홈 & 가든"
+  },
+  "upcomingEvents": {
+    "title": "다가오는 이벤트",
+    "subtitle": "곧 열리는 커뮤니티 이벤트",
+    "viewAll": "모두 보기"
+  },
+  "todaysDeals": {
+    "title": "오늘의 딜",
+    "subtitle": "지역 업체의 특별 혜택",
+    "viewAll": "모두 보기"
   }
 }

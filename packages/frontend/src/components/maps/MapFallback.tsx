@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 interface MapFallbackProps {
   address: string;
 }
@@ -7,11 +9,13 @@ interface MapFallbackProps {
  * Spec §27.5 Graceful Degradation
  */
 export function MapFallback({ address }: MapFallbackProps) {
+  const { t } = useTranslation('business');
+
   return (
     <div
       className="flex items-center gap-3 p-6 bg-neutral-light rounded-lg border border-neutral-medium"
       role="region"
-      aria-label="Business location (map unavailable)"
+      aria-label={t('mapUnavailable')}
     >
       <svg
         className="w-8 h-8 text-primary shrink-0"
@@ -34,7 +38,7 @@ export function MapFallback({ address }: MapFallbackProps) {
         />
       </svg>
       <div>
-        <p className="text-sm text-text-light mb-1">Location</p>
+        <p className="text-sm text-text-light mb-1">{t('location')}</p>
         <p className="text-base text-text-dark font-medium">{address}</p>
       </div>
     </div>

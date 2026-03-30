@@ -52,6 +52,21 @@ export function BusinessListPage() {
   const { businesses, pagination, loading, error, setPage, setFilters: updateFilters } = useBusinesses(filters);
   const { categories, loading: categoriesLoading } = useCategories({ active: true, withBusinesses: true });
 
+  // Resolve category slug to ID (homepage links use slugs, filters use IDs)
+  useEffect(() => {
+    if (filters.category && categories.length > 0) {
+      const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(filters.category);
+      if (!isUUID) {
+        const match = categories.find(c => c.slug === filters.category);
+        if (match) {
+          const resolved = { ...filters, category: match.id };
+          setFilters(resolved);
+          updateFilters(resolved);
+        }
+      }
+    }
+  }, [categories]); // eslint-disable-line react-hooks/exhaustive-deps
+
   // Sync filters to URL
   useEffect(() => {
     const params = new URLSearchParams();

@@ -93,12 +93,11 @@
 
 #### Maps Integration (required for business profiles) [Spec §26]
 
-- [ ] Set up Google Maps API (JavaScript API, Places API, Directions API, API keys)
-- [ ] Implement map embed component for business profiles using Google Maps
-- [ ] Implement "Get Directions" link using Google Directions API
-- [ ] Implement geocoding (address to coordinates) using Google Places API
+- [x] Set up Mapbox GL JS (map rendering, geocoding, static images, API keys)
+- [x] Implement map embed component for business profiles using Mapbox
+- [x] Implement "Get Directions" deep links (Google Maps, Apple Maps, Waze)
+- [x] Implement geocoding (address to coordinates) using Mapbox
 - [ ] Implement distance calculation from user location
-- [ ] Note: Migrate from previously completed Mapbox GL JS implementation
 
 #### i18n Foundation [Spec §8] (100% Complete)
 

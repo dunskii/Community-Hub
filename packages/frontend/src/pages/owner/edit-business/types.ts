@@ -24,6 +24,8 @@ export interface FormData {
   name: string;
   description: string;
   detailedDescription: string;
+  categoryPrimaryId: string;
+  categoriesSecondary: string[];
   phone: string;
   secondaryPhone: string;
   email: string;

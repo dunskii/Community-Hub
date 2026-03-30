@@ -90,7 +90,7 @@ interface ApiResponse<T> {
  * Normalize business data from API (snake_case) to frontend (camelCase)
  * The backend returns raw Prisma records with snake_case fields
  */
-function normalizeBusiness(data: Record<string, unknown>): Business {
+export function normalizeBusiness(data: Record<string, unknown>): Business {
   const biz = data as Record<string, unknown>;
   // Map gallery (Json field) to photos array
   let photos: string[] = [];
@@ -102,6 +102,8 @@ function normalizeBusiness(data: Record<string, unknown>): Business {
     photos = biz.photos as string[];
   }
 
+  const accessibilityFeatures = (biz.accessibility_features || biz.accessibilityFeatures || []) as string[];
+
   return {
     ...data,
     coverPhoto: (biz.cover_photo || biz.coverPhoto) as string | undefined,
@@ -110,8 +112,19 @@ function normalizeBusiness(data: Record<string, unknown>): Business {
     operatingHours: biz.operating_hours || biz.operatingHours,
     socialLinks: biz.social_links || biz.socialLinks,
     languagesSpoken: biz.languages_spoken || biz.languagesSpoken || [],
-    accessibilityFeatures: biz.accessibility_features || biz.accessibilityFeatures || [],
+    accessibilityFeatures,
+    accessibility: accessibilityFeatures.length > 0
+      ? { wheelchairAccessible: accessibilityFeatures.some((f: string) => f.includes('WHEELCHAIR')), features: accessibilityFeatures }
+      : undefined,
     paymentMethods: biz.payment_methods || biz.paymentMethods || [],
+    certifications: biz.certifications || [],
+    parkingInformation: (biz.parking_information || biz.parkingInformation) as string | undefined,
+    yearEstablished: (biz.year_established || biz.yearEstablished) as number | undefined,
+    priceRange: (biz.price_range || biz.priceRange) as string | undefined,
+    categoryPrimaryId: (biz.category_primary_id || biz.categoryPrimaryId) as string,
+    categoriesSecondary: (biz.categories_secondary || biz.categoriesSecondary || []) as string[],
+    secondaryPhone: (biz.secondary_phone || biz.secondaryPhone) as string | undefined,
+    verifiedAt: (biz.verified_at || biz.verifiedAt) as Date | undefined,
   } as unknown as Business;
 }
 

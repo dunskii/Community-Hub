@@ -58,7 +58,9 @@ function verifySignedToken(signedToken: string): string | null {
  * Spec Section 4.7: SameSite=Strict cookies + CSRF token for non-GET requests.
  */
 export function csrfProtection(req: Request, res: Response, next: NextFunction): void {
-  const isProduction = process.env['NODE_ENV'] === 'production';
+  const useSecureCookies =
+    process.env['NODE_ENV'] === 'production' &&
+    process.env['COOKIE_SECURE'] !== 'false';
 
   const existingCookie = req.cookies?.[CSRF_COOKIE_NAME] as string | undefined;
   let token: string;
@@ -82,7 +84,7 @@ export function csrfProtection(req: Request, res: Response, next: NextFunction):
     const signedToken = signToken(token);
     res.cookie(CSRF_COOKIE_NAME, signedToken, {
       httpOnly: false, // Client JS must read this to send in header
-      secure: isProduction,
+      secure: useSecureCookies,
       sameSite: 'strict',
       path: '/',
     });

@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { useLanguage } from '../../hooks/useLanguage';
 import { useAuth } from '../../hooks/useAuth';
 import { ThemeToggle } from '../ui/ThemeToggle';
+import { LANGUAGE_NATIVE_NAMES } from '../../i18n/utils';
 import {
   Bars3Icon,
   XMarkIcon,
@@ -17,20 +18,6 @@ import {
   UserCircleIcon,
   GlobeAltIcon,
 } from '@heroicons/react/24/outline';
-
-// Language display names
-const LANGUAGE_NAMES: Record<string, string> = {
-  en: 'English',
-  ar: 'العربية',
-  'zh-CN': '简体中文',
-  'zh-TW': '繁體中文',
-  vi: 'Tiếng Việt',
-  hi: 'हिन्दी',
-  ur: 'اردو',
-  ko: '한국어',
-  el: 'Ελληνικά',
-  it: 'Italiano',
-};
 
 interface HeaderProps {
   /** Platform name from config */
@@ -198,7 +185,7 @@ export function Header({
                       }`}
                       role="menuitem"
                     >
-                      {LANGUAGE_NAMES[lang] || lang}
+                      {LANGUAGE_NATIVE_NAMES[lang] || lang}
                     </button>
                   ))}
                 </div>

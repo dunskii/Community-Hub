@@ -72,5 +72,15 @@
     "entertainment": "मनोरंजन",
     "automotive": "ऑटोमोटिव",
     "home": "घर और बगीचा"
+  },
+  "upcomingEvents": {
+    "title": "आगामी कार्यक्रम",
+    "subtitle": "जल्द होने वाले सामुदायिक कार्यक्रम",
+    "viewAll": "सभी देखें"
+  },
+  "todaysDeals": {
+    "title": "आज के सौदे",
+    "subtitle": "स्थानीय व्यवसायों से विशेष ऑफ़र",
+    "viewAll": "सभी देखें"
   }
 }

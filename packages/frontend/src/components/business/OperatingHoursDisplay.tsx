@@ -28,8 +28,8 @@ function formatTime(time: string): string {
   return time.replace(/^0/, '');
 }
 
-// Day name labels with fallbacks
-const DAY_LABELS: Record<string, string> = {
+// Day name fallbacks (English) - used when t() key is missing
+const DAY_FALLBACKS: Record<string, string> = {
   monday: 'Monday',
   tuesday: 'Tuesday',
   wednesday: 'Wednesday',
@@ -86,10 +86,10 @@ export function OperatingHoursDisplay({
         )}
         <div className="operating-hours__row">
           <span className="operating-hours__day operating-hours__day--current">
-            {DAY_LABELS[currentDay]}
+            {t(`days.${currentDay}`, DAY_FALLBACKS[currentDay] || currentDay)}
           </span>
           <span className="operating-hours__time">
-            {todayHours?.open && todayHours?.close
+            {!todayHours?.closed && todayHours?.open && todayHours?.close
               ? `${formatTime(todayHours.open)} - ${formatTime(todayHours.close)}`
               : t('closed', 'Closed')}
           </span>
@@ -120,7 +120,7 @@ export function OperatingHoursDisplay({
               className={`operating-hours__row ${isCurrent ? 'operating-hours__row--current' : ''}`}
             >
               <span className={`operating-hours__day ${isCurrent ? 'operating-hours__day--current' : ''}`}>
-                {DAY_LABELS[day]}
+                {t(`days.${day}`, DAY_FALLBACKS[day] || day)}
                 {isCurrent && (
                   <span className="operating-hours__today-badge">
                     {t('today', 'Today')}
@@ -128,7 +128,7 @@ export function OperatingHoursDisplay({
                 )}
               </span>
               <span className={`operating-hours__time ${isCurrent ? 'operating-hours__time--current' : ''}`}>
-                {hours?.open && hours?.close
+                {!hours?.closed && hours?.open && hours?.close
                   ? `${formatTime(hours.open)} - ${formatTime(hours.close)}`
                   : t('closed', 'Closed')}
               </span>
