@@ -5,7 +5,6 @@
     "selectBusiness": "Seleziona attività",
     "verified": "Verificato",
     "reviews": "recensioni",
-    "followers": "follower",
     "viewProfile": "Visualizza profilo",
     "editProfile": "Modifica profilo",
     "quickStats": "Statistiche rapide",
@@ -23,8 +22,7 @@
     "stats": {
       "profileViews": "Visualizzazioni profilo",
       "searchAppearances": "Apparizioni nelle ricerche",
-      "totalClicks": "Click totali",
-      "newFollowers": "Nuovi follower"
+      "totalClicks": "Click totali"
     },
     "quickActions": "Azioni rapide",
     "actions": {
@@ -100,7 +98,6 @@
       "phoneClicks": "Click telefono",
       "directionsClicks": "Click indicazioni",
       "saves": "Salvataggi",
-      "follows": "Seguiti",
       "photoViews": "Visualizzazioni foto",
       "averageRating": "Valutazione media",
       "newReviews": "Nuove recensioni"

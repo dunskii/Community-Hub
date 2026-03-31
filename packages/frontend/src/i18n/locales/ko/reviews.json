@@ -66,13 +66,6 @@
     "loginRequired": "로그인 필요",
     "loginRequiredDescription": "비즈니스를 저장하고 맞춤 목록을 만들려면 로그인해주세요."
   },
-  "follow": {
-    "follow": "팔로우",
-    "following": "팔로잉",
-    "unfollow": "언팔로우",
-    "followerCount": "팔로워 {{count}}명",
-    "followerCount_plural": "팔로워 {{count}}명"
-  },
   "moderation": {
     "pageTitle": "콘텐츠 관리",
     "pageDescription": "사용자 생성 콘텐츠를 검토하고 관리합니다",

@@ -5,7 +5,6 @@
     "selectBusiness": "اختر نشاطًا تجاريًا",
     "verified": "موثق",
     "reviews": "التقييمات",
-    "followers": "المتابعون",
     "viewProfile": "عرض الملف الشخصي",
     "editProfile": "تعديل الملف الشخصي",
     "quickStats": "إحصائيات سريعة",
@@ -23,8 +22,7 @@
     "stats": {
       "profileViews": "مشاهدات الملف",
       "searchAppearances": "ظهور في البحث",
-      "totalClicks": "إجمالي النقرات",
-      "newFollowers": "متابعون جدد"
+      "totalClicks": "إجمالي النقرات"
     },
     "quickActions": "إجراءات سريعة",
     "actions": {
@@ -100,7 +98,6 @@
       "phoneClicks": "نقرات الهاتف",
       "directionsClicks": "نقرات الاتجاهات",
       "saves": "الحفظ",
-      "follows": "المتابعات",
       "photoViews": "مشاهدات الصور",
       "averageRating": "متوسط التقييم",
       "newReviews": "تقييمات جديدة"

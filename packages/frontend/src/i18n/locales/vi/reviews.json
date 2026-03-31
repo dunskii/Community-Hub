@@ -66,13 +66,6 @@
     "loginRequired": "Yêu cầu đăng nhập",
     "loginRequiredDescription": "Vui lòng đăng nhập để lưu doanh nghiệp và tạo danh sách tùy chỉnh."
   },
-  "follow": {
-    "follow": "Theo dõi",
-    "following": "Đang theo dõi",
-    "unfollow": "Bỏ theo dõi",
-    "followerCount": "{{count}} người theo dõi",
-    "followerCount_plural": "{{count}} người theo dõi"
-  },
   "moderation": {
     "pageTitle": "Kiểm duyệt nội dung",
     "pageDescription": "Xem xét và kiểm duyệt nội dung do người dùng tạo",

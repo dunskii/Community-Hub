@@ -71,6 +71,8 @@ export interface UserPublic {
   bio: string | null;
   interests: string[];
   notificationPreferences: NotificationPreferences | null;
+  receiveDealEmails: boolean;
+  receiveEventEmails: boolean;
   role: UserRole;
   status: UserStatus;
   emailVerified: boolean;

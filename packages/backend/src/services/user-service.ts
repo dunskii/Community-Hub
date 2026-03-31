@@ -32,6 +32,8 @@ function toUserPublic(user: users): UserPublic {
     bio: user.bio,
     interests: user.interests,
     notificationPreferences: user.notification_preferences as NotificationPreferences | null,
+    receiveDealEmails: user.receive_deal_emails,
+    receiveEventEmails: user.receive_event_emails,
     role: user.role,
     status: user.status,
     emailVerified: user.email_verified,
@@ -452,13 +454,22 @@ export async function verifyEmailChange(
  */
 export async function updateNotificationPreferences(
   userId: string,
-  preferences: NotificationPreferences
+  preferences: NotificationPreferences & { receiveDealEmails?: boolean; receiveEventEmails?: boolean }
 ): Promise<UserPublic> {
+  const updateData: Record<string, unknown> = {
+    notification_preferences: preferences as any,
+  };
+
+  if (preferences.receiveDealEmails !== undefined) {
+    updateData['receive_deal_emails'] = preferences.receiveDealEmails;
+  }
+  if (preferences.receiveEventEmails !== undefined) {
+    updateData['receive_event_emails'] = preferences.receiveEventEmails;
+  }
+
   const user = await prisma.users.update({
     where: { id: userId },
-    data: {
-      notification_preferences: preferences as any,
-    },
+    data: updateData,
   });
 
   logger.info({ userId }, 'Notification preferences updated');

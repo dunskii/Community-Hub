@@ -61,7 +61,6 @@ export interface AnalyticsResponse {
     };
     photoViews: MetricSummary;
     saves: MetricSummary;
-    follows: MetricSummary;
     reviews: {
       count: MetricSummary;
       averageRating: number;
@@ -78,7 +77,6 @@ export interface AnalyticsResponse {
     directionsClicks: number;
     photoViews: number;
     saves: number;
-    follows: number;
     reviews: number;
   }>;
   insights: {
@@ -225,8 +223,6 @@ export class AnalyticsService {
       PHOTO_VIEW: 'photoViews',
       SAVE: 'saves',
       UNSAVE: 'saves', // Decrement handled separately
-      FOLLOW: 'follows',
-      UNFOLLOW: 'follows', // Decrement handled separately
       REVIEW_CREATED: 'reviews',
       MESSAGE_SENT: 'messages',
     };
@@ -234,8 +230,7 @@ export class AnalyticsService {
     const field = fieldMap[eventType];
     if (!field) return;
 
-    // For UNSAVE/UNFOLLOW, we should decrement, but for simplicity we track net
-    // In production, consider tracking separately or using signed values
+    // For UNSAVE, we decrement; for others, increment
 
     await prisma.business_analytics_daily.upsert({
       where: {
@@ -252,7 +247,7 @@ export class AnalyticsService {
       },
       update: {
         [field]: {
-          increment: eventType === 'UNSAVE' || eventType === 'UNFOLLOW' ? -1 : 1,
+          increment: eventType === 'UNSAVE' ? -1 : 1,
         },
       },
     });
@@ -372,7 +367,6 @@ export class AnalyticsService {
         },
         photoViews: calculateMetricSummary(currentAggregates.photoViews, previousAggregates.photoViews),
         saves: calculateMetricSummary(currentAggregates.saves, previousAggregates.saves),
-        follows: calculateMetricSummary(currentAggregates.follows, previousAggregates.follows),
         reviews: {
           count: calculateMetricSummary(currentAggregates.reviews, previousAggregates.reviews),
           averageRating: reviewStats.averageRating,
@@ -411,7 +405,6 @@ export class AnalyticsService {
     directionsClicks: number;
     photoViews: number;
     saves: number;
-    follows: number;
     reviews: number;
     messages: number;
   }> {
@@ -432,7 +425,6 @@ export class AnalyticsService {
         directions_clicks: true,
         photo_views: true,
         saves: true,
-        follows: true,
         reviews: true,
         messages: true,
       },
@@ -447,7 +439,6 @@ export class AnalyticsService {
       directionsClicks: aggregates._sum.directions_clicks || 0,
       photoViews: aggregates._sum.photo_views || 0,
       saves: aggregates._sum.saves || 0,
-      follows: aggregates._sum.follows || 0,
       reviews: aggregates._sum.reviews || 0,
       messages: aggregates._sum.messages || 0,
     };
@@ -475,7 +466,7 @@ export class AnalyticsService {
 
     // For now, return daily data
     // TODO: Implement week/month aggregation based on _granularity
-    return dailyData.map((day: { date: Date; profile_views: number; unique_views: number; search_appearances: number; website_clicks: number; phone_clicks: number; directions_clicks: number; photo_views: number; saves: number; follows: number; reviews: number }) => ({
+    return dailyData.map((day: { date: Date; profile_views: number; unique_views: number; search_appearances: number; website_clicks: number; phone_clicks: number; directions_clicks: number; photo_views: number; saves: number; reviews: number }) => ({
       date: day.date.toISOString().split('T')[0] ?? '',
       profileViews: day.profile_views,
       uniqueViews: day.unique_views,
@@ -485,7 +476,6 @@ export class AnalyticsService {
       directionsClicks: day.directions_clicks,
       photoViews: day.photo_views,
       saves: day.saves,
-      follows: day.follows,
       reviews: day.reviews,
     }));
   }
@@ -632,7 +622,6 @@ export class AnalyticsService {
       'Directions Clicks',
       'Photo Views',
       'Saves',
-      'Follows',
       'Reviews',
     ];
 
@@ -646,7 +635,6 @@ export class AnalyticsService {
       day.directionsClicks,
       day.photoViews,
       day.saves,
-      day.follows,
       day.reviews,
     ]);
 

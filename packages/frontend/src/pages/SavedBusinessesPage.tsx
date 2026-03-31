@@ -17,6 +17,7 @@ import { Input } from '../components/form/Input';
 import { Alert } from '../components/display/Alert';
 import { savedService, type SavedBusiness, type SavedList } from '../services/saved-service';
 import { useAuth } from '../hooks/useAuth';
+import { DigestPreferencesPanel } from '../components/DigestPreferencesPanel';
 import './SavedBusinessesPage.css';
 
 export function SavedBusinessesPage() {
@@ -232,6 +233,8 @@ export function SavedBusinessesPage() {
               {t('saved.createList')}
             </button>
           </header>
+
+          <DigestPreferencesPanel />
 
           {error && <Alert type="critical" message={error} />}
 

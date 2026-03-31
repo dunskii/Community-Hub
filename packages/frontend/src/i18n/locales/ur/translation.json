@@ -155,7 +155,6 @@
     "managePhotos": "تصاویر",
     "verified": "تصدیق شدہ",
     "reviews": "جائزے",
-    "followers": "فالورز",
     "enquiries": "گاہک کی پوچھ گچھ",
     "viewAllMessages": "سب دیکھیں",
     "noEnquiries": "ابھی تک کوئی پوچھ گچھ نہیں۔ جب گاہک رابطہ کریں گے تو یہاں دکھائی دیں گی۔",
@@ -195,8 +194,7 @@
       "websiteClicks": "ویب سائٹ",
       "phoneClicks": "فون",
       "directionsClicks": "ہدایات",
-      "totalClicks": "کل کلکس",
-      "newFollowers": "فالورز"
+      "totalClicks": "کل کلکس"
     },
     "promo": {
       "activeDeals": "فعال ڈیلز",

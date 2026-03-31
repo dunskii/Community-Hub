@@ -66,13 +66,6 @@
     "loginRequired": "需要登入",
     "loginRequiredDescription": "請登入以儲存商家並建立自訂清單。"
   },
-  "follow": {
-    "follow": "追蹤",
-    "following": "已追蹤",
-    "unfollow": "取消追蹤",
-    "followerCount": "{{count}} 位追蹤者",
-    "followerCount_plural": "{{count}} 位追蹤者"
-  },
   "moderation": {
     "pageTitle": "內容審核",
     "pageDescription": "審核和管理使用者生成的內容",

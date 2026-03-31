@@ -226,7 +226,6 @@
     "managePhotos": "Photos",
     "verified": "Verified",
     "reviews": "reviews",
-    "followers": "followers",
     "enquiries": "Customer Enquiries",
     "viewAllMessages": "View All",
     "noEnquiries": "No customer enquiries yet. They'll appear here when customers contact you.",
@@ -266,8 +265,7 @@
       "websiteClicks": "Website",
       "phoneClicks": "Phone",
       "directionsClicks": "Directions",
-      "totalClicks": "Total Clicks",
-      "newFollowers": "Followers"
+      "totalClicks": "Total Clicks"
     },
     "promo": {
       "activeDeals": "Active Deals",

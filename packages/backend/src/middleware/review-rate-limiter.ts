@@ -64,14 +64,3 @@ export const saveBusinessLimiter = rateLimit({
   legacyHeaders: false,
 });
 
-/**
- * Rate limiter for following businesses
- * 30 follows per minute
- */
-export const followBusinessLimiter = rateLimit({
-  windowMs: 60 * 1000, // 1 minute
-  max: 30,
-  message: 'Too many follow actions. Please slow down.',
-  standardHeaders: true,
-  legacyHeaders: false,
-});

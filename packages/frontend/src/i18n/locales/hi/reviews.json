@@ -66,13 +66,6 @@
     "loginRequired": "साइन इन आवश्यक है",
     "loginRequiredDescription": "व्यवसायों को सहेजने और कस्टम सूचियां बनाने के लिए कृपया साइन इन करें।"
   },
-  "follow": {
-    "follow": "फ़ॉलो करें",
-    "following": "फ़ॉलो किया जा रहा है",
-    "unfollow": "अनफ़ॉलो करें",
-    "followerCount": "{{count}} फ़ॉलोअर",
-    "followerCount_plural": "{{count}} फ़ॉलोअर्स"
-  },
   "moderation": {
     "pageTitle": "सामग्री मॉडरेशन",
     "pageDescription": "उपयोगकर्ता-जनित सामग्री की समीक्षा करें और मॉडरेट करें",

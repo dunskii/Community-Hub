@@ -54,6 +54,8 @@ function toUserPublic(user: users): UserPublic {
     bio: user.bio,
     interests: user.interests,
     notificationPreferences: user.notification_preferences as any,
+    receiveDealEmails: user.receive_deal_emails,
+    receiveEventEmails: user.receive_event_emails,
     role: user.role,
     status: user.status,
     emailVerified: user.email_verified,

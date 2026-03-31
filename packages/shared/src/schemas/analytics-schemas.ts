@@ -26,8 +26,6 @@ export const analyticsEventTypeSchema = z.enum([
   'PHOTO_VIEW',
   'SAVE',
   'UNSAVE',
-  'FOLLOW',
-  'UNFOLLOW',
   'REVIEW_CREATED',
   'MESSAGE_SENT',
 ]);

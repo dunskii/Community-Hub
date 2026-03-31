@@ -137,7 +137,7 @@ export const platformConfigSchema = z.object({
     surveySystem: z.boolean(),
     reviewsAndRatings: z.boolean(),
     savedBusinesses: z.boolean().default(true),
-    businessFollowing: z.boolean().default(true),
+    weeklyDigest: z.boolean().default(true),
     reviewModeration: z.boolean().default(true),
     reviewPhotos: z.boolean().default(true),
     businessResponses: z.boolean().default(true),
@@ -213,6 +213,12 @@ export const platformConfigSchema = z.object({
     businessResponseMaxLength: z.number().int().min(100).max(2000).default(500),
     accountDeletionGracePeriodDays: z.number().int().positive(),
   }),
+
+  digest: z.object({
+    enabled: z.boolean().default(true),
+    weeklyDigestDay: z.number().int().min(0).max(6).default(1),
+    weeklyDigestHourUTC: z.number().int().min(0).max(23).default(21),
+  }).optional().default({ enabled: true, weeklyDigestDay: 1, weeklyDigestHourUTC: 21 }),
 
   analytics: z.object({
     googleAnalyticsId: z.string(),

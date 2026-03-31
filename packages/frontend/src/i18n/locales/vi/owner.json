@@ -5,7 +5,6 @@
     "selectBusiness": "Chọn doanh nghiệp",
     "verified": "Đã xác minh",
     "reviews": "đánh giá",
-    "followers": "người theo dõi",
     "viewProfile": "Xem hồ sơ",
     "editProfile": "Chỉnh sửa hồ sơ",
     "quickStats": "Thống kê nhanh",
@@ -23,8 +22,7 @@
     "stats": {
       "profileViews": "Lượt xem hồ sơ",
       "searchAppearances": "Hiển thị trong tìm kiếm",
-      "totalClicks": "Tổng số nhấp chuột",
-      "newFollowers": "Người theo dõi mới"
+      "totalClicks": "Tổng số nhấp chuột"
     },
     "quickActions": "Thao tác nhanh",
     "actions": {
@@ -100,7 +98,6 @@
       "phoneClicks": "Nhấp vào số điện thoại",
       "directionsClicks": "Nhấp vào chỉ đường",
       "saves": "Lượt lưu",
-      "follows": "Lượt theo dõi",
       "photoViews": "Lượt xem ảnh",
       "averageRating": "Đánh giá trung bình",
       "newReviews": "Đánh giá mới"

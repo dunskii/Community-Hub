@@ -10,7 +10,8 @@ export type EmailTemplateKey =
   | 'event_cancellation'
   | 'event_reminder_24h'
   | 'event_reminder_1h'
-  | 'event_update';
+  | 'event_update'
+  | 'weekly_digest';
   // Future templates:
   // | 'business_claim_notification'
   // | 'claim_approved'
@@ -77,6 +78,16 @@ export interface TemplateVariables {
     eventTime: string;
     organizerName: string;
     changes: string;
+  };
+  weekly_digest: {
+    userName: string;
+    platformName: string;
+    dealsHtml: string;
+    eventsHtml: string;
+    hasDeals: string;
+    hasEvents: string;
+    unsubscribeUrl: string;
+    preferencesUrl: string;
   };
 }
 

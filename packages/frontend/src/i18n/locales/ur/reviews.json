@@ -66,13 +66,6 @@
     "loginRequired": "سائن ان ضروری ہے",
     "loginRequiredDescription": "کاروباروں کو محفوظ کرنے اور اپنی مرضی کی فہرستیں بنانے کے لیے براہ کرم سائن ان کریں۔"
   },
-  "follow": {
-    "follow": "فالو کریں",
-    "following": "فالو کر رہے ہیں",
-    "unfollow": "ان فالو کریں",
-    "followerCount": "{{count}} فالوورز",
-    "followerCount_plural": "{{count}} فالوورز"
-  },
   "moderation": {
     "pageTitle": "مواد کی نگرانی",
     "pageDescription": "صارف کے تیار کردہ مواد کا جائزہ لیں اور نگرانی کریں",

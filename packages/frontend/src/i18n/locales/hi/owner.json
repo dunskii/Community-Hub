@@ -5,7 +5,6 @@
     "selectBusiness": "व्यवसाय चुनें",
     "verified": "सत्यापित",
     "reviews": "समीक्षाएं",
-    "followers": "अनुयायी",
     "viewProfile": "प्रोफ़ाइल देखें",
     "editProfile": "प्रोफ़ाइल संपादित करें",
     "quickStats": "त्वरित आंकड़े",
@@ -23,8 +22,7 @@
     "stats": {
       "profileViews": "प्रोफ़ाइल व्यूज",
       "searchAppearances": "खोज में दिखावट",
-      "totalClicks": "कुल क्लिक",
-      "newFollowers": "नए अनुयायी"
+      "totalClicks": "कुल क्लिक"
     },
     "quickActions": "त्वरित क्रियाएं",
     "actions": {
@@ -100,7 +98,6 @@
       "phoneClicks": "फ़ोन क्लिक",
       "directionsClicks": "दिशा-निर्देश क्लिक",
       "saves": "सेव",
-      "follows": "फॉलो",
       "photoViews": "फ़ोटो व्यूज",
       "averageRating": "औसत रेटिंग",
       "newReviews": "नई समीक्षाएं"

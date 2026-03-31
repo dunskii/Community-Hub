@@ -16,6 +16,8 @@ export interface User {
   bio: string | null;
   interests: string[];
   notificationPreferences: Record<string, any> | null;
+  receiveDealEmails: boolean;
+  receiveEventEmails: boolean;
   role: string;
   status: string;
   emailVerified: boolean;

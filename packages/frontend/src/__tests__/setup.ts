@@ -91,7 +91,7 @@ const mockPlatformConfig = {
     surveySystem: true,
     reviewsAndRatings: true,
     savedBusinesses: true,
-    businessFollowing: true,
+    weeklyDigest: true,
     reviewModeration: true,
     reviewPhotos: true,
     businessResponses: true,
@@ -158,6 +158,11 @@ const mockPlatformConfig = {
     reportsPerHour: 10,
     businessResponseMaxLength: 500,
     accountDeletionGracePeriodDays: 30,
+  },
+  digest: {
+    enabled: true,
+    weeklyDigestDay: 1,
+    weeklyDigestHourUTC: 21,
   },
   analytics: {
     googleAnalyticsId: '',

@@ -66,13 +66,6 @@
     "loginRequired": "需要登录",
     "loginRequiredDescription": "请登录以保存商家并创建自定义列表。"
   },
-  "follow": {
-    "follow": "关注",
-    "following": "已关注",
-    "unfollow": "取消关注",
-    "followerCount": "{{count}} 位关注者",
-    "followerCount_plural": "{{count}} 位关注者"
-  },
   "moderation": {
     "pageTitle": "内容审核",
     "pageDescription": "审核和管理用户生成的内容",

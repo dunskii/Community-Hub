@@ -155,7 +155,6 @@
     "managePhotos": "照片",
     "verified": "已認證",
     "reviews": "則評價",
-    "followers": "位追蹤者",
     "enquiries": "客戶詢問",
     "viewAllMessages": "檢視全部",
     "noEnquiries": "尚無客戶詢問。當客戶聯繫您時，詢問將顯示在這裡。",
@@ -195,8 +194,7 @@
       "websiteClicks": "網站",
       "phoneClicks": "電話",
       "directionsClicks": "導航",
-      "totalClicks": "總點擊",
-      "newFollowers": "追蹤者"
+      "totalClicks": "總點擊"
     },
     "promo": {
       "activeDeals": "活躍促銷",

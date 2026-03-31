@@ -19,8 +19,6 @@ export type AnalyticsEventType =
   | 'PHOTO_VIEW'
   | 'SAVE'
   | 'UNSAVE'
-  | 'FOLLOW'
-  | 'UNFOLLOW'
   | 'REVIEW_CREATED'
   | 'MESSAGE_SENT';
 
@@ -55,7 +53,6 @@ export interface AnalyticsResponse {
     };
     photoViews: MetricSummary;
     saves: MetricSummary;
-    follows: MetricSummary;
     reviews: {
       count: MetricSummary;
       averageRating: number;
@@ -72,7 +69,6 @@ export interface AnalyticsResponse {
     directionsClicks: number;
     photoViews: number;
     saves: number;
-    follows: number;
     reviews: number;
   }>;
   insights: {

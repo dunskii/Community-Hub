@@ -34,7 +34,7 @@ import {
   EyeIcon,
   MagnifyingGlassIcon,
   CursorArrowRaysIcon,
-  HeartIcon,
+  BookmarkIcon,
   ChatBubbleLeftRightIcon,
   EnvelopeIcon,
   PhoneIcon as PhoneOutlineIcon,
@@ -56,7 +56,6 @@ interface OwnedBusiness {
   verifiedAt: string | null;
   rating: number | null;
   reviewCount: number;
-  followerCount: number;
   photos: string[];
   // Raw API fields (snake_case from Prisma)
   cover_photo?: string;
@@ -368,7 +367,6 @@ export function OwnerDashboardPage() {
                           </span>
                         )}
                         <span>{selectedBusiness.reviewCount} {t('owner.reviews', 'reviews')}</span>
-                        <span>{selectedBusiness.followerCount} {t('owner.followers', 'followers')}</span>
                       </div>
                     </div>
                   </div>
@@ -583,9 +581,9 @@ export function OwnerDashboardPage() {
                       icon={<CursorArrowRaysIcon className="w-5 h-5" />}
                     />
                     <StatCard
-                      label={t('owner.stats.newFollowers', 'Followers')}
-                      metric={analytics.summary.follows}
-                      icon={<HeartIcon className="w-5 h-5" />}
+                      label={t('owner.stats.saves', 'Saves')}
+                      metric={analytics.summary.saves}
+                      icon={<BookmarkIcon className="w-5 h-5" />}
                     />
                   </div>
                 ) : (

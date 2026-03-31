@@ -26,8 +26,8 @@ import { BusinessListPage } from './pages/BusinessListPage';
 import { BusinessDetailPage } from './pages/BusinessDetailPage';
 import { CategoriesPage } from './pages/CategoriesPage';
 import { SavedBusinessesPage } from './pages/SavedBusinessesPage';
-import { FollowingPage } from './pages/FollowingPage';
 import { ModerationPage } from './pages/ModerationPage';
+import { UnsubscribePage } from './pages/UnsubscribePage';
 import { OwnerDashboardPage } from './pages/owner/OwnerDashboardPage';
 import { AnalyticsDashboardPage } from './pages/owner/AnalyticsDashboardPage';
 import { ClaimBusinessPage } from './pages/owner/ClaimBusinessPage';
@@ -68,7 +68,6 @@ const DashboardPage: React.FC = () => {
   // Quick links for dashboard
   const quickLinks = [
     { href: '/saved', label: t('navigation.saved', 'Saved Businesses'), icon: '❤️' },
-    { href: '/following', label: t('navigation.following', 'Following'), icon: '👥' },
     { href: '/messages', label: t('navigation.messages', 'Messages'), icon: '💬' },
   ];
 
@@ -203,15 +202,6 @@ export function App() {
                 </ProtectedRoute>
               }
             />
-            <Route
-              path="/following"
-              element={
-                <ProtectedRoute>
-                  <FollowingPage />
-                </ProtectedRoute>
-              }
-            />
-
             {/* Owner Dashboard Routes */}
             <Route
               path="/business/dashboard"
@@ -308,6 +298,9 @@ export function App() {
 
             {/* Deals Routes */}
             <Route path="/deals" element={<DealsListingPage />} />
+
+            {/* Unsubscribe Route (no auth required) */}
+            <Route path="/unsubscribe" element={<UnsubscribePage />} />
 
             {/* Messaging Routes */}
             <Route

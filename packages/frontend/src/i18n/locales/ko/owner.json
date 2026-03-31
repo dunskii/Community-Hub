@@ -5,7 +5,6 @@
     "selectBusiness": "비즈니스 선택",
     "verified": "인증됨",
     "reviews": "리뷰",
-    "followers": "팔로워",
     "viewProfile": "프로필 보기",
     "editProfile": "프로필 편집",
     "quickStats": "빠른 통계",
@@ -23,8 +22,7 @@
     "stats": {
       "profileViews": "프로필 조회수",
       "searchAppearances": "검색 노출",
-      "totalClicks": "총 클릭수",
-      "newFollowers": "새 팔로워"
+      "totalClicks": "총 클릭수"
     },
     "quickActions": "빠른 작업",
     "actions": {
@@ -100,7 +98,6 @@
       "phoneClicks": "전화 클릭",
       "directionsClicks": "길찾기 클릭",
       "saves": "저장",
-      "follows": "팔로우",
       "photoViews": "사진 조회",
       "averageRating": "평균 평점",
       "newReviews": "새 리뷰"

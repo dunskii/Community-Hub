@@ -5,7 +5,6 @@
     "selectBusiness": "Select a business",
     "verified": "Verified",
     "reviews": "reviews",
-    "followers": "followers",
     "viewProfile": "View Profile",
     "editProfile": "Edit Profile",
     "quickStats": "Quick Stats",
@@ -24,8 +23,7 @@
     "stats": {
       "profileViews": "Profile Views",
       "searchAppearances": "Search Appearances",
-      "totalClicks": "Total Clicks",
-      "newFollowers": "New Followers"
+      "totalClicks": "Total Clicks"
     },
     "quickActions": "Quick Actions",
     "actions": {
@@ -101,7 +99,6 @@
       "phoneClicks": "Phone Clicks",
       "directionsClicks": "Direction Clicks",
       "saves": "Saves",
-      "follows": "Follows",
       "photoViews": "Photo Views",
       "averageRating": "Average Rating",
       "newReviews": "New Reviews"

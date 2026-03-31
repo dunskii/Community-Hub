@@ -155,7 +155,6 @@
     "managePhotos": "الصور",
     "verified": "موثق",
     "reviews": "تقييمات",
-    "followers": "متابعون",
     "enquiries": "استفسارات العملاء",
     "viewAllMessages": "عرض الكل",
     "noEnquiries": "لا توجد استفسارات بعد. ستظهر هنا عندما يتواصل العملاء معك.",
@@ -195,8 +194,7 @@
       "websiteClicks": "الموقع",
       "phoneClicks": "الهاتف",
       "directionsClicks": "الاتجاهات",
-      "totalClicks": "إجمالي النقرات",
-      "newFollowers": "المتابعون"
+      "totalClicks": "إجمالي النقرات"
     },
     "promo": {
       "activeDeals": "عروض نشطة",

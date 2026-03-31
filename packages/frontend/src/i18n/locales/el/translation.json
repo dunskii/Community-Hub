@@ -155,7 +155,6 @@
     "managePhotos": "Φωτογραφίες",
     "verified": "Επαληθευμένο",
     "reviews": "κριτικές",
-    "followers": "ακόλουθοι",
     "enquiries": "Ερωτήσεις Πελατών",
     "viewAllMessages": "Προβολή Όλων",
     "noEnquiries": "Δεν υπάρχουν ερωτήσεις ακόμα. Θα εμφανιστούν εδώ όταν επικοινωνήσουν πελάτες.",
@@ -195,8 +194,7 @@
       "websiteClicks": "Ιστοσελίδα",
       "phoneClicks": "Τηλέφωνο",
       "directionsClicks": "Οδηγίες",
-      "totalClicks": "Σύνολο Κλικ",
-      "newFollowers": "Ακόλουθοι"
+      "totalClicks": "Σύνολο Κλικ"
     },
     "promo": {
       "activeDeals": "Ενεργές Προσφορές",

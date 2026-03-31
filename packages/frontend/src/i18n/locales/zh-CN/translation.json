@@ -155,7 +155,6 @@
     "managePhotos": "照片",
     "verified": "已认证",
     "reviews": "条评价",
-    "followers": "位关注者",
     "enquiries": "客户咨询",
     "viewAllMessages": "查看全部",
     "noEnquiries": "暂无客户咨询。当客户联系您时，咨询将显示在这里。",
@@ -195,8 +194,7 @@
       "websiteClicks": "网站",
       "phoneClicks": "电话",
       "directionsClicks": "导航",
-      "totalClicks": "总点击",
-      "newFollowers": "关注者"
+      "totalClicks": "总点击"
     },
     "promo": {
       "activeDeals": "活跃促销",

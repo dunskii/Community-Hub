@@ -14,7 +14,6 @@ import categoryRouter from './category.js';
 import searchRouter from './search.js';
 import { reviewRouter } from './review.js';
 import { savedRouter } from './saved.js';
-import { followRouter } from './follow.js';
 import { moderationRouter } from './moderation.js';
 import claimRouter from './claim.js';
 import analyticsRouter from './analytics.js';
@@ -25,6 +24,7 @@ import { enquiryRouter } from './enquiry.js';
 import { adminRouter } from './admin.js';
 import { socialRouter } from './social.js';
 import { imageProxyRouter } from './image-proxy.js';
+import { unsubscribeRouter } from './unsubscribe.js';
 
 export function setupRoutes(app: Express): void {
   // API v1
@@ -40,7 +40,6 @@ export function setupRoutes(app: Express): void {
   v1.use('/search', searchRouter);
   v1.use('/', reviewRouter);
   v1.use('/', savedRouter);
-  v1.use('/', followRouter);
   v1.use('/', moderationRouter);
   v1.use('/', claimRouter);
   v1.use('/', analyticsRouter);
@@ -52,6 +51,7 @@ export function setupRoutes(app: Express): void {
   v1.use('/', adminRouter);
   v1.use('/businesses/:businessId/social', socialRouter);
   v1.use('/images', imageProxyRouter);
+  v1.use('/unsubscribe', unsubscribeRouter);
 
   app.use('/api/v1', v1);
 

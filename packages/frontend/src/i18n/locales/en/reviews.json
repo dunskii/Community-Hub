@@ -66,27 +66,6 @@
     "loginRequired": "Sign In Required",
     "loginRequiredDescription": "Please sign in to save businesses and create custom lists."
   },
-  "follow": {
-    "follow": "Follow",
-    "following": "Following",
-    "unfollow": "Unfollow",
-    "followerCount": "{{count}} followers",
-    "followerCount_plural": "{{count}} followers"
-  },
-  "following": {
-    "title": "Following",
-    "description": "Businesses you are following",
-    "subtitle": "Following {{count}} businesses",
-    "subtitle_plural": "Following {{count}} businesses",
-    "emptyTitle": "Not Following Anyone",
-    "emptyDescription": "Follow businesses to get updates and see them here.",
-    "browseBusinesses": "Browse Businesses",
-    "errorTitle": "Error Loading",
-    "fetchError": "Failed to load followed businesses. Please try again.",
-    "loginRequired": "Sign In Required",
-    "loginDescription": "Please sign in to see businesses you follow.",
-    "followedSince": "Following since {{date}}"
-  },
   "moderation": {
     "pageTitle": "Content Moderation",
     "pageDescription": "Review and moderate user-generated content",

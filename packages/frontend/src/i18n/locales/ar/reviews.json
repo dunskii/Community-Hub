@@ -66,13 +66,6 @@
     "loginRequired": "يتطلب تسجيل الدخول",
     "loginRequiredDescription": "يرجى تسجيل الدخول لحفظ الأنشطة التجارية وإنشاء قوائم مخصصة."
   },
-  "follow": {
-    "follow": "متابعة",
-    "following": "يتابع",
-    "unfollow": "إلغاء المتابعة",
-    "followerCount": "{{count}} متابع",
-    "followerCount_plural": "{{count}} متابعين"
-  },
   "moderation": {
     "pageTitle": "إدارة المحتوى",
     "pageDescription": "مراجعة وإدارة المحتوى الذي ينشئه المستخدمون",

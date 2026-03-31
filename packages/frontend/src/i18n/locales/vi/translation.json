@@ -155,7 +155,6 @@
     "managePhotos": "Ảnh",
     "verified": "Đã xác minh",
     "reviews": "đánh giá",
-    "followers": "người theo dõi",
     "enquiries": "Yêu cầu khách hàng",
     "viewAllMessages": "Xem tất cả",
     "noEnquiries": "Chưa có yêu cầu nào. Chúng sẽ xuất hiện khi khách hàng liên hệ với bạn.",
@@ -195,8 +194,7 @@
       "websiteClicks": "Website",
       "phoneClicks": "Điện thoại",
       "directionsClicks": "Chỉ đường",
-      "totalClicks": "Tổng nhấp",
-      "newFollowers": "Theo dõi"
+      "totalClicks": "Tổng nhấp"
     },
     "promo": {
       "activeDeals": "KM hoạt động",

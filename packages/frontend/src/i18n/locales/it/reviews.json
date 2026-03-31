@@ -66,13 +66,6 @@
     "loginRequired": "Accesso richiesto",
     "loginRequiredDescription": "Effettua l'accesso per salvare attività e creare liste personalizzate."
   },
-  "follow": {
-    "follow": "Segui",
-    "following": "Seguendo",
-    "unfollow": "Smetti di seguire",
-    "followerCount": "{{count}} follower",
-    "followerCount_plural": "{{count}} follower"
-  },
   "moderation": {
     "pageTitle": "Moderazione contenuti",
     "pageDescription": "Rivedi e modera i contenuti generati dagli utenti",

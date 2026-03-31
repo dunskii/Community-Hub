@@ -82,6 +82,8 @@ const updatePreferencesBodySchema = z.object({
   eventReminders: z.boolean().optional(),
   businessUpdates: z.boolean().optional(),
   emergencyAlerts: z.enum(['all', 'critical_only', 'none']).optional(),
+  receiveDealEmails: z.boolean().optional(),
+  receiveEventEmails: z.boolean().optional(),
 });
 
 // ─── Routes ──────────────────────────────────────────────────────

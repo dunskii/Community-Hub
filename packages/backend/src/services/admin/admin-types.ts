@@ -53,7 +53,6 @@ export interface PlatformAnalyticsResponse {
     totalDirectionsClicks: number;
     totalPhotoViews: number;
     totalSaves: number;
-    totalFollows: number;
     totalReviews: number;
     totalMessages: number;
     totalDealClicks: number;

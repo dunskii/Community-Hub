@@ -155,7 +155,6 @@
     "managePhotos": "फ़ोटो",
     "verified": "सत्यापित",
     "reviews": "समीक्षाएँ",
-    "followers": "अनुयायी",
     "enquiries": "ग्राहक पूछताछ",
     "viewAllMessages": "सभी देखें",
     "noEnquiries": "अभी तक कोई पूछताछ नहीं। जब ग्राहक संपर्क करेंगे तो यहाँ दिखाई देंगी।",
@@ -195,8 +194,7 @@
       "websiteClicks": "वेबसाइट",
       "phoneClicks": "फ़ोन",
       "directionsClicks": "दिशाएँ",
-      "totalClicks": "कुल क्लिक",
-      "newFollowers": "अनुयायी"
+      "totalClicks": "कुल क्लिक"
     },
     "promo": {
       "activeDeals": "सक्रिय डील",

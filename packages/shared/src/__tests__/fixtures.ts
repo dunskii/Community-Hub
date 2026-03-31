@@ -14,7 +14,7 @@ export const allEnabledFeatures: FeaturesConfig = {
   surveySystem: true,
   reviewsAndRatings: true,
   savedBusinesses: true,
-  businessFollowing: true,
+  weeklyDigest: true,
   reviewModeration: true,
   reviewPhotos: true,
   businessResponses: true,
@@ -146,6 +146,7 @@ export function createValidPlatformConfig(): PlatformConfig {
       businessResponseMaxLength: 500,
       accountDeletionGracePeriodDays: 14,
     },
+    digest: { enabled: true, weeklyDigestDay: 1, weeklyDigestHourUTC: 21 },
     analytics: { googleAnalyticsId: '', enableCookieConsent: true },
   };
 }

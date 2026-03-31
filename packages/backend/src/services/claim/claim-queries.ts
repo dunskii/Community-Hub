@@ -79,7 +79,6 @@ export async function getOwnedBusinesses(userId: string) {
           _count: {
             select: {
               reviews: true,
-              business_follows: true,
             },
           },
         },
@@ -109,7 +108,7 @@ export async function getOwnedBusinesses(userId: string) {
       verifiedAt: claim.decision_at?.toISOString() || null,
       rating: null,
       reviewCount: business._count.reviews,
-      followerCount: business._count.business_follows,
+      followerCount: 0,
       photos: coverPhoto ? [coverPhoto, ...galleryPhotos] : galleryPhotos,
     };
   });

@@ -155,7 +155,6 @@
     "managePhotos": "Foto",
     "verified": "Verificato",
     "reviews": "recensioni",
-    "followers": "follower",
     "enquiries": "Richieste Clienti",
     "viewAllMessages": "Vedi Tutto",
     "noEnquiries": "Nessuna richiesta ancora. Appariranno qui quando i clienti ti contatteranno.",
@@ -195,8 +194,7 @@
       "websiteClicks": "Sito Web",
       "phoneClicks": "Telefono",
       "directionsClicks": "Indicazioni",
-      "totalClicks": "Clic Totali",
-      "newFollowers": "Follower"
+      "totalClicks": "Clic Totali"
     },
     "promo": {
       "activeDeals": "Offerte Attive",

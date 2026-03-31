@@ -155,7 +155,6 @@
     "managePhotos": "사진",
     "verified": "인증됨",
     "reviews": "리뷰",
-    "followers": "팔로워",
     "enquiries": "고객 문의",
     "viewAllMessages": "전체 보기",
     "noEnquiries": "아직 고객 문의가 없습니다. 고객이 연락하면 여기에 표시됩니다.",
@@ -195,8 +194,7 @@
       "websiteClicks": "웹사이트",
       "phoneClicks": "전화",
       "directionsClicks": "길찾기",
-      "totalClicks": "총 클릭",
-      "newFollowers": "팔로워"
+      "totalClicks": "총 클릭"
     },
     "promo": {
       "activeDeals": "활성 딜",

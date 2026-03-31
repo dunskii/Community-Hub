@@ -5,7 +5,6 @@
     "selectBusiness": "選擇商家",
     "verified": "已驗證",
     "reviews": "評價",
-    "followers": "追蹤者",
     "viewProfile": "查看資料",
     "editProfile": "編輯資料",
     "quickStats": "快速統計",
@@ -23,8 +22,7 @@
     "stats": {
       "profileViews": "資料瀏覽量",
       "searchAppearances": "搜尋出現次數",
-      "totalClicks": "總點擊量",
-      "newFollowers": "新增追蹤者"
+      "totalClicks": "總點擊量"
     },
     "quickActions": "快速操作",
     "actions": {
@@ -100,7 +98,6 @@
       "phoneClicks": "電話點擊",
       "directionsClicks": "導航點擊",
       "saves": "收藏",
-      "follows": "追蹤",
       "photoViews": "照片瀏覽",
       "averageRating": "平均評分",
       "newReviews": "新評價"

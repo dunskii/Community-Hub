@@ -17,11 +17,9 @@ import { OperatingHoursDisplay } from '../components/business/OperatingHoursDisp
 import { ReviewsTab } from '../components/business/ReviewsTab';
 import { DealsSection } from '../components/business/DealsSection';
 import { SaveButton } from '../components/SaveButton';
-import { FollowButton } from '../components/FollowButton';
 import { useBusinessDetail } from '../hooks/useBusinessDetail';
 import { useIsOpenNow } from '../hooks/useIsOpenNow';
 import { useSavedBusiness } from '../hooks/useSavedBusiness';
-import { useFollowBusiness } from '../hooks/useFollowBusiness';
 import { useAuth } from '../hooks/useAuth';
 import { submitEnquiry } from '../services/enquiry-service';
 import { dealApi } from '../services/deal-api';
@@ -345,7 +343,6 @@ export function BusinessDetailPage() {
 
   const { user } = useAuth();
   const { isSaved, toggleSaved } = useSavedBusiness(business?.id || '');
-  const { isFollowing, followerCount, toggleFollow } = useFollowBusiness(business?.id || '');
   const { currentLanguage, changeLanguage } = useLanguage();
 
   const [showEnquiry, setShowEnquiry] = useState(false);
@@ -579,19 +576,11 @@ export function BusinessDetailPage() {
                 )}
 
                 {user && (
-                  <>
-                    <SaveButton
-                      isSaved={isSaved}
-                      onClick={toggleSaved}
-                      variant="full"
-                    />
-                    <FollowButton
-                      isFollowing={isFollowing}
-                      onClick={toggleFollow}
-                      variant="primary"
-                      followerCount={followerCount}
-                    />
-                  </>
+                  <SaveButton
+                    isSaved={isSaved}
+                    onClick={toggleSaved}
+                    variant="full"
+                  />
                 )}
               </div>
             </div>

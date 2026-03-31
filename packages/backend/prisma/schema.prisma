@@ -60,7 +60,6 @@ model business_analytics_daily {
   directions_clicks  Int        @default(0)
   photo_views        Int        @default(0)
   saves              Int        @default(0)
-  follows            Int        @default(0)
   reviews            Int        @default(0)
   messages           Int        @default(0)
   businesses         businesses @relation(fields: [business_id], references: [id], onDelete: Cascade)
@@ -129,19 +128,6 @@ model business_claim_requests {
   @@index([verification_status])
 }
 
-model business_follows {
-  id          String     @id
-  user_id     String
-  business_id String
-  created_at  DateTime   @default(now())
-  businesses  businesses @relation(fields: [business_id], references: [id], onDelete: Cascade)
-  users       users      @relation(fields: [user_id], references: [id], onDelete: Cascade)
-
-  @@unique([user_id, business_id])
-  @@index([business_id])
-  @@index([user_id])
-}
-
 model business_owner_staff {
   id                                         String     @id
   business_id                                String
@@ -200,7 +186,6 @@ model businesses {
   business_analytics_daily  business_analytics_daily[]
   business_analytics_events business_analytics_events[]
   business_claim_requests   business_claim_requests[]
-  business_follows          business_follows[]
   business_owner_staff      business_owner_staff[]
   categories                categories                  @relation(fields: [category_primary_id], references: [id])
   users                     users?                      @relation(fields: [claimed_by], references: [id])
@@ -579,6 +564,8 @@ model users {
   bio                                                                 String?                     @db.VarChar(500)
   interests                                                           String[]
   notification_preferences                                            Json?
+  receive_deal_emails                                                 Boolean                     @default(false)
+  receive_event_emails                                                Boolean                     @default(false)
   role                                                                UserRole                    @default(COMMUNITY)
   status                                                              UserStatus                  @default(PENDING)
   email_verified                                                      Boolean                     @default(false)
@@ -593,7 +580,6 @@ model users {
   business_analytics_events                                           business_analytics_events[]
   business_claim_requests_business_claim_requests_moderator_idTousers business_claim_requests[]   @relation("business_claim_requests_moderator_idTousers")
   business_claim_requests_business_claim_requests_user_idTousers      business_claim_requests[]   @relation("business_claim_requests_user_idTousers")
-  business_follows                                                    business_follows[]
   business_owner_staff_business_owner_staff_added_byTousers           business_owner_staff[]      @relation("business_owner_staff_added_byTousers")
   business_owner_staff_business_owner_staff_user_idTousers            business_owner_staff[]      @relation("business_owner_staff_user_idTousers")
   businesses                                                          businesses[]
@@ -629,8 +615,6 @@ enum AnalyticsEventType {
   PHOTO_VIEW
   SAVE
   UNSAVE
-  FOLLOW
-  UNFOLLOW
   REVIEW_CREATED
   MESSAGE_SENT
 }

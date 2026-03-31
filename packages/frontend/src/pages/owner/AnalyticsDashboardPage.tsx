@@ -33,7 +33,6 @@ import {
   PhoneIcon,
   MapPinIcon,
   BookmarkIcon,
-  HeartIcon,
   PhotoIcon,
   StarIcon,
   PencilSquareIcon,
@@ -307,12 +306,6 @@ export function AnalyticsDashboardPage() {
                 label={t('analytics.metrics.saves')}
                 metric={analytics.summary.saves}
                 icon={<BookmarkIcon className="w-5 h-5" />}
-                size="small"
-              />
-              <MetricCard
-                label={t('analytics.metrics.follows')}
-                metric={analytics.summary.follows}
-                icon={<HeartIcon className="w-5 h-5" />}
                 size="small"
               />
               <MetricCard
