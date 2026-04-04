@@ -282,3 +282,81 @@ export async function searchUsers(query: string): Promise<UserSearchResult[]> {
 export async function assignBusinessOwner(businessId: string, userId: string | null): Promise<void> {
   await put(`/admin/businesses/${businessId}/owner`, { userId });
 }
+
+// ─── Business CSV Import & Google Places Enrichment ────────
+
+export interface EnrichBusinessInput {
+  name: string;
+  address?: string;
+  phone?: string;
+}
+
+export interface EnrichedBusinessData {
+  name: string;
+  formattedAddress: string;
+  street: string;
+  suburb: string;
+  state: string;
+  postcode: string;
+  country: string;
+  latitude: number;
+  longitude: number;
+  phone: string;
+  website: string;
+  googleMapsUri: string;
+  googlePlaceId: string;
+  operatingHours: Record<string, { open: string; close: string }> | null;
+  rating: number | null;
+  userRatingCount: number | null;
+  businessType: string | null;
+}
+
+export interface BulkImportBusinessInput {
+  name: string;
+  description?: string;
+  categoryPrimaryId: string;
+  phone: string;
+  email?: string;
+  website?: string;
+  street: string;
+  suburb: string;
+  state: string;
+  postcode: string;
+  country?: string;
+  latitude?: number;
+  longitude?: number;
+  operatingHours?: Record<string, { open: string; close: string }>;
+}
+
+export interface BulkImportResult {
+  row: number;
+  name: string;
+  success: boolean;
+  businessId?: string;
+  error?: string;
+}
+
+export interface BulkImportResponse {
+  results: BulkImportResult[];
+  summary: { total: number; success: number; failed: number };
+}
+
+export async function enrichBusinessesFromCSV(
+  businesses: EnrichBusinessInput[],
+): Promise<(EnrichedBusinessData | null)[]> {
+  const response = await post<ApiSuccessResponse<{ enriched: (EnrichedBusinessData | null)[] }>>(
+    '/admin/businesses/enrich',
+    { businesses },
+  );
+  return response.data.enriched;
+}
+
+export async function bulkImportBusinesses(
+  businesses: BulkImportBusinessInput[],
+): Promise<BulkImportResponse> {
+  const response = await post<ApiSuccessResponse<BulkImportResponse>>(
+    '/admin/businesses/bulk-import',
+    { businesses },
+  );
+  return response.data;
+}

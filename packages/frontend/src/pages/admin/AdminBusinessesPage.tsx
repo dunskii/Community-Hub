@@ -17,6 +17,7 @@ import {
   MagnifyingGlassIcon,
   PencilSquareIcon,
   PlusIcon,
+  ArrowUpTrayIcon,
   TagIcon,
   EyeIcon,
   PhotoIcon,
@@ -140,6 +141,13 @@ export function AdminBusinessesPage({ basePath = '/admin' }: { basePath?: string
             <span className="text-sm text-slate-500">
               {pagination.total} {t('admin.businesses.totalCount')}
             </span>
+            <Link
+              to={`${basePath}/businesses/import`}
+              className="flex items-center gap-2 px-4 py-2 text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-full hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors text-sm font-medium"
+            >
+              <ArrowUpTrayIcon className="h-4 w-4" />
+              {t('admin.businesses.importCSV', 'Import CSV')}
+            </Link>
             <Link
               to={`${basePath}/businesses/create`}
               className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-full hover:bg-primary/90 transition-colors text-sm font-medium"

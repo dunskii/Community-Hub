@@ -21,6 +21,10 @@ import {
   assignBusinessOwnerSchema,
 } from '@community-hub/shared';
 import { UserRole, BusinessStatus } from '../generated/prisma/index.js';
+import { businessService } from '../services/business-service.js';
+import { batchEnrichBusinesses } from '../services/maps/google-places-service.js';
+import { logger } from '../utils/logger.js';
+import { z } from 'zod';
 
 function getClientIp(req: Request): string {
   const fwd = req.headers['x-forwarded-for'];
@@ -240,6 +244,117 @@ class AdminController {
       }
       const users = await adminService.searchUsers(query, 10);
       sendSuccess(res, users);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * POST /admin/businesses/enrich
+   * Enrich CSV rows with Google Places API data
+   */
+  async enrichBusinesses(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const enrichSchema = z.object({
+        businesses: z.array(z.object({
+          name: z.string().min(1),
+          address: z.string().optional(),
+          phone: z.string().optional(),
+        })).min(1).max(100),
+      });
+
+      const { businesses } = enrichSchema.parse(req.body);
+
+      const enriched = await batchEnrichBusinesses(
+        businesses.map((b) => ({ name: b.name, address: b.address, phone: b.phone })),
+      );
+
+      sendSuccess(res, { enriched });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * POST /admin/businesses/bulk-import
+   * Bulk create businesses from CSV data (with optional Google Places enrichment)
+   */
+  async bulkImportBusinesses(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const importSchema = z.object({
+        businesses: z.array(z.object({
+          name: z.string().min(1).max(100),
+          description: z.string().optional(),
+          categoryPrimaryId: z.string().min(1),
+          phone: z.string().min(1),
+          email: z.string().email().optional().or(z.literal('')),
+          website: z.string().url().optional().or(z.literal('')),
+          street: z.string().min(1),
+          suburb: z.string().min(1),
+          state: z.string().min(1),
+          postcode: z.string().min(1),
+          country: z.string().optional(),
+          latitude: z.number().optional(),
+          longitude: z.number().optional(),
+          operatingHours: z.record(z.object({ open: z.string(), close: z.string() })).optional(),
+        })).min(1).max(100),
+      });
+
+      const { businesses } = importSchema.parse(req.body);
+
+      const adminId = req.user!.id;
+      const ipAddress = getClientIp(req);
+      const userAgent = getClientUA(req);
+      const auditContext = { userId: adminId, ipAddress, userAgent };
+
+      const results: Array<{
+        row: number;
+        name: string;
+        success: boolean;
+        businessId?: string;
+        error?: string;
+      }> = [];
+
+      for (let i = 0; i < businesses.length; i++) {
+        const row = businesses[i];
+        try {
+          const business = await businessService.createBusiness(
+            {
+              name: row.name,
+              description: row.description ? { en: row.description } : { en: '' },
+              categoryPrimaryId: row.categoryPrimaryId,
+              phone: row.phone,
+              email: row.email || undefined,
+              website: row.website || undefined,
+              address: {
+                street: row.street,
+                suburb: row.suburb,
+                state: row.state,
+                postcode: row.postcode,
+                country: row.country || 'Australia',
+              },
+              operatingHours: row.operatingHours as Record<string, unknown> | undefined,
+            },
+            auditContext,
+          );
+
+          results.push({
+            row: i + 1,
+            name: row.name,
+            success: true,
+            businessId: business.id as string,
+          });
+        } catch (err) {
+          const message = err instanceof Error ? err.message : 'Unknown error';
+          logger.warn({ error: err, row: i + 1, name: row.name }, 'Bulk import row failed');
+          results.push({ row: i + 1, name: row.name, success: false, error: message });
+        }
+      }
+
+      const successCount = results.filter((r) => r.success).length;
+      const failCount = results.filter((r) => !r.success).length;
+
+      sendSuccess(res, { results, summary: { total: businesses.length, success: successCount, failed: failCount } });
     } catch (error) {
       next(error);
     }

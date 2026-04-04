@@ -52,6 +52,7 @@ import { AdminEventCreatePage } from './pages/admin/AdminEventCreatePage';
 import { AdminEventEditPage } from './pages/admin/AdminEventEditPage';
 import { AdminUsersPage } from './pages/admin/AdminUsersPage';
 import { AdminBusinessCreatePage } from './pages/admin/AdminBusinessCreatePage';
+import { AdminCSVImportPage } from './pages/admin/AdminCSVImportPage';
 import { CuratorLayout } from './components/admin/CuratorLayout';
 import { CuratorDashboardPage } from './pages/admin/CuratorDashboardPage';
 import { HomePage as RealHomePage } from './pages/HomePage';
@@ -332,6 +333,7 @@ export function App() {
               <Route index element={<AdminDashboardPage />} />
               <Route path="businesses" element={<AdminBusinessesPage />} />
               <Route path="businesses/create" element={<AdminBusinessCreatePage />} />
+              <Route path="businesses/import" element={<AdminCSVImportPage />} />
               <Route path="businesses/:businessId/edit" element={<EditBusinessPage />} />
               <Route path="businesses/:businessId/photos" element={<PhotosManagementPage />} />
               <Route path="analytics" element={<AdminAnalyticsPage />} />
@@ -354,6 +356,7 @@ export function App() {
               <Route index element={<CuratorDashboardPage />} />
               <Route path="businesses" element={<AdminBusinessesPage basePath="/curator" />} />
               <Route path="businesses/create" element={<AdminBusinessCreatePage />} />
+              <Route path="businesses/import" element={<AdminCSVImportPage />} />
               <Route path="businesses/:businessId/edit" element={<EditBusinessPage />} />
               <Route path="businesses/:businessId/photos" element={<PhotosManagementPage />} />
               <Route path="events" element={<AdminEventsPage basePath="/curator" />} />

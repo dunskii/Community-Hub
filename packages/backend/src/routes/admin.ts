@@ -38,6 +38,11 @@ router.get('/admin/businesses', ...curatorAndAdminAuth, adminController.listBusi
 router.put('/admin/businesses/:id/status', ...curatorAndAdminAuth, adminController.updateBusinessStatus.bind(adminController));
 router.put('/admin/businesses/:id/owner', ...curatorAndAdminAuth, adminController.assignBusinessOwner.bind(adminController));
 
+// ─── Business Bulk Import ──────────────────────────────────
+
+router.post('/admin/businesses/enrich', ...curatorAndAdminAuth, adminController.enrichBusinesses.bind(adminController));
+router.post('/admin/businesses/bulk-import', ...curatorAndAdminAuth, adminController.bulkImportBusinesses.bind(adminController));
+
 // ─── Event Management ───────────────────────────────────────
 
 router.get('/admin/events', ...curatorAndAdminAuth, adminController.listEvents.bind(adminController));
