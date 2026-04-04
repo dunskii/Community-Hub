@@ -30,6 +30,26 @@ export interface BusinessListResponse {
   };
 }
 
+export interface GooglePlacesEnrichedData {
+  name: string;
+  formattedAddress: string;
+  street: string;
+  suburb: string;
+  state: string;
+  postcode: string;
+  country: string;
+  latitude: number;
+  longitude: number;
+  phone: string;
+  website: string;
+  googleMapsUri: string;
+  googlePlaceId: string;
+  operatingHours: Record<string, { open: string; close: string }> | null;
+  rating: number | null;
+  userRatingCount: number | null;
+  businessType: string | null;
+}
+
 export interface CategoryListParams {
   type?: string;
   parent?: string | 'null';
@@ -180,6 +200,15 @@ class BusinessApiClient {
    */
   async updateBusiness(id: string, input: BusinessUpdateInput): Promise<Business> {
     const response = await put<ApiResponse<Business>>(`/businesses/${id}`, input);
+    return response.data;
+  }
+
+  /**
+   * Look up business on Google Places API for enrichment.
+   * Returns enriched data without modifying the business.
+   */
+  async lookupGoogle(id: string): Promise<GooglePlacesEnrichedData> {
+    const response = await post<ApiResponse<GooglePlacesEnrichedData>>(`/businesses/${id}/lookup-google`);
     return response.data;
   }
 

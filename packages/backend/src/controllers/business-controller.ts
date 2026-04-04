@@ -6,6 +6,7 @@
 import type { Request, Response, NextFunction } from 'express';
 import { businessService } from '../services/business-service.js';
 import { sendSuccess, sendError } from '../utils/api-response.js';
+import { searchAndEnrichBusiness } from '../services/maps/google-places-service.js';
 import type { BusinessCreateInput, BusinessUpdateInput, BusinessStatus } from '@community-hub/shared';
 
 export class BusinessController {
@@ -154,6 +155,46 @@ export class BusinessController {
       await businessService.deleteBusiness(id, auditContext);
 
       sendSuccess(res, { message: 'Business deleted successfully' }, 200);
+    } catch (error) {
+      next(error);
+    }
+  }
+  /**
+   * POST /businesses/:id/lookup-google - Look up business on Google Places for enrichment
+   * Returns enriched data without modifying the business. Owner applies fields via normal update.
+   */
+  async lookupGoogle(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+      if (!id) {
+        sendError(res, 'INVALID_REQUEST', 'Business ID is required', 400);
+        return;
+      }
+
+      const business = await businessService.getBusinessById(id);
+      if (!business) {
+        sendError(res, 'BUSINESS_NOT_FOUND', 'Business not found', 404);
+        return;
+      }
+
+      // Build search query from existing business data
+      const address = business.address as Record<string, string> | null;
+      const addressParts = address
+        ? [address.street, address.suburb, address.state, address.postcode].filter(Boolean).join(', ')
+        : undefined;
+
+      const enriched = await searchAndEnrichBusiness({
+        name: business.name as string,
+        address: addressParts,
+        phone: (business.phone as string) || undefined,
+      });
+
+      if (!enriched) {
+        sendError(res, 'GOOGLE_NO_MATCH', 'No matching business found on Google Maps', 404);
+        return;
+      }
+
+      sendSuccess(res, enriched);
     } catch (error) {
       next(error);
     }

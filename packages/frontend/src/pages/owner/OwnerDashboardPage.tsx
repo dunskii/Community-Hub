@@ -621,6 +621,31 @@ export function OwnerDashboardPage() {
                 </section>
               )}
 
+              {/* Google Maps Import CTA */}
+              <section>
+                <Link
+                  to={`/business/manage/${selectedBusiness.id}/edit?tab=contact`}
+                  className="block bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800 p-4 hover:bg-blue-100/70 dark:hover:bg-blue-900/30 transition-colors group"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="p-2.5 bg-blue-100 dark:bg-blue-900/50 rounded-lg group-hover:bg-blue-200 dark:group-hover:bg-blue-800/50 transition-colors">
+                      <MapPinIcon className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-sm font-semibold text-blue-900 dark:text-blue-200">
+                        {t('owner.googleImport.title', 'Import from Google Maps')}
+                      </h3>
+                      <p className="text-xs text-blue-700 dark:text-blue-400 mt-0.5">
+                        {t('owner.googleImport.description', 'Auto-fill your phone, address, website, and operating hours from your Google listing')}
+                      </p>
+                    </div>
+                    <span className="text-xs font-medium text-blue-600 dark:text-blue-400 px-3 py-1 bg-blue-100 dark:bg-blue-900/50 rounded-full whitespace-nowrap">
+                      {t('owner.googleImport.cta', 'Get Started')}
+                    </span>
+                  </div>
+                </Link>
+              </section>
+
               {/* Quick Actions */}
               <section>
                 <h2 className="text-xl font-semibold text-slate-900 dark:text-white mb-4">

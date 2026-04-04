@@ -175,7 +175,13 @@ export function EditBusinessPage() {
             )}
 
             {activeTab === 'contact' && (
-              <ContactLocationTab formData={form.formData} handleInputChange={form.handleInputChange} t={t} />
+              <ContactLocationTab
+                formData={form.formData}
+                handleInputChange={form.handleInputChange}
+                t={t}
+                businessId={businessId}
+                onGoogleFieldsApplied={form.handleGbpFieldsApplied}
+              />
             )}
 
             {activeTab === 'hours' && (

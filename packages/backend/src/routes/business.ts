@@ -111,4 +111,19 @@ router.put(
   businessController.updateBusiness.bind(businessController)
 );
 
+/**
+ * POST /businesses/:id/lookup-google
+ * Look up business on Google Places API and return enriched data.
+ * Does not modify the business - owner reviews and applies via normal update.
+ * Business owner or admin
+ * Rate limit: 5 requests per minute per business
+ */
+router.post(
+  '/businesses/:id/lookup-google',
+  requireAuth,
+  requireBusinessOwnership,
+  updateBusinessLimiter,
+  businessController.lookupGoogle.bind(businessController)
+);
+
 export default router;

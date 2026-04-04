@@ -2,15 +2,31 @@
  * ContactLocationTab
  *
  * Phone, email, website, address fields, and parking information.
+ * Includes Google Maps import panel for auto-filling profile data.
  */
 
+import { GoogleMapsImportPanel } from '../../../components/business/GoogleMapsImportPanel';
 import { FormSection } from './FormSection';
 import { INPUT_CLASS_NAME, LABEL_CLASS_NAME } from './constants';
-import type { TabProps } from './types';
+import type { TabProps, FormData } from './types';
 
-export function ContactLocationTab({ formData, handleInputChange, t }: TabProps) {
+interface ContactLocationTabProps extends TabProps {
+  businessId?: string;
+  onGoogleFieldsApplied?: (updates: Partial<FormData>) => void;
+}
+
+export function ContactLocationTab({ formData, handleInputChange, t, businessId, onGoogleFieldsApplied }: ContactLocationTabProps) {
   return (
     <div className="space-y-6">
+      {/* Google Maps Import Panel */}
+      {businessId && onGoogleFieldsApplied && (
+        <GoogleMapsImportPanel
+          businessId={businessId}
+          formData={formData}
+          onFieldsApplied={onGoogleFieldsApplied}
+        />
+      )}
+
       <FormSection title={t('editBusiness.contactInfo', 'Contact Information')}>
         <div className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
