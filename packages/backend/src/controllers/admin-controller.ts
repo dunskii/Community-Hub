@@ -23,7 +23,8 @@ import {
 } from '@community-hub/shared';
 import { UserRole, BusinessStatus } from '../generated/prisma/index.js';
 import { businessService } from '../services/business-service.js';
-import { batchEnrichBusinesses } from '../services/maps/google-places-service.js';
+import { batchEnrichBusinesses, type BatchEnrichResult } from '../services/maps/google-places-service.js';
+import { getPlatformConfig } from '../config/platform-loader.js';
 import { logger } from '../utils/logger.js';
 import { z } from 'zod';
 
@@ -266,11 +267,15 @@ class AdminController {
 
       const { businesses } = enrichSchema.parse(req.body);
 
-      const enriched = await batchEnrichBusinesses(
+      const results = await batchEnrichBusinesses(
         businesses.map((b) => ({ name: b.name, address: b.address, phone: b.phone })),
       );
 
-      sendSuccess(res, { enriched });
+      // Map to frontend-friendly format: enriched data + optional error reason
+      const enriched = results.map((r: BatchEnrichResult) => r.data);
+      const errors = results.map((r: BatchEnrichResult) => r.error || null);
+
+      sendSuccess(res, { enriched, errors });
     } catch (error) {
       next(error);
     }
@@ -307,6 +312,7 @@ class AdminController {
       const ipAddress = getClientIp(req);
       const userAgent = getClientUA(req);
       const auditContext = { actorId: adminId, actorRole: req.user!.role, ipAddress, userAgent };
+      const defaultCountry = getPlatformConfig().location.country;
 
       const results: Array<{
         row: number;
@@ -331,7 +337,7 @@ class AdminController {
                 suburb: row.suburb,
                 state: row.state,
                 postcode: row.postcode,
-                country: row.country || 'Australia',
+                country: row.country || defaultCountry,
               },
               operatingHours: row.operatingHours as OperatingHours | undefined,
             },

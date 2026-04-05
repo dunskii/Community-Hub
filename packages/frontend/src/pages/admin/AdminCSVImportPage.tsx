@@ -64,7 +64,9 @@ type Step = 'upload' | 'preview' | 'results';
 // ─── CSV Parser ─────────────────────────────────────────────
 
 function parseCSV(text: string): CSVRow[] {
-  const lines = text.split(/\r?\n/).filter((line) => line.trim());
+  // Strip UTF-8 BOM that Excel commonly adds to CSV exports
+  const cleaned = text.replace(/^\uFEFF/, '');
+  const lines = cleaned.split(/\r?\n/).filter((line) => line.trim());
   if (lines.length < 2) return [];
 
   // Parse header row
@@ -504,15 +506,15 @@ export function AdminCSVImportPage() {
                   </thead>
                   <tbody>
                     {[
-                      ['name', t('common.yes', 'Yes'), 'Guildford Bakery'],
-                      ['phone', t('admin.businesses.import.recommended', 'Recommended'), '(02) 9632 1234'],
-                      ['address / street', t('admin.businesses.import.recommended', 'Recommended'), '123 Main St'],
-                      ['suburb', t('admin.businesses.import.recommended', 'Recommended'), 'Guildford'],
-                      ['state', t('admin.businesses.import.recommended', 'Recommended'), 'NSW'],
-                      ['postcode', t('admin.businesses.import.recommended', 'Recommended'), '2161'],
-                      ['email', t('common.optional', 'Optional'), 'info@bakery.com'],
-                      ['website', t('common.optional', 'Optional'), 'https://bakery.com'],
-                      ['description', t('common.optional', 'Optional'), 'Fresh bread daily'],
+                      ['name', t('common.yes', 'Yes'), t('admin.businesses.import.examples.name', 'Local Bakery')],
+                      ['phone', t('admin.businesses.import.recommended', 'Recommended'), t('admin.businesses.import.examples.phone', '(02) 1234 5678')],
+                      ['address / street', t('admin.businesses.import.recommended', 'Recommended'), t('admin.businesses.import.examples.street', '123 Main St')],
+                      ['suburb', t('admin.businesses.import.recommended', 'Recommended'), t('admin.businesses.import.examples.suburb', 'Town Centre')],
+                      ['state', t('admin.businesses.import.recommended', 'Recommended'), t('admin.businesses.import.examples.state', 'NSW')],
+                      ['postcode', t('admin.businesses.import.recommended', 'Recommended'), t('admin.businesses.import.examples.postcode', '2000')],
+                      ['email', t('common.optional', 'Optional'), 'info@business.com'],
+                      ['website', t('common.optional', 'Optional'), 'https://business.com'],
+                      ['description', t('common.optional', 'Optional'), t('admin.businesses.import.examples.description', 'Fresh bread daily')],
                     ].map(([col, req, ex]) => (
                       <tr key={col} className="border-b border-slate-100 dark:border-slate-800">
                         <td className="py-1.5 pr-4 font-mono">{col}</td>

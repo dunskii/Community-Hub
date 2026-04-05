@@ -7,6 +7,11 @@
     "reviews": "التقييمات",
     "viewProfile": "عرض الملف الشخصي",
     "editProfile": "تعديل الملف الشخصي",
+    "googleImport": {
+      "title": "استيراد من خرائط Google",
+      "description": "ملء تلقائي للهاتف والعنوان والموقع وساعات العمل من قائمتك في Google",
+      "cta": "ابدأ الآن"
+    },
     "quickStats": "إحصائيات سريعة",
     "analyticsNotAvailable": "بيانات التحليلات غير متاحة بعد لهذا النشاط التجاري.",
     "noBusinessesTitle": "لا توجد أنشطة تجارية",

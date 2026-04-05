@@ -7,6 +7,11 @@
     "reviews": "đánh giá",
     "viewProfile": "Xem hồ sơ",
     "editProfile": "Chỉnh sửa hồ sơ",
+    "googleImport": {
+      "title": "Nhập từ Google Maps",
+      "description": "Tự động điền điện thoại, địa chỉ, website và giờ mở cửa từ Google",
+      "cta": "Bắt đầu"
+    },
     "quickStats": "Thống kê nhanh",
     "analyticsNotAvailable": "Dữ liệu phân tích chưa có sẵn cho doanh nghiệp này.",
     "noBusinessesTitle": "Chưa có doanh nghiệp",

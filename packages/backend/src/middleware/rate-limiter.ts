@@ -24,6 +24,7 @@ export const RATE_LIMIT_CONFIG = {
   search:             { windowMs: 1 * 60 * 1000,      limit: isDevelopment ? 1000 : 30  },  // 30 req / 1 min
   review:             { windowMs: 24 * 60 * 60 * 1000, limit: isDevelopment ? 1000 : 5   },  // 5 req / 24 hrs
   imageProxy:         { windowMs: 60 * 60 * 1000,      limit: isDevelopment ? 1000 : 30  },  // 30 req / 1 hr
+  adminBulk:          { windowMs: 1 * 60 * 1000,       limit: isDevelopment ? 100 : 5   },  // 5 req / 1 min (admin CSV import & Google enrichment)
 } as const;
 
 function createLimiter(config: { windowMs: number; limit: number }) {
@@ -64,6 +65,9 @@ export const reviewRateLimiter = createLimiter(RATE_LIMIT_CONFIG.review);
 
 /** Image proxy download rate limiter. */
 export const imageProxyRateLimiter = createLimiter(RATE_LIMIT_CONFIG.imageProxy);
+
+/** Admin bulk import/enrich rate limiter (protects Google Places API quota). */
+export const adminBulkRateLimiter = createLimiter(RATE_LIMIT_CONFIG.adminBulk);
 
 // TODO: Add conversationRateLimiter (10/day) in Phase 9 (Messaging)
 // TODO: Add flashDealRateLimiter (2/week) in Phase 10 (Deals)

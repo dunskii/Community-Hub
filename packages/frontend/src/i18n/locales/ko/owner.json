@@ -7,6 +7,11 @@
     "reviews": "리뷰",
     "viewProfile": "프로필 보기",
     "editProfile": "프로필 편집",
+    "googleImport": {
+      "title": "Google 지도에서 가져오기",
+      "description": "Google 목록에서 전화, 주소, 웹사이트, 영업시간 자동 채우기",
+      "cta": "시작하기"
+    },
     "quickStats": "빠른 통계",
     "analyticsNotAvailable": "이 비즈니스의 분석 데이터가 아직 없습니다.",
     "noBusinessesTitle": "비즈니스 없음",

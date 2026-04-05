@@ -120,7 +120,7 @@ export function GoogleMapsImportPanel({ businessId, formData, onFieldsApplied }:
             field: 'operatingHours',
             label: t('editBusiness.tabs.hours', 'Operating Hours'),
             currentValue: t('editBusiness.googleImport.defaultHours', 'Default hours'),
-            googleValue: formatHoursSummary(data.operatingHours),
+            googleValue: formatHoursSummary(data.operatingHours, t),
             selected: true,
           });
         }
@@ -380,9 +380,22 @@ export function GoogleMapsImportPanel({ businessId, formData, onFieldsApplied }:
 
 // ─── Helpers ──────────────────────────────────────────────
 
-function formatHoursSummary(hours: Record<string, { open: string; close: string }>): string {
+function formatHoursSummary(
+  hours: Record<string, { open: string; close: string }>,
+  t: (key: string, fallback: string) => string,
+): string {
   const entries = Object.entries(hours);
   if (entries.length === 0) return '';
+
+  const dayLabels: Record<string, string> = {
+    monday: t('editBusiness.googleImport.days.mon', 'Mon'),
+    tuesday: t('editBusiness.googleImport.days.tue', 'Tue'),
+    wednesday: t('editBusiness.googleImport.days.wed', 'Wed'),
+    thursday: t('editBusiness.googleImport.days.thu', 'Thu'),
+    friday: t('editBusiness.googleImport.days.fri', 'Fri'),
+    saturday: t('editBusiness.googleImport.days.sat', 'Sat'),
+    sunday: t('editBusiness.googleImport.days.sun', 'Sun'),
+  };
 
   // Check if all days have same hours
   const [firstDay] = entries;
@@ -392,10 +405,10 @@ function formatHoursSummary(hours: Record<string, { open: string; close: string 
   );
 
   if (allSame) {
-    return `${firstDay[1].open} - ${firstDay[1].close} (all days)`;
+    return `${firstDay[1].open} - ${firstDay[1].close} (${t('editBusiness.googleImport.allDays', 'all days')})`;
   }
 
   return entries
-    .map(([day, h]) => `${day.substring(0, 3)}: ${h.open}-${h.close}`)
+    .map(([day, h]) => `${dayLabels[day] || day.substring(0, 3)}: ${h.open}-${h.close}`)
     .join(', ');
 }

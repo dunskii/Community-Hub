@@ -8,6 +8,7 @@ import { Router } from 'express';
 import { adminController } from '../controllers/admin-controller.js';
 import { requireAuth } from '../middleware/auth-middleware.js';
 import { requireRole } from '../middleware/rbac-middleware.js';
+import { adminBulkRateLimiter } from '../middleware/rate-limiter.js';
 
 const router: ReturnType<typeof Router> = Router();
 
@@ -40,8 +41,8 @@ router.put('/admin/businesses/:id/owner', ...curatorAndAdminAuth, adminControlle
 
 // ─── Business Bulk Import ──────────────────────────────────
 
-router.post('/admin/businesses/enrich', ...curatorAndAdminAuth, adminController.enrichBusinesses.bind(adminController));
-router.post('/admin/businesses/bulk-import', ...curatorAndAdminAuth, adminController.bulkImportBusinesses.bind(adminController));
+router.post('/admin/businesses/enrich', ...curatorAndAdminAuth, adminBulkRateLimiter, adminController.enrichBusinesses.bind(adminController));
+router.post('/admin/businesses/bulk-import', ...curatorAndAdminAuth, adminBulkRateLimiter, adminController.bulkImportBusinesses.bind(adminController));
 
 // ─── Event Management ───────────────────────────────────────
 

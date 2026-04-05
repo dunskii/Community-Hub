@@ -9,6 +9,7 @@
  */
 
 import { logger } from '../../utils/logger.js';
+import { getPlatformConfig } from '../../config/platform-loader.js';
 
 const PLACES_API_BASE = 'https://places.googleapis.com/v1/places';
 
@@ -163,19 +164,31 @@ export async function searchAndEnrichBusiness(
   }
 }
 
+export interface BatchEnrichResult {
+  data: PlacesEnrichedData | null;
+  error?: string;
+}
+
 /**
  * Batch enrich multiple businesses.
  * Processes sequentially with a small delay to respect rate limits.
+ * Returns richer results so callers can distinguish "not found" from "API error".
  */
 export async function batchEnrichBusinesses(
   inputs: PlacesSearchInput[],
-): Promise<(PlacesEnrichedData | null)[]> {
-  const results: (PlacesEnrichedData | null)[] = [];
+): Promise<BatchEnrichResult[]> {
+  const results: BatchEnrichResult[] = [];
 
   for (let i = 0; i < inputs.length; i++) {
     const input = inputs[i]!;
-    const result = await searchAndEnrichBusiness(input);
-    results.push(result);
+    try {
+      const data = await searchAndEnrichBusiness(input);
+      results.push({ data });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Enrichment failed';
+      logger.warn({ error, name: input.name }, 'Batch enrichment item error');
+      results.push({ data: null, error: message });
+    }
 
     // Small delay between requests to respect rate limits (100ms)
     if (i < inputs.length - 1) {
@@ -196,7 +209,8 @@ function mapPlaceToEnrichedData(place: PlaceResult): PlacesEnrichedData {
     extractComponent(components, 'sublocality_level_1') || '';
   const state = extractComponent(components, 'administrative_area_level_1') || '';
   const postcode = extractComponent(components, 'postal_code') || '';
-  const country = extractComponent(components, 'country') || 'Australia';
+  const config = getPlatformConfig();
+  const country = extractComponent(components, 'country') || config.location.country;
 
   return {
     name: place.displayName?.text || '',

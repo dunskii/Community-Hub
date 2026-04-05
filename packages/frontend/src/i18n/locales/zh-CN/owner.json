@@ -7,6 +7,11 @@
     "reviews": "评价",
     "viewProfile": "查看资料",
     "editProfile": "编辑资料",
+    "googleImport": {
+      "title": "从Google地图导入",
+      "description": "从Google列表自动填充电话、地址、网站和营业时间",
+      "cta": "开始"
+    },
     "quickStats": "快速统计",
     "analyticsNotAvailable": "此商家的分析数据尚不可用。",
     "noBusinessesTitle": "暂无商家",

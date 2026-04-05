@@ -7,6 +7,11 @@
     "reviews": "recensioni",
     "viewProfile": "Visualizza profilo",
     "editProfile": "Modifica profilo",
+    "googleImport": {
+      "title": "Importa da Google Maps",
+      "description": "Compila automaticamente telefono, indirizzo, sito web e orari dalla tua scheda Google",
+      "cta": "Inizia"
+    },
     "quickStats": "Statistiche rapide",
     "analyticsNotAvailable": "I dati analitici non sono ancora disponibili per questa attività.",
     "noBusinessesTitle": "Nessuna attività",

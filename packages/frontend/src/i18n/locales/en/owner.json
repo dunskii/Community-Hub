@@ -7,6 +7,11 @@
     "reviews": "reviews",
     "viewProfile": "View Profile",
     "editProfile": "Edit Profile",
+    "googleImport": {
+      "title": "Import from Google Maps",
+      "description": "Auto-fill your phone, address, website, and operating hours from your Google listing",
+      "cta": "Get Started"
+    },
     "quickStats": "Quick Stats",
     "analyticsNotAvailable": "Analytics data is not yet available for this business.",
     "noBusinessesTitle": "No Businesses",

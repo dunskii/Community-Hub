@@ -7,6 +7,11 @@
     "reviews": "समीक्षाएं",
     "viewProfile": "प्रोफ़ाइल देखें",
     "editProfile": "प्रोफ़ाइल संपादित करें",
+    "googleImport": {
+      "title": "Google Maps से आयात करें",
+      "description": "अपनी Google लिस्टिंग से फ़ोन, पता, वेबसाइट और समय स्वतः भरें",
+      "cta": "शुरू करें"
+    },
     "quickStats": "त्वरित आंकड़े",
     "analyticsNotAvailable": "इस व्यवसाय के लिए विश्लेषण डेटा अभी उपलब्ध नहीं है।",
     "noBusinessesTitle": "कोई व्यवसाय नहीं",
