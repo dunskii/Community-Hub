@@ -223,7 +223,9 @@
       "moderation": "Moderation",
       "administration": "Administration",
       "toggleMenu": "Toggle admin menu",
-      "adminNavigation": "Admin navigation"
+      "adminNavigation": "Admin navigation",
+      "curatorRole": "क्यूरेटर",
+      "adminRole": "व्यवस्थापक"
     },
     "dashboard": {
       "title": "Admin Dashboard",
@@ -303,6 +305,7 @@
         "rowCount": "{{count}} व्यवसाय",
         "selectedCount": "{{count}} चयनित",
         "enrichedCount": "{{count}} समृद्ध",
+        "enrichErrorCount": "{{count}} विफल",
         "selectAll": "सभी चुनें",
         "selectRow": "{{name}} चुनें",
         "selectCategory": "{{name}} की श्रेणी",
@@ -310,6 +313,7 @@
         "selectCat": "चुनें...",
         "removeRow": "{{name}} हटाएं",
         "enrichedYes": "मिला",
+        "enrichError": "त्रुटि",
         "missing": "अनुपलब्ध",
         "enrichmentSummary": "Google Maps समृद्धि परिणाम",
         "enrichmentDetail": "{{total}} में से {{matched}} व्यवसाय मिले।",
@@ -331,10 +335,10 @@
         "viewBusinesses": "सभी देखें",
         "examples": {
           "name": "स्थानीय बेकरी",
-          "phone": "(02) 1234 5678",
+          "phone": "+61 2 1234 5678",
           "street": "123 मुख्य सड़क",
           "suburb": "शहर केंद्र",
-          "state": "NSW",
+          "state": "राज्य",
           "postcode": "2000",
           "description": "ताज़ा रोटी रोज़"
         }

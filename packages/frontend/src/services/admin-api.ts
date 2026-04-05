@@ -341,14 +341,19 @@ export interface BulkImportResponse {
   summary: { total: number; success: number; failed: number };
 }
 
+export interface EnrichmentResponse {
+  enriched: (EnrichedBusinessData | null)[];
+  errors: (string | null)[];
+}
+
 export async function enrichBusinessesFromCSV(
   businesses: EnrichBusinessInput[],
-): Promise<(EnrichedBusinessData | null)[]> {
-  const response = await post<ApiSuccessResponse<{ enriched: (EnrichedBusinessData | null)[] }>>(
+): Promise<EnrichmentResponse> {
+  const response = await post<ApiSuccessResponse<EnrichmentResponse>>(
     '/admin/businesses/enrich',
     { businesses },
   );
-  return response.data.enriched;
+  return response.data;
 }
 
 export async function bulkImportBusinesses(

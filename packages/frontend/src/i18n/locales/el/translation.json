@@ -223,7 +223,9 @@
       "moderation": "Moderation",
       "administration": "Administration",
       "toggleMenu": "Toggle admin menu",
-      "adminNavigation": "Admin navigation"
+      "adminNavigation": "Admin navigation",
+      "curatorRole": "Επιμελητής",
+      "adminRole": "Διαχειριστής"
     },
     "dashboard": {
       "title": "Admin Dashboard",
@@ -303,6 +305,7 @@
         "rowCount": "{{count}} επιχειρήσεις",
         "selectedCount": "{{count}} επιλεγμένες",
         "enrichedCount": "{{count}} εμπλουτισμένες",
+        "enrichErrorCount": "{{count}} απέτυχαν",
         "selectAll": "Επιλογή όλων",
         "selectRow": "Επιλογή {{name}}",
         "selectCategory": "Κατηγορία για {{name}}",
@@ -310,6 +313,7 @@
         "selectCat": "Επιλέξτε...",
         "removeRow": "Αφαίρεση {{name}}",
         "enrichedYes": "Βρέθηκε",
+        "enrichError": "Σφάλμα",
         "missing": "Λείπει",
         "enrichmentSummary": "Αποτελέσματα Εμπλουτισμού Google Maps",
         "enrichmentDetail": "{{matched}} από {{total}} επιχειρήσεις βρέθηκαν.",
@@ -331,10 +335,10 @@
         "viewBusinesses": "Προβολή Επιχειρήσεων",
         "examples": {
           "name": "Τοπικός Φούρνος",
-          "phone": "(02) 1234 5678",
+          "phone": "+61 2 1234 5678",
           "street": "123 Κεντρικός Δρ.",
           "suburb": "Κέντρο",
-          "state": "NSW",
+          "state": "Πολιτεία",
           "postcode": "2000",
           "description": "Φρέσκο ψωμί καθημερινά"
         }

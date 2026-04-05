@@ -223,7 +223,9 @@
       "moderation": "Moderation",
       "administration": "Administration",
       "toggleMenu": "Toggle admin menu",
-      "adminNavigation": "Admin navigation"
+      "adminNavigation": "Admin navigation",
+      "curatorRole": "策展人",
+      "adminRole": "管理員"
     },
     "dashboard": {
       "title": "Admin Dashboard",
@@ -303,6 +305,7 @@
         "rowCount": "{{count}}家商家",
         "selectedCount": "已選{{count}}",
         "enrichedCount": "已增強{{count}}",
+        "enrichErrorCount": "{{count}}個失敗",
         "selectAll": "全選",
         "selectRow": "選擇{{name}}",
         "selectCategory": "{{name}}的類別",
@@ -310,6 +313,7 @@
         "selectCat": "選擇...",
         "removeRow": "移除{{name}}",
         "enrichedYes": "匹配",
+        "enrichError": "錯誤",
         "missing": "缺失",
         "enrichmentSummary": "Google地圖增強結果",
         "enrichmentDetail": "{{total}}家中{{matched}}家匹配成功。",
@@ -331,10 +335,10 @@
         "viewBusinesses": "檢視全部",
         "examples": {
           "name": "在地麵包店",
-          "phone": "(02) 1234 5678",
+          "phone": "+61 2 1234 5678",
           "street": "主街123號",
           "suburb": "市中心",
-          "state": "NSW",
+          "state": "州",
           "postcode": "2000",
           "description": "每日新鮮麵包"
         }

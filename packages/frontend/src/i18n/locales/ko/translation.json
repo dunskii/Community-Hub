@@ -223,7 +223,9 @@
       "moderation": "Moderation",
       "administration": "Administration",
       "toggleMenu": "Toggle admin menu",
-      "adminNavigation": "Admin navigation"
+      "adminNavigation": "Admin navigation",
+      "curatorRole": "큐레이터",
+      "adminRole": "관리자"
     },
     "dashboard": {
       "title": "Admin Dashboard",
@@ -303,6 +305,7 @@
         "rowCount": "{{count}}개 업체",
         "selectedCount": "{{count}}개 선택",
         "enrichedCount": "{{count}}개 보강",
+        "enrichErrorCount": "{{count}}개 실패",
         "selectAll": "모두 선택",
         "selectRow": "{{name}} 선택",
         "selectCategory": "{{name}} 카테고리",
@@ -310,6 +313,7 @@
         "selectCat": "선택...",
         "removeRow": "{{name}} 제거",
         "enrichedYes": "일치",
+        "enrichError": "오류",
         "missing": "누락",
         "enrichmentSummary": "Google 지도 보강 결과",
         "enrichmentDetail": "{{total}}개 중 {{matched}}개 업체가 일치했습니다.",
@@ -331,10 +335,10 @@
         "viewBusinesses": "전체 보기",
         "examples": {
           "name": "동네 빵집",
-          "phone": "(02) 1234 5678",
+          "phone": "+61 2 1234 5678",
           "street": "123 메인 스트리트",
           "suburb": "시내 중심",
-          "state": "NSW",
+          "state": "주",
           "postcode": "2000",
           "description": "매일 신선한 빵"
         }

@@ -623,7 +623,9 @@
       "administration": "Administration",
       "adminNavigation": "Admin Navigation",
       "backToDashboard": "Back to Dashboard",
-      "toggleMenu": "Toggle Menu"
+      "toggleMenu": "Toggle Menu",
+      "curatorRole": "Curator",
+      "adminRole": "Admin"
     },
     "dashboard": {
       "title": "Admin Dashboard",
@@ -735,6 +737,7 @@
         "rowCount": "{{count}} businesses",
         "selectedCount": "{{count}} selected",
         "enrichedCount": "{{count}} enriched",
+        "enrichErrorCount": "{{count}} failed",
         "selectAll": "Select all",
         "selectRow": "Select {{name}}",
         "selectCategory": "Category for {{name}}",
@@ -742,6 +745,7 @@
         "selectCat": "Select...",
         "removeRow": "Remove {{name}}",
         "enrichedYes": "Matched",
+        "enrichError": "Error",
         "missing": "Missing",
         "enrichmentSummary": "Google Maps Enrichment Results",
         "enrichmentDetail": "{{matched}} of {{total}} businesses matched. Matched businesses had their addresses, phone numbers, websites, coordinates, and operating hours updated from Google Maps.",
@@ -763,7 +767,7 @@
         "viewBusinesses": "View All Businesses",
         "examples": {
           "name": "Local Bakery",
-          "phone": "(02) 1234 5678",
+          "phone": "+61 2 1234 5678",
           "street": "123 Main St",
           "suburb": "Town Centre",
           "state": "NSW",

@@ -223,7 +223,9 @@
       "moderation": "Moderation",
       "administration": "Administration",
       "toggleMenu": "Toggle admin menu",
-      "adminNavigation": "Admin navigation"
+      "adminNavigation": "Admin navigation",
+      "curatorRole": "Biên tập viên",
+      "adminRole": "Quản trị viên"
     },
     "dashboard": {
       "title": "Admin Dashboard",
@@ -303,6 +305,7 @@
         "rowCount": "{{count}} doanh nghiệp",
         "selectedCount": "{{count}} đã chọn",
         "enrichedCount": "{{count}} đã làm giàu",
+        "enrichErrorCount": "{{count}} thất bại",
         "selectAll": "Chọn tất cả",
         "selectRow": "Chọn {{name}}",
         "selectCategory": "Danh mục cho {{name}}",
@@ -310,6 +313,7 @@
         "selectCat": "Chọn...",
         "removeRow": "Xóa {{name}}",
         "enrichedYes": "Khớp",
+        "enrichError": "Lỗi",
         "missing": "Thiếu",
         "enrichmentSummary": "Kết quả Làm giàu Google Maps",
         "enrichmentDetail": "{{matched}} trong {{total}} doanh nghiệp được khớp.",
@@ -331,10 +335,10 @@
         "viewBusinesses": "Xem tất cả",
         "examples": {
           "name": "Tiệm bánh địa phương",
-          "phone": "(02) 1234 5678",
+          "phone": "+61 2 1234 5678",
           "street": "123 Đường Chính",
           "suburb": "Trung tâm",
-          "state": "NSW",
+          "state": "Bang",
           "postcode": "2000",
           "description": "Bánh mì tươi mỗi ngày"
         }

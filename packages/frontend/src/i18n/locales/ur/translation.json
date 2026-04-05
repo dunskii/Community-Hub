@@ -223,7 +223,9 @@
       "moderation": "Moderation",
       "administration": "Administration",
       "toggleMenu": "Toggle admin menu",
-      "adminNavigation": "Admin navigation"
+      "adminNavigation": "Admin navigation",
+      "curatorRole": "کیوریٹر",
+      "adminRole": "منتظم"
     },
     "dashboard": {
       "title": "Admin Dashboard",
@@ -303,6 +305,7 @@
         "rowCount": "{{count}} کاروبار",
         "selectedCount": "{{count}} منتخب",
         "enrichedCount": "{{count}} مثری",
+        "enrichErrorCount": "{{count}} ناکام",
         "selectAll": "سب منتخب کریں",
         "selectRow": "{{name}} منتخب کریں",
         "selectCategory": "{{name}} کا زمرہ",
@@ -310,6 +313,7 @@
         "selectCat": "منتخب کریں...",
         "removeRow": "{{name}} ہٹائیں",
         "enrichedYes": "مطابق",
+        "enrichError": "خرابی",
         "missing": "غائب",
         "enrichmentSummary": "گوگل میپس اثراء کے نتائج",
         "enrichmentDetail": "{{total}} میں سے {{matched}} کاروبار مطابق ہوئے۔ پتے، فون نمبر، ویب سائٹس، کوآرڈینیٹس اور اوقات اپ ڈیٹ ہو گئے۔",
@@ -331,10 +335,10 @@
         "viewBusinesses": "تمام کاروبار دیکھیں",
         "examples": {
           "name": "مقامی بیکری",
-          "phone": "(02) 1234 5678",
+          "phone": "+61 2 1234 5678",
           "street": "123 مین سٹریٹ",
           "suburb": "ڈاؤن ٹاؤن",
-          "state": "NSW",
+          "state": "ریاست",
           "postcode": "2000",
           "description": "روزانہ تازہ روٹی"
         }

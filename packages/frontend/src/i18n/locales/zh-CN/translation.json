@@ -223,7 +223,9 @@
       "moderation": "Moderation",
       "administration": "Administration",
       "toggleMenu": "Toggle admin menu",
-      "adminNavigation": "Admin navigation"
+      "adminNavigation": "Admin navigation",
+      "curatorRole": "策展人",
+      "adminRole": "管理员"
     },
     "dashboard": {
       "title": "Admin Dashboard",
@@ -303,6 +305,7 @@
         "rowCount": "{{count}}家商家",
         "selectedCount": "已选{{count}}",
         "enrichedCount": "已增强{{count}}",
+        "enrichErrorCount": "{{count}}个失败",
         "selectAll": "全选",
         "selectRow": "选择{{name}}",
         "selectCategory": "{{name}}的类别",
@@ -310,6 +313,7 @@
         "selectCat": "选择...",
         "removeRow": "移除{{name}}",
         "enrichedYes": "匹配",
+        "enrichError": "错误",
         "missing": "缺失",
         "enrichmentSummary": "Google地图增强结果",
         "enrichmentDetail": "{{total}}家中{{matched}}家匹配成功。",
@@ -331,10 +335,10 @@
         "viewBusinesses": "查看全部",
         "examples": {
           "name": "本地面包店",
-          "phone": "(02) 1234 5678",
+          "phone": "+61 2 1234 5678",
           "street": "主街123号",
           "suburb": "市中心",
-          "state": "NSW",
+          "state": "州",
           "postcode": "2000",
           "description": "每日新鲜面包"
         }

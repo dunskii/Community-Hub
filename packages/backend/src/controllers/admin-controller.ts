@@ -351,9 +351,16 @@ class AdminController {
             businessId: business.id as string,
           });
         } catch (err) {
-          const message = err instanceof Error ? err.message : 'Unknown error';
+          // Log the full error server-side but return a sanitized message to the client
+          // to prevent leaking internal schema details from Prisma or other ORM errors
           logger.warn({ error: err, row: i + 1, name: row.name }, 'Bulk import row failed');
-          results.push({ row: i + 1, name: row.name, success: false, error: message });
+          let safeMessage = 'Failed to create business';
+          if (err instanceof Error) {
+            if (err.message.includes('Unique constraint')) safeMessage = 'A business with this name or details already exists';
+            else if (err.message.includes('Foreign key')) safeMessage = 'Invalid category or reference';
+            else if (err.message.includes('not found')) safeMessage = err.message;
+          }
+          results.push({ row: i + 1, name: row.name, success: false, error: safeMessage });
         }
       }
 

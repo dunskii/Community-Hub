@@ -52,6 +52,7 @@ interface CSVRow {
 
 interface ImportRow extends CSVRow {
   enriched: EnrichedBusinessData | null;
+  enrichError?: string | null;
   selected: boolean;
   categoryPrimaryId: string;
   latitude?: number;
@@ -261,16 +262,18 @@ export function AdminCSVImportPage() {
         phone: row.phone || undefined,
       }));
 
-      const enriched = await enrichBusinessesFromCSV(inputs);
+      const { enriched, errors } = await enrichBusinessesFromCSV(inputs);
 
       setRows((prev) =>
         prev.map((row, idx) => {
           const data = enriched[idx];
-          if (!data) return { ...row, enriched: null };
+          const enrichError = errors[idx] || null;
+          if (!data) return { ...row, enriched: null, enrichError };
 
           return {
             ...row,
             enriched: data,
+            enrichError: null,
             // Prefill empty fields from Google Places
             phone: row.phone || data.phone,
             email: row.email,
@@ -400,6 +403,7 @@ export function AdminCSVImportPage() {
 
   const selectedCount = rows.filter((r) => r.selected).length;
   const enrichedCount = rows.filter((r) => r.enriched).length;
+  const enrichErrorCount = rows.filter((r) => r.enrichError).length;
 
   const inputClasses =
     'w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary text-sm';
@@ -411,7 +415,7 @@ export function AdminCSVImportPage() {
       <Helmet>
         <title>
           {t('admin.businesses.import.title', 'Import Businesses')} |{' '}
-          {basePath === '/curator' ? 'Curator' : 'Admin'}
+          {basePath === '/curator' ? t('admin.nav.curatorRole', 'Curator') : t('admin.nav.adminRole', 'Admin')}
         </title>
         <meta name="robots" content="noindex, nofollow" />
       </Helmet>
@@ -551,6 +555,12 @@ export function AdminCSVImportPage() {
                     <span className="text-green-600 dark:text-green-400">
                       <CheckCircleIcon className="h-4 w-4 inline mr-1" />
                       {t('admin.businesses.import.enrichedCount', '{{count}} enriched', { count: enrichedCount })}
+                    </span>
+                  )}
+                  {enrichErrorCount > 0 && (
+                    <span className="text-red-500 dark:text-red-400">
+                      <XCircleIcon className="h-4 w-4 inline mr-1" />
+                      {t('admin.businesses.import.enrichErrorCount', '{{count}} failed', { count: enrichErrorCount })}
                     </span>
                   )}
                 </div>
@@ -720,6 +730,11 @@ export function AdminCSVImportPage() {
                             <span className="inline-flex items-center gap-1 text-xs text-green-600 dark:text-green-400">
                               <CheckCircleIcon className="h-4 w-4" />
                               {t('admin.businesses.import.enrichedYes', 'Matched')}
+                            </span>
+                          ) : row.enrichError ? (
+                            <span className="text-xs text-red-500 dark:text-red-400" title={row.enrichError}>
+                              <XCircleIcon className="h-4 w-4 inline mr-0.5" />
+                              {t('admin.businesses.import.enrichError', 'Error')}
                             </span>
                           ) : enriching ? (
                             <ArrowPathIcon className="h-4 w-4 text-blue-500 animate-spin" />

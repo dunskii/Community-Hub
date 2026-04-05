@@ -223,7 +223,9 @@
       "moderation": "Moderation",
       "administration": "Administration",
       "toggleMenu": "Toggle admin menu",
-      "adminNavigation": "Admin navigation"
+      "adminNavigation": "Admin navigation",
+      "curatorRole": "Curatore",
+      "adminRole": "Amministratore"
     },
     "dashboard": {
       "title": "Admin Dashboard",
@@ -303,6 +305,7 @@
         "rowCount": "{{count}} attività",
         "selectedCount": "{{count}} selezionate",
         "enrichedCount": "{{count}} arricchite",
+        "enrichErrorCount": "{{count}} non riuscite",
         "selectAll": "Seleziona tutto",
         "selectRow": "Seleziona {{name}}",
         "selectCategory": "Categoria per {{name}}",
@@ -310,6 +313,7 @@
         "selectCat": "Seleziona...",
         "removeRow": "Rimuovi {{name}}",
         "enrichedYes": "Trovata",
+        "enrichError": "Errore",
         "missing": "Mancante",
         "enrichmentSummary": "Risultati Arricchimento Google Maps",
         "enrichmentDetail": "{{matched}} di {{total}} attività trovate.",
@@ -331,10 +335,10 @@
         "viewBusinesses": "Vedi Tutte",
         "examples": {
           "name": "Panificio Locale",
-          "phone": "(02) 1234 5678",
+          "phone": "+61 2 1234 5678",
           "street": "Via Roma 123",
           "suburb": "Centro",
-          "state": "NSW",
+          "state": "Stato",
           "postcode": "2000",
           "description": "Pane fresco ogni giorno"
         }
