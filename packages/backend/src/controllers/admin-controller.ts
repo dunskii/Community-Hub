@@ -19,6 +19,7 @@ import {
   adminEventsQuerySchema,
   createUserSchema,
   assignBusinessOwnerSchema,
+  type OperatingHours,
 } from '@community-hub/shared';
 import { UserRole, BusinessStatus } from '../generated/prisma/index.js';
 import { businessService } from '../services/business-service.js';
@@ -305,7 +306,7 @@ class AdminController {
       const adminId = req.user!.id;
       const ipAddress = getClientIp(req);
       const userAgent = getClientUA(req);
-      const auditContext = { userId: adminId, ipAddress, userAgent };
+      const auditContext = { actorId: adminId, actorRole: req.user!.role, ipAddress, userAgent };
 
       const results: Array<{
         row: number;
@@ -315,8 +316,7 @@ class AdminController {
         error?: string;
       }> = [];
 
-      for (let i = 0; i < businesses.length; i++) {
-        const row = businesses[i];
+      for (const [i, row] of businesses.entries()) {
         try {
           const business = await businessService.createBusiness(
             {
@@ -333,7 +333,7 @@ class AdminController {
                 postcode: row.postcode,
                 country: row.country || 'Australia',
               },
-              operatingHours: row.operatingHours as Record<string, unknown> | undefined,
+              operatingHours: row.operatingHours as OperatingHours | undefined,
             },
             auditContext,
           );
